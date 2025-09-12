@@ -1,10 +1,10 @@
 {
   "mappings": [
-    "/content/aem-boilerplate/:/",
-    "/content/aem-boilerplate/configuration:/.helix/config.json",
-    "/content/aem-boilerplate/metadata:/metadata.json"
+    "/content/ue-multitenant-root/:/",
+    "/content/ue-multitenant-root/configuration:/.helix/config.json",
+    "/content/ue-multitenant-root/metadata:/metadata.json"
   ],
   "includes": [
-    "/content/aem-boilerplate/"
+    "/content/ue-multitenant-root/"
   ]
 }
