@@ -1,4 +1,4 @@
-name: Comment commits to Jira
+name: Comment commits to Jira from Commits
 
 on:
     push:
