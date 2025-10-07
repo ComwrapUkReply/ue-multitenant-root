@@ -1,5 +1,0 @@
-mountpoints:
-  /:
-    url: "https://author-p24706-e491522.adobeaemcloud.com/bin/franklin.delivery/comwrapukreply/ue-multitenant-root/main"
-    type: "markup"
-    suffix: ".html"
