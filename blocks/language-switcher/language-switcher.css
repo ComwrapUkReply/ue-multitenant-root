@@ -1,0 +1,326 @@
+/* Language Switcher Block Styles */
+.block.language-switcher {
+  margin: 0;
+  padding: 0;
+}
+
+/* Common Language Switcher Styles */
+.language-switcher,
+.language-switcher-dropdown-container,
+.language-switcher-inline-container,
+.language-switcher-flags-container {
+  position: relative;
+  display: inline-block;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+}
+
+/* Dropdown Style Language Switcher */
+.language-switcher-dropdown-container {
+  z-index: 1000;
+}
+
+.language-switcher-current {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--background-color);
+  border: 1px solid var(--light-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  min-width: 120px;
+  justify-content: space-between;
+}
+
+.language-switcher-current:hover {
+  background: var(--light-color);
+  border-color: var(--link-color);
+}
+
+.language-switcher-current:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+.language-switcher-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--background-color);
+  border: 1px solid var(--light-color);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1001;
+}
+
+.language-switcher-dropdown-container.open .language-switcher-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.language-switcher-dropdown-container.open .language-switcher-current .language-arrow {
+  transform: rotate(180deg);
+}
+
+.language-switcher-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--text-color);
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.language-switcher-option:hover {
+  background: var(--light-color);
+}
+
+.language-switcher-option:focus {
+  background: var(--light-color);
+  outline: 2px solid var(--link-color);
+  outline-offset: -2px;
+}
+
+/* Inline Style Language Switcher */
+.language-switcher-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.language-switcher-inline li {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.language-switcher-current-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+  color: var(--link-color);
+}
+
+.language-switcher-link {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.language-switcher-link:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+.language-switcher-link:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.language-separator {
+  margin: 0 0.25rem;
+  color: var(--light-color);
+  font-weight: 300;
+}
+
+/* Flags Style Language Switcher */
+.language-switcher-flags {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.language-switcher-flag-current,
+.language-switcher-flag-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 24px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.language-switcher-flag-current {
+  background: var(--light-color);
+  border: 2px solid var(--link-color);
+}
+
+.language-switcher-flag-button {
+  background: transparent;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.language-switcher-flag-button:hover {
+  background: var(--light-color);
+  border-color: var(--light-color);
+}
+
+.language-switcher-flag-button:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+/* Flag and Label Styling */
+.language-flag {
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.language-label {
+  white-space: nowrap;
+}
+
+.language-arrow {
+  font-size: 0.8em;
+  transition: transform 0.3s ease;
+}
+
+/* Block Options Styling */
+.language-switcher-block.header-right {
+  text-align: right;
+}
+
+.language-switcher-block.header-left {
+  text-align: left;
+}
+
+.language-switcher-block.centered {
+  text-align: center;
+}
+
+.language-switcher-block.light {
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --light-color: #f5f5f5;
+}
+
+.language-switcher-block.dark {
+  --background-color: #333333;
+  --text-color: #ffffff;
+  --light-color: #555555;
+}
+
+/* Header Integration Styles */
+header .nav-tools .language-switcher,
+header .nav-tools .language-switcher-dropdown-container,
+header .nav-tools .language-switcher-inline-container,
+header .nav-tools .language-switcher-flags-container {
+  margin-left: auto;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .language-switcher-current {
+    min-width: 100px;
+    padding: 0.4rem 0.6rem;
+    font-size: var(--body-font-size-xs);
+  }
+  
+  .language-switcher-inline {
+    gap: 0.25rem;
+  }
+  
+  .language-switcher-inline .language-label {
+    display: none;
+  }
+  
+  .language-switcher-flags {
+    gap: 0.25rem;
+  }
+  
+  .language-switcher-flag-current,
+  .language-switcher-flag-button {
+    width: 28px;
+    height: 20px;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .language-switcher-current,
+  .language-switcher-option {
+    border-width: 2px;
+  }
+  
+  .language-switcher-dropdown {
+    border-width: 2px;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .language-switcher-current,
+  .language-switcher-dropdown,
+  .language-switcher-option,
+  .language-switcher-link,
+  .language-switcher-flag-button,
+  .language-arrow {
+    transition: none;
+  }
+  
+  .language-switcher-dropdown {
+    transform: none;
+  }
+  
+  .language-switcher-dropdown-container.open .language-switcher-current .language-arrow {
+    transform: none;
+  }
+}
+
+/* Focus Visible Support */
+.language-switcher-current:focus-visible,
+.language-switcher-option:focus-visible,
+.language-switcher-link:focus-visible,
+.language-switcher-flag-button:focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .language-switcher,
+  .language-switcher-dropdown-container,
+  .language-switcher-inline-container,
+  .language-switcher-flags-container {
+    display: none;
+  }
+}
