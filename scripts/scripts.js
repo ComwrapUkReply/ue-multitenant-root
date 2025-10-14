@@ -90,7 +90,11 @@ export function decorateMain(main) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  document.documentElement.lang = 'en';
+  // Set document language based on current locale
+  const currentLang = window.location.pathname.startsWith('/ch/de/') ? 'de' :
+                     window.location.pathname.startsWith('/ch/fr/') ? 'fr' :
+                     window.location.pathname.startsWith('/de/de/') ? 'de' : 'en';
+  document.documentElement.lang = currentLang;
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {

@@ -214,5 +214,96 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "language-switcher",
+    "fields": [
+      {
+        "component": "multiselect",
+        "name": "supportedLocales",
+        "label": "Supported Locales",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Switzerland",
+            "children": [
+              { "name": "German (Switzerland)", "value": "ch-de" },
+              { "name": "French (Switzerland)", "value": "ch-fr" },
+              { "name": "English (Switzerland)", "value": "ch-en" }
+            ]
+          },
+          {
+            "name": "Germany", 
+            "children": [
+              { "name": "German (Germany)", "value": "de-de" },
+              { "name": "English (Germany)", "value": "de-en" }
+            ]
+          }
+        ],
+        "value": "ch-de,ch-fr,ch-en,de-de,de-en"
+      },
+      {
+        "component": "select",
+        "name": "displayStyle",
+        "label": "Display Style",
+        "valueType": "string",
+        "options": [
+          { "name": "Dropdown", "value": "dropdown" },
+          { "name": "Inline Links", "value": "inline" },
+          { "name": "Flag Icons", "value": "flags" }
+        ],
+        "value": "dropdown"
+      },
+      {
+        "component": "select",
+        "name": "fallbackLocale",
+        "label": "Fallback Locale",
+        "valueType": "string",
+        "options": [
+          { "name": "German (Germany)", "value": "de-de" },
+          { "name": "German (Switzerland)", "value": "ch-de" },
+          { "name": "English (Switzerland)", "value": "ch-en" },
+          { "name": "French (Switzerland)", "value": "ch-fr" },
+          { "name": "English (Germany)", "value": "de-en" }
+        ],
+        "value": "de-de"
+      },
+      {
+        "component": "boolean",
+        "name": "showCountryFlags",
+        "label": "Show Country Flags",
+        "value": true
+      },
+      {
+        "component": "boolean",
+        "name": "preservePath",
+        "label": "Preserve Current Page Path",
+        "value": true
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Style Options",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Position",
+            "children": [
+              { "name": "Header Right", "value": "header-right" },
+              { "name": "Header Left", "value": "header-left" },
+              { "name": "Centered", "value": "centered" }
+            ]
+          },
+          {
+            "name": "Theme",
+            "children": [
+              { "name": "Light", "value": "light" },
+              { "name": "Dark", "value": "dark" }
+            ]
+          }
+        ],
+        "value": "header-right"
+      }
+    ]
   }
 ]

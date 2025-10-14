@@ -1,5 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { createLanguageSwitcher } from '../../scripts/language-switcher.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -158,6 +159,25 @@ export default async function decorate(block) {
   // prevent mobile nav behavior on window resize
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+
+  // Initialize language switcher in nav-tools
+  const navTools = nav.querySelector('.nav-tools');
+  if (navTools) {
+    // Check if language switcher should be added automatically
+    // Look for a placeholder paragraph or specific content that indicates language switcher placement
+    const languagePlaceholder = navTools.querySelector('p');
+    if (languagePlaceholder && 
+        (languagePlaceholder.textContent.toLowerCase().includes('language') || 
+         languagePlaceholder.textContent.toLowerCase().includes('lang'))) {
+      // Replace the placeholder with the actual language switcher
+      const languageSwitcher = createLanguageSwitcher();
+      languagePlaceholder.replaceWith(languageSwitcher);
+    } else if (!navTools.querySelector('.language-switcher')) {
+      // Add language switcher if not already present and no specific placeholder
+      const languageSwitcher = createLanguageSwitcher();
+      navTools.appendChild(languageSwitcher);
+    }
+  }
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
