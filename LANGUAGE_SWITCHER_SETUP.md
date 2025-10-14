@@ -192,9 +192,19 @@ You can override styles by targeting these classes:
 
 ### Incorrect Language Detection
 
-1. Verify URL structure matches locale configuration
-2. Check that paths start with correct language prefixes
-3. Confirm default locale is set correctly
+1. **AEM Authoring vs Published URLs**: The system automatically detects whether you're in AEM authoring environment
+   - AEM Authoring: `/content/ue-multitenant-root/ch/de/index.html`
+   - Published Site: `/ch/de/`
+2. Verify URL structure matches your environment
+3. Check browser console for debug information
+4. Use the debug utility: `debugLanguageSwitcher()` in browser console
+
+### Wrong Target URLs
+
+1. **AEM Authoring Environment**: URLs should include `/content/ue-multitenant-root/` prefix
+2. **Published Environment**: URLs should use clean paths like `/ch/de/`
+3. Check that target pages exist in both environments
+4. Verify placeholders configuration includes both URL formats
 
 ### Mapping Not Working
 
@@ -245,11 +255,50 @@ const config = {
 5. **Test responsive behavior** on mobile devices
 6. **Verify accessibility** with screen readers
 
+## Debugging
+
+### Debug Utility
+
+A debug utility is available to help troubleshoot language detection issues:
+
+1. **Load the debug script** (add to your page temporarily):
+   ```html
+   <script type="module" src="/debug-language-switcher.js"></script>
+   ```
+
+2. **Run in browser console**:
+   ```javascript
+   debugLanguageSwitcher()
+   ```
+
+3. **Check the output** for:
+   - Current URL and detected language
+   - URL pattern matching results
+   - Generated target URLs for switching
+   - Available languages configuration
+
+### Common Debug Scenarios
+
+#### AEM Authoring Environment
+```
+URL: https://author-p24706-e491522.adobeaemcloud.com/content/ue-multitenant-root/ch/de/index.html
+Expected Detection: ch-de
+Expected Target (to ch-fr): /content/ue-multitenant-root/ch/fr/index.html
+```
+
+#### Published Site
+```
+URL: https://main--ue-multitenant-root--ComwrapUkReply.aem.page/ch/de/
+Expected Detection: ch-de  
+Expected Target (to ch-fr): /ch/fr/
+```
+
 ## Support
 
 For issues or questions:
 
-1. Check the browser console for JavaScript errors
-2. Verify network requests to `placeholders.json`
-3. Test with different browsers and devices
-4. Review the implementation files for debugging
+1. Use the debug utility: `debugLanguageSwitcher()`
+2. Check the browser console for JavaScript errors
+3. Verify network requests to `placeholders.json`
+4. Test with different browsers and devices
+5. Review the implementation files for debugging

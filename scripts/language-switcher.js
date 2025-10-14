@@ -18,15 +18,31 @@ let languageMappingsCache = null;
 
 /**
  * Detects the current language from the URL path
+ * Handles both AEM authoring URLs and published site URLs
  * @returns {string} The detected language code (e.g., 'ch-de', 'de-de')
  */
 export function getLanguage() {
   const { pathname } = window.location;
   
-  // Check each locale configuration
-  for (const [localeCode, config] of Object.entries(LOCALES_CONFIG)) {
-    if (pathname.startsWith(config.path)) {
-      return localeCode;
+  // Check if we're in AEM authoring environment
+  const isAEMAuthoring = pathname.includes('/content/ue-multitenant-root/');
+  
+  if (isAEMAuthoring) {
+    // Handle AEM authoring URLs like /content/ue-multitenant-root/ch/de/index.html
+    const match = pathname.match(/\/content\/ue-multitenant-root\/([^\/]+)\/([^\/]+)/);
+    if (match) {
+      const [, country, language] = match;
+      const localeCode = `${country}-${language}`;
+      if (LOCALES_CONFIG[localeCode]) {
+        return localeCode;
+      }
+    }
+  } else {
+    // Handle published site URLs like /ch/de/
+    for (const [localeCode, config] of Object.entries(LOCALES_CONFIG)) {
+      if (pathname.startsWith(config.path)) {
+        return localeCode;
+      }
     }
   }
   
@@ -38,6 +54,7 @@ export function getLanguage() {
 
 /**
  * Gets the current page path without the language prefix
+ * Handles both AEM authoring URLs and published site URLs
  * @returns {string} The page path without language prefix
  */
 export function getCurrentPagePath() {
@@ -45,12 +62,32 @@ export function getCurrentPagePath() {
   const currentLang = getLanguage();
   const langConfig = LOCALES_CONFIG[currentLang];
   
-  if (langConfig && pathname.startsWith(langConfig.path)) {
-    const pagePath = pathname.substring(langConfig.path.length);
-    return pagePath || '';
-  }
+  // Check if we're in AEM authoring environment
+  const isAEMAuthoring = pathname.includes('/content/ue-multitenant-root/');
   
-  return pathname.substring(1); // Remove leading slash
+  if (isAEMAuthoring) {
+    // Handle AEM authoring URLs like /content/ue-multitenant-root/ch/de/page-name.html
+    const match = pathname.match(/\/content\/ue-multitenant-root\/[^\/]+\/[^\/]+\/(.*)$/);
+    if (match) {
+      let pagePath = match[1];
+      // Remove .html extension and handle index pages
+      if (pagePath.endsWith('.html')) {
+        pagePath = pagePath.substring(0, pagePath.length - 5);
+      }
+      if (pagePath === 'index' || pagePath === '') {
+        return '';
+      }
+      return pagePath;
+    }
+    return '';
+  } else {
+    // Handle published site URLs like /ch/de/page-name
+    if (langConfig && pathname.startsWith(langConfig.path)) {
+      const pagePath = pathname.substring(langConfig.path.length);
+      return pagePath || '';
+    }
+    return pathname.substring(1); // Remove leading slash
+  }
 }
 
 /**
@@ -143,27 +180,50 @@ export async function switchToLanguage(targetLang) {
     return; // Already on the target language
   }
   
-  const mappings = await fetchLanguageMappings();
+  const { pathname } = window.location;
+  const isAEMAuthoring = pathname.includes('/content/ue-multitenant-root/');
   const currentPath = getCurrentPagePath();
-  const currentFullPath = LOCALES_CONFIG[currentLang]?.path + currentPath;
-  
-  // Try to find a mapped URL
-  const mappedUrl = findMappedUrl(currentFullPath, targetLang, mappings);
   
   let targetUrl;
-  if (mappedUrl) {
-    // Use the mapped URL
-    targetUrl = mappedUrl;
+  
+  if (isAEMAuthoring) {
+    // Build AEM authoring URL
+    const [targetCountry, targetLanguage] = targetLang.split('-');
+    const basePath = `/content/ue-multitenant-root/${targetCountry}/${targetLanguage}`;
+    
+    if (currentPath === '' || currentPath === 'index') {
+      // Homepage
+      targetUrl = `${basePath}/index.html`;
+    } else {
+      // Other pages
+      targetUrl = `${basePath}/${currentPath}.html`;
+    }
   } else {
-    // Fallback: construct URL using the target language path
-    const targetConfig = LOCALES_CONFIG[targetLang];
-    targetUrl = targetConfig.path + currentPath;
+    // Build published site URL
+    const mappings = await fetchLanguageMappings();
+    const currentFullPath = LOCALES_CONFIG[currentLang]?.path + currentPath;
+    
+    // Try to find a mapped URL
+    const mappedUrl = findMappedUrl(currentFullPath, targetLang, mappings);
+    
+    if (mappedUrl) {
+      // Use the mapped URL
+      targetUrl = mappedUrl;
+    } else {
+      // Fallback: construct URL using the target language path
+      const targetConfig = LOCALES_CONFIG[targetLang];
+      targetUrl = targetConfig.path + currentPath;
+    }
+    
+    // Handle homepage special case
+    if (currentPath === '' || currentPath === '/') {
+      targetUrl = LOCALES_CONFIG[targetLang].path;
+    }
   }
   
-  // Handle homepage special case
-  if (currentPath === '' || currentPath === '/') {
-    targetUrl = LOCALES_CONFIG[targetLang].path;
-  }
+  console.log(`Switching from ${currentLang} to ${targetLang}:`);
+  console.log(`Current path: ${currentPath}`);
+  console.log(`Target URL: ${targetUrl}`);
   
   // Navigate to the target URL
   window.location.href = targetUrl;
