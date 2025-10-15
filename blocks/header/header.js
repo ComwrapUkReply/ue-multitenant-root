@@ -10,19 +10,11 @@ const isDesktop = window.matchMedia('(min-width: 900px)');
  */
 async function createHeaderLanguageSwitcher() {
   try {
-    // Determine the correct script path based on environment
-    const { pathname } = window.location;
-    const isAEMAuthoring = pathname.includes('/content/ue-multitenant-root/');
-    
-    const scriptPath = isAEMAuthoring
-      ? '/content/ue-multitenant-root/scripts/language-switcher.js'
-      : '/scripts/language-switcher.js';
-
     // Dynamically import the language switcher utilities
     const {
       switchToLanguage,
       getAvailableLanguages,
-    } = await import(scriptPath);
+    } = await import('../../scripts/language-switcher.js');
 
     const availableLanguages = getAvailableLanguages();
 
