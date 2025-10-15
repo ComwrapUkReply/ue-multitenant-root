@@ -91,18 +91,11 @@ header .nav-tools .language-switcher-dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  display: block !important; /* Ensure visibility */
 }
 
 .language-switcher-dropdown-container.open .language-switcher-current .language-arrow {
   transform: rotate(180deg);
-}
-
-/* Ensure dropdown is visible when open - fallback styles */
-.language-switcher-dropdown-container.open .language-switcher-dropdown {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  display: block !important;
 }
 
 .language-switcher-option {
@@ -117,8 +110,10 @@ header .nav-tools .language-switcher-dropdown {
   font-family: inherit;
   font-size: inherit;
   color: var(--text-color);
+  text-decoration: none;
   text-align: left;
   transition: background-color 0.2s ease;
+  outline: none;
 }
 
 .language-switcher-option:hover {

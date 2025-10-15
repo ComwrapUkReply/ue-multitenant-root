@@ -3,11 +3,10 @@
  * Provides a configurable language switching component for Universal Editor
  */
 
-import { 
-  getLanguage, 
-  switchToLanguage, 
+import {
+  getLanguage,
+  switchToLanguage,
   getAvailableLanguages,
-  createLanguageSwitcher 
 } from '../../scripts/language-switcher.js';
 
 /**
@@ -21,20 +20,20 @@ function extractBlockConfig(block) {
     displayStyle: 'dropdown',
     fallbackLocale: 'de-de',
     showCountryFlags: true,
-    preservePath: true
+    preservePath: true,
   };
 
   // Extract configuration from block content if available
   const configRows = block.querySelectorAll(':scope > div');
-  configRows.forEach(row => {
+  configRows.forEach((row) => {
     const cells = row.querySelectorAll('div');
     if (cells.length >= 2) {
       const key = cells[0].textContent.trim();
       const value = cells[1].textContent.trim();
-      
+
       switch (key.toLowerCase()) {
         case 'supportedlocales':
-          config.supportedLocales = value.split(',').map(s => s.trim());
+          config.supportedLocales = value.split(',').map((s) => s.trim());
           break;
         case 'displaystyle':
           config.displayStyle = value;
@@ -47,6 +46,9 @@ function extractBlockConfig(block) {
           break;
         case 'preservepath':
           config.preservePath = value.toLowerCase() === 'true';
+          break;
+        default:
+          // No action needed for unknown keys
           break;
       }
     }
@@ -61,12 +63,11 @@ function extractBlockConfig(block) {
  * @returns {HTMLElement} The dropdown switcher element
  */
 function createDropdownSwitcher(config) {
-  const currentLang = getLanguage();
   const availableLanguages = getAvailableLanguages()
-    .filter(lang => config.supportedLocales.includes(lang.code));
-  
-  const currentLanguage = availableLanguages.find(lang => lang.isCurrent) 
-    || availableLanguages.find(lang => lang.code === config.fallbackLocale)
+    .filter((lang) => config.supportedLocales.includes(lang.code));
+
+  const currentLanguage = availableLanguages.find((lang) => lang.isCurrent)
+    || availableLanguages.find((lang) => lang.code === config.fallbackLocale)
     || availableLanguages[0];
 
   const switcher = document.createElement('div');
@@ -93,30 +94,31 @@ function createDropdownSwitcher(config) {
   dropdown.setAttribute('role', 'menu');
   dropdown.setAttribute('aria-hidden', 'true');
 
-  availableLanguages.forEach(lang => {
+  availableLanguages.forEach((lang) => {
     if (!lang.isCurrent) {
       const listItem = document.createElement('li');
       listItem.setAttribute('role', 'none');
-      
-      const option = document.createElement('button');
+
+      const option = document.createElement('a');
       option.className = 'language-switcher-option';
       option.setAttribute('role', 'menuitem');
       option.setAttribute('aria-label', `Switch to ${lang.label}`);
-      
+      option.href = '#'; // Temporary href to make it focusable
+
       const optionContent = [];
       if (config.showCountryFlags) {
         optionContent.push(`<span class="language-flag">${lang.flag}</span>`);
       }
       optionContent.push(`<span class="language-label">${lang.label}</span>`);
-      
+
       option.innerHTML = optionContent.join('');
-      
+
       option.addEventListener('click', async (e) => {
         e.preventDefault();
         e.stopPropagation();
         await switchToLanguage(lang.code);
       });
-      
+
       listItem.appendChild(option);
       dropdown.appendChild(listItem);
     }
@@ -125,17 +127,17 @@ function createDropdownSwitcher(config) {
   // Toggle functionality
   const toggleDropdown = (open) => {
     const isOpen = open !== undefined ? open : currentButton.getAttribute('aria-expanded') === 'false';
+
+    // Update ARIA attributes
     currentButton.setAttribute('aria-expanded', isOpen.toString());
     dropdown.setAttribute('aria-hidden', (!isOpen).toString());
-    switcher.classList.toggle('open', isOpen);
-    
-    // Debug logging
-    console.log('Language switcher dropdown toggled:', {
-      isOpen,
-      hasOpenClass: switcher.classList.contains('open'),
-      ariaExpanded: currentButton.getAttribute('aria-expanded'),
-      ariaHidden: dropdown.getAttribute('aria-hidden')
-    });
+
+    // Toggle the open class on the container
+    if (isOpen) {
+      switcher.classList.add('open');
+    } else {
+      switcher.classList.remove('open');
+    }
   };
 
   currentButton.addEventListener('click', (e) => {
@@ -336,30 +338,42 @@ export default function decorate(block) {
       const button = switcher.querySelector('.language-switcher-current');
       const dropdown = switcher.querySelector('.language-switcher-dropdown');
       const container = switcher.closest('.language-switcher-dropdown-container');
-      
+
+      // eslint-disable-next-line no-console
       console.group('🔧 Language Switcher Dropdown Debug');
+      // eslint-disable-next-line no-console
       console.log('Button element:', button);
+      // eslint-disable-next-line no-console
       console.log('Dropdown element:', dropdown);
+      // eslint-disable-next-line no-console
       console.log('Container element:', container);
+      // eslint-disable-next-line no-console
       console.log('Container has open class:', container?.classList.contains('open'));
+      // eslint-disable-next-line no-console
       console.log('Button aria-expanded:', button?.getAttribute('aria-expanded'));
+      // eslint-disable-next-line no-console
       console.log('Dropdown aria-hidden:', dropdown?.getAttribute('aria-hidden'));
-      
+
       if (button) {
+        // eslint-disable-next-line no-console
         console.log('Triggering button click...');
         button.click();
-        
+
         setTimeout(() => {
+          // eslint-disable-next-line no-console
           console.log('After click - Container has open class:', container?.classList.contains('open'));
+          // eslint-disable-next-line no-console
           console.log('After click - Button aria-expanded:', button?.getAttribute('aria-expanded'));
+          // eslint-disable-next-line no-console
           console.log('After click - Dropdown aria-hidden:', dropdown?.getAttribute('aria-hidden'));
+          // eslint-disable-next-line no-console
           console.log('After click - Dropdown computed visibility:', getComputedStyle(dropdown).visibility);
+          // eslint-disable-next-line no-console
           console.log('After click - Dropdown computed opacity:', getComputedStyle(dropdown).opacity);
         }, 100);
       }
+      // eslint-disable-next-line no-console
       console.groupEnd();
     };
   }
-  
-  console.log('Language switcher block initialized with config:', config);
 }
