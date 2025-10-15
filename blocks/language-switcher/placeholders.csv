@@ -1,0 +1,25 @@
+source,target,description
+/ch/de/,/ch/fr/,Homepage CH German to French (Published)
+/ch/fr/,/ch/de/,Homepage CH French to German (Published)
+/content/ue-multitenant-root/ch/de/index.html,/content/ue-multitenant-root/ch/fr/index.html,Homepage CH German to French (AEM Authoring)
+/content/ue-multitenant-root/ch/fr/index.html,/content/ue-multitenant-root/ch/de/index.html,Homepage CH French to German (AEM Authoring)
+/ch/de/,/ch/en/,Homepage CH German to English
+/ch/en/,/ch/de/,Homepage CH English to German
+/de/de/,/de/en/,Homepage DE German to English
+/de/en/,/de/de/,Homepage DE English to German
+/ch/de/ueber-uns,/ch/fr/a-propos,About page CH German to French (Published)
+/ch/fr/a-propos,/ch/de/ueber-uns,About page CH French to German (Published)
+/content/ue-multitenant-root/ch/de/ueber-uns.html,/content/ue-multitenant-root/ch/fr/a-propos.html,About page CH German to French (AEM Authoring)
+/content/ue-multitenant-root/ch/fr/a-propos.html,/content/ue-multitenant-root/ch/de/ueber-uns.html,About page CH French to German (AEM Authoring)
+/ch/de/ueber-uns,/ch/en/about-us,About page CH German to English
+/ch/en/about-us,/ch/de/ueber-uns,About page CH English to German
+/ch/de/produkte,/ch/fr/produits,Products page CH German to French
+/ch/fr/produits,/ch/de/produkte,Products page CH French to German
+/ch/de/produkte,/ch/en/products,Products page CH German to English
+/ch/en/products,/ch/de/produkte,Products page CH English to German
+/ch/de/kontakt,/ch/fr/contact,Contact page CH German to French
+/ch/fr/contact,/ch/de/kontakt,Contact page CH French to German
+/ch/de/kontakt,/ch/en/contact,Contact page CH German to English
+/ch/en/contact,/ch/de/kontakt,Contact page CH English to German
+/de/de/ueber-uns,/de/en/about-us,About page DE German to English
+/de/en/about-us,/de/de/ueber-uns,About page DE English to German

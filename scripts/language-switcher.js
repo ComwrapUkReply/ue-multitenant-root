@@ -127,23 +127,57 @@ async function fetchLanguageMappings() {
     // eslint-disable-next-line no-console
     console.log('Raw placeholders data:', data);
     // eslint-disable-next-line no-console
+    console.log('Data type:', typeof data);
+    // eslint-disable-next-line no-console
+    console.log('Data keys:', Object.keys(data));
+    // eslint-disable-next-line no-console
+    console.log('Has data property?', !!data.data);
+    // eslint-disable-next-line no-console
+    console.log('data.data type:', typeof data.data);
+    // eslint-disable-next-line no-console
     console.log('First row sample:', data.data?.[0]);
 
-    // Convert the data structure to a more usable format
-    if (data.data) {
-      data.data.forEach((row) => {
-        // Handle both 'source/target' and 'sourece/terget' typo keys
-        const source = row.source || row.sourece;
-        const target = row.target || row.terget;
+    // Handle multiple possible JSON structures
+    let rows = [];
 
-        // eslint-disable-next-line no-console
-        console.log('Processing row - source:', source, 'target:', target, 'raw row:', row);
-
-        if (source && target) {
-          mappings[source] = target;
-        }
-      });
+    if (data.data && Array.isArray(data.data)) {
+      // Standard structure: { data: [...] }
+      rows = data.data;
+      // eslint-disable-next-line no-console
+      console.log('Using data.data array, length:', rows.length);
+    } else if (Array.isArray(data)) {
+      // Direct array structure: [...]
+      rows = data;
+      // eslint-disable-next-line no-console
+      console.log('Using direct array, length:', rows.length);
+    } else if (data[':items']) {
+      // AEM structure: { ':items': [...] }
+      rows = data[':items'];
+      // eslint-disable-next-line no-console
+      console.log('Using :items array, length:', rows.length);
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('Unknown JSON structure, attempting to extract rows from object values');
+      rows = Object.values(data).filter((item) => typeof item === 'object' && item !== null);
+      // eslint-disable-next-line no-console
+      console.log('Extracted rows from object values, length:', rows.length);
     }
+
+    // Convert rows to mappings
+    rows.forEach((row, index) => {
+      // Handle both 'source/target' and 'sourece/terget' typo keys
+      const source = row.source || row.sourece;
+      const target = row.target || row.terget;
+
+      if (index < 3) {
+        // eslint-disable-next-line no-console
+        console.log(`Row ${index} - source:`, source, 'target:', target, 'raw row:', row);
+      }
+
+      if (source && target) {
+        mappings[source] = target;
+      }
+    });
 
     // eslint-disable-next-line no-console
     console.log('Loaded language mappings:', Object.keys(mappings).length, 'entries');
