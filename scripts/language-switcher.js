@@ -124,11 +124,21 @@ async function fetchLanguageMappings() {
     const data = await response.json();
     const mappings = {};
 
+    // eslint-disable-next-line no-console
+    console.log('Raw placeholders data:', data);
+    // eslint-disable-next-line no-console
+    console.log('First row sample:', data.data?.[0]);
+
     // Convert the data structure to a more usable format
     if (data.data) {
       data.data.forEach((row) => {
-        // Handle 'source/target'
-        const { source, target } = row;
+        // Handle both 'source/target' and 'sourece/terget' typo keys
+        const source = row.source || row.sourece;
+        const target = row.target || row.terget;
+
+        // eslint-disable-next-line no-console
+        console.log('Processing row - source:', source, 'target:', target, 'raw row:', row);
+
         if (source && target) {
           mappings[source] = target;
         }
@@ -139,6 +149,8 @@ async function fetchLanguageMappings() {
     console.log('Loaded language mappings:', Object.keys(mappings).length, 'entries');
     // eslint-disable-next-line no-console
     console.log('Sample mappings:', Object.entries(mappings).slice(0, 3));
+    // eslint-disable-next-line no-console
+    console.log('All mapping keys:', Object.keys(mappings));
 
     languageMappingsCache = mappings;
     return mappings;
