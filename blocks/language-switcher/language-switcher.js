@@ -128,6 +128,14 @@ function createDropdownSwitcher(config) {
     currentButton.setAttribute('aria-expanded', isOpen.toString());
     dropdown.setAttribute('aria-hidden', (!isOpen).toString());
     switcher.classList.toggle('open', isOpen);
+    
+    // Debug logging
+    console.log('Language switcher dropdown toggled:', {
+      isOpen,
+      hasOpenClass: switcher.classList.contains('open'),
+      ariaExpanded: currentButton.getAttribute('aria-expanded'),
+      ariaHidden: dropdown.getAttribute('aria-hidden')
+    });
   };
 
   currentButton.addEventListener('click', (e) => {
@@ -321,6 +329,37 @@ export default function decorate(block) {
   // Add accessibility enhancements
   block.setAttribute('role', 'navigation');
   block.setAttribute('aria-label', 'Language switcher');
+  
+  // Add debug function for testing
+  if (window.location.hostname.includes('localhost') || window.location.hostname.includes('aem.page')) {
+    window.testLanguageSwitcherDropdown = () => {
+      const button = switcher.querySelector('.language-switcher-current');
+      const dropdown = switcher.querySelector('.language-switcher-dropdown');
+      const container = switcher.closest('.language-switcher-dropdown-container');
+      
+      console.group('🔧 Language Switcher Dropdown Debug');
+      console.log('Button element:', button);
+      console.log('Dropdown element:', dropdown);
+      console.log('Container element:', container);
+      console.log('Container has open class:', container?.classList.contains('open'));
+      console.log('Button aria-expanded:', button?.getAttribute('aria-expanded'));
+      console.log('Dropdown aria-hidden:', dropdown?.getAttribute('aria-hidden'));
+      
+      if (button) {
+        console.log('Triggering button click...');
+        button.click();
+        
+        setTimeout(() => {
+          console.log('After click - Container has open class:', container?.classList.contains('open'));
+          console.log('After click - Button aria-expanded:', button?.getAttribute('aria-expanded'));
+          console.log('After click - Dropdown aria-hidden:', dropdown?.getAttribute('aria-hidden'));
+          console.log('After click - Dropdown computed visibility:', getComputedStyle(dropdown).visibility);
+          console.log('After click - Dropdown computed opacity:', getComputedStyle(dropdown).opacity);
+        }, 100);
+      }
+      console.groupEnd();
+    };
+  }
   
   console.log('Language switcher block initialized with config:', config);
 }

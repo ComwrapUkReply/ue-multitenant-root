@@ -4,6 +4,24 @@
   padding: 0;
 }
 
+/* Header Integration Styles */
+header .nav-tools .language-switcher,
+header .nav-tools .language-switcher-dropdown-container,
+header .nav-tools .language-switcher-inline-container,
+header .nav-tools .language-switcher-flags-container {
+  margin-left: auto;
+}
+
+/* Ensure dropdown appears above other content */
+header .nav-tools .language-switcher-dropdown-container {
+  position: relative;
+  z-index: 1000;
+}
+
+header .nav-tools .language-switcher-dropdown {
+  z-index: 1001;
+}
+
 /* Common Language Switcher Styles */
 .language-switcher,
 .language-switcher-dropdown-container,
@@ -55,7 +73,7 @@
   background: var(--background-color);
   border: 1px solid var(--light-color);
   border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -64,6 +82,9 @@
   transform: translateY(-10px);
   transition: all 0.3s ease;
   z-index: 1001;
+  min-width: 150px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .language-switcher-dropdown-container.open .language-switcher-dropdown {
@@ -74,6 +95,14 @@
 
 .language-switcher-dropdown-container.open .language-switcher-current .language-arrow {
   transform: rotate(180deg);
+}
+
+/* Ensure dropdown is visible when open - fallback styles */
+.language-switcher-dropdown-container.open .language-switcher-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  display: block !important;
 }
 
 .language-switcher-option {
@@ -228,27 +257,21 @@
 }
 
 .language-switcher-block.light {
-  --background-color: #ffffff;
-  --text-color: #333333;
+  --background-color: #fff;
+  --text-color: #333;
   --light-color: #f5f5f5;
 }
 
 .language-switcher-block.dark {
-  --background-color: #333333;
-  --text-color: #ffffff;
-  --light-color: #555555;
+  --background-color: #333;
+  --text-color: #fff;
+  --light-color: #555;
 }
 
-/* Header Integration Styles */
-header .nav-tools .language-switcher,
-header .nav-tools .language-switcher-dropdown-container,
-header .nav-tools .language-switcher-inline-container,
-header .nav-tools .language-switcher-flags-container {
-  margin-left: auto;
-}
+
 
 /* Mobile Responsive Styles */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .language-switcher-current {
     min-width: 100px;
     padding: 0.4rem 0.6rem;
@@ -275,7 +298,7 @@ header .nav-tools .language-switcher-flags-container {
 }
 
 /* High Contrast Mode Support */
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more) {
   .language-switcher-current,
   .language-switcher-option {
     border-width: 2px;
