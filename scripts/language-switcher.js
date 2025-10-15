@@ -108,7 +108,7 @@ async function fetchLanguageMappings() {
     const isAEMAuthoring = pathname.includes('/content/ue-multitenant-root/');
 
     const placeholdersUrl = isAEMAuthoring
-      ? '/content/ue-multitenant-root/placeholders.json'
+      ? '/content/ue-multitenant-root/placeholders.html'
       : '/placeholders.json';
 
     // eslint-disable-next-line no-console
