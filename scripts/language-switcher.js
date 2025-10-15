@@ -128,34 +128,32 @@ async function fetchLanguageMappings() {
 
 /**
  * Finds the mapped URL for a given source URL and target language
- * @param {string} sourceUrl - The source URL to map
+ * @param {string} sourceUrl - The source URL to map (can be authoring or published)
  * @param {string} targetLang - The target language code
  * @param {Object} mappings - The language mappings object
  * @returns {string|null} The mapped URL or null if not found
  */
 function findMappedUrl(sourceUrl, targetLang, mappings) {
-  const currentLang = getLanguage();
-  const currentPath = getCurrentPagePath();
-  const currentFullPath = LOCALES_CONFIG[currentLang]?.path + currentPath;
-  
-  // Look for exact match in mappings
+  // Look for exact match in mappings - sourceUrl is already the full path
   for (const [source, target] of Object.entries(mappings)) {
-    if (source === currentFullPath || source === sourceUrl) {
+    if (source === sourceUrl) {
       return target;
     }
   }
   
   // Look for reverse mapping (if we're on a target page, find the source)
   for (const [source, target] of Object.entries(mappings)) {
-    if (target === currentFullPath || target === sourceUrl) {
+    if (target === sourceUrl) {
       // Find the corresponding mapping for the target language
-      const targetPath = LOCALES_CONFIG[targetLang]?.path;
-      if (targetPath) {
-        // Try to find a mapping that starts with the target language path
-        for (const [mapSource, mapTarget] of Object.entries(mappings)) {
-          if (mapSource.startsWith(targetPath) && mapTarget === source) {
-            return mapSource;
-          }
+      const [targetCountry, targetLanguage] = targetLang.split('-');
+      const targetPrefix = `/content/ue-multitenant-root/${targetCountry}/${targetLanguage}/`;
+      const targetPrefixPublished = `/${targetCountry}/${targetLanguage}/`;
+      
+      // Try to find a mapping that starts with the target language path
+      for (const [mapSource, mapTarget] of Object.entries(mappings)) {
+        if ((mapSource.startsWith(targetPrefix) || mapSource.startsWith(targetPrefixPublished)) 
+            && mapTarget === source) {
+          return mapSource;
         }
       }
     }
@@ -171,6 +169,7 @@ function findMappedUrl(sourceUrl, targetLang, mappings) {
  */
 export async function switchToLanguage(targetLang) {
   if (!LOCALES_CONFIG[targetLang]) {
+    // eslint-disable-next-line no-console
     console.error(`Unsupported language: ${targetLang}`);
     return;
   }
@@ -184,23 +183,43 @@ export async function switchToLanguage(targetLang) {
   const isAEMAuthoring = pathname.includes('/content/ue-multitenant-root/');
   const currentPath = getCurrentPagePath();
   
+  // Fetch mappings for both authoring and published environments
+  const mappings = await fetchLanguageMappings();
+  
   let targetUrl;
   
   if (isAEMAuthoring) {
-    // Build AEM authoring URL
+    // Build AEM authoring URL using placeholders mappings
+    const [currentCountry, currentLanguage] = currentLang.split('-');
     const [targetCountry, targetLanguage] = targetLang.split('-');
-    const basePath = `/content/ue-multitenant-root/${targetCountry}/${targetLanguage}`;
     
+    // Construct current full authoring path
+    let currentFullPath;
     if (currentPath === '' || currentPath === 'index') {
-      // Homepage
-      targetUrl = `${basePath}/index.html`;
+      currentFullPath = `/content/ue-multitenant-root/${currentCountry}/${currentLanguage}/index.html`;
     } else {
-      // Other pages
-      targetUrl = `${basePath}/${currentPath}.html`;
+      currentFullPath = `/content/ue-multitenant-root/${currentCountry}/${currentLanguage}/${currentPath}.html`;
+    }
+    
+    // Try to find mapped URL in placeholders
+    const mappedUrl = findMappedUrl(currentFullPath, targetLang, mappings);
+    
+    if (mappedUrl) {
+      // Use the mapped URL from placeholders
+      targetUrl = mappedUrl;
+    } else {
+      // Fallback: construct URL using same page name (may not exist)
+      const basePath = `/content/ue-multitenant-root/${targetCountry}/${targetLanguage}`;
+      if (currentPath === '' || currentPath === 'index') {
+        targetUrl = `${basePath}/index.html`;
+      } else {
+        targetUrl = `${basePath}/${currentPath}.html`;
+      }
+      // eslint-disable-next-line no-console
+      console.warn(`No mapping found for ${currentFullPath} to ${targetLang}, using fallback: ${targetUrl}`);
     }
   } else {
     // Build published site URL
-    const mappings = await fetchLanguageMappings();
     const currentFullPath = LOCALES_CONFIG[currentLang]?.path + currentPath;
     
     // Try to find a mapped URL
@@ -221,8 +240,11 @@ export async function switchToLanguage(targetLang) {
     }
   }
   
+  // eslint-disable-next-line no-console
   console.log(`Switching from ${currentLang} to ${targetLang}:`);
+  // eslint-disable-next-line no-console
   console.log(`Current path: ${currentPath}`);
+  // eslint-disable-next-line no-console
   console.log(`Target URL: ${targetUrl}`);
   
   // Navigate to the target URL
