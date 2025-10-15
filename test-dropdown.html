@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Switcher Dropdown Test</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="blocks/language-switcher/language-switcher.css">
+    <style>
+        body {
+            font-family: var(--body-font-family);
+            margin: 2rem;
+            background: var(--background-color);
+            color: var(--text-color);
+        }
+        
+        .test-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+        
+        .test-header {
+            background: var(--link-color);
+            color: white;
+            padding: 1rem 2rem;
+            margin: -2rem -2rem 2rem -2rem;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid var(--light-color);
+            border-radius: 4px;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .test-button {
+            padding: 0.5rem 1rem;
+            background: var(--link-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .test-button:hover {
+            background: var(--link-hover-color);
+        }
+        
+        .debug-info {
+            background: var(--light-color);
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>Language Switcher Dropdown Test</h1>
+        </div>
+        
+        <div class="test-section">
+            <h2>Dropdown Test</h2>
+            <p>Click the language switcher below to test the dropdown functionality:</p>
+            <div id="dropdown-test-container"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Debug Information</h2>
+            <div class="test-buttons">
+                <button class="test-button" onclick="testDropdown()">Test Dropdown Toggle</button>
+                <button class="test-button" onclick="inspectDropdown()">Inspect Dropdown</button>
+                <button class="test-button" onclick="clearConsole()">Clear Console</button>
+            </div>
+            <div id="debug-info" class="debug-info">
+                Debug information will appear here...
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createLanguageSwitcher, getLanguage, getAvailableLanguages } from './scripts/language-switcher.js';
+
+        let testSwitcher = null;
+
+        // Initialize test
+        function initializeTest() {
+            const container = document.getElementById('dropdown-test-container');
+            
+            // Create a test configuration
+            const testConfig = {
+                supportedLocales: ['ch-de', 'ch-fr', 'ch-en', 'de-de', 'de-en'],
+                displayStyle: 'dropdown',
+                showCountryFlags: true,
+                preservePath: true
+            };
+            
+            // Create the language switcher
+            testSwitcher = createLanguageSwitcher(container);
+            
+            updateDebugInfo('Language switcher initialized');
+        }
+
+        // Test dropdown functionality
+        window.testDropdown = function() {
+            if (!testSwitcher) {
+                updateDebugInfo('Error: No test switcher found');
+                return;
+            }
+            
+            const button = testSwitcher.querySelector('.language-switcher-current');
+            if (button) {
+                console.log('Triggering dropdown click...');
+                button.click();
+                updateDebugInfo('Dropdown click triggered - check console for details');
+            } else {
+                updateDebugInfo('Error: Dropdown button not found');
+            }
+        };
+
+        // Inspect dropdown state
+        window.inspectDropdown = function() {
+            if (!testSwitcher) {
+                updateDebugInfo('Error: No test switcher found');
+                return;
+            }
+            
+            const button = testSwitcher.querySelector('.language-switcher-current');
+            const dropdown = testSwitcher.querySelector('.language-switcher-dropdown');
+            const container = testSwitcher.closest('.language-switcher-dropdown-container');
+            
+            const state = {
+                hasButton: !!button,
+                hasDropdown: !!dropdown,
+                hasContainer: !!container,
+                containerHasOpenClass: container?.classList.contains('open'),
+                buttonAriaExpanded: button?.getAttribute('aria-expanded'),
+                dropdownAriaHidden: dropdown?.getAttribute('aria-hidden'),
+                dropdownVisible: dropdown ? getComputedStyle(dropdown).visibility : 'N/A',
+                dropdownOpacity: dropdown ? getComputedStyle(dropdown).opacity : 'N/A'
+            };
+            
+            console.log('Dropdown state:', state);
+            updateDebugInfo(JSON.stringify(state, null, 2));
+        };
+
+        // Clear console
+        window.clearConsole = function() {
+            console.clear();
+            updateDebugInfo('Console cleared');
+        };
+
+        // Update debug info
+        function updateDebugInfo(message) {
+            const debugDiv = document.getElementById('debug-info');
+            const timestamp = new Date().toLocaleTimeString();
+            debugDiv.innerHTML = `[${timestamp}] ${message}`;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulate being on a specific page for testing
+            history.pushState({}, '', '/content/ue-multitenant-root/ch/de/index.html');
+            
+            initializeTest();
+            
+            console.log('Test page loaded');
+            console.log('Current language:', getLanguage());
+            console.log('Available languages:', getAvailableLanguages());
+        });
+    </script>
+</body>
+</html>
