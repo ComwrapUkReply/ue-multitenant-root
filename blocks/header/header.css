@@ -1,9 +1,6 @@
-/* Import language switcher styles */
-@import url('../language-switcher/language-switcher.css');
-
 /* header and nav layout */
 header .nav-wrapper {
-  background-color: white;
+  background-color: var(--background-color);
   width: 100%;
   z-index: 2;
   position: fixed;
@@ -268,8 +265,4 @@ header nav .nav-sections ul > li > ul > li {
 /* tools */
 header nav .nav-tools {
   grid-area: tools;
-  display: flex;
-  flex-direction: row;
-  align-items: end;
-  justify-content: flex-end;
 }
