@@ -172,16 +172,18 @@ function mapPagePath(currentPath, currentLocale, targetLocale, customMapping = {
   // Remove leading slash for consistency
   const cleanPath = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
 
-  // Check custom mapping first
-  if (customMapping[currentLocale.code] && customMapping[currentLocale.code][cleanPath]) {
-    const mappedPath = customMapping[currentLocale.code][cleanPath];
+  // Use PAGE_MAPPINGS as fallback if no custom mapping provided
+  const mappingToUse = Object.keys(customMapping).length > 0 ? customMapping : PAGE_MAPPINGS;
+
+  // Check mapping
+  if (mappingToUse[currentLocale.code] && mappingToUse[currentLocale.code][cleanPath]) {
+    const mappedPath = mappingToUse[currentLocale.code][cleanPath];
     if (mappedPath[targetLocale.code]) {
       return mappedPath[targetLocale.code];
     }
   }
 
   // Default mapping logic - try to find equivalent page
-  // This is where you would implement more sophisticated mapping logic
   // For now, we'll use the same path and let the target site handle 404s
   return cleanPath;
 }
