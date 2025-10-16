@@ -1,6 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import languageSwitcherDecorate from '../language-switcher/language-switcher.js';
+import { getPageMappingsJSON, getCustomLabelsJSON } from '../language-switcher/page-mappings.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -130,11 +131,11 @@ async function addLanguageSwitcher(navTools) {
     </div>
     <div>
       <div>Custom Labels</div>
-      <div></div>
+      <div>${getCustomLabelsJSON()}</div>
     </div>
     <div>
       <div>Page Mapping</div>
-      <div></div>
+      <div>${getPageMappingsJSON()}</div>
     </div>
     <div>
       <div>Exclude Locales</div>

@@ -119,35 +119,142 @@ For most use cases, the default settings work well:
 
 ### Advanced Configuration
 
-For custom page mappings, use the Page Mapping field:
+The language switcher supports sophisticated page mapping for multilingual sites where pages have different URLs across locales.
+
+#### Page Mapping Structure
 
 ```json
 {
-  "current-locale": {
-    "current-page-path": {
-      "target-locale": "target-page-path"
+  "source-locale": {
+    "source-page-path": {
+      "target-locale-1": "target-page-path-1",
+      "target-locale-2": "target-page-path-2"
     }
   }
 }
 ```
 
-Example:
+#### Real-World Example
+
+Based on your multitenant setup where:
+- `https://main--ue-multitenant-root-ch-fr--comwrapukreply.aem.page/a-propos`
+- Maps to: `https://main--ue-multitenant-root-de-de--comwrapukreply.aem.page/ueber-uns-de`
+
+Configuration:
 ```json
 {
   "ch-fr": {
     "a-propos": {
       "de-de": "ueber-uns-de",
+      "de-en": "about-us",
+      "ch-de": "ueber-uns",
+      "ch-en": "about-us"
+    }
+  },
+  "de-de": {
+    "ueber-uns-de": {
+      "ch-fr": "a-propos",
+      "ch-de": "ueber-uns",
+      "ch-en": "about-us",
+      "de-en": "about-us"
+    }
+  }
+}
+```
+
+#### Comprehensive Page Mapping Example
+
+```json
+{
+  "ch-fr": {
+    "a-propos": {
+      "de-de": "ueber-uns-de",
+      "de-en": "about-us",
+      "ch-de": "ueber-uns",
+      "ch-en": "about-us"
+    },
+    "contact": {
+      "de-de": "kontakt",
+      "de-en": "contact",
+      "ch-de": "kontakt",
+      "ch-en": "contact"
+    },
+    "services": {
+      "de-de": "dienstleistungen",
+      "de-en": "services",
+      "ch-de": "dienstleistungen",
+      "ch-en": "services"
+    },
+    "actualites": {
+      "de-de": "nachrichten",
+      "de-en": "news",
+      "ch-de": "nachrichten",
+      "ch-en": "news"
+    }
+  },
+  "de-de": {
+    "ueber-uns-de": {
+      "ch-fr": "a-propos",
       "ch-de": "ueber-uns",
       "ch-en": "about-us",
       "de-en": "about-us"
     },
-    "contact": {
-      "de-de": "kontakt",
+    "kontakt": {
+      "ch-fr": "contact",
       "ch-de": "kontakt",
       "ch-en": "contact",
       "de-en": "contact"
     }
   }
+}
+```
+
+#### Configuration Methods
+
+**Method 1: Centralized Configuration (Recommended)**
+
+The header integration uses a centralized configuration file (`page-mappings.js`) that automatically applies to all pages:
+
+1. **Edit Configuration File**: `blocks/language-switcher/page-mappings.js`
+2. **Add Your Mappings**: Update the `PAGE_MAPPINGS` object
+3. **Deploy Changes**: Push to your repository
+
+**Method 2: Manual Block Configuration**
+
+For page-specific mappings when using manual blocks:
+
+1. **Add Language Switcher Block** to your page
+2. **Open Block Properties** in Universal Editor
+3. **Page Mapping Field**: Enter JSON configuration
+4. **Save and Publish**
+
+#### Configuration File Structure
+
+```javascript
+// blocks/language-switcher/page-mappings.js
+export const PAGE_MAPPINGS = {
+  'ch-fr': {
+    'a-propos': {
+      'de-de': 'ueber-uns-de',
+      'de-en': 'about-us',
+      'ch-de': 'ueber-uns',
+      'ch-en': 'about-us'
+    }
+  }
+};
+```
+
+#### Custom Labels Configuration
+
+You can also customize the display labels for each locale:
+
+```json
+{
+  "ch-de": "Schweiz (DE)",
+  "ch-fr": "Suisse (FR)",
+  "ch-en": "Switzerland (EN)",
+  "de-de": "Deutschland (DE)",
+  "de-en": "Germany (EN)"
 }
 ```
 
