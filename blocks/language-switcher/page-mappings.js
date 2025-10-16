@@ -11,6 +11,7 @@ export const PAGE_MAPPINGS = {
       'de-en': 'about-us',
       'ch-de': 'ueber-uns',
       'ch-en': 'about-us',
+      'ch-fr': 'a-propos',
     },
     contact: {
       'de-de': 'kontakt',
