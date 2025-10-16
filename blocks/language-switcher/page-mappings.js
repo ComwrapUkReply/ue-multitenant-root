@@ -10,7 +10,7 @@ export const PAGE_MAPPINGS = {
       'de-de': 'ueber-uns-de',
       'de-en': 'about-us',
       'ch-de': 'ueber-uns',
-      'ch-en': 'about',
+      'ch-en': 'about-us',
     },
     contact: {
       'de-de': 'kontakt',
