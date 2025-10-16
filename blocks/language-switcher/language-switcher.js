@@ -55,6 +55,13 @@ const CONFIG = {
   ],
 };
 
+// Cache for performance optimization
+const cache = {
+  currentLocale: null,
+  currentPagePath: null,
+  isAEMAuthoring: null,
+};
+
 /**
  * Gets AEM content path from URL or referrer
  * @returns {string|null} Content path or null
@@ -76,9 +83,13 @@ function getAEMContentPath() {
 
   // Check referrer
   if (document.referrer) {
-    const referrerUrl = new URL(document.referrer);
-    if (referrerUrl.pathname.includes('/content/')) {
-      return referrerUrl.pathname;
+    try {
+      const referrerUrl = new URL(document.referrer);
+      if (referrerUrl.pathname.includes('/content/')) {
+        return referrerUrl.pathname;
+      }
+    } catch {
+      // Ignore invalid referrer URLs
     }
   }
 
@@ -86,10 +97,26 @@ function getAEMContentPath() {
 }
 
 /**
- * Detects the current locale from the URL
+ * Checks if we're in AEM authoring mode (cached)
+ * @returns {boolean} True if in AEM authoring mode
+ */
+function isAEMAuthoring() {
+  if (cache.isAEMAuthoring === null) {
+    const { hostname } = window.location;
+    cache.isAEMAuthoring = hostname.includes('adobeaemcloud.com') || hostname.includes('author-');
+  }
+  return cache.isAEMAuthoring;
+}
+
+/**
+ * Detects the current locale from the URL (cached)
  * @returns {Object|null} Current locale object or null if not detected
  */
 function detectCurrentLocale() {
+  if (cache.currentLocale) {
+    return cache.currentLocale;
+  }
+
   const { hostname } = window.location;
 
   // Check if we're on an Edge Delivery Services site
@@ -100,16 +127,12 @@ function detectCurrentLocale() {
   if (siteMatch) {
     const [, country, language] = siteMatch;
     const localeCode = `${country}-${language}`;
-    const foundLocale = CONFIG.locales.find((locale) => locale.code === localeCode);
-    // eslint-disable-next-line no-console
-    console.log('detectCurrentLocale (EDS):', {
-      hostname, siteMatch, localeCode, foundLocale,
-    });
-    return foundLocale;
+    cache.currentLocale = CONFIG.locales.find((locale) => locale.code === localeCode);
+    return cache.currentLocale;
   }
 
   // Check if we're on AEM authoring (for Universal Editor)
-  if (hostname.includes('adobeaemcloud.com')) {
+  if (isAEMAuthoring()) {
     // Parse AEM content path from URL or referrer
     const contentPath = getAEMContentPath();
     if (contentPath) {
@@ -119,55 +142,57 @@ function detectCurrentLocale() {
       if (pathMatch) {
         const [, country, language] = pathMatch;
         const localeCode = `${country}-${language}`;
-        return CONFIG.locales.find((locale) => locale.code === localeCode);
+        cache.currentLocale = CONFIG.locales.find((locale) => locale.code === localeCode);
+        return cache.currentLocale;
       }
     }
   }
 
   // Fallback to default locale
-  return CONFIG.locales.find((locale) => locale.default) || CONFIG.locales[0];
+  cache.currentLocale = CONFIG.locales.find((locale) => locale.default) || CONFIG.locales[0];
+  return cache.currentLocale;
 }
 
 /**
- * Gets the current page path relative to the locale
+ * Gets the current page path relative to the locale (cached)
  * @param {Object} currentLocale Current locale object
  * @returns {string} Page path
  */
 function getCurrentPagePath(currentLocale) {
+  if (cache.currentPagePath !== null) {
+    return cache.currentPagePath;
+  }
+
   const { pathname } = window.location;
 
   // For Edge Delivery Services sites, the path is already relative
   if (window.location.hostname.includes('.aem.page')) {
     if (pathname === '/') {
-      return '';
+      cache.currentPagePath = '';
+    } else {
+      // Remove leading slash for consistency with page mappings
+      cache.currentPagePath = pathname.startsWith('/') ? pathname.substring(1) : pathname;
     }
-    // Remove leading slash for consistency with page mappings
-    const result = pathname.startsWith('/') ? pathname.substring(1) : pathname;
-    // eslint-disable-next-line no-console
-    console.log('getCurrentPagePath (EDS):', { pathname, result });
-    return result;
+    return cache.currentPagePath;
   }
 
   // For AEM authoring, extract from content path
-  const contentPath = getAEMContentPath();
-  if (contentPath && currentLocale) {
-    const basePath = `/content/ue-multitenant-root${currentLocale.path}`;
-    if (contentPath.startsWith(basePath)) {
-      const relativePath = contentPath.substring(basePath.length);
-      const cleanPath = relativePath.replace(/\.html$/, '');
-      // Remove leading slash for consistency with page mappings
-      const result = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
-      // eslint-disable-next-line no-console
-      console.log('getCurrentPagePath (AEM):', {
-        contentPath, basePath, relativePath, cleanPath, result,
-      });
-      return result;
+  if (isAEMAuthoring()) {
+    const contentPath = getAEMContentPath();
+    if (contentPath && currentLocale) {
+      const basePath = `/content/ue-multitenant-root${currentLocale.path}`;
+      if (contentPath.startsWith(basePath)) {
+        const relativePath = contentPath.substring(basePath.length);
+        const cleanPath = relativePath.replace(/\.html$/, '');
+        // Remove leading slash for consistency with page mappings
+        cache.currentPagePath = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
+        return cache.currentPagePath;
+      }
     }
   }
 
-  // eslint-disable-next-line no-console
-  console.log('getCurrentPagePath: No path detected');
-  return '';
+  cache.currentPagePath = '';
+  return cache.currentPagePath;
 }
 
 /**
@@ -190,32 +215,12 @@ function mapPagePath(currentPath, currentLocale, targetLocale, customMapping = {
   // Use PAGE_MAPPINGS as fallback if no custom mapping provided
   const mappingToUse = Object.keys(customMapping).length > 0 ? customMapping : PAGE_MAPPINGS;
 
-  // Debug logging (temporary)
-  // eslint-disable-next-line no-console
-  console.log('mapPagePath Debug:', {
-    currentPath,
-    cleanPath,
-    currentLocaleCode: currentLocale.code,
-    targetLocaleCode: targetLocale.code,
-    hasCurrentLocaleMapping: !!mappingToUse[currentLocale.code],
-    hasPageMapping: !!(mappingToUse[currentLocale.code]
-      && mappingToUse[currentLocale.code][cleanPath]),
-  });
-
   // Check mapping
-  if (mappingToUse[currentLocale.code] && mappingToUse[currentLocale.code][cleanPath]) {
-    const mappedPath = mappingToUse[currentLocale.code][cleanPath];
-    if (mappedPath[targetLocale.code]) {
-      // eslint-disable-next-line no-console
-      console.log('Found mapping:', cleanPath, '->', mappedPath[targetLocale.code]);
-      return mappedPath[targetLocale.code];
-    }
+  if (mappingToUse[currentLocale.code]?.[cleanPath]?.[targetLocale.code]) {
+    return mappingToUse[currentLocale.code][cleanPath][targetLocale.code];
   }
 
-  // Default mapping logic - try to find equivalent page
-  // For now, we'll use the same path and let the target site handle 404s
-  // eslint-disable-next-line no-console
-  console.log('No mapping found, using same path:', cleanPath);
+  // Default mapping logic - use the same path
   return cleanPath;
 }
 
@@ -226,28 +231,49 @@ function mapPagePath(currentPath, currentLocale, targetLocale, customMapping = {
  * @returns {string} Complete target URL
  */
 function generateTargetURL(targetLocale, pagePath) {
-  // Check if we're in AEM authoring mode
-  const { hostname, search } = window.location;
-  const isAEMAuthoring = hostname.includes('adobeaemcloud.com') || hostname.includes('author-');
-
-  if (isAEMAuthoring) {
+  if (isAEMAuthoring()) {
     // Generate AEM authoring URL
     const pagePathPart = pagePath ? `/${pagePath}` : '';
     const contentPath = `/content/ue-multitenant-root${targetLocale.path}${pagePathPart}`;
-    const authorURL = `${window.location.protocol}//${hostname}${contentPath}.html${search}`;
-    return authorURL;
+    const { protocol, hostname, search } = window.location;
+    return `${protocol}//${hostname}${contentPath}.html${search}`;
   }
 
   // Generate Edge Delivery Services URL
   const baseURL = `https://multi-lang--${CONFIG.projectName}-${targetLocale.code}--${CONFIG.githubOrg}.aem.page`;
 
-  if (!pagePath || pagePath === '') {
+  if (!pagePath) {
     return baseURL;
   }
-  // Example: if pagePath is "about-us" or "/about-us", cleanPath becomes "/about-us"
-  // Final URL: https://multi-lang--myproject-fr--myorg.aem.page/about-us
+
   const cleanPath = pagePath.startsWith('/') ? pagePath : `/${pagePath}`;
   return `${baseURL}${cleanPath}`;
+}
+
+/**
+ * Creates a language option element
+ * @param {Object} locale Locale object
+ * @param {Object} options Switcher options
+ * @param {string} href Target URL
+ * @param {boolean} isCurrent Whether this is the current locale
+ * @returns {HTMLElement} Language option element
+ */
+function createLanguageOption(locale, options, href, isCurrent = false) {
+  const element = document.createElement(isCurrent ? 'span' : 'a');
+  element.className = isCurrent ? 'language-current' : 'language-option';
+
+  if (!isCurrent) {
+    element.href = href;
+    element.setAttribute('role', 'menuitem');
+  }
+
+  const label = options.customLabels[locale.code] || locale.label;
+  element.innerHTML = `
+    ${options.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
+    <span class="label">${label}</span>
+  `;
+
+  return element;
 }
 
 /**
@@ -258,17 +284,16 @@ function createDropdownSwitcher(container, currentLocale, availableLocales, opti
   dropdown.className = 'language-dropdown';
 
   // Current language button
-  const currentButton = document.createElement('button');
+  const currentButton = createLanguageOption(currentLocale, options, '', true);
   currentButton.className = 'language-current';
   currentButton.setAttribute('aria-haspopup', 'true');
   currentButton.setAttribute('aria-expanded', 'false');
 
-  const currentLabel = options.customLabels[currentLocale.code] || currentLocale.label;
-  currentButton.innerHTML = `
-    ${options.showFlags ? `<span class="flag">${currentLocale.flag}</span>` : ''}
-    <span class="label">${currentLabel}</span>
-    <span class="arrow">▼</span>
-  `;
+  // Add arrow to current button
+  const arrow = document.createElement('span');
+  arrow.className = 'arrow';
+  arrow.textContent = '▼';
+  currentButton.appendChild(arrow);
 
   // Dropdown menu
   const menu = document.createElement('ul');
@@ -276,57 +301,64 @@ function createDropdownSwitcher(container, currentLocale, availableLocales, opti
   menu.setAttribute('role', 'menu');
   menu.style.display = 'none';
 
-  availableLocales.forEach((locale) => {
-    if (locale.code === currentLocale.code) return;
+  // Create menu items for other locales
+  availableLocales
+    .filter((locale) => locale.code !== currentLocale.code)
+    .forEach((locale) => {
+      const item = document.createElement('li');
+      item.setAttribute('role', 'none');
 
-    const item = document.createElement('li');
-    item.setAttribute('role', 'none');
+      const mappedPath = mapPagePath(
+        options.currentPagePath,
+        currentLocale,
+        locale,
+        options.pageMapping,
+      );
+      const href = generateTargetURL(locale, mappedPath);
+      const link = createLanguageOption(locale, options, href);
 
-    const link = document.createElement('a');
-    link.className = 'language-option';
-    link.setAttribute('role', 'menuitem');
-    link.href = generateTargetURL(
-      locale,
-      mapPagePath(options.currentPagePath, currentLocale, locale, options.pageMapping),
-    );
-
-    const label = options.customLabels[locale.code] || locale.label;
-    link.innerHTML = `
-      ${options.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
-      <span class="label">${label}</span>
-    `;
-
-    item.appendChild(link);
-    menu.appendChild(item);
-  });
+      item.appendChild(link);
+      menu.appendChild(item);
+    });
 
   // Toggle functionality
+  const toggleMenu = (show) => {
+    menu.style.display = show ? 'block' : 'none';
+    currentButton.setAttribute('aria-expanded', show);
+  };
+
   currentButton.addEventListener('click', (e) => {
     e.preventDefault();
-    const isOpen = menu.style.display !== 'none';
-    menu.style.display = isOpen ? 'none' : 'block';
-    currentButton.setAttribute('aria-expanded', !isOpen);
+    toggleMenu(menu.style.display === 'none');
   });
 
   // Close on outside click
-  document.addEventListener('click', (e) => {
+  const closeOnOutsideClick = (e) => {
     if (!dropdown.contains(e.target)) {
-      menu.style.display = 'none';
-      currentButton.setAttribute('aria-expanded', 'false');
+      toggleMenu(false);
     }
-  });
+  };
+
+  document.addEventListener('click', closeOnOutsideClick);
 
   // Keyboard navigation
   currentButton.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      currentButton.click();
+      toggleMenu(menu.style.display === 'none');
+    } else if (e.key === 'Escape') {
+      toggleMenu(false);
     }
   });
 
   dropdown.appendChild(currentButton);
   dropdown.appendChild(menu);
   container.appendChild(dropdown);
+
+  // Store cleanup function for memory management
+  dropdown.cleanupFunction = () => {
+    document.removeEventListener('click', closeOnOutsideClick);
+  };
 }
 
 /**
@@ -339,35 +371,21 @@ function createHorizontalSwitcher(container, currentLocale, availableLocales, op
 
   availableLocales.forEach((locale) => {
     const item = document.createElement('li');
+    item.className = `language-item ${locale.code === currentLocale.code ? 'current' : ''}`;
     item.setAttribute('role', 'listitem');
 
     if (locale.code === currentLocale.code) {
-      item.className = 'language-item current';
-      const span = document.createElement('span');
-      span.className = 'language-current';
-
-      const label = options.customLabels[locale.code] || locale.label;
-      span.innerHTML = `
-        ${options.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
-        <span class="label">${label}</span>
-      `;
-
-      item.appendChild(span);
+      const current = createLanguageOption(locale, options, '', true);
+      item.appendChild(current);
     } else {
-      item.className = 'language-item';
-      const link = document.createElement('a');
-      link.className = 'language-option';
-      link.href = generateTargetURL(
+      const mappedPath = mapPagePath(
+        options.currentPagePath,
+        currentLocale,
         locale,
-        mapPagePath(options.currentPagePath, currentLocale, locale, options.pageMapping),
+        options.pageMapping,
       );
-
-      const label = options.customLabels[locale.code] || locale.label;
-      link.innerHTML = `
-        ${options.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
-        <span class="label">${label}</span>
-      `;
-
+      const href = generateTargetURL(locale, mappedPath);
+      const link = createLanguageOption(locale, options, href);
       item.appendChild(link);
     }
 
@@ -387,23 +405,29 @@ function createFlagSwitcher(container, currentLocale, availableLocales, options)
 
   availableLocales.forEach((locale) => {
     const item = document.createElement('li');
-    item.className = locale.code === currentLocale.code ? 'language-item current' : 'language-item';
+    item.className = `language-item ${locale.code === currentLocale.code ? 'current' : ''}`;
     item.setAttribute('role', 'listitem');
 
+    const label = options.customLabels[locale.code] || locale.label;
+
     if (locale.code === currentLocale.code) {
-      const span = document.createElement('span');
-      span.className = 'language-current flag-only';
-      span.title = options.customLabels[locale.code] || locale.label;
-      span.innerHTML = `<span class="flag">${locale.flag}</span>`;
-      item.appendChild(span);
+      const current = document.createElement('span');
+      current.className = 'language-current flag-only';
+      current.title = label;
+      current.innerHTML = `<span class="flag">${locale.flag}</span>`;
+      item.appendChild(current);
     } else {
+      const mappedPath = mapPagePath(
+        options.currentPagePath,
+        currentLocale,
+        locale,
+        options.pageMapping,
+      );
+      const href = generateTargetURL(locale, mappedPath);
       const link = document.createElement('a');
       link.className = 'language-option flag-only';
-      link.href = generateTargetURL(
-        locale,
-        mapPagePath(options.currentPagePath, currentLocale, locale, options.pageMapping),
-      );
-      link.title = options.customLabels[locale.code] || locale.label;
+      link.href = href;
+      link.title = label;
       link.innerHTML = `<span class="flag">${locale.flag}</span>`;
       item.appendChild(link);
     }
@@ -426,7 +450,7 @@ function createLanguageSwitcher(block, currentLocale, availableLocales, config) 
     displayStyle = 'dropdown',
     showFlags = 'true',
     customLabels = {},
-    pageMapping = PAGE_MAPPINGS, // Use imported page mappings as default
+    pageMapping = PAGE_MAPPINGS,
     fallbackPage = '/',
   } = config;
 
@@ -444,13 +468,15 @@ function createLanguageSwitcher(block, currentLocale, availableLocales, config) 
     fallbackPage,
   };
 
-  if (displayStyle === 'dropdown') {
-    createDropdownSwitcher(container, currentLocale, availableLocales, switcherOptions);
-  } else if (displayStyle === 'horizontal') {
-    createHorizontalSwitcher(container, currentLocale, availableLocales, switcherOptions);
-  } else if (displayStyle === 'flags') {
-    createFlagSwitcher(container, currentLocale, availableLocales, switcherOptions);
-  }
+  // Create appropriate switcher type
+  const switcherCreators = {
+    dropdown: createDropdownSwitcher,
+    horizontal: createHorizontalSwitcher,
+    flags: createFlagSwitcher,
+  };
+
+  const createSwitcher = switcherCreators[displayStyle] || switcherCreators.dropdown;
+  createSwitcher(container, currentLocale, availableLocales, switcherOptions);
 
   block.appendChild(container);
 }
@@ -461,7 +487,7 @@ function createLanguageSwitcher(block, currentLocale, availableLocales, config) 
  * @returns {Object} Parsed object or empty object
  */
 function parseJSONConfig(jsonString) {
-  if (!jsonString || jsonString.trim() === '') {
+  if (!jsonString?.trim()) {
     return {};
   }
 
@@ -483,38 +509,32 @@ function parseJSONConfig(jsonString) {
  */
 function extractBlockConfig(block) {
   const config = {};
-
-  // Extract configuration from block children
   const rows = [...block.children];
+
+  const configMap = {
+    displaystyle: 'displayStyle',
+    showflags: 'showFlags',
+    customlabels: (value) => ({ customLabels: parseJSONConfig(value) }),
+    pagemapping: (value) => ({ pageMapping: parseJSONConfig(value) }),
+    excludelocales: (value) => ({
+      excludeLocales: value.split(',').map((s) => s.trim()).filter(Boolean),
+    }),
+    fallbackpage: 'fallbackPage',
+  };
 
   rows.forEach((row) => {
     const cells = [...row.children];
     if (cells.length >= 2) {
       const key = cells[0].textContent.trim().toLowerCase().replace(/\s+/g, '');
       const value = cells[1].textContent.trim();
+      const mapping = configMap[key];
 
-      switch (key) {
-        case 'displaystyle':
-          config.displayStyle = value;
-          break;
-        case 'showflags':
-          config.showFlags = value;
-          break;
-        case 'customlabels':
-          config.customLabels = parseJSONConfig(value);
-          break;
-        case 'pagemapping':
-          config.pageMapping = parseJSONConfig(value);
-          break;
-        case 'excludelocales':
-          config.excludeLocales = value.split(',').map((s) => s.trim()).filter((s) => s);
-          break;
-        case 'fallbackpage':
-          config.fallbackPage = value;
-          break;
-        default:
-          // No default case needed
-          break;
+      if (mapping) {
+        if (typeof mapping === 'string') {
+          config[mapping] = value;
+        } else if (typeof mapping === 'function') {
+          Object.assign(config, mapping(value));
+        }
       }
     }
   });
@@ -546,41 +566,67 @@ function addAnalyticsTracking(block) {
 }
 
 /**
+ * Cleanup function for memory management
+ * @param {HTMLElement} block Block element
+ */
+function cleanup(block) {
+  // Clean up event listeners
+  const dropdown = block.querySelector('.language-dropdown');
+  if (dropdown?.cleanupFunction) {
+    dropdown.cleanupFunction();
+  }
+
+  // Clear cache
+  Object.keys(cache).forEach((key) => {
+    cache[key] = null;
+  });
+}
+
+/**
  * Main decoration function
  * @param {HTMLElement} block The block DOM element
  */
 export default function decorate(block) {
-  // Extract configuration from block content
-  const config = extractBlockConfig(block);
+  try {
+    // Extract configuration from block content
+    const config = extractBlockConfig(block);
 
-  // Detect current locale
-  const currentLocale = detectCurrentLocale();
+    // Detect current locale
+    const currentLocale = detectCurrentLocale();
 
-  if (!currentLocale) {
+    if (!currentLocale) {
+      // eslint-disable-next-line no-console
+      console.warn('Language Switcher: Could not detect current locale');
+      block.innerHTML = '<p>Language switcher not available</p>';
+      return;
+    }
+
+    // Filter available locales based on configuration
+    let availableLocales = CONFIG.locales;
+
+    if (config.excludeLocales?.length > 0) {
+      availableLocales = availableLocales.filter(
+        (locale) => !config.excludeLocales.includes(locale.code),
+      );
+    }
+
+    // Clear block content
+    block.innerHTML = '';
+
+    // Add semantic classes
+    block.classList.add('language-switcher-block');
+
+    // Store cleanup function on block for later use
+    block.cleanupFunction = () => cleanup(block);
+
+    // Create language switcher
+    createLanguageSwitcher(block, currentLocale, availableLocales, config);
+
+    // Add analytics tracking
+    addAnalyticsTracking(block);
+  } catch (error) {
     // eslint-disable-next-line no-console
-    console.warn('Language Switcher: Could not detect current locale');
-    block.innerHTML = '<p>Language switcher not available</p>';
-    return;
+    console.error('Language Switcher: Failed to initialize', error);
+    block.innerHTML = '<p>Language switcher unavailable</p>';
   }
-
-  // Filter available locales based on configuration
-  let availableLocales = CONFIG.locales;
-
-  if (config.excludeLocales && config.excludeLocales.length > 0) {
-    availableLocales = availableLocales.filter(
-      (locale) => !config.excludeLocales.includes(locale.code),
-    );
-  }
-
-  // Clear block content
-  block.innerHTML = '';
-
-  // Add semantic classes
-  block.classList.add('language-switcher-block');
-
-  // Create language switcher
-  createLanguageSwitcher(block, currentLocale, availableLocales, config);
-
-  // Add analytics tracking
-  addAnalyticsTracking(block);
 }
