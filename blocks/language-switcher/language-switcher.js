@@ -201,7 +201,7 @@ function generateTargetURL(targetLocale, pagePath) {
     // Generate AEM authoring URL
     const pagePathPart = pagePath ? `/${pagePath}` : '';
     const contentPath = `/content/ue-multitenant-root${targetLocale.path}${pagePathPart}`;
-    const authorURL = `${window.location.protocol}/${hostname}${contentPath}.html${search}`;
+    const authorURL = `${window.location.protocol}//${hostname}${contentPath}.html${search}`;
     return authorURL;
   }
 
