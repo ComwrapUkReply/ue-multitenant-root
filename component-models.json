@@ -214,5 +214,137 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "language-switcher",
+    "fields": [
+      {
+        "component": "select",
+        "name": "displayStyle",
+        "label": "Display Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Dropdown",
+            "value": "dropdown"
+          },
+          {
+            "name": "Horizontal List",
+            "value": "horizontal"
+          },
+          {
+            "name": "Flag Icons",
+            "value": "flags"
+          }
+        ],
+        "value": "dropdown"
+      },
+      {
+        "component": "select",
+        "name": "showFlags",
+        "label": "Show Country Flags",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Yes",
+            "value": "true"
+          },
+          {
+            "name": "No",
+            "value": "false"
+          }
+        ],
+        "value": "true"
+      },
+      {
+        "component": "richtext",
+        "name": "customLabels",
+        "label": "Custom Labels (JSON format)",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "pageMapping",
+        "label": "Page Mapping (JSON format)",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "multiselect",
+        "name": "excludeLocales",
+        "label": "Exclude Locales",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Switzerland German",
+            "value": "ch-de"
+          },
+          {
+            "name": "Switzerland French",
+            "value": "ch-fr"
+          },
+          {
+            "name": "Switzerland English",
+            "value": "ch-en"
+          },
+          {
+            "name": "Germany German",
+            "value": "de-de"
+          },
+          {
+            "name": "Germany English",
+            "value": "de-en"
+          }
+        ],
+        "value": ""
+      },
+      {
+        "component": "text",
+        "name": "fallbackPage",
+        "label": "Fallback Page Path",
+        "valueType": "string",
+        "value": "/"
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Block Options",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Style",
+            "children": [
+              {
+                "name": "Compact",
+                "value": "compact"
+              },
+              {
+                "name": "Large",
+                "value": "large"
+              }
+            ]
+          },
+          {
+            "name": "Position",
+            "children": [
+              {
+                "name": "Left Aligned",
+                "value": "left"
+              },
+              {
+                "name": "Center Aligned",
+                "value": "center"
+              },
+              {
+                "name": "Right Aligned",
+                "value": "right"
+              }
+            ]
+          }
+        ],
+        "value": ""
+      }
+    ]
   }
 ]

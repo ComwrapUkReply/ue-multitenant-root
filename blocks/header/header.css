@@ -265,4 +265,54 @@ header nav .nav-sections ul > li > ul > li {
 /* tools */
 header nav .nav-tools {
   grid-area: tools;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Language switcher in header */
+header nav .nav-tools .language-switcher-header {
+  display: flex;
+  align-items: center;
+}
+
+header nav .nav-tools .language-switcher-header .block.language-switcher {
+  margin: 0;
+  font-size: var(--body-font-size-xs);
+}
+
+header nav .nav-tools .language-switcher-header .language-current {
+  min-width: auto;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--body-font-size-xs);
+  border: 1px solid var(--light-color);
+  background: var(--background-color);
+}
+
+header nav .nav-tools .language-switcher-header .language-current:hover {
+  background: var(--light-color);
+}
+
+header nav .nav-tools .language-switcher-header .language-menu {
+  right: 0;
+  left: auto;
+  min-width: 180px;
+}
+
+header nav .nav-tools .language-switcher-header .language-option {
+  font-size: var(--body-font-size-xs);
+  padding: 0.5rem 0.75rem;
+}
+
+/* Mobile adjustments for header language switcher */
+@media (width <= 900px) {
+  header nav[aria-expanded='true'] .nav-tools {
+    justify-content: center;
+    padding: 1rem 0;
+    border-top: 1px solid var(--light-color);
+  }
+  
+  header nav .nav-tools .language-switcher-header .language-current {
+    min-width: 150px;
+  }
 }

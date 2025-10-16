@@ -1,5 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import languageSwitcherDecorate from '../language-switcher/language-switcher.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -104,6 +105,68 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 }
 
 /**
+ * Creates and adds language switcher to nav-tools
+ * @param {Element} navTools The nav-tools container element
+ */
+async function addLanguageSwitcher(navTools) {
+  // Create a container for the language switcher
+  const languageSwitcherContainer = document.createElement('div');
+  languageSwitcherContainer.className = 'language-switcher-header';
+
+  // Create a mock block structure for the language switcher
+  const mockBlock = document.createElement('div');
+  mockBlock.className = 'block language-switcher';
+
+  // Add default configuration as table structure (as expected by the block)
+  const configTable = document.createElement('div');
+  configTable.innerHTML = `
+    <div>
+      <div>Display Style</div>
+      <div>dropdown</div>
+    </div>
+    <div>
+      <div>Show Flags</div>
+      <div>true</div>
+    </div>
+    <div>
+      <div>Custom Labels</div>
+      <div></div>
+    </div>
+    <div>
+      <div>Page Mapping</div>
+      <div></div>
+    </div>
+    <div>
+      <div>Exclude Locales</div>
+      <div></div>
+    </div>
+    <div>
+      <div>Fallback Page</div>
+      <div>/</div>
+    </div>
+  `;
+
+  // Add configuration to mock block
+  while (configTable.firstElementChild) {
+    mockBlock.appendChild(configTable.firstElementChild);
+  }
+
+  // Decorate the language switcher
+  try {
+    await languageSwitcherDecorate(mockBlock);
+
+    // Add the decorated block to the container
+    languageSwitcherContainer.appendChild(mockBlock);
+
+    // Add to nav-tools
+    navTools.appendChild(languageSwitcherContainer);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('Failed to load language switcher in header:', error);
+  }
+}
+
+/**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
@@ -158,6 +221,12 @@ export default async function decorate(block) {
   // prevent mobile nav behavior on window resize
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+
+  // Add language switcher to nav-tools
+  const navTools = nav.querySelector('.nav-tools');
+  if (navTools) {
+    await addLanguageSwitcher(navTools);
+  }
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';

@@ -1,0 +1,318 @@
+/* Language Switcher Block Styles */
+
+.block.language-switcher {
+  margin: 1rem 0;
+  font-family: var(--body-font-family, roboto, roboto-fallback, sans-serif);
+}
+
+/* Container */
+.language-switcher-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Common styles for flags */
+.flag {
+  font-size: 1.2em;
+  margin-right: 0.5rem;
+  display: inline-block;
+}
+
+.label {
+  display: inline-block;
+}
+
+/* Dropdown Styles */
+.language-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.language-current {
+  background: var(--background-color, #fff);
+  border: 1px solid var(--light-color, #ddd);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--body-font-size-s, 16px);
+  color: var(--text-color, #333);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  min-width: 200px;
+  justify-content: space-between;
+}
+
+.language-current:hover {
+  background: var(--light-color, #f5f5f5);
+  border-color: var(--link-color, #06c);
+}
+
+.language-current:focus {
+  outline: 2px solid var(--link-color, #06c);
+  outline-offset: 2px;
+}
+
+.language-current .arrow {
+  font-size: 0.8em;
+  transition: transform 0.3s ease;
+}
+
+.language-current[aria-expanded="true"] .arrow {
+  transform: rotate(180deg);
+}
+
+.language-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--background-color, #fff);
+  border: 1px solid var(--light-color, #ddd);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  z-index: 1000;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-top: 2px;
+}
+
+.language-menu li {
+  margin: 0;
+  padding: 0;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-color, #333);
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: var(--body-font-size-s, 16px);
+}
+
+.language-option:hover {
+  background: var(--light-color, #f5f5f5);
+}
+
+.language-option:focus {
+  background: var(--light-color, #f5f5f5);
+  outline: 2px solid var(--link-color, #06c);
+  outline-offset: -2px;
+}
+
+/* Horizontal List Styles */
+.language-list.horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.language-list.horizontal .language-item {
+  margin: 0;
+  padding: 0;
+}
+
+.language-list.horizontal .language-current,
+.language-list.horizontal .language-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--text-color, #333);
+  font-size: var(--body-font-size-s, 16px);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.language-list.horizontal .language-current {
+  background: var(--link-color, #06c);
+  color: var(--background-color, #fff);
+  border-color: var(--link-color, #06c);
+}
+
+.language-list.horizontal .language-option:hover {
+  background: var(--light-color, #f5f5f5);
+  border-color: var(--light-color, #ddd);
+}
+
+.language-list.horizontal .language-option:focus {
+  outline: 2px solid var(--link-color, #06c);
+  outline-offset: 2px;
+}
+
+/* Flag-only Styles */
+.language-list.flags {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.language-list.flags .language-item {
+  margin: 0;
+  padding: 0;
+}
+
+.flag-only {
+  display: inline-block;
+  padding: 0.5rem;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 1.5em;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.flag-only:hover {
+  background: var(--light-color, #f5f5f5);
+  transform: scale(1.1);
+}
+
+.flag-only:focus {
+  outline: 2px solid var(--link-color, #06c);
+  outline-offset: 2px;
+}
+
+.language-list.flags .current .flag-only {
+  border-color: var(--link-color, #06c);
+  background: var(--light-color, #f5f5f5);
+}
+
+.language-list.flags .flag-only .flag {
+  margin: 0;
+}
+
+/* Block Options */
+.block.language-switcher.compact {
+  margin: 0.5rem 0;
+}
+
+.block.language-switcher.compact .language-current,
+.block.language-switcher.compact .language-option {
+  padding: 0.5rem 0.75rem;
+  font-size: var(--body-font-size-xs, 14px);
+}
+
+.block.language-switcher.large {
+  margin: 1.5rem 0;
+}
+
+.block.language-switcher.large .language-current,
+.block.language-switcher.large .language-option {
+  padding: 1rem 1.25rem;
+  font-size: var(--body-font-size-m, 18px);
+}
+
+.block.language-switcher.left {
+  text-align: left;
+}
+
+.block.language-switcher.center {
+  text-align: center;
+}
+
+.block.language-switcher.right {
+  text-align: right;
+}
+
+/* Responsive Design */
+@media (width <= 768px) {
+  .language-current {
+    min-width: 150px;
+    padding: 0.5rem 0.75rem;
+    font-size: var(--body-font-size-xs, 14px);
+  }
+  
+  .language-list.horizontal {
+    gap: 0.5rem;
+  }
+  
+  .language-list.horizontal .language-current,
+  .language-list.horizontal .language-option {
+    padding: 0.4rem 0.75rem;
+    font-size: var(--body-font-size-xs, 14px);
+  }
+  
+  .flag-only {
+    padding: 0.4rem;
+    font-size: 1.2em;
+  }
+}
+
+@media (width <= 480px) {
+  .language-current {
+    min-width: 120px;
+  }
+  
+  .language-list.horizontal {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+  }
+  
+  .language-list.horizontal .language-current,
+  .language-list.horizontal .language-option {
+    justify-content: center;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: more) {
+  .language-current,
+  .language-option {
+    border-width: 2px;
+  }
+  
+  .language-menu {
+    border-width: 2px;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .language-current,
+  .language-option,
+  .flag-only,
+  .arrow {
+    transition: none;
+  }
+  
+  .flag-only:hover {
+    transform: none;
+  }
+}
+
+/* Focus Visible Support */
+@supports selector(:focus-visible) {
+  .language-current:focus-visible,
+  .language-option:focus-visible,
+  .flag-only:focus-visible {
+    outline: 2px solid var(--link-color, #06c);
+    outline-offset: 2px;
+  }
+  
+  .language-current:focus:not(:focus-visible),
+  .language-option:focus:not(:focus-visible),
+  .flag-only:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
