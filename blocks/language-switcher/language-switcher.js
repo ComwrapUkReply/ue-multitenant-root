@@ -146,7 +146,9 @@ function getCurrentPagePath(currentLocale) {
     const basePath = `/content/ue-multitenant-root${currentLocale.path}`;
     if (contentPath.startsWith(basePath)) {
       const relativePath = contentPath.substring(basePath.length);
-      return relativePath.replace(/\.html$/, '');
+      const cleanPath = relativePath.replace(/\.html$/, '');
+      // Remove leading slash for consistency with page mappings
+      return cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
     }
   }
 
@@ -191,6 +193,19 @@ function mapPagePath(currentPath, currentLocale, targetLocale, customMapping = {
  * @returns {string} Complete target URL
  */
 function generateTargetURL(targetLocale, pagePath) {
+  // Check if we're in AEM authoring mode
+  const { hostname, search } = window.location;
+  const isAEMAuthoring = hostname.includes('adobeaemcloud.com') || hostname.includes('author-');
+
+  if (isAEMAuthoring) {
+    // Generate AEM authoring URL
+    const pagePathPart = pagePath ? `/${pagePath}` : '';
+    const contentPath = `/content/ue-multitenant-root${targetLocale.path}${pagePathPart}`;
+    const authorURL = `${window.location.protocol}//${hostname}${contentPath}.html${search}`;
+    return authorURL;
+  }
+
+  // Generate Edge Delivery Services URL
   const baseURL = `https://multi-lang--${CONFIG.projectName}-${targetLocale.code}--${CONFIG.githubOrg}.aem.page`;
 
   if (!pagePath || pagePath === '') {
