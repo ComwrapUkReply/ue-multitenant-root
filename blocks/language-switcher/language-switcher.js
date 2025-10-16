@@ -94,13 +94,18 @@ function detectCurrentLocale() {
 
   // Check if we're on an Edge Delivery Services site
   const siteMatch = hostname.match(
-    /main--ue-multitenant-root-([^-]+)-([^-]+)--comwrapukreply\.aem\.page/,
+    /multi-lang--ue-multitenant-root-([^-]+)-([^-]+)--comwrapukreply\.aem\.page/,
   );
 
   if (siteMatch) {
     const [, country, language] = siteMatch;
     const localeCode = `${country}-${language}`;
-    return CONFIG.locales.find((locale) => locale.code === localeCode);
+    const foundLocale = CONFIG.locales.find((locale) => locale.code === localeCode);
+    // eslint-disable-next-line no-console
+    console.log('detectCurrentLocale (EDS):', {
+      hostname, siteMatch, localeCode, foundLocale,
+    });
+    return foundLocale;
   }
 
   // Check if we're on AEM authoring (for Universal Editor)
@@ -185,15 +190,13 @@ function mapPagePath(currentPath, currentLocale, targetLocale, customMapping = {
   // Use PAGE_MAPPINGS as fallback if no custom mapping provided
   const mappingToUse = Object.keys(customMapping).length > 0 ? customMapping : PAGE_MAPPINGS;
 
-  // Debug logging
+  // Debug logging (temporary)
   // eslint-disable-next-line no-console
   console.log('mapPagePath Debug:', {
     currentPath,
     cleanPath,
     currentLocaleCode: currentLocale.code,
     targetLocaleCode: targetLocale.code,
-    customMappingKeys: Object.keys(customMapping),
-    mappingToUseKeys: Object.keys(mappingToUse),
     hasCurrentLocaleMapping: !!mappingToUse[currentLocale.code],
     hasPageMapping: !!(mappingToUse[currentLocale.code]
       && mappingToUse[currentLocale.code][cleanPath]),
