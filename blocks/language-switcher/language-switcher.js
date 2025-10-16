@@ -185,7 +185,7 @@ function mapPagePath(currentPath, currentLocale, targetLocale, customMapping = {
  * @returns {string} Complete target URL
  */
 function generateTargetURL(targetLocale, pagePath) {
-  const baseURL = `https://main--${CONFIG.projectName}-${targetLocale.code}--${CONFIG.githubOrg}.aem.page`;
+  const baseURL = `https://multi-lang--${CONFIG.projectName}-${targetLocale.code}--${CONFIG.githubOrg}.aem.page`;
 
   if (!pagePath || pagePath === '') {
     return baseURL;
