@@ -4,6 +4,8 @@
  * Supports automatic locale detection and intelligent page mapping
  */
 
+import { PAGE_MAPPINGS } from './page-mappings.js';
+
 // Configuration for the multitenant setup
 const CONFIG = {
   projectName: 'ue-multitenant-root',
@@ -131,7 +133,11 @@ function getCurrentPagePath(currentLocale) {
 
   // For Edge Delivery Services sites, the path is already relative
   if (window.location.hostname.includes('.aem.page')) {
-    return pathname === '/' ? '' : pathname;
+    if (pathname === '/') {
+      return '';
+    }
+    // Remove leading slash for consistency with page mappings
+    return pathname.startsWith('/') ? pathname.substring(1) : pathname;
   }
 
   // For AEM authoring, extract from content path
@@ -190,7 +196,8 @@ function generateTargetURL(targetLocale, pagePath) {
   if (!pagePath || pagePath === '') {
     return baseURL;
   }
-
+  // Example: if pagePath is "about-us" or "/about-us", cleanPath becomes "/about-us"
+  // Final URL: https://multi-lang--myproject-fr--myorg.aem.page/about-us
   const cleanPath = pagePath.startsWith('/') ? pagePath : `/${pagePath}`;
   return `${baseURL}${cleanPath}`;
 }
@@ -371,7 +378,7 @@ function createLanguageSwitcher(block, currentLocale, availableLocales, config) 
     displayStyle = 'dropdown',
     showFlags = 'true',
     customLabels = {},
-    pageMapping = {},
+    pageMapping = PAGE_MAPPINGS, // Use imported page mappings as default
     fallbackPage = '/',
   } = config;
 
