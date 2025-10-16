@@ -137,7 +137,10 @@ function getCurrentPagePath(currentLocale) {
       return '';
     }
     // Remove leading slash for consistency with page mappings
-    return pathname.startsWith('/') ? pathname.substring(1) : pathname;
+    const result = pathname.startsWith('/') ? pathname.substring(1) : pathname;
+    // eslint-disable-next-line no-console
+    console.log('getCurrentPagePath (EDS):', { pathname, result });
+    return result;
   }
 
   // For AEM authoring, extract from content path
@@ -148,10 +151,17 @@ function getCurrentPagePath(currentLocale) {
       const relativePath = contentPath.substring(basePath.length);
       const cleanPath = relativePath.replace(/\.html$/, '');
       // Remove leading slash for consistency with page mappings
-      return cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
+      const result = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
+      // eslint-disable-next-line no-console
+      console.log('getCurrentPagePath (AEM):', {
+        contentPath, basePath, relativePath, cleanPath, result,
+      });
+      return result;
     }
   }
 
+  // eslint-disable-next-line no-console
+  console.log('getCurrentPagePath: No path detected');
   return '';
 }
 
@@ -175,16 +185,34 @@ function mapPagePath(currentPath, currentLocale, targetLocale, customMapping = {
   // Use PAGE_MAPPINGS as fallback if no custom mapping provided
   const mappingToUse = Object.keys(customMapping).length > 0 ? customMapping : PAGE_MAPPINGS;
 
+  // Debug logging
+  // eslint-disable-next-line no-console
+  console.log('mapPagePath Debug:', {
+    currentPath,
+    cleanPath,
+    currentLocaleCode: currentLocale.code,
+    targetLocaleCode: targetLocale.code,
+    customMappingKeys: Object.keys(customMapping),
+    mappingToUseKeys: Object.keys(mappingToUse),
+    hasCurrentLocaleMapping: !!mappingToUse[currentLocale.code],
+    hasPageMapping: !!(mappingToUse[currentLocale.code]
+      && mappingToUse[currentLocale.code][cleanPath]),
+  });
+
   // Check mapping
   if (mappingToUse[currentLocale.code] && mappingToUse[currentLocale.code][cleanPath]) {
     const mappedPath = mappingToUse[currentLocale.code][cleanPath];
     if (mappedPath[targetLocale.code]) {
+      // eslint-disable-next-line no-console
+      console.log('Found mapping:', cleanPath, '->', mappedPath[targetLocale.code]);
       return mappedPath[targetLocale.code];
     }
   }
 
   // Default mapping logic - try to find equivalent page
   // For now, we'll use the same path and let the target site handle 404s
+  // eslint-disable-next-line no-console
+  console.log('No mapping found, using same path:', cleanPath);
   return cleanPath;
 }
 
