@@ -1,0 +1,10 @@
+{
+  "paths": {
+    "mappings": [
+      "/content/ue-multitenant-root/de/de/:/"
+    ],
+    "includes": [
+      "/content/ue-multitenant-root/de/de/"
+    ]
+  }
+}
