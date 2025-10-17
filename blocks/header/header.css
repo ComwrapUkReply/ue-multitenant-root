@@ -1,3 +1,6 @@
+@import url('../language-switcher/language-switcher.css');
+
+
 /* header and nav layout */
 header .nav-wrapper {
   background-color: var(--background-color);
@@ -294,6 +297,7 @@ header nav .nav-tools .language-switcher-header .language-current:hover {
 }
 
 header nav .nav-tools .language-switcher-header .language-menu {
+  position: absolute;
   right: 0;
   left: auto;
   min-width: 180px;
