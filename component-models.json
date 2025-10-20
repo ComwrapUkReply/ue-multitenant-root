@@ -240,37 +240,6 @@
         "value": "dropdown"
       },
       {
-        "component": "select",
-        "name": "showFlags",
-        "label": "Show Country Flags",
-        "valueType": "string",
-        "options": [
-          {
-            "name": "Yes",
-            "value": "true"
-          },
-          {
-            "name": "No",
-            "value": "false"
-          }
-        ],
-        "value": "true"
-      },
-      {
-        "component": "richtext",
-        "name": "customLabels",
-        "label": "Custom Labels (JSON format)",
-        "valueType": "string",
-        "value": ""
-      },
-      {
-        "component": "richtext",
-        "name": "pageMapping",
-        "label": "Page Mapping (JSON format)",
-        "valueType": "string",
-        "value": ""
-      },
-      {
         "component": "multiselect",
         "name": "excludeLocales",
         "label": "Exclude Locales",
@@ -300,11 +269,11 @@
         "value": ""
       },
       {
-        "component": "text",
-        "name": "fallbackPage",
-        "label": "Fallback Page Path",
+        "component": "richtext",
+        "name": "advancedConfig",
+        "label": "Advanced Configuration (JSON)",
         "valueType": "string",
-        "value": "/"
+        "value": ""
       },
       {
         "component": "multiselect",

@@ -513,13 +513,18 @@ function extractBlockConfig(block) {
 
   const configMap = {
     displaystyle: 'displayStyle',
-    showflags: 'showFlags',
-    customlabels: (value) => ({ customLabels: parseJSONConfig(value) }),
-    pagemapping: (value) => ({ pageMapping: parseJSONConfig(value) }),
     excludelocales: (value) => ({
       excludeLocales: value.split(',').map((s) => s.trim()).filter(Boolean),
     }),
-    fallbackpage: 'fallbackPage',
+    advancedconfig: (value) => {
+      const advancedConfig = parseJSONConfig(value);
+      return {
+        showFlags: advancedConfig.showFlags !== false ? 'true' : 'false',
+        customLabels: advancedConfig.customLabels || {},
+        pageMapping: advancedConfig.pageMapping || PAGE_MAPPINGS,
+        fallbackPage: advancedConfig.fallbackPage || '/',
+      };
+    },
   };
 
   rows.forEach((row) => {
