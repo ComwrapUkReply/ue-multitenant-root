@@ -185,12 +185,11 @@ function detectCurrentLocale() {
 
   // Check if we're on an Edge Delivery Services site
   const siteMatch = hostname.match(
-    /multi-lang--ue-multitenant-root-([^-]+)-([^-]+)--comwrapukreply\.aem\.page/,
+    /multi-lang--ue-multitenant-root-([^-]+-[^-]+)--comwrapukreply\.aem\.page/,
   );
 
   if (siteMatch) {
-    const [, country, language] = siteMatch;
-    const localeCode = `${country}-${language}`;
+    const [, localeCode] = siteMatch;
     cache.currentLocale = CONFIG.locales.find((locale) => locale.code === localeCode);
     return cache.currentLocale;
   }
@@ -658,13 +657,13 @@ function addAnalyticsTracking(block) {
 
   links.forEach((link) => {
     link.addEventListener('click', () => {
-      const targetLocale = link.href.match(/--ue-multitenant-root-([^-]+)-([^-]+)--/);
+      const targetLocale = link.href.match(/--ue-multitenant-root-([^-]+-[^-]+)--/);
 
       if (targetLocale && window.dataLayer) {
         window.dataLayer.push({
           event: 'language_switch',
           language_from: detectCurrentLocale()?.code,
-          language_to: `${targetLocale[1]}-${targetLocale[2]}`,
+          language_to: targetLocale[1],
           page_path: window.location.pathname,
         });
       }
