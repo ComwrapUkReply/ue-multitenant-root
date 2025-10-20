@@ -429,6 +429,7 @@ sites=(
     "https://main--ue-multitenant-root-ch-en--${GITHUB_ORG}.aem.page"
     "https://main--ue-multitenant-root-de-en--${GITHUB_ORG}.aem.page"
     "https://main--ue-multitenant-root-de-de--${GITHUB_ORG}.aem.page"
+    "https://main--ue-multitenant-root-de-de--${GITHUB_ORG}.aem.page"
 )
 
 for site in "${sites[@]}"; do
