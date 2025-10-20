@@ -60,7 +60,71 @@ const cache = {
   currentLocale: null,
   currentPagePath: null,
   isAEMAuthoring: null,
+  placeholderMappings: null,
+  placeholdersFetched: false,
 };
+
+/**
+ * Fetches page mappings from placeholders.json endpoint
+ * @returns {Promise<Object>} Promise resolving to processed mappings object
+ */
+async function fetchPlaceholderMappings() {
+  if (cache.placeholdersFetched) {
+    return cache.placeholderMappings || {};
+  }
+
+  try {
+    const response = await fetch('https://main--ue-multitenant-root--comwrapukreply.aem.page/placeholders.json');
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const processedMappings = {};
+
+    // Process the data array into our mapping structure
+    if (data.data && Array.isArray(data.data)) {
+      data.data.forEach((mapping) => {
+        const { source, target } = mapping;
+
+        // Extract locale codes from paths
+        const sourceMatch = source.match(/^\/([^/]+)\/([^/]+)\/?(.*)$/);
+        const targetMatch = target.match(/^\/([^/]+)\/([^/]+)\/?(.*)$/);
+
+        if (sourceMatch && targetMatch) {
+          const sourceLocale = `${sourceMatch[1]}-${sourceMatch[2]}`;
+          const targetLocale = `${targetMatch[1]}-${targetMatch[2]}`;
+          const sourcePath = sourceMatch[3] || '';
+          const targetPath = targetMatch[3] || '';
+
+          // Initialize nested structure if needed
+          if (!processedMappings[sourceLocale]) {
+            processedMappings[sourceLocale] = {};
+          }
+          if (!processedMappings[sourceLocale][sourcePath]) {
+            processedMappings[sourceLocale][sourcePath] = {};
+          }
+
+          // Add the mapping
+          processedMappings[sourceLocale][sourcePath][targetLocale] = targetPath;
+        }
+      });
+    }
+
+    cache.placeholderMappings = processedMappings;
+    cache.placeholdersFetched = true;
+
+    // eslint-disable-next-line no-console
+    console.log('Language Switcher: Loaded placeholder mappings', processedMappings);
+    return processedMappings;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('Language Switcher: Failed to fetch placeholder mappings', error);
+    cache.placeholderMappings = {};
+    cache.placeholdersFetched = true;
+    return {};
+  }
+}
 
 /**
  * Gets AEM content path from URL or referrer
@@ -201,9 +265,16 @@ function getCurrentPagePath(currentLocale) {
  * @param {Object} currentLocale Current locale
  * @param {Object} targetLocale Target locale
  * @param {Object} customMapping Custom page mappings from block configuration
+ * @param {Object} placeholderMappings Mappings from placeholders.json
  * @returns {string} Mapped path for target locale
  */
-function mapPagePath(currentPath, currentLocale, targetLocale, customMapping = {}) {
+function mapPagePath(
+  currentPath,
+  currentLocale,
+  targetLocale,
+  customMapping = {},
+  placeholderMappings = {},
+) {
   // If no path, return root
   if (!currentPath || currentPath === '/') {
     return '';
@@ -212,16 +283,40 @@ function mapPagePath(currentPath, currentLocale, targetLocale, customMapping = {
   // Remove leading slash for consistency
   const cleanPath = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
 
-  // Use PAGE_MAPPINGS as fallback if no custom mapping provided
-  const mappingToUse = Object.keys(customMapping).length > 0 ? customMapping : PAGE_MAPPINGS;
+  let mappedPath = null;
+  let mappingSource = 'none';
 
-  // Check mapping
-  if (mappingToUse[currentLocale.code]?.[cleanPath]?.[targetLocale.code]) {
-    return mappingToUse[currentLocale.code][cleanPath][targetLocale.code];
+  // Priority 1: Check placeholder mappings (from placeholders.json)
+  if (placeholderMappings[currentLocale.code]?.[cleanPath]?.[targetLocale.code] !== undefined) {
+    mappedPath = placeholderMappings[currentLocale.code][cleanPath][targetLocale.code];
+    mappingSource = 'placeholders.json';
+  } else if (
+    Object.keys(customMapping).length > 0
+    && customMapping[currentLocale.code]?.[cleanPath]?.[targetLocale.code]
+  ) {
+    // Priority 2: Check custom mapping (from advancedConfig)
+    mappedPath = customMapping[currentLocale.code][cleanPath][targetLocale.code];
+    mappingSource = 'advancedConfig';
+  } else if (PAGE_MAPPINGS[currentLocale.code]?.[cleanPath]?.[targetLocale.code]) {
+    // Priority 3: Check default PAGE_MAPPINGS
+    mappedPath = PAGE_MAPPINGS[currentLocale.code][cleanPath][targetLocale.code];
+    mappingSource = 'PAGE_MAPPINGS';
+  } else {
+    // Priority 4: Use the same path as fallback
+    mappedPath = cleanPath;
+    mappingSource = 'same-path-fallback';
   }
 
-  // Default mapping logic - use the same path
-  return cleanPath;
+  // Console log the mapping decision for debugging
+  // eslint-disable-next-line no-console
+  console.log('Language Switcher: Page mapping', {
+    from: `${currentLocale.code}/${cleanPath}`,
+    to: `${targetLocale.code}/${mappedPath}`,
+    source: mappingSource,
+    originalPath: currentPath,
+  });
+
+  return mappedPath;
 }
 
 /**
@@ -313,6 +408,7 @@ function createDropdownSwitcher(container, currentLocale, availableLocales, opti
         currentLocale,
         locale,
         options.pageMapping,
+        options.placeholderMappings,
       );
       const href = generateTargetURL(locale, mappedPath);
       const link = createLanguageOption(locale, options, href);
@@ -383,6 +479,7 @@ function createHorizontalSwitcher(container, currentLocale, availableLocales, op
         currentLocale,
         locale,
         options.pageMapping,
+        options.placeholderMappings,
       );
       const href = generateTargetURL(locale, mappedPath);
       const link = createLanguageOption(locale, options, href);
@@ -422,6 +519,7 @@ function createFlagSwitcher(container, currentLocale, availableLocales, options)
         currentLocale,
         locale,
         options.pageMapping,
+        options.placeholderMappings,
       );
       const href = generateTargetURL(locale, mappedPath);
       const link = document.createElement('a');
@@ -445,7 +543,7 @@ function createFlagSwitcher(container, currentLocale, availableLocales, options)
  * @param {Array} availableLocales Available locales
  * @param {Object} config Block configuration
  */
-function createLanguageSwitcher(block, currentLocale, availableLocales, config) {
+async function createLanguageSwitcher(block, currentLocale, availableLocales, config) {
   const {
     displayStyle = 'dropdown',
     showFlags = 'true',
@@ -456,6 +554,9 @@ function createLanguageSwitcher(block, currentLocale, availableLocales, config) 
 
   const currentPagePath = getCurrentPagePath(currentLocale);
 
+  // Fetch placeholder mappings
+  const placeholderMappings = await fetchPlaceholderMappings();
+
   // Create container
   const container = document.createElement('div');
   container.className = 'language-switcher-container';
@@ -464,6 +565,7 @@ function createLanguageSwitcher(block, currentLocale, availableLocales, config) 
     showFlags: showFlags === 'true',
     customLabels,
     pageMapping,
+    placeholderMappings,
     currentPagePath,
     fallbackPage,
   };
@@ -591,7 +693,7 @@ function cleanup(block) {
  * Main decoration function
  * @param {HTMLElement} block The block DOM element
  */
-export default function decorate(block) {
+export default async function decorate(block) {
   try {
     // Extract configuration from block content
     const config = extractBlockConfig(block);
@@ -624,8 +726,8 @@ export default function decorate(block) {
     // Store cleanup function on block for later use
     block.cleanupFunction = () => cleanup(block);
 
-    // Create language switcher
-    createLanguageSwitcher(block, currentLocale, availableLocales, config);
+    // Create language switcher (now async)
+    await createLanguageSwitcher(block, currentLocale, availableLocales, config);
 
     // Add analytics tracking
     addAnalyticsTracking(block);
