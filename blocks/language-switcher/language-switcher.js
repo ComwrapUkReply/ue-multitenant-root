@@ -87,9 +87,9 @@ async function fetchPlaceholderMappings() {
       data.data.forEach((mapping) => {
         const { source, target } = mapping;
 
-        // Extract locale codes from paths
-        const sourceMatch = source.match(/^\/([^/]+)\/([^/]+)\/?(.*)$/);
-        const targetMatch = target.match(/^\/([^/]+)\/([^/]+)\/?(.*)$/);
+        // Extract locale codes from paths (handle both with and without leading slash)
+        const sourceMatch = source.match(/^\/?([^/]+)\/([^/]+)\/?(.*)$/);
+        const targetMatch = target.match(/^\/?([^/]+)\/([^/]+)\/?(.*)$/);
 
         if (sourceMatch && targetMatch) {
           const sourceLocale = `${sourceMatch[1]}-${sourceMatch[2]}`;
@@ -289,21 +289,35 @@ function mapPagePath(
   if (placeholderMappings[currentLocale.code]?.[cleanPath]?.[targetLocale.code] !== undefined) {
     mappedPath = placeholderMappings[currentLocale.code][cleanPath][targetLocale.code];
     mappingSource = 'placeholders.json';
-  } else if (
-    Object.keys(customMapping).length > 0
-    && customMapping[currentLocale.code]?.[cleanPath]?.[targetLocale.code]
-  ) {
-    // Priority 2: Check custom mapping (from advancedConfig)
-    mappedPath = customMapping[currentLocale.code][cleanPath][targetLocale.code];
-    mappingSource = 'advancedConfig';
-  } else if (PAGE_MAPPINGS[currentLocale.code]?.[cleanPath]?.[targetLocale.code]) {
-    // Priority 3: Check default PAGE_MAPPINGS
-    mappedPath = PAGE_MAPPINGS[currentLocale.code][cleanPath][targetLocale.code];
-    mappingSource = 'PAGE_MAPPINGS';
   } else {
-    // Priority 4: Use the same path as fallback
-    mappedPath = cleanPath;
-    mappingSource = 'same-path-fallback';
+    // Debug: Log what we're looking for
+    // eslint-disable-next-line no-console
+    console.log('Language Switcher: Debug placeholder lookup', {
+      currentLocale: currentLocale.code,
+      cleanPath,
+      targetLocale: targetLocale.code,
+      availableMappings: placeholderMappings[currentLocale.code] || {},
+      lookingFor: `${currentLocale.code}.${cleanPath}.${targetLocale.code}`,
+    });
+  }
+
+  if (mappingSource === 'none') {
+    if (
+      Object.keys(customMapping).length > 0
+      && customMapping[currentLocale.code]?.[cleanPath]?.[targetLocale.code]
+    ) {
+      // Priority 2: Check custom mapping (from advancedConfig)
+      mappedPath = customMapping[currentLocale.code][cleanPath][targetLocale.code];
+      mappingSource = 'advancedConfig';
+    } else if (PAGE_MAPPINGS[currentLocale.code]?.[cleanPath]?.[targetLocale.code]) {
+      // Priority 3: Check default PAGE_MAPPINGS
+      mappedPath = PAGE_MAPPINGS[currentLocale.code][cleanPath][targetLocale.code];
+      mappingSource = 'PAGE_MAPPINGS';
+    } else {
+      // Priority 4: Use the same path as fallback
+      mappedPath = cleanPath;
+      mappingSource = 'same-path-fallback';
+    }
   }
 
   // Console log the mapping decision for debugging
