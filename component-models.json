@@ -43,11 +43,10 @@
         "value": ""
       },
       {
-        "component": "text",
+        "component": "aem-tag",
         "valueType": "string",
-        "name": "tags",
-        "label": "Tags",
-        "value": ""
+        "name": "cq:tags",
+        "label": "Tags"
       },
       {
         "component": "date-time",
