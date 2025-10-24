@@ -45,6 +45,8 @@ indices:
   blog:
     include:
       - '/**'
+    exclude:
+      - '/drafts/**'
     target: /blog-index.json
     properties:
       lastModified:
