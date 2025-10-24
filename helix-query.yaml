@@ -74,4 +74,10 @@ indices:
       keywords:
         select: head > meta[name="keywords"]
         value: attribute(el, "content")
+      tags:
+        select: head > meta[name="cq-tags"]
+        value: attribute(el, "content")
+      publishDate:
+        select: head > meta[name="article_publish_date"]
+        value: attribute(el, "content")
 
