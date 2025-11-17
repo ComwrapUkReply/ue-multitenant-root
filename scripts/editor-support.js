@@ -93,6 +93,43 @@ async function applyChanges(event) {
   return false;
 }
 
+/**
+ * Fetches current user and their group memberships
+ * @returns {Promise<Object>} User data including group memberships
+ */
+async function getCurrentUser() {
+  try {
+    const response = await fetch('/libs/granite/security/currentuser.json?props=memberOf');
+    if (!response.ok) throw new Error('Failed to fetch user data');
+    return await response.json();
+  } catch (error) {
+    // console.error('Error fetching user data:', error);
+    return null;
+  }
+}
+
+/**
+ * Disables publish/live button for contributor group users
+ * @param {Object} userData - Current user data including group memberships
+ */
+function disablePublishForContributors(userData) {
+  if (!userData?.memberOf) return;
+
+  const userGroups = userData.memberOf;
+  const isContributor = userGroups.some((group) => group.authorizableId === 'contributor');
+
+  if (isContributor) {
+    // Check if meta tag already exists
+    const existingMeta = document.querySelector('meta[name="urn:adobe:aue:config:disable"]');
+    if (!existingMeta) {
+      const meta = document.createElement('meta');
+      meta.setAttribute('name', 'urn:adobe:aue:config:disable');
+      meta.setAttribute('content', 'publish-live');
+      document.head.appendChild(meta);
+    }
+  }
+}
+
 function attachEventListners(main) {
   [
     'aue:content-patch',
@@ -107,6 +144,14 @@ function attachEventListners(main) {
     if (!applied) window.location.reload();
   }));
 }
+
+// Initialize publish button control based on user group
+(async () => {
+  const userData = await getCurrentUser();
+  if (userData) {
+    disablePublishForContributors(userData);
+  }
+})();
 
 attachEventListners(document.querySelector('main'));
 
