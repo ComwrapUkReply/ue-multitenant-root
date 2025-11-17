@@ -124,7 +124,7 @@ function disablePublishForContributors(userData) {
     if (!existingMeta) {
       const meta = document.createElement('meta');
       meta.setAttribute('name', 'urn:adobe:aue:config:disable');
-      meta.setAttribute('content', 'publish-preview');
+      meta.setAttribute('content', 'publish');
       document.head.appendChild(meta);
     }
   }
