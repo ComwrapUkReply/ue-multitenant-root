@@ -12,7 +12,7 @@ async function getCurrentUser() {
     if (!response.ok) throw new Error('Failed to fetch user data');
     return await response.json();
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    // console.error('Error fetching user data:', error);
     return null;
   }
 }
@@ -44,7 +44,7 @@ function lockComponent(element) {
  * @returns {Promise<void>} A promise that resolves when the filter script is loaded
  */
 async function updateComponentFilters(userData) {
-  console.log('Updating component filters for user:', userData);
+  // console.log('Updating component filters for user:', userData);
   if (!userData?.memberOf) return;
 
   const userGroups = userData.memberOf;
@@ -56,7 +56,7 @@ async function updateComponentFilters(userData) {
 
   // Determine appropriate filter based on user groups
   let filterPath = '/content/aem-xwalk.resource/component-filters.json'; // default path
-  console.log('User groups:', userGroups);
+  // console.log('User groups:', userGroups);
 
   // Check if any group in the array has the name 'contributor'
   if (userGroups.some((group) => group.authorizableId === 'contributor')) {
