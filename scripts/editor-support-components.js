@@ -44,19 +44,19 @@ function lockComponent(element) {
  * @returns {Promise<void>} A promise that resolves when the filter script is loaded
  */
 async function updateComponentFilters(userData) {
-  // console.log('Updating component filters for user:', userData);
+  console.log('Updating component filters for user:', userData);
   if (!userData?.memberOf) return;
 
   const userGroups = userData.memberOf;
   const filterScript = document.querySelector('script[type="application/vnd.adobe.aue.filter+json"]');
   if (!filterScript) {
-    // console.error('Filter script element not found');
+    console.error('Filter script element not found');
     return;
   }
 
   // Determine appropriate filter based on user groups
   let filterPath = '/content/aem-xwalk.resource/component-filters.json'; // default path
-  // console.log('User groups:', userGroups);
+  console.log('User groups:', userGroups);
 
   // Check if any group in the array has the name 'contributor'
   if (userGroups.some((group) => group.authorizableId === 'contributor')) {
