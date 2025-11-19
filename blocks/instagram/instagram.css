@@ -1,0 +1,28 @@
+.instagram {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto;
+  padding: 0;
+}
+
+.instagram blockquote {
+  margin: 0 auto;
+}
+
+/* Loading state */
+.instagram:empty::after {
+  content: 'Loading Instagram post...';
+  display: block;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 540px) {
+  .instagram {
+    margin: 1rem auto;
+  }
+}

@@ -43,21 +43,6 @@
         "value": ""
       },
       {
-        "component": "aem-tag",
-        "valueType": "string",
-        "name": "cq:tags",
-        "label": "Tags"
-      },
-      {
-        "component": "date-time",
-        "valueType": "date-time",
-        "name": "article_publish_date",
-        "label": "Publish Date",
-        "placeholder": "YYYY-MM-DD",
-        "displayFormat": null,
-        "valueFormat": null
-      },
-      {
         "component": "select",
         "name": "category",
         "label": "Category",
@@ -269,6 +254,19 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "instagram",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "url",
+        "label": "Instagram Post URL",
+        "description": "Enter the full Instagram post URL (e.g., https://www.instagram.com/p/ABC123/)",
+        "required": true
       }
     ]
   }
