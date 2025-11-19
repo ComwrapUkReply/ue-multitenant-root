@@ -5,26 +5,11 @@
  */
 
 /**
- * Extracts field value from a row based on field name
- * @param {Element} block The block element
- * @param {string} fieldName The field name to look for
- * @returns {Element|string|null} The field value
- */
-function getField(block, fieldName) {
-  const field = block.querySelector(`[data-aue-prop="${fieldName}"]`)
-    || block.querySelector(`[data-aue-resource*="${fieldName}"]`);
-  return field;
-}
-
-/**
  * Loads and decorates the video hero block
  * @param {Element} block The video hero block element
  */
 export default function decorate(block) {
-  // Debug: Log the block structure to console
-  console.log('Video Hero Block Structure:', block.innerHTML);
-
-  // Try to extract fields using data attributes first (Universal Editor)
+  // Extract fields from Universal Editor structure
   let videoSrc = null;
   let headingHtml = null;
   let subheadingText = null;
@@ -32,98 +17,55 @@ export default function decorate(block) {
   let secondaryBtn = null;
   let badgeImg = null;
 
-  // Check if we have Universal Editor attributes
-  const videoField = getField(block, 'video');
-  const headingField = getField(block, 'heading');
-  const subheadingField = getField(block, 'subheading');
-  const primaryButtonField = getField(block, 'primaryButton');
-  const primaryButtonTextField = getField(block, 'primaryButtonText');
-  const secondaryButtonField = getField(block, 'secondaryButton');
-  const secondaryButtonTextField = getField(block, 'secondaryButtonText');
-  const badgeField = getField(block, 'badge');
+  // Get the rows
+  const rows = [...block.children];
 
-  console.log('Fields found:', {
-    videoField,
-    headingField,
-    subheadingField,
-    primaryButtonField,
-    primaryButtonTextField,
-    secondaryButtonField,
-    secondaryButtonTextField,
-    badgeField,
-  });
-
-  // Extract values
-  if (videoField) {
-    const videoLink = videoField.querySelector('a');
-    videoSrc = videoLink ? videoLink.href : videoField.textContent.trim();
-  }
-
-  if (headingField) {
-    headingHtml = headingField.innerHTML;
-  }
-
-  if (subheadingField) {
-    subheadingText = subheadingField.textContent.trim();
-  }
-
-  if (badgeField) {
-    badgeImg = badgeField.querySelector('img') || badgeField.querySelector('picture img');
-  }
-
-  // Handle buttons - they might be in separate link and text fields
-  if (primaryButtonField || primaryButtonTextField) {
-    const link = primaryButtonField?.querySelector('a');
-    const text = primaryButtonTextField?.textContent.trim();
-    if (link) {
-      primaryBtn = link.cloneNode(true);
-      if (text && text !== '') {
-        primaryBtn.textContent = text;
-      }
+  // Row 0: Video (link in button-container)
+  if (rows[0]) {
+    const videoLink = rows[0].querySelector('a');
+    if (videoLink) {
+      videoSrc = videoLink.href;
     }
   }
 
-  if (secondaryButtonField || secondaryButtonTextField) {
-    const link = secondaryButtonField?.querySelector('a');
-    const text = secondaryButtonTextField?.textContent.trim();
-    if (link) {
-      secondaryBtn = link.cloneNode(true);
-      if (text && text !== '') {
-        secondaryBtn.textContent = text;
-      }
+  // Row 1: Heading (richtext field)
+  if (rows[1]) {
+    const heading = rows[1].querySelector('[data-richtext-prop="heading"]');
+    if (heading) {
+      headingHtml = heading.innerHTML;
     }
   }
 
-  // Fallback: Parse from row structure (for document-based authoring)
-  if (!videoSrc || !headingHtml) {
-    const rows = [...block.children];
-    let rowIndex = 0;
+  // Row 2: Subheading
+  if (rows[2]) {
+    const subheading = rows[2].querySelector('[data-aue-prop="subheading"]');
+    if (subheading) {
+      subheadingText = subheading.textContent.trim();
+    }
+  }
 
-    rows.forEach((row) => {
-      const cells = [...row.children];
-      cells.forEach((cell) => {
-        const content = cell.textContent.trim();
-        const link = cell.querySelector('a');
-        const img = cell.querySelector('img');
+  // Row 3: Primary Button
+  if (rows[3]) {
+    const primaryLink = rows[3].querySelector('[data-aue-prop="primaryButtonText"]');
+    if (primaryLink) {
+      primaryBtn = primaryLink.cloneNode(true);
+    }
+  }
 
-        if (rowIndex === 0 && content) {
-          videoSrc = videoSrc || content;
-        } else if (rowIndex === 1 && !headingHtml) {
-          headingHtml = cell.innerHTML;
-        } else if (rowIndex === 2 && !subheadingText) {
-          subheadingText = content;
-        } else if (rowIndex === 3 && link) {
-          if (!primaryBtn) {
-            primaryBtn = link.cloneNode(true);
-          } else if (!secondaryBtn) {
-            secondaryBtn = link.cloneNode(true);
-          }
-        } else if (rowIndex === 4 && img && !badgeImg) {
-          badgeImg = img;
-        }
-      });
-      rowIndex++;
-    });
+  // Row 4: Secondary Button
+  if (rows[4]) {
+    const secondaryLink = rows[4].querySelector('[data-aue-prop="secondaryButtonText"]');
+    if (secondaryLink) {
+      secondaryBtn = secondaryLink.cloneNode(true);
+    }
+  }
+
+  // Row 5: Badge
+  if (rows[5]) {
+    const badge = rows[5].querySelector('[data-aue-prop="badge"]');
+    if (badge) {
+      badgeImg = badge;
+    }
   }
 
   // Clear the block
