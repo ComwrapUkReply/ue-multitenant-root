@@ -32,7 +32,7 @@ export default function decorate(block) {
   if (rows[1]) {
     const heading = rows[1].querySelector('[data-richtext-prop="heading"]');
     if (heading) {
-      headingHtml = heading.innerHTML;
+      headingHtml = heading.textContent.trim();
     }
   }
 
