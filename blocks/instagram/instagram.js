@@ -28,30 +28,38 @@ function getInstagramUrl(url) {
 
 /**
  * Fetches Instagram embed HTML using oEmbed API
+ * Tries multiple endpoints to support posts, reels, and other content
  * @param {string} url - Instagram post URL
  * @returns {Promise<string>} - Instagram embed HTML
  */
 async function getInstagramEmbed(url) {
-  try {
-    // Use Instagram's oEmbed API endpoint
-    const oembedUrl = `https://graph.instagram.com/oembed?url=${encodeURIComponent(url)}&omitscript=true`;
-    const response = await fetch(oembedUrl);
+  // Try both oEmbed endpoints - legacy supports more content types including Reels
+  const endpoints = [
+    `https://api.instagram.com/oembed?url=${encodeURIComponent(url)}&omitscript=true`,
+    `https://graph.instagram.com/oembed?url=${encodeURIComponent(url)}&omitscript=true`,
+  ];
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch Instagram embed: ${response.status}`);
+  for (const oembedUrl of endpoints) {
+    try {
+      const response = await fetch(oembedUrl);
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.html;
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn(`Failed to fetch from ${oembedUrl}:`, error);
     }
-
-    const data = await response.json();
-    return data.html;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error fetching Instagram embed:', error);
-    // Return a fallback link
-    return `<div class="instagram-error">
-      <p>Unable to load Instagram post.</p>
-      <a href="${url}" target="_blank" rel="noopener noreferrer">View on Instagram</a>
-    </div>`;
   }
+
+  // If both endpoints fail, return fallback
+  // eslint-disable-next-line no-console
+  console.error('Error fetching Instagram embed from all endpoints');
+  return `<div class="instagram-error">
+    <p>Unable to load Instagram post.</p>
+    <a href="${url}" target="_blank" rel="noopener noreferrer">View on Instagram</a>
+  </div>`;
 }
 
 /**
