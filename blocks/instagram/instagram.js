@@ -1,19 +1,4 @@
 /**
- * Loads Instagram embed script if not already loaded
- */
-function loadInstagramScript() {
-  if (!window.instgrm) {
-    const script = document.createElement('script');
-    script.src = 'https://www.instagram.com/embed.js';
-    script.async = true;
-    document.body.appendChild(script);
-  } else {
-    // If script already loaded, process embeds
-    window.instgrm.Embeds.process();
-  }
-}
-
-/**
  * Extracts Instagram post URL from various input formats
  * @param {string} url - Instagram URL or post ID
  * @returns {string} - Clean Instagram post URL
@@ -42,6 +27,50 @@ function getInstagramUrl(url) {
 }
 
 /**
+ * Fetches Instagram embed HTML using oEmbed API
+ * @param {string} url - Instagram post URL
+ * @returns {Promise<string>} - Instagram embed HTML
+ */
+async function getInstagramEmbed(url) {
+  try {
+    // Use Instagram's oEmbed API endpoint
+    const oembedUrl = `https://graph.instagram.com/oembed?url=${encodeURIComponent(url)}&omitscript=true`;
+    const response = await fetch(oembedUrl);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Instagram embed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.html;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching Instagram embed:', error);
+    // Return a fallback link
+    return `<div class="instagram-error">
+      <p>Unable to load Instagram post.</p>
+      <a href="${url}" target="_blank" rel="noopener noreferrer">View on Instagram</a>
+    </div>`;
+  }
+}
+
+/**
+ * Loads Instagram embed script if not already loaded
+ */
+function loadInstagramScript() {
+  if (!document.querySelector('script[src="https://www.instagram.com/embed.js"]')) {
+    const script = document.createElement('script');
+    script.src = 'https://www.instagram.com/embed.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  } else if (window.instgrm) {
+    // If script already loaded, process embeds
+    window.instgrm.Embeds.process();
+  }
+}
+
+/**
  * Decorates Instagram embed blocks
  * @param {Element} block - The block element to decorate
  */
@@ -56,34 +85,24 @@ export default async function decorate(block) {
 
   const url = getInstagramUrl(link.href);
 
-  // Clear the block content
-  block.textContent = '';
+  // Show loading state
+  block.innerHTML = '<div class="instagram-loading">Loading Instagram post...</div>';
 
-  // Create the Instagram embed blockquote structure
-  const blockquote = document.createElement('blockquote');
-  blockquote.className = 'instagram-media';
-  blockquote.setAttribute('data-instgrm-permalink', url);
-  blockquote.setAttribute('data-instgrm-version', '14');
-  blockquote.style.background = '#FFF';
-  blockquote.style.border = '0';
-  blockquote.style.borderRadius = '3px';
-  blockquote.style.boxShadow = '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)';
-  blockquote.style.margin = '1px';
-  blockquote.style.maxWidth = '540px';
-  blockquote.style.minWidth = '326px';
-  blockquote.style.padding = '0';
-  blockquote.style.width = 'calc(100% - 2px)';
+  try {
+    // Fetch the embed HTML from Instagram's oEmbed API
+    const embedHtml = await getInstagramEmbed(url);
 
-  // Add fallback link
-  const fallbackLink = document.createElement('a');
-  fallbackLink.href = url;
-  fallbackLink.target = '_blank';
-  fallbackLink.rel = 'noopener noreferrer';
-  fallbackLink.textContent = 'View this post on Instagram';
+    // Clear the block and insert the embed HTML
+    block.innerHTML = embedHtml;
 
-  blockquote.appendChild(fallbackLink);
-  block.appendChild(blockquote);
-
-  // Load Instagram's embed script
-  loadInstagramScript();
+    // Load Instagram's embed script to make it interactive
+    loadInstagramScript();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error decorating Instagram block:', error);
+    block.innerHTML = `<div class="instagram-error">
+      <p>Unable to load Instagram post.</p>
+      <a href="${url}" target="_blank" rel="noopener noreferrer">View on Instagram</a>
+    </div>`;
+  }
 }
