@@ -256,18 +256,5 @@
         "valueType": "string"
       }
     ]
-  },
-  {
-    "id": "instagram",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "url",
-        "label": "Instagram Post URL",
-        "description": "Enter the full Instagram post URL (e.g., https://www.instagram.com/p/ABC123/)",
-        "required": true
-      }
-    ]
   }
 ]
