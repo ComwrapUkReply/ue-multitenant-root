@@ -106,7 +106,7 @@ function disablePublishForContributors(userData) {
   if (!userData?.memberOf) return;
 
   const userGroups = userData.memberOf;
-  const isContributor = userGroups.some((group) => group.authorizableId === 'contributor');
+  const isContributor = userGroups.some((group) => group.authorizableId === 'eds-editor');
 
   if (isContributor) {
     // Check if meta tag already exists
