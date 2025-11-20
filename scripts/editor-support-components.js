@@ -62,7 +62,7 @@ async function updateComponentFilters(userData) {
   // console.log('User groups:', userGroups);
 
   // Check if any group in the array has the name 'contributor'
-  if (userGroups.some((group) => group.authorizableId === 'contributor')) {
+  if (userGroups.some((group) => group.authorizableId === 'eds-editor')) {
     filterPath = '/content/ue-multitenant-root.resource/component-limited-filters.json';
   }
 
