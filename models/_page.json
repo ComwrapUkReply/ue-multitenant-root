@@ -123,6 +123,12 @@
           "valueType": "string"
         },
         {
+          "component": "aem-tag",
+          "name": "cq-tags",
+          "label": "CQ Tags",
+          "valueType": "string"
+        },
+        {
           "component": "text",
           "name": "events:organizer",
           "label": "Organizer",
