@@ -50,6 +50,12 @@
     ]
   },
   {
+    "id": "carousel",
+    "components": [
+      "carousel-slide"
+    ]
+  },
+  {
     "id": "columns",
     "components": [
       "column"
