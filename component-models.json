@@ -601,6 +601,10 @@
     ]
   },
   {
+    "id": "tags",
+    "fields": []
+  },
+  {
     "id": "video",
     "fields": [
       {
