@@ -51,8 +51,8 @@
         },
         {
           "component": "container",
-          "name": "social",
-          "label": "Social",
+          "name": "meta",
+          "label": "Meta",
           "fields": [
             {
               "component": "text",
@@ -87,11 +87,11 @@
         },
         {
           "component": "container",
-          "name": "social",
-          "label": "Social",
+          "name": "meta",
+          "label": "Meta",
           "fields": [
             {
-              "...": "#/models/page-metadata/fields/social/fields"
+              "...": "#/models/page-metadata/fields/meta/fields"
             },
             {
               "component": "text",

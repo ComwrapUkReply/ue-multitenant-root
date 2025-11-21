@@ -50,7 +50,7 @@
       },
       {
         "component": "container",
-        "name": "Meta",
+        "name": "meta",
         "label": "Meta",
         "fields": [
           {
@@ -110,7 +110,7 @@
       },
       {
         "component": "container",
-        "name": "Meta",
+        "name": "meta",
         "label": "Meta",
         "fields": [
           {
