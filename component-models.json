@@ -50,8 +50,8 @@
       },
       {
         "component": "container",
-        "name": "social",
-        "label": "Social",
+        "name": "Meta",
+        "label": "Meta",
         "fields": [
           {
             "component": "text",
@@ -110,8 +110,8 @@
       },
       {
         "component": "container",
-        "name": "social",
-        "label": "Social",
+        "name": "Meta",
+        "label": "Meta",
         "fields": [
           {
             "component": "text",
