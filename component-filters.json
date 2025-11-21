@@ -36,7 +36,10 @@
       "text",
       "image",
       "button",
-      "title"
+      "title",
+      "teaser",
+      "accordion",
+      "custom-button"
     ]
   },
   {
