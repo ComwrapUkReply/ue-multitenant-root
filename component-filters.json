@@ -15,7 +15,26 @@
       "hero",
       "cards",
       "columns",
-      "fragment"
+      "fragment",
+      "accordion",
+      "breadcrumbs",
+      "carousel",
+      "download",
+      "teaser",
+      "facts-figures-cards",
+      "buttons",
+      "headline",
+      "custom-button",
+      "form",
+      "table",
+      "quote",
+      "video",
+      "article-feeds",
+      "teaser",
+      "tags",
+      "embed",
+      "teaser",
+      "separator"
     ]
   },
   {
