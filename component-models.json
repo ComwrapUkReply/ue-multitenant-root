@@ -476,5 +476,22 @@
         "value": "white"
       }
     ]
+  },
+  {
+    "id": "video",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "video",
+        "label": "Video",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "video_description",
+        "label": "Video Description",
+        "valueType": "string"
+      }
+    ]
   }
 ]
