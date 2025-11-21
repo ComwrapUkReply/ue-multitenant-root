@@ -74,6 +74,12 @@
     ]
   },
   {
+    "id": "facts-figures-cards",
+    "components": [
+      "facts-figures-card"
+    ]
+  },
+  {
     "id": "hero",
     "components": [
       "button"
