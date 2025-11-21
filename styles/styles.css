@@ -900,7 +900,7 @@ blockquote::before {
 }
 
 /* High Contrast Mode Support */
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more) {
     .btn {
         border-width: 3px;
     }

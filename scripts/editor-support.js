@@ -141,10 +141,10 @@ function attachEventListners(main) {
   if (userData) {
     // Disable publish button for contributors
     disablePublishForContributors(userData);
-    
+
     // Update component filters based on user group
     await updateComponentFilters(userData);
-    
+
     // Optionally lock specific components for contributors
     if (userData.memberOf?.some((group) => group.authorizableId === 'contributor')) {
       // Lock restricted components if they exist

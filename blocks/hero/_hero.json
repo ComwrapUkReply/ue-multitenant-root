@@ -37,7 +37,7 @@
         },
         {
           "component": "richtext",
-          "name": "heroText",
+          "name": "text",
           "value": "",
           "label": "Text",
           "valueType": "string"
