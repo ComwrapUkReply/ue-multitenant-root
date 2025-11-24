@@ -315,6 +315,10 @@
     ]
   },
   {
+    "id": "access-badge",
+    "fields": []
+  },
+  {
     "id": "accordion",
     "fields": []
   },
@@ -937,6 +941,58 @@
           }
         ],
         "value": "white"
+      }
+    ]
+  },
+  {
+    "id": "login",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string",
+        "value": "Sign In"
+      },
+      {
+        "component": "text",
+        "name": "apiUrl",
+        "label": "Login API URL",
+        "valueType": "string",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "protected-content",
+    "fields": [
+      {
+        "component": "select",
+        "name": "accessLevel",
+        "label": "Required Access Level",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Member",
+            "value": "member"
+          },
+          {
+            "name": "Premium",
+            "value": "premium"
+          },
+          {
+            "name": "Admin",
+            "value": "admin"
+          }
+        ],
+        "value": "member"
+      },
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Protected Content",
+        "valueType": "string",
+        "value": ""
       }
     ]
   },

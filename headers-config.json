@@ -1,0 +1,27 @@
+{
+  "/**": [
+    {
+      "key": "x-access-level",
+      "value": "public"
+    }
+  ],
+  "/members/**": [
+    {
+      "key": "x-access-level",
+      "value": "member"
+    }
+  ],
+  "/premium/**": [
+    {
+      "key": "x-access-level",
+      "value": "premium"
+    }
+  ],
+  "/admin/**": [
+    {
+      "key": "x-access-level",
+      "value": "admin"
+    }
+  ]
+}
+

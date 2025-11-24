@@ -1,0 +1,14 @@
+{
+  "name": "ue-multitenant-access-control-worker",
+  "version": "1.0.0",
+  "description": "CloudFlare Worker for gated content access control",
+  "main": "src/index.js",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
+

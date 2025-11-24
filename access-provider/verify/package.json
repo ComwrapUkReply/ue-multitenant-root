@@ -1,0 +1,8 @@
+{
+  "name": "verify-action",
+  "version": "1.0.0",
+  "description": "Verification action for access control",
+  "main": "index.js",
+  "dependencies": {}
+}
+
