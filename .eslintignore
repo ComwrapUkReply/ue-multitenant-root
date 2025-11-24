@@ -1,2 +1,5 @@
 helix-importer-ui
 dompurify.min.js
+component-models.json
+component-filters.json
+component-definition.json

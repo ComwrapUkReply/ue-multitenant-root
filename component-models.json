@@ -50,8 +50,8 @@
       },
       {
         "component": "container",
-        "name": "social",
-        "label": "Social",
+        "name": "meta",
+        "label": "Meta",
         "fields": [
           {
             "component": "text",
@@ -110,8 +110,8 @@
       },
       {
         "component": "container",
-        "name": "social",
-        "label": "Social",
+        "name": "meta",
+        "label": "Meta",
         "fields": [
           {
             "component": "text",
@@ -315,6 +315,121 @@
     ]
   },
   {
+    "id": "accordion",
+    "fields": []
+  },
+  {
+    "id": "accordionitem",
+    "fields": [
+      {
+        "component": "tab",
+        "label": "Content",
+        "name": "content"
+      },
+      {
+        "component": "text",
+        "name": "accordion-item-title",
+        "label": "Accordion Item Title",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "accordion-item-content",
+        "label": "Accordion Item Content",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "image-alt",
+        "label": "Image Alt Text",
+        "valueType": "string"
+      },
+      {
+        "component": "tab",
+        "label": "CTA",
+        "name": "accordion-cta"
+      },
+      {
+        "component": "aem-content",
+        "name": "button-link",
+        "label": "Button Link"
+      },
+      {
+        "component": "text",
+        "name": "button-text",
+        "label": "Button Text"
+      },
+      {
+        "component": "select",
+        "name": "button-style",
+        "label": "Button Style",
+        "options": [
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Secondary",
+            "value": "secondary"
+          }
+        ],
+        "value": "primary"
+      },
+      {
+        "component": "tab",
+        "label": "Layout",
+        "name": "layout"
+      },
+      {
+        "component": "select",
+        "name": "layout-style",
+        "label": "Accordion Layout",
+        "options": [
+          {
+            "name": "Image Left",
+            "value": "image-left"
+          },
+          {
+            "name": "Image Right",
+            "value": "image-right"
+          },
+          {
+            "name": "Image Top",
+            "value": "image-top"
+          },
+          {
+            "name": "Image Bottom",
+            "value": "image-bottom"
+          }
+        ],
+        "value": "image-left"
+      },
+      {
+        "component": "boolean",
+        "name": "accordion-item-open",
+        "label": "Initially Open"
+      }
+    ]
+  },
+  {
+    "id": "breadcrumbs",
+    "fields": [
+      {
+        "component": "boolean",
+        "name": "showbreadcrumbs",
+        "value": "",
+        "label": "Show Breadcrumbs"
+      }
+    ]
+  },
+  {
     "id": "card",
     "fields": [
       {
@@ -329,6 +444,54 @@
         "name": "text",
         "value": "",
         "label": "Text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "carousel",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Carousel background color",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Dark",
+            "value": "dark"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "carousel-slide",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Carousel image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Carousel image alt text",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Carousel description",
         "valueType": "string"
       }
     ]
@@ -353,12 +516,385 @@
     ]
   },
   {
+    "id": "custom-button",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "custom-button-link",
+        "label": "Button Link"
+      },
+      {
+        "component": "text",
+        "name": "custom-button-label",
+        "label": "Button Label"
+      },
+      {
+        "component": "select",
+        "name": "custom-button-target",
+        "label": "Link Target",
+        "options": [
+          {
+            "name": "Same Window",
+            "value": ""
+          },
+          {
+            "name": "New Tab",
+            "value": "_blank"
+          }
+        ]
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Style",
+        "valueType": "string",
+        "maxSize": 2,
+        "options": [
+          {
+            "name": "Style",
+            "children": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Secondary",
+                "value": "secondary"
+              },
+              {
+                "name": "Text",
+                "value": "text"
+              }
+            ]
+          },
+          {
+            "name": "Type",
+            "children": [
+              {
+                "name": "Download",
+                "value": "download"
+              },
+              {
+                "name": "Email",
+                "value": "email"
+              },
+              {
+                "name": "Telephone",
+                "value": "telephone"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "embed",
+    "fields": [
+      {
+        "component": "text",
+        "name": "embedUrl",
+        "label": "Embed URL",
+        "description": "Enter the iframe source URL",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "aspectRatio",
+        "label": "Aspect Ratio",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "16:9 (Widescreen)",
+            "value": "16-9"
+          },
+          {
+            "name": "4:3 (Standard)",
+            "value": "4-3"
+          },
+          {
+            "name": "1:1 (Square)",
+            "value": "1-1"
+          },
+          {
+            "name": "21:9 (Ultrawide)",
+            "value": "21-9"
+          },
+          {
+            "name": "Custom",
+            "value": "custom"
+          }
+        ],
+        "value": "16-9"
+      },
+      {
+        "component": "text",
+        "name": "customWidth",
+        "label": "Width (px)",
+        "description": "Custom width in pixels (when using Custom aspect ratio)",
+        "valueType": "number",
+        "value": "800",
+        "condition": {
+          "===": [
+            {
+              "var": "aspectRatio"
+            },
+            "custom"
+          ]
+        }
+      },
+      {
+        "component": "text",
+        "name": "customHeight",
+        "label": "Height (px)",
+        "description": "Custom height in pixels (when using Custom aspect ratio)",
+        "valueType": "number",
+        "value": "450",
+        "condition": {
+          "===": [
+            {
+              "var": "aspectRatio"
+            },
+            "custom"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "facts-figures-cards",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes_style",
+        "value": "",
+        "label": "Card Style",
+        "description": "The background style for all cards",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Blue",
+            "value": "blue"
+          },
+          {
+            "name": "Grey",
+            "value": "grey"
+          },
+          {
+            "name": "Bordered",
+            "value": "bordered"
+          },
+          {
+            "name": "Highlighted",
+            "value": "highlighted"
+          },
+          {
+            "name": "Minimal",
+            "value": "minimal"
+          },
+          {
+            "name": "Dark",
+            "value": "dark"
+          },
+          {
+            "name": "Success",
+            "value": "success"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "classes_layout",
+        "value": "",
+        "label": "Card Layout",
+        "description": "The layout style for all cards",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Compact",
+            "value": "compact"
+          },
+          {
+            "name": "Spacious",
+            "value": "spacious"
+          },
+          {
+            "name": "Centered",
+            "value": "centered"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "classes_animation",
+        "value": "",
+        "label": "Animation Style",
+        "description": "The animation style for all cards",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Fade In",
+            "value": "fade-in"
+          },
+          {
+            "name": "Slide Up",
+            "value": "slide-up"
+          },
+          {
+            "name": "Scale In",
+            "value": "scale-in"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "facts-figures-card",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "value": "",
+        "label": "Title",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Text",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes_style",
+        "value": "",
+        "label": "Card Style",
+        "description": "The background style of the card",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Blue",
+            "value": "blue"
+          },
+          {
+            "name": "Grey",
+            "value": "grey"
+          },
+          {
+            "name": "Bordered",
+            "value": "bordered"
+          },
+          {
+            "name": "Highlighted",
+            "value": "highlighted"
+          },
+          {
+            "name": "Minimal",
+            "value": "minimal"
+          },
+          {
+            "name": "Dark",
+            "value": "dark"
+          },
+          {
+            "name": "Success",
+            "value": "success"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "classes_size",
+        "value": "",
+        "label": "Card Size",
+        "description": "The size of the card",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Small",
+            "value": "small"
+          },
+          {
+            "name": "Large",
+            "value": "large"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "classes_emphasis",
+        "value": "",
+        "label": "Card Emphasis",
+        "description": "The emphasis level of the card",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Subtle",
+            "value": "subtle"
+          },
+          {
+            "name": "Bold",
+            "value": "bold"
+          },
+          {
+            "name": "Accent",
+            "value": "accent"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "fragment",
     "fields": [
       {
         "component": "aem-content",
         "name": "reference",
         "label": "Reference"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Style",
+        "valueType": "string",
+        "value": "",
+        "description": "The style of the fragment",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Dark",
+            "value": "dark"
+          }
+        ]
       }
     ]
   },
@@ -385,6 +921,434 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Style",
+        "options": [
+          {
+            "name": "White",
+            "value": "white"
+          },
+          {
+            "name": "Black",
+            "value": "black"
+          }
+        ],
+        "value": "white"
+      }
+    ]
+  },
+  {
+    "id": "quote",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "quote",
+        "value": "",
+        "label": "Quote",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "author",
+        "value": "",
+        "label": "Author",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "value": "",
+        "label": "Background Styles",
+        "description": "The background styles of the quote",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default",
+            "value": "",
+            "description": "The default background style"
+          },
+          {
+            "name": "Highlight",
+            "value": "highlight",
+            "description": "The highlight background style"
+          },
+          {
+            "name": "Dark",
+            "value": "dark",
+            "description": "The dark background style"
+          },
+          {
+            "name": "Light",
+            "value": "light",
+            "description": "The light background style"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "separator",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Color",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Transparent",
+            "value": ""
+          },
+          {
+            "name": "Blue",
+            "value": "blue"
+          },
+          {
+            "name": "Grey",
+            "value": "grey"
+          }
+        ],
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "table",
+    "fields": [
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "value": "",
+        "label": "Options",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Border",
+            "children": [
+              {
+                "name": "Striped",
+                "value": "striped"
+              },
+              {
+                "name": "Bordered",
+                "value": "bordered"
+              }
+            ]
+          },
+          {
+            "name": "Header",
+            "children": [
+              {
+                "name": "No Header",
+                "value": "no-header"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "filter",
+        "label": "Columns",
+        "valueType": "string",
+        "value": "table",
+        "options": [
+          {
+            "name": "1 Column",
+            "value": "table"
+          },
+          {
+            "name": "2 Columns",
+            "value": "table-2-columns"
+          },
+          {
+            "name": "3 Columns",
+            "value": "table-3-columns"
+          },
+          {
+            "name": "4 Columns",
+            "value": "table-4-columns"
+          },
+          {
+            "name": "5 Columns",
+            "value": "table-5-columns"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table-row",
+    "fields": [
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "column1text",
+        "label": "Column1"
+      }
+    ]
+  },
+  {
+    "id": "table-col-2",
+    "fields": [
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "column1text",
+        "label": "Column1"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "column2text",
+        "label": "Column2"
+      }
+    ]
+  },
+  {
+    "id": "table-col-3",
+    "fields": [
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "column1text",
+        "label": "Column1"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "column2text",
+        "label": "Column2"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "column3text",
+        "label": "Column3"
+      }
+    ]
+  },
+  {
+    "id": "table-col-4",
+    "fields": [
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "column1text",
+        "label": "Column1"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "column2text",
+        "label": "Column2"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "column3text",
+        "label": "Column3"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "column4text",
+        "label": "Column4"
+      }
+    ]
+  },
+  {
+    "id": "tags",
+    "fields": []
+  },
+  {
+    "id": "teaser",
+    "fields": [
+      {
+        "component": "tab",
+        "label": "Content",
+        "name": "teaser-content"
+      },
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "imageAlt",
+        "label": "Image Alt Text",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "name": "heading",
+        "label": "Heading",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Description",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "name": "fullBlockLink",
+        "label": "Teaser Link",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "tab",
+        "label": "CTAs",
+        "name": "teaser-ctas"
+      },
+      {
+        "component": "aem-content",
+        "name": "primaryButton_link",
+        "label": "Primary Button Link"
+      },
+      {
+        "component": "text",
+        "name": "primaryButton_label",
+        "label": "Primary Button Label",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "primaryButton_target",
+        "label": "Primary Button Target",
+        "options": [
+          {
+            "name": "Same Window",
+            "value": ""
+          },
+          {
+            "name": "New Tab",
+            "value": "_blank"
+          }
+        ],
+        "value": ""
+      },
+      {
+        "component": "multiselect",
+        "name": "primaryButton_classes",
+        "label": "Primary Button Style",
+        "valueType": "string",
+        "maxSize": 2,
+        "options": [
+          {
+            "name": "Style",
+            "children": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Secondary",
+                "value": "secondary"
+              },
+              {
+                "name": "Text",
+                "value": "text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "aem-content",
+        "name": "secondaryButton_link",
+        "label": "Secondary Button Link (optional)"
+      },
+      {
+        "component": "text",
+        "name": "secondaryButton_label",
+        "label": "Secondary Button Label",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "secondaryButton_target",
+        "label": "Secondary Button Target",
+        "options": [
+          {
+            "name": "Same Window",
+            "value": ""
+          },
+          {
+            "name": "New Tab",
+            "value": "_blank"
+          }
+        ],
+        "value": ""
+      },
+      {
+        "component": "multiselect",
+        "name": "secondaryButton_classes",
+        "label": "Secondary Button Style",
+        "valueType": "string",
+        "maxSize": 2,
+        "options": [
+          {
+            "name": "Style",
+            "children": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Secondary",
+                "value": "secondary"
+              },
+              {
+                "name": "Text",
+                "value": "text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "tab",
+        "label": "Layout",
+        "name": "teaser-layout"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Layout Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Image Left",
+            "value": "image-left"
+          },
+          {
+            "name": "Image Right",
+            "value": "image-right"
+          },
+          {
+            "name": "Image Top",
+            "value": "image-top"
+          },
+          {
+            "name": "Image Bottom",
+            "value": "image-bottom"
+          },
+          {
+            "name": "Image Background",
+            "value": "image-background"
+          }
+        ]
       }
     ]
   },
@@ -453,6 +1417,23 @@
         "name": "badgeAlt",
         "label": "Badge Alt Text",
         "value": ""
+      }
+    ]
+  },
+  {
+    "id": "video",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "video",
+        "label": "Video",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "video_description",
+        "label": "Video Description",
+        "valueType": "string"
       }
     ]
   }

@@ -1,0 +1,11 @@
+kind: "API"
+version: "1"
+metadata:
+  envTypes: ["dev"]
+data:
+  allowedClientIDs:
+    author:
+      - "aem-oauth-chatgpt"
+      - "aem-oauth-claude"
+      - "aem-oauth-mscopilot"
+      - "aem-oauth-cursor"
