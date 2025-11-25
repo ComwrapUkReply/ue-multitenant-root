@@ -108,5 +108,299 @@
     "components": [
       "table-col-4"
     ]
+  },
+  {
+    "id": "standard-richtext",
+    "rte": {
+      "toolbar": {
+        "format": ["bold", "italic", "underline"],
+        "blocks": ["paragraph", "h2", "h3", "h4"],
+        "alignment": ["left", "center", "right"],
+        "indentation": ["indent", "outdent"],
+        "list": ["bullet_list", "ordered_list"],
+        "insert": ["link", "unlink"],
+        "editor": ["removeformat"],
+        "sections": [
+          "format",
+          "blocks",
+          "alignment",
+          "indentation",
+          "list",
+          "insert",
+          "editor"
+        ]
+      },
+      "actions": {
+        "bold": {
+          "tag": "strong",
+          "shortcut": "Mod-B",
+          "label": "Bold"
+        },
+        "italic": {
+          "tag": "em",
+          "shortcut": "Mod-I",
+          "label": "Italic"
+        },
+        "underline": {
+          "tag": "u",
+          "shortcut": "Mod-U",
+          "label": "Underline"
+        },
+        "bullet_list": {
+          "wrapInParagraphs": true,
+          "label": "Bullet List"
+        },
+        "ordered_list": {
+          "wrapInParagraphs": true,
+          "label": "Numbered List"
+        },
+        "link": {
+          "hideTarget": false,
+          "shortcut": "Mod-K",
+          "label": "Add Link"
+        },
+        "h2": {
+          "shortcut": "Mod-Alt-2",
+          "label": "Heading 2"
+        },
+        "h3": {
+          "shortcut": "Mod-Alt-3",
+          "label": "Heading 3"
+        },
+        "h4": {
+          "shortcut": "Mod-Alt-4",
+          "label": "Heading 4"
+        }
+      }
+    },
+    "components": ["richtext", "text"]
+  },
+  {
+    "id": "minimal-richtext",
+    "rte": {
+      "toolbar": {
+        "format": ["bold", "italic"],
+        "blocks": ["paragraph"],
+        "insert": ["link", "unlink"],
+        "sections": ["format", "insert"]
+      },
+      "actions": {
+        "bold": {
+          "tag": "strong",
+          "shortcut": "Mod-B",
+          "label": "Bold"
+        },
+        "italic": {
+          "tag": "em",
+          "shortcut": "Mod-I",
+          "label": "Italic"
+        },
+        "link": {
+          "hideTarget": false,
+          "shortcut": "Mod-K",
+          "label": "Add Link"
+        }
+      }
+    },
+    "components": ["description", "teaser-description"]
+  },
+  {
+    "id": "card-richtext",
+    "rte": {
+      "toolbar": {
+        "format": ["bold", "italic"],
+        "list": ["bullet_list"],
+        "insert": ["link", "unlink"],
+        "sections": ["format", "list", "insert"]
+      },
+      "actions": {
+        "bold": {
+          "tag": "strong",
+          "label": "Bold"
+        },
+        "italic": {
+          "tag": "em",
+          "label": "Italic"
+        },
+        "bullet_list": {
+          "wrapInParagraphs": false,
+          "label": "Bullet List"
+        },
+        "link": {
+          "hideTarget": false,
+          "label": "Add Link"
+        }
+      }
+    },
+    "components": ["card"]
+  },
+  {
+    "id": "accordion-richtext",
+    "rte": {
+      "toolbar": {
+        "format": ["bold", "italic", "underline"],
+        "blocks": ["paragraph", "h3", "h4"],
+        "list": ["bullet_list", "ordered_list"],
+        "insert": ["link", "unlink"],
+        "editor": ["removeformat"],
+        "sections": [
+          "format",
+          "blocks",
+          "list",
+          "insert",
+          "editor"
+        ]
+      },
+      "actions": {
+        "bold": {
+          "tag": "strong",
+          "label": "Bold"
+        },
+        "italic": {
+          "tag": "em",
+          "label": "Italic"
+        },
+        "bullet_list": {
+          "wrapInParagraphs": true,
+          "label": "Bullet List"
+        },
+        "ordered_list": {
+          "wrapInParagraphs": true,
+          "label": "Numbered List"
+        },
+        "link": {
+          "hideTarget": false,
+          "label": "Add Link"
+        }
+      }
+    },
+    "components": ["accordion-item-content"]
+  },
+  {
+    "id": "table-richtext",
+    "rte": {
+      "toolbar": {
+        "format": ["bold", "italic"],
+        "insert": ["link", "unlink"],
+        "sections": ["format", "insert"]
+      },
+      "actions": {
+        "bold": {
+          "tag": "strong",
+          "label": "Bold"
+        },
+        "italic": {
+          "tag": "em",
+          "label": "Italic"
+        },
+        "link": {
+          "hideTarget": false,
+          "label": "Add Link"
+        }
+      }
+    },
+    "components": ["column1text", "column2text", "column3text", "column4text"]
+  },
+  {
+    "id": "hero-richtext",
+    "rte": {
+      "toolbar": {
+        "format": ["bold", "italic"],
+        "blocks": ["paragraph", "h1", "h2"],
+        "alignment": ["left", "center"],
+        "sections": ["format", "blocks", "alignment"]
+      },
+      "actions": {
+        "bold": {
+          "tag": "strong",
+          "label": "Bold"
+        },
+        "italic": {
+          "tag": "em",
+          "label": "Italic"
+        },
+        "h1": {
+          "shortcut": "Mod-Alt-1",
+          "label": "Main Heading"
+        },
+        "h2": {
+          "shortcut": "Mod-Alt-2",
+          "label": "Subheading"
+        }
+      }
+    },
+    "components": ["heroText"]
+  },
+  {
+    "id": "quote-richtext",
+    "rte": {
+      "toolbar": {
+        "format": ["bold", "italic"],
+        "blocks": ["paragraph"],
+        "sections": ["format"]
+      },
+      "actions": {
+        "bold": {
+          "tag": "strong",
+          "label": "Bold"
+        },
+        "italic": {
+          "tag": "em",
+          "label": "Italic"
+        }
+      }
+    },
+    "components": ["quote"]
+  },
+  {
+    "id": "carousel-richtext",
+    "rte": {
+      "toolbar": {
+        "format": ["bold", "italic"],
+        "blocks": ["paragraph"],
+        "insert": ["link", "unlink"],
+        "sections": ["format", "insert"]
+      },
+      "actions": {
+        "bold": {
+          "tag": "strong",
+          "label": "Bold"
+        },
+        "italic": {
+          "tag": "em",
+          "label": "Italic"
+        },
+        "link": {
+          "hideTarget": false,
+          "label": "Add Link"
+        }
+      }
+    },
+    "components": ["carousel-description"]
+  },
+  {
+    "id": "facts-figures-richtext",
+    "rte": {
+      "toolbar": {
+        "format": ["bold", "italic"],
+        "list": ["bullet_list"],
+        "sections": ["format", "list"]
+      },
+      "actions": {
+        "bold": {
+          "tag": "strong",
+          "label": "Bold"
+        },
+        "italic": {
+          "tag": "em",
+          "label": "Italic"
+        },
+        "bullet_list": {
+          "wrapInParagraphs": false,
+          "label": "Bullet List"
+        }
+      }
+    },
+    "components": ["facts-figures-card"]
   }
 ]
