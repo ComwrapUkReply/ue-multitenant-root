@@ -98,7 +98,7 @@ This will merge the block definitions from:
 Upload the headers configuration using the Configuration Service API:
 
 ```bash
-curl -X POST https://admin.hlx.page/config/ComwrapUkReply/sites/ue-multitenant-root/headers.json \
+curl -X POST https://admin.hlx.page/config/comwrapukreply/sites/ue-multitenant-root/headers.json \
   -H 'content-type: application/json' \
   -H 'x-auth-token: YOUR_AUTH_TOKEN' \
   --data @headers-config.json
@@ -111,7 +111,7 @@ Replace `YOUR_AUTH_TOKEN` with your actual token.
 Test if headers are applied:
 
 ```bash
-curl -I https://main--ue-multitenant-root--ComwrapUkReply.aem.live/members/dashboard
+curl -I https://main--ue-multitenant-root--comwrapukreply.aem.live/members/dashboard
 ```
 
 Look for the `x-access-level: member` header in the response.
@@ -140,7 +140,7 @@ Look for the `x-access-level: member` header in the response.
 Set the same encryption key for all actions:
 
 ```bash
-export ENCRYPTION_KEY="your-super-secret-key-min-32-chars-long"
+export ENCRYPTION_KEY="5ZRTzvR1SFp2un0PCWEeFNcV1BGJbBlvLqcSc8A2tW5g"
 ```
 
 **IMPORTANT**: Use a strong, random encryption key (minimum 32 characters).
