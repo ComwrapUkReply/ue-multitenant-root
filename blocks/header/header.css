@@ -1,4 +1,4 @@
-@import './xf-nav.css';
+@import url('./xf-nav.css');
 
 /* header and nav layout */
 header .nav-wrapper {
