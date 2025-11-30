@@ -1,0 +1,8 @@
+{
+  "name": "login-action",
+  "version": "1.0.0",
+  "description": "Login action for access control",
+  "main": "index.js",
+  "dependencies": {}
+}
+

@@ -1,0 +1,91 @@
+/* Access Badge Block Styles */
+
+.block.access-badge {
+  display: inline-flex;
+  margin: 1rem 0;
+}
+
+.access-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.badge-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.badge-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.badge-label {
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  font-size: var(--heading-font-size-xs);
+  line-height: 1.2;
+}
+
+.badge-name {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  opacity: 0.9;
+  line-height: 1.2;
+}
+
+.badge-text {
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  font-size: var(--heading-font-size-xs);
+  line-height: 1;
+}
+
+/* Guest Badge */
+.access-badge.guest {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--background-color);
+}
+
+/* Member Badge */
+.access-badge.member {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  color: var(--background-color);
+}
+
+/* Premium Badge */
+.access-badge.premium {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  color: var(--background-color);
+}
+
+/* Admin Badge */
+.access-badge.admin {
+  background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
+  color: var(--background-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .access-badge {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .badge-icon {
+    font-size: 1.5rem;
+  }
+
+  .badge-label {
+    font-size: var(--body-font-size-s);
+  }
+
+  .badge-name {
+    font-size: calc(var(--body-font-size-xs) * 0.9);
+  }
+}
+

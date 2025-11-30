@@ -1,0 +1,8 @@
+name = "ue-multitenant-access-control"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[env.production]
+name = "ue-multitenant-access-control-prod"
+route = "https://yourdomain.com/*"
+

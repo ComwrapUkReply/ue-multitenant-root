@@ -1,5 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { getUserData, logout } from '../../scripts/auth-utils.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -159,8 +160,58 @@ export default async function decorate(block) {
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
 
+  // Add authentication container
+  const authContainer = createAuthContainer(nav);
+  if (authContainer) {
+    const navTools = nav.querySelector('.nav-tools');
+    if (navTools) {
+      navTools.appendChild(authContainer);
+    } else {
+      nav.appendChild(authContainer);
+    }
+  }
+
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+}
+
+/**
+ * Create authentication container with user info or login link
+ * @param {Element} nav - The nav element
+ * @returns {Element|null} Authentication container or null
+ */
+function createAuthContainer(nav) {
+  const userData = getUserData();
+  const authContainer = document.createElement('div');
+  authContainer.className = 'header-auth';
+
+  if (userData) {
+    // User is logged in - show user info and logout
+    authContainer.innerHTML = `
+      <div class="user-info" data-level="${userData.level}">
+        <span class="user-greeting">Hello, ${userData.userName}!</span>
+        <span class="user-level">${userData.level}</span>
+        <button class="logout-button">Sign Out</button>
+      </div>
+    `;
+
+    // Add logout handler
+    const logoutButton = authContainer.querySelector('.logout-button');
+    if (logoutButton) {
+      logoutButton.addEventListener('click', async (e) => {
+        e.preventDefault();
+        // TODO: Update with actual logout URL from access provider
+        await logout('/api/logout');
+      });
+    }
+  } else {
+    // User is not logged in - show login link
+    authContainer.innerHTML = `
+      <a href="/login" class="login-link">Sign In</a>
+    `;
+  }
+
+  return authContainer;
 }

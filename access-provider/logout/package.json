@@ -1,0 +1,8 @@
+{
+  "name": "logout-action",
+  "version": "1.0.0",
+  "description": "Logout action for access control",
+  "main": "index.js",
+  "dependencies": {}
+}
+

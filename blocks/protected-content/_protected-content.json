@@ -1,0 +1,56 @@
+{
+  "definitions": [
+    {
+      "title": "Protected Content",
+      "id": "protected-content",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Protected Content",
+              "model": "protected-content"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "protected-content",
+      "fields": [
+        {
+          "component": "select",
+          "name": "accessLevel",
+          "label": "Required Access Level",
+          "valueType": "string",
+          "options": [
+            {
+              "name": "Member",
+              "value": "member"
+            },
+            {
+              "name": "Premium",
+              "value": "premium"
+            },
+            {
+              "name": "Admin",
+              "value": "admin"
+            }
+          ],
+          "value": "member"
+        },
+        {
+          "component": "richtext",
+          "name": "content",
+          "label": "Protected Content",
+          "valueType": "string",
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
+
