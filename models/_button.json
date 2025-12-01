@@ -25,15 +25,20 @@
           "name": "link",
           "label": "Link"
         },
-        {
-          "component": "text",
-          "name": "linkText",
-          "label": "Text"
-        },
-        {
-          "component": "select",
-          "name": "linkType",
-          "label": "Type",
+      {
+        "component": "text",
+        "name": "linkText",
+        "label": "Text"
+      },
+      {
+        "component": "text",
+        "name": "linkTitle",
+        "label": "Title"
+      },
+      {
+        "component": "select",
+        "name": "linkType",
+        "label": "Type",
           "options": [
             {
               "name": "default",

@@ -267,6 +267,11 @@
         "label": "Text"
       },
       {
+        "component": "text",
+        "name": "linkTitle",
+        "label": "Title"
+      },
+      {
         "component": "select",
         "name": "linkType",
         "label": "Type",

@@ -51,7 +51,7 @@ function processButtons(block) {
   // Find all button block items (buttons added as children to hero)
   // These are direct children of the hero block with data-block-name="button"
   const buttonBlockItems = [...block.children].filter(
-    (child) => child.getAttribute('data-block-name') === 'button'
+    (child) => child.getAttribute('data-block-name') === 'button',
   );
 
   buttonBlockItems.forEach((buttonBlock) => {
