@@ -1,5 +1,3 @@
-@import url('./xf-nav.css');
-
 /* header and nav layout */
 header .nav-wrapper {
   background-color: var(--background-color);
