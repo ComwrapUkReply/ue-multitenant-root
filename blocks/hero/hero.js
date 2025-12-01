@@ -48,7 +48,67 @@ function processImageReference(block) {
  * @param {HTMLElement} block - The hero block DOM element
  */
 function processButtons(block) {
-  // Find all button components (both button and custom-button)
+  // Find all button block items (buttons added as children to hero)
+  // These are direct children of the hero block with data-block-name="button"
+  const buttonBlockItems = [...block.children].filter(
+    (child) => child.getAttribute('data-block-name') === 'button'
+  );
+
+  buttonBlockItems.forEach((buttonBlock) => {
+    // Extract button fields from the block structure
+    // Each field is a div child of the button block
+    const rows = [...buttonBlock.querySelectorAll(':scope > div')];
+    let link = '';
+    let linkText = '';
+    let linkTitle = '';
+    let linkType = '';
+
+    rows.forEach((row, index) => {
+      const text = row.textContent?.trim() || '';
+      const linkElement = row.querySelector('a');
+
+      if (index === 0 && linkElement) {
+        // First row: link (aem-content)
+        link = linkElement.href || linkElement.textContent?.trim() || '';
+      } else if (index === 1) {
+        // Second row: linkText
+        linkText = text;
+      } else if (index === 2) {
+        // Third row: linkTitle
+        linkTitle = text;
+      } else if (index === 3) {
+        // Fourth row: linkType
+        linkType = text;
+      }
+    });
+
+    // Create button element if we have link and text
+    if (link && linkText) {
+      const button = document.createElement('a');
+      button.href = link;
+      button.textContent = linkText;
+      button.className = 'button';
+      if (linkTitle) {
+        button.title = linkTitle;
+      }
+      if (linkType === 'primary') {
+        button.classList.add('primary');
+      } else if (linkType === 'secondary') {
+        button.classList.add('secondary');
+      }
+
+      // Wrap button in container
+      const buttonContainer = document.createElement('p');
+      buttonContainer.classList.add('button-container');
+      buttonContainer.appendChild(button);
+
+      // Replace the button block content with the collapsed button
+      buttonBlock.innerHTML = '';
+      buttonBlock.appendChild(buttonContainer);
+    }
+  });
+
+  // Find all button components (both button and custom-button) that are already collapsed
   const buttonComponents = block.querySelectorAll('.button-container');
 
   if (buttonComponents.length > 0) {
