@@ -990,6 +990,10 @@
     ]
   },
   {
+    "id": "search",
+    "fields": []
+  },
+  {
     "id": "separator",
     "fields": [
       {
