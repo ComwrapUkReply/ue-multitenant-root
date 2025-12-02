@@ -1122,6 +1122,34 @@
     ]
   },
   {
+    "id": "search",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "source",
+        "label": "Data Source",
+        "description": "Link to the query index JSON file. Leave empty to use the default /query-index.json"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Display Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default (Grid Results)",
+            "value": ""
+          },
+          {
+            "name": "Minimal (List Results)",
+            "value": "minimal"
+          }
+        ],
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "separator",
     "fields": [
       {
