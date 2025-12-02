@@ -263,7 +263,7 @@
       },
       {
         "component": "text",
-        "name": "linkText",
+        "name": "text",
         "label": "Text"
       },
       {
