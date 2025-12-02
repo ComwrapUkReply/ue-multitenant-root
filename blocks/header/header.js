@@ -337,11 +337,12 @@ export default async function decorate(block) {
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
 
-  // Add language switcher and region switcher to nav-tools
+  // Add region switcher first, then language switcher to nav-tools
+  // Region = Country selection, Language = Languages within that country
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
-    await addLanguageSwitcher(navTools);
     await addRegionSwitcher(navTools);
+    await addLanguageSwitcher(navTools);
   }
 
   const navWrapper = document.createElement('div');

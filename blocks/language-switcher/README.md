@@ -4,28 +4,49 @@ A comprehensive language switcher block for AEM Universal Editor with Edge Deliv
 
 ## Overview
 
-The Language Switcher block provides seamless navigation between different locale versions of the same page in a multitenant setup. It automatically detects the current locale and generates appropriate links to equivalent pages in other locales.
+The Language Switcher block provides seamless navigation between different **language versions within the same region/country**. It works in conjunction with the Region Switcher block - users first select their country/region, then use the Language Switcher to choose their preferred language within that region.
+
+**Key Concept**: The Language Switcher only shows languages available in the current region. For example:
+- In **Switzerland** (🇨🇭): Shows Deutsch, Français, English
+- In **Germany** (🇩🇪): Shows Deutsch, English
 
 ## Features
 
+- **Region-Aware**: Only shows languages available in the current region
 - **Automatic Locale Detection**: Detects current locale from URL patterns
-- **Smart Page Mapping**: Maps equivalent pages across different locales
+- **Smart Page Mapping**: Maps equivalent pages across different languages
 - **Multiple Display Styles**: Dropdown, horizontal list, or flag-only display
 - **Customizable Labels**: Override default locale names
 - **Page Mapping Configuration**: Define custom page mappings between locales
 - **Responsive Design**: Mobile-first approach with touch-friendly interface
 - **Accessibility**: Full keyboard navigation and screen reader support
 - **Analytics Integration**: Built-in tracking for language switching events
+- **Auto-Hide**: Hides automatically if region has only one language
+
+## How It Works with Region Switcher
+
+The Language Switcher and Region Switcher work together:
+
+1. **Region Switcher** → Select country (Switzerland, Germany, etc.)
+2. **Language Switcher** → Select language within that country
+
+| Region | Available Languages |
+|--------|---------------------|
+| 🇨🇭 Switzerland | Deutsch, Français, English |
+| 🇩🇪 Germany | Deutsch, English |
 
 ## Supported Locales
 
 The block supports the following locales based on your multitenant configuration:
 
-- **Switzerland German** (`ch-de`): 🇨🇭 Schweiz (Deutsch)
-- **Switzerland French** (`ch-fr`): 🇨🇭 Suisse (Français)  
-- **Switzerland English** (`ch-en`): 🇨🇭 Switzerland (English)
-- **Germany German** (`de-de`): 🇩🇪 Deutschland (Deutsch) *(default)*
-- **Germany English** (`de-en`): 🇩🇪 Germany (English)
+### Switzerland (🇨🇭)
+- **Deutsch** (`ch-de`)
+- **Français** (`ch-fr`)
+- **English** (`ch-en`)
+
+### Germany (🇩🇪)
+- **Deutsch** (`de-de`) *(default)*
+- **English** (`de-en`)
 
 ## URL Mapping
 

@@ -1,6 +1,7 @@
 /**
  * Language Switcher Block
- * Provides navigation between different locale versions of the same page
+ * Provides navigation between different language versions within the SAME REGION
+ * Works in conjunction with Region Switcher - shows only languages available in current region
  * Supports automatic locale detection and intelligent page mapping
  */
 
@@ -10,11 +11,34 @@ import { PAGE_MAPPINGS } from './page-mappings.js';
 const CONFIG = {
   projectName: 'ue-multitenant-root',
   githubOrg: 'comwrapukreply',
+  branch: 'region-sel',
+  // Region definitions with available languages
+  regions: {
+    ch: {
+      code: 'ch',
+      name: 'Switzerland',
+      flag: '🇨🇭',
+      languages: ['de', 'fr', 'en'],
+    },
+    de: {
+      code: 'de',
+      name: 'Germany',
+      flag: '🇩🇪',
+      languages: ['de', 'en'],
+    },
+  },
+  // Language metadata
+  languages: {
+    de: { code: 'de', name: 'Deutsch', nativeName: 'Deutsch' },
+    fr: { code: 'fr', name: 'Français', nativeName: 'Français' },
+    en: { code: 'en', name: 'English', nativeName: 'English' },
+  },
+  // All locale combinations (for backwards compatibility)
   locales: [
     {
       code: 'ch-de',
       path: '/ch/de/',
-      label: 'Schweiz (Deutsch)',
+      label: 'Deutsch',
       flag: '🇨🇭',
       country: 'ch',
       language: 'de',
@@ -22,7 +46,7 @@ const CONFIG = {
     {
       code: 'ch-fr',
       path: '/ch/fr/',
-      label: 'Suisse (Français)',
+      label: 'Français',
       flag: '🇨🇭',
       country: 'ch',
       language: 'fr',
@@ -30,7 +54,7 @@ const CONFIG = {
     {
       code: 'ch-en',
       path: '/ch/en/',
-      label: 'Switzerland (English)',
+      label: 'English',
       flag: '🇨🇭',
       country: 'ch',
       language: 'en',
@@ -38,7 +62,7 @@ const CONFIG = {
     {
       code: 'de-de',
       path: '/de/de/',
-      label: 'Deutschland (Deutsch)',
+      label: 'Deutsch',
       flag: '🇩🇪',
       country: 'de',
       language: 'de',
@@ -47,7 +71,7 @@ const CONFIG = {
     {
       code: 'de-en',
       path: '/de/en/',
-      label: 'Germany (English)',
+      label: 'English',
       flag: '🇩🇪',
       country: 'de',
       language: 'en',
@@ -154,6 +178,25 @@ function detectCurrentLocale() {
 }
 
 /**
+ * Gets available languages for the current region
+ * @param {Object} currentLocale Current locale object
+ * @returns {Array} Array of locale objects for the current region
+ */
+function getLanguagesForCurrentRegion(currentLocale) {
+  if (!currentLocale?.country) {
+    return CONFIG.locales;
+  }
+
+  const region = CONFIG.regions[currentLocale.country];
+  if (!region) {
+    return CONFIG.locales;
+  }
+
+  // Filter locales to only those in the current region
+  return CONFIG.locales.filter((locale) => locale.country === currentLocale.country);
+}
+
+/**
  * Gets the current page path relative to the locale (cached)
  * @param {Object} currentLocale Current locale object
  * @returns {string} Page path
@@ -240,7 +283,7 @@ function generateTargetURL(targetLocale, pagePath) {
   }
 
   // Generate Edge Delivery Services URL
-  const baseURL = `https://region-sel--${CONFIG.projectName}-${targetLocale.code}--${CONFIG.githubOrg}.aem.page`;
+  const baseURL = `https://${CONFIG.branch}--${CONFIG.projectName}-${targetLocale.code}--${CONFIG.githubOrg}.aem.page`;
 
   if (!pagePath) {
     return baseURL;
@@ -606,13 +649,21 @@ export default function decorate(block) {
       return;
     }
 
-    // Filter available locales based on configuration
-    let availableLocales = CONFIG.locales;
+    // Get languages available for the current region only
+    let availableLocales = getLanguagesForCurrentRegion(currentLocale);
 
+    // Apply additional exclusions from config
     if (config.excludeLocales?.length > 0) {
       availableLocales = availableLocales.filter(
         (locale) => !config.excludeLocales.includes(locale.code),
       );
+    }
+
+    // If only one language available (current), hide the switcher
+    if (availableLocales.length <= 1) {
+      block.innerHTML = '';
+      block.style.display = 'none';
+      return;
     }
 
     // Clear block content
@@ -635,3 +686,10 @@ export default function decorate(block) {
     block.innerHTML = '<p>Language switcher unavailable</p>';
   }
 }
+
+// Export utilities for external use
+export {
+  detectCurrentLocale,
+  getLanguagesForCurrentRegion,
+  CONFIG,
+};

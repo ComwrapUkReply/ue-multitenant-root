@@ -1,15 +1,36 @@
 # Region Switcher Block
 
-A block that allows users to switch between different country/regions. Unlike the language switcher, this block focuses on **region selection** where each region uses its default language.
+A block that allows users to switch between different country/regions. This block works **together with the Language Switcher** to provide a complete locale selection experience.
 
 ## Overview
 
+The Region Switcher and Language Switcher work as a **two-step selection process**:
+
+1. **Region Switcher** → User selects their country/region (e.g., Switzerland, Germany)
+2. **Language Switcher** → User selects their preferred language within that region
+
+### Example Flow
+
+`
+User is on Switzerland (German) page
+    │
+    ├── Region Switcher shows: [🇨🇭 Switzerland ▼] [🇩🇪 Germany]
+    │
+    └── Language Switcher shows: [Deutsch ▼] [Français] [English]
+           ↑ Only languages available in Switzerland
+
+User switches to Germany
+    │
+    ├── Region Switcher shows: [🇨🇭 Switzerland] [🇩🇪 Germany ▼]
+    │
+    └── Language Switcher shows: [Deutsch ▼] [English]
+           ↑ Only languages available in Germany
+`
+
 The Region Switcher:
-- Fetches region data from `placeholders.json`
 - Shows available countries/regions (not individual languages)
-- Each region uses its default language
-- No cross-language page mapping required
-- Users stay within their selected region
+- Each region uses its default language when switching
+- Works with Language Switcher for complete locale control
 
 ## How It Works
 
@@ -189,11 +210,25 @@ const url = generateRegionURL(
 
 | Feature | Region Switcher | Language Switcher |
 |---------|-----------------|-------------------|
-| Purpose | Switch countries | Switch languages |
-| Scope | Cross-region | Within region |
-| Page Mapping | Not required | Required |
+| Purpose | Switch countries/regions | Switch languages within region |
+| Scope | Cross-region | Within current region only |
+| Page Mapping | Not required | Required for inner pages |
 | Default Language | Uses region default | User selected |
-| Use Case | Multi-country sites | Multi-language sites |
+| Visibility | Always visible | Hidden if region has 1 language |
+| Order in Header | First (left) | Second (right) |
+
+### Combined Workflow
+
+`
+┌─────────────────────────────────────────────────────────────────┐
+│ [Logo]  [Nav Items...]  [🇨🇭 Switzerland ▼] [Deutsch ▼]        │
+│                          └─ Region          └─ Language        │
+│                             (Step 1)           (Step 2)        │
+└─────────────────────────────────────────────────────────────────┘
+`
+
+**Step 1**: User selects region (Switzerland/Germany)
+**Step 2**: User selects language within that region
 
 ## Data Source
 
