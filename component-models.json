@@ -1122,6 +1122,100 @@
     ]
   },
   {
+    "id": "region-switcher",
+    "fields": [
+      {
+        "component": "select",
+        "name": "displayStyle",
+        "label": "Display Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Dropdown",
+            "value": "dropdown"
+          },
+          {
+            "name": "Horizontal List",
+            "value": "horizontal"
+          },
+          {
+            "name": "Flag Icons Only",
+            "value": "flags"
+          }
+        ],
+        "value": "dropdown"
+      },
+      {
+        "component": "select",
+        "name": "showFlags",
+        "label": "Show Country Flags",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Yes",
+            "value": "true"
+          },
+          {
+            "name": "No",
+            "value": "false"
+          }
+        ],
+        "value": "true"
+      },
+      {
+        "component": "richtext",
+        "name": "defaultLanguages",
+        "label": "Default Languages per Region (JSON)",
+        "description": "Override default language per region. Format: {\"ch\": \"de\", \"de\": \"de\"}",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Style Options",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Layout",
+            "children": [
+              {
+                "name": "Default",
+                "value": ""
+              },
+              {
+                "name": "Compact",
+                "value": "compact"
+              },
+              {
+                "name": "Full Width",
+                "value": "full-width"
+              }
+            ]
+          },
+          {
+            "name": "Theme",
+            "children": [
+              {
+                "name": "Light",
+                "value": "light"
+              },
+              {
+                "name": "Dark",
+                "value": "dark"
+              },
+              {
+                "name": "Transparent",
+                "value": "transparent"
+              }
+            ]
+          }
+        ],
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "search",
     "fields": [
       {
