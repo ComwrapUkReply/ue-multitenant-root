@@ -1,0 +1,83 @@
+version: 1
+
+indices:
+  default:
+    include:
+      - '/**'
+    exclude:
+      - '/drafts/**'
+    target: /query-index.json
+    properties:
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
+      keywords:
+        select: head > meta[name="keywords"]
+        value: attribute(el, "content")
+      robots:
+        select: head > meta[name="robots"]
+        value: attribute(el, "content")
+      template:
+        select: head > meta[name="template"]
+        value: attribute(el, "content")
+      author-name:
+        select: head > meta[name="author-name"]
+        value: attribute(el, "content")
+      author-role:
+        select: head > meta[name="author-role"]
+        value: attribute(el, "content")
+      author-email:
+        select: head > meta[name="author-email"]
+        value: attribute(el, "content")
+      category:
+        select: head > meta[name="category"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: match(attribute(el, "content"), "https://[^/]+(/.*)")
+
+  blog:
+    include:
+      - '/blog/**'
+    target: /blog-index.json
+    properties:
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
+      author-name:
+        select: head > meta[name="author-name"]
+        value: attribute(el, "content")
+      author-role:
+        select: head > meta[name="author-role"]
+        value: attribute(el, "content")
+      author-email:
+        select: head > meta[name="author-email"]
+        value: attribute(el, "content")
+      category:
+        select: head > meta[name="category"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: match(attribute(el, "content"), "https://[^/]+(/.*)")
+      keywords:
+        select: head > meta[name="keywords"]
+        value: attribute(el, "content")
+      tags:
+        select: head > meta[name="cq-tags"]
+        value: attribute(el, "content")
+      publishDate:
+        select: head > meta[name="article_publish_date"]
+        value: attribute(el, "content")
+

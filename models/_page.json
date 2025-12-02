@@ -4,6 +4,33 @@
       "id": "page-metadata",
       "fields": [
         {
+          "component": "select",
+          "name": "template",
+          "label": "Template",
+          "options": [
+            {
+              "name": "Default",
+              "value": ""
+            },
+            {
+              "name": "Article",
+              "value": "article"
+            },
+            {
+              "name": "Events",
+              "value": "events"
+            }
+          ],
+          "condition": {
+            "===": [
+              {
+                "var": "initialContentRefTarget"
+              },
+              "true"
+            ]
+          }
+        },
+        {
           "component": "text",
           "valueType": "string",
           "name": "jcr:title",
@@ -21,6 +48,92 @@
           "name": "keywords",
           "multi": true,
           "label": "Keywords"
+        },
+        {
+          "component": "container",
+          "name": "meta",
+          "label": "Meta",
+          "fields": [
+            {
+              "component": "text",
+              "name": "og:title",
+              "label": "Title"
+            },
+            {
+              "component": "aem-content",
+              "name": "link",
+              "label": "Link"
+            },
+            {
+              "component": "text",
+              "name": "linkText",
+              "label": "Text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "article-metadata",
+      "fields": [
+        {
+          "...": "#/models/page-metadata/fields/template"
+        },
+        {
+          "component": "aem-tag",
+          "name": "tags",
+          "label": "Tags",
+          "valueType": "string"
+        },
+        {
+          "component": "container",
+          "name": "meta",
+          "label": "Meta",
+          "fields": [
+            {
+              "...": "#/models/page-metadata/fields/meta/fields"
+            },
+            {
+              "component": "text",
+              "name": "article:author",
+              "label": "Author",
+              "condition": {
+                "===": [
+                  {
+                    "var": "template"
+                  },
+                  "article"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "events-metadata",
+      "fields": [
+        {
+          "...": "#/models/page-metadata/fields/template"
+        },
+        {
+          "component": "aem-tag",
+          "name": "tags",
+          "label": "Tags",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "events:organizer",
+          "label": "Organizer",
+          "condition": {
+            "===": [
+              {
+                "var": "template"
+              },
+              "events"
+            ]
+          }
         }
       ]
     }

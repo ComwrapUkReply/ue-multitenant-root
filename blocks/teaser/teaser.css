@@ -1,0 +1,328 @@
+/* Teaser block styles - Based on Figma design */
+
+/* Design system colors: Primary #0073DD, Black #000000 */
+
+/* Typography: Heading 44px/56px, Body 20px/32px */
+
+.block.teaser {
+  margin: 2rem 0;
+  padding: 0;
+}
+
+/* Wrapper - main container */
+.teaser-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  min-height: 513px;
+}
+
+/* Image container */
+.teaser-image {
+  position: relative;
+  flex-shrink: 0;
+  width: 50%;
+  height: 513px;
+  overflow: hidden;
+}
+
+.teaser-image picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.teaser-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Content container */
+.teaser-content {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding-left: 20px;
+  width: 50%;
+  flex-shrink: 0;
+}
+
+/* Heading wrapper with arrow */
+.teaser-heading-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.teaser-heading {
+  font-family: var(--heading-font-family);
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 56px;
+  color: #0073dd;
+  margin: 0;
+}
+
+.teaser-description {
+  font-family: var(--body-font-family);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 32px;
+  color: #000;
+  margin: 0;
+}
+
+.teaser-description p {
+  margin: 0 0 1rem;
+}
+
+.teaser-description p:last-child {
+  margin-bottom: 0;
+}
+
+/* Buttons container */
+.teaser-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+
+/* Full block link */
+.teaser-block-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease;
+}
+
+.teaser-block-link:hover {
+  transform: translateY(-2px);
+}
+
+.teaser-block-link:hover .teaser-wrapper {
+  box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+}
+
+/* Layout variants */
+
+/* Image Right */
+.block.teaser.image-right .teaser-wrapper {
+  flex-direction: row-reverse;
+}
+
+.block.teaser.image-right .teaser-content {
+  padding-left: 0;
+  padding-right: 20px;
+}
+
+.block.teaser.image-right .teaser-description-wrapper,
+.block.teaser.image-right .teaser-buttons {
+  padding-left: 0;
+  padding-right: 48px;
+}
+
+/* Image Top */
+.block.teaser.image-top .teaser-wrapper {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.block.teaser.image-top .teaser-image {
+  width: 100%;
+  height: 400px;
+}
+
+.block.teaser.image-top .teaser-content {
+  width: 100%;
+  padding-left: 0;
+  padding-top: 2rem;
+}
+
+.block.teaser.image-top .teaser-heading-wrapper {
+  align-items: center;
+  text-align: center;
+}
+
+.block.teaser.image-top .teaser-description-wrapper,
+.block.teaser.image-top .teaser-buttons {
+  padding-left: 0;
+}
+
+.block.teaser.image-top .teaser-buttons {
+  justify-content: center;
+}
+
+/* Image Bottom */
+.block.teaser.image-bottom .teaser-wrapper {
+  flex-direction: column-reverse;
+  align-items: stretch;
+}
+
+.block.teaser.image-bottom .teaser-image {
+  width: 100%;
+  height: 400px;
+}
+
+.block.teaser.image-bottom .teaser-content {
+  width: 100%;
+  padding-left: 0;
+  padding-bottom: 2rem;
+}
+
+.block.teaser.image-bottom .teaser-heading-wrapper {
+  align-items: center;
+  text-align: center;
+}
+
+.block.teaser.image-bottom .teaser-description-wrapper,
+.block.teaser.image-bottom .teaser-buttons {
+  padding-left: 0;
+}
+
+.block.teaser.image-bottom .teaser-buttons {
+  justify-content: center;
+}
+
+/* Image Background */
+.block.teaser.image-background .teaser-wrapper {
+  position: relative;
+  min-height: 600px;
+  padding: 3rem;
+}
+
+.block.teaser.image-background .teaser-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.block.teaser.image-background .teaser-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
+}
+
+.block.teaser.image-background .teaser-image-overlay {
+  display: none;
+}
+
+.block.teaser.image-background .teaser-content {
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem;
+  background: rgb(255 255 255 / 95%);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.block.teaser.image-background .teaser-heading {
+  color: #0073dd;
+}
+
+/* Responsive Design */
+
+/* Tablet */
+@media (width <= 1024px) {
+  .teaser-image {
+    width: 50%;
+    height: auto;
+    min-height: 400px;
+  }
+
+  .teaser-content {
+    width: 50%;
+  }
+
+  .teaser-heading {
+    font-size: 36px;
+    line-height: 44px;
+  }
+
+  .teaser-description {
+    font-size: 18px;
+    line-height: 28px;
+  }
+}
+
+/* Mobile */
+@media (width <= 768px) {
+  .teaser-wrapper {
+    flex-direction: column !important;
+    gap: 1.5rem;
+    min-height: auto;
+  }
+
+  .teaser-image {
+    width: 100% !important;
+    height: 300px;
+  }
+
+  .teaser-content {
+    width: 100% !important;
+    padding: 0 !important;
+    gap: 2rem;
+  }
+
+  .teaser-heading {
+    font-size: var(--heading-font-size-m);
+    line-height: 1.3;
+  }
+
+  .teaser-description-wrapper,
+  .teaser-buttons {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .teaser-description {
+    font-size: var(--body-font-size-s);
+    line-height: 1.6;
+  }
+
+  .teaser-buttons {
+    flex-direction: column;
+  }
+
+  .teaser-buttons .button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .block.teaser.image-background .teaser-wrapper {
+    padding: 1.5rem;
+    min-height: 500px;
+  }
+
+  .block.teaser.image-background .teaser-content {
+    padding: 1.5rem;
+  }
+}
+
+/* Accessibility */
+.teaser-block-link:focus-visible {
+  outline: 2px solid #0073dd;
+  outline-offset: 4px;
+}
+
+.teaser-buttons .button:focus-visible,
+.teaser-buttons a:focus-visible {
+  outline: 2px solid #0073dd;
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .teaser-wrapper,
+  .teaser-block-link,
+  .teaser-buttons .button {
+    transition: none;
+  }
+}

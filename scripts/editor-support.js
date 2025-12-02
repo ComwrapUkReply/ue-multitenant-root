@@ -10,6 +10,11 @@ import {
 } from './aem.js';
 import { decorateRichtext } from './editor-support-rte.js';
 import { decorateMain } from './scripts.js';
+import {
+  getCurrentUser,
+  lockComponent,
+  updateComponentFilters,
+} from './editor-support-components.js';
 
 async function applyChanges(event) {
   // redecorate default content and blocks on patches (in the properties rail)
@@ -93,6 +98,28 @@ async function applyChanges(event) {
   return false;
 }
 
+/**
+ * Disables publish/live button for contributor group users
+ * @param {Object} userData - Current user data including group memberships
+ */
+function disablePublishForContributors(userData) {
+  if (!userData?.memberOf) return;
+
+  const userGroups = userData.memberOf;
+  const isContributor = userGroups.some((group) => group.authorizableId === 'eds-editor');
+
+  if (isContributor) {
+    // Check if meta tag already exists
+    const existingMeta = document.querySelector('meta[name="urn:adobe:aue:config:disable"]');
+    if (!existingMeta) {
+      const meta = document.createElement('meta');
+      meta.setAttribute('name', 'urn:adobe:aue:config:disable');
+      meta.setAttribute('content', 'publish-live');
+      document.head.appendChild(meta);
+    }
+  }
+}
+
 function attachEventListners(main) {
   [
     'aue:content-patch',
@@ -107,6 +134,27 @@ function attachEventListners(main) {
     if (!applied) window.location.reload();
   }));
 }
+
+// Initialize user-based controls (publish button and component filters)
+(async () => {
+  const userData = await getCurrentUser();
+  if (userData) {
+    // Disable publish button for contributors
+    disablePublishForContributors(userData);
+
+    // Update component filters based on user group
+    await updateComponentFilters(userData);
+
+    // Optionally lock specific components for contributors
+    if (userData.memberOf?.some((group) => group.authorizableId === 'contributor')) {
+      // Lock restricted components if they exist
+      const restrictedComponents = document.querySelectorAll('.block[data-restricted]');
+      restrictedComponents.forEach((component) => {
+        lockComponent(component);
+      });
+    }
+  }
+})();
 
 attachEventListners(document.querySelector('main'));
 
