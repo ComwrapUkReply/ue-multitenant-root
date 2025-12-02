@@ -57,7 +57,7 @@ function focusNavSection() {
  * @param {Boolean} expanded Whether the element should be expanded or collapsed
  */
 function toggleAllNavSections(sections, expanded = false) {
-  sections.querySelectorAll('.nav-sections .default-content-wrapper > ul > li').forEach((section) => {
+  sections.querySelectorAll('.nav-sections .nav-sections-menu > ul > li.nav-drop').forEach((section) => {
     section.setAttribute('aria-expanded', expanded);
   });
 }
@@ -104,6 +104,63 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 }
 
 /**
+ * Restructures nav sections menu to wrap p>ul patterns in li.nav-drop>ul
+ * @param {Element} navSectionsMenu The nav sections menu container
+ */
+function restructureNavSectionsMenu(navSectionsMenu) {
+  // Find all p elements that are followed by a ul element
+  const allChildren = Array.from(navSectionsMenu.children);
+  const menuItems = [];
+  let i = 0;
+
+  while (i < allChildren.length) {
+    const current = allChildren[i];
+
+    // Check if current is a p and next sibling is a ul
+    if (current.tagName === 'P' && i + 1 < allChildren.length && allChildren[i + 1].tagName === 'UL') {
+      const pElement = current;
+      const ulElement = allChildren[i + 1];
+
+      // Remove class attribute from p element
+      pElement.removeAttribute('class');
+
+      // Remove button class from any a elements inside p
+      const links = pElement.querySelectorAll('a.button');
+      links.forEach((link) => {
+        link.classList.remove('button');
+      });
+
+      // Add nav-sections-submenu class to ul element
+      ulElement.classList.add('nav-sections-1');
+
+      // Create li.nav-drop wrapper
+      const liWrapper = document.createElement('li');
+      liWrapper.classList.add('nav-drop');
+
+      // Move p and ul into li
+      liWrapper.appendChild(pElement);
+      liWrapper.appendChild(ulElement);
+
+      menuItems.push(liWrapper);
+      i += 2; // Skip both p and ul
+    } else {
+      // Skip standalone elements (p without following ul)
+      i += 1;
+    }
+  }
+
+  // If we found menu items, wrap them in a ul
+  if (menuItems.length > 0) {
+    const ulWrapper = document.createElement('ul');
+    menuItems.forEach((li) => ulWrapper.appendChild(li));
+
+    // Clear the container and add the new structure
+    navSectionsMenu.textContent = '';
+    navSectionsMenu.appendChild(ulWrapper);
+  }
+}
+
+/**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
@@ -117,6 +174,7 @@ export default async function decorate(block) {
   block.textContent = '';
   const nav = document.createElement('nav');
   nav.id = 'nav';
+  nav.classList.add('nav');
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
   const classes = ['brand', 'sections', 'tools'];
@@ -134,9 +192,18 @@ export default async function decorate(block) {
 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
-    navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
-      if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
+    // add nav-section-menu class to default-content-wrapper
+    const defaultContentWrapper = navSections.querySelector('.default-content-wrapper');
+    if (defaultContentWrapper) {
+      defaultContentWrapper.classList.add('nav-sections-menu');
+      // restructure nav sections menu to wrap p>ul patterns in li.nav-drop>ul
+      restructureNavSectionsMenu(defaultContentWrapper);
+    }
+
+    navSections.querySelectorAll(':scope .nav-sections-menu > ul > li.nav-drop').forEach((navSection) => {
+      // Add click handler to toggle submenu only in desktop view
       navSection.addEventListener('click', () => {
+        // Condition: Only runs if device is currently in desktop mode (via media query)
         if (isDesktop.matches) {
           const expanded = navSection.getAttribute('aria-expanded') === 'true';
           toggleAllNavSections(navSections);

@@ -1,48 +1,54 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>{{properties.title}}</title>
-  </head>
-  <body>
-    <header></header>
-    <main>
-      <div>
-        <div class="hero">
+<head>
+  <title>{{properties.title}}</title>
+</head>
+<body>
+  <header></header>
+  <main>
+    <div>
+      <div class="hero">
+        <div>
           <div>
-            <div>
-              <p>
-                <picture>
-                  <img src="{{{properties.elements.image.value}}}">
-                </picture>
-              </p>
-              <h1>{{properties.elements.newsTitle.value}}</h1>
-            </div>
-          </div>
-        </div>
-        <p><strong>Author:</strong> {{properties.elements.author.value}}</p>
-        <div class="columns">
-          <div>
-            <div>
-              <p>
-                <picture>
-                  <img src="{{{properties.elements.image2.value}}}">
-                </picture>
-              </p>
-            </div>
-            <div>
-              <p>{{{properties.elements.text.value}}}</p>
-            </div>
-            <div>
-              <p>
-                <picture>
-                  <img src="{{{properties.elements.image3.value}}}">
-                </picture>
-              </p>
-            </div>
+            {{#properties.elements.heroImage.value}}
+            <p>
+              <picture>
+                <img src="{{{properties.elements.heroImage.value}}}">
+              </picture>
+            </p>
+            {{/properties.elements.heroImage.value}}
+            <h1>{{properties.elements.newsTitle.value}}</h1>
           </div>
         </div>
       </div>
-    </main>
-    <footer></footer>
-  </body>
+      <p><strong>Author:</strong> {{properties.elements.author.value}}</p>
+      <div class="columns">
+        <div>
+          <div>
+            {{#properties.elements.leftImage.value}}
+            <p>
+              <picture>
+                <img src="{{{properties.elements.leftImage.value}}}">
+              </picture>
+            </p>
+            {{/properties.elements.leftImage.value}}
+          </div>
+          <div>
+            <p>{{{properties.elements.text.value}}}</p>
+          </div>
+          <div>
+            {{#properties.elements.rightImage.value}}
+            <p>
+              <picture>
+                <img src="{{{properties.elements.rightImage.value}}}">
+              </picture>
+            </p>
+            {{/properties.elements.rightImage.value}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer></footer>
+</body>
 </html>
