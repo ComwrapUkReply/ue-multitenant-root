@@ -15,7 +15,7 @@ const CONFIG = {
   placeholdersUrl: '/placeholders.json',
   projectName: 'ue-multitenant-root',
   githubOrg: 'comwrapukreply',
-  branch: 'multi-lang',
+  branch: 'region-sel',
   // Region definitions with default languages and metadata
   regions: {
     ch: {
