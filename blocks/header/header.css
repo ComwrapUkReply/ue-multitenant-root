@@ -24,7 +24,6 @@ header nav[aria-expanded='true'] {
     'brand hamburger' var(--nav-height)
     'sections sections' 1fr
     'tools tools' var(--nav-height) / 1fr auto;
-  overflow-y: auto;
   min-height: 100dvh;
   min-height: 0;
   overflow: visible;
