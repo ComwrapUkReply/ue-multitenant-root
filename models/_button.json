@@ -8,7 +8,6 @@
           "page": {
             "resourceType": "core/franklin/components/button/v1/button",
             "template": {
-              "name": "Button",
               "model": "button"
             }
           }
@@ -25,15 +24,15 @@
           "name": "link",
           "label": "Link"
         },
-      {
-        "component": "text",
-        "name": "text",
-        "label": "Text"
-      },
-      {
-        "component": "select",
-        "name": "linkType",
-        "label": "Type",
+        {
+          "component": "text",
+          "name": "text",
+          "label": "Text"
+        },
+        {
+          "component": "select",
+          "name": "linkType",
+          "label": "Type",
           "options": [
             {
               "name": "default",
