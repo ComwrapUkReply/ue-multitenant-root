@@ -184,12 +184,24 @@ function addSemanticClasses(block) {
   });
 }
 
+function processButtonText(block) {
+  block.querySelectorAll('.button-container').forEach((buttonContainer) => {
+    const textContentElement = buttonContainer.parentElement.nextElementSibling.querySelector('p');
+    const textContent = textContentElement.textContent.trim();
+    buttonContainer.querySelector('a').textContent = textContent;
+    textContentElement.remove();
+  });
+}
+
 /**
  * Entry point to hero block's JavaScript
  * Must be exported as default and accept a block's DOM element
  * @param {HTMLElement} block - The block's DOM element/tree
  */
 export default function decorate(block) {
+  // Sync button text fields with text content of button elements
+  processButtonText(block);
+
   // Process classes field first (before other processing)
   processClasses(block);
 
