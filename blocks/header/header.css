@@ -1,4 +1,5 @@
 @import url('../language-switcher/language-switcher.css');
+@import url('../region-switcher/region-switcher.css');
 
 
 /* header and nav layout */
@@ -149,6 +150,9 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 
   header nav .nav-tools {
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 }
 

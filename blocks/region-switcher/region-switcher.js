@@ -343,7 +343,7 @@ function createDropdownSwitcher(regions, currentRegion, showFlags, pagePath) {
   button.className = 'region-current';
   button.setAttribute('aria-haspopup', 'true');
   button.setAttribute('aria-expanded', 'false');
-  button.setAttribute('aria-label', `Current region: ${currentRegion?.name || 'Select region'}. Click to change.`);
+  button.setAttribute('aria-label', `Current region: ${currentRegion?.name || 'Region'}. Click to change.`);
 
   if (showFlags && currentRegion) {
     const flagSpan = document.createElement('span');
@@ -355,7 +355,7 @@ function createDropdownSwitcher(regions, currentRegion, showFlags, pagePath) {
 
   const labelSpan = document.createElement('span');
   labelSpan.className = 'label';
-  labelSpan.textContent = currentRegion?.name || 'Select Region';
+  labelSpan.textContent = currentRegion?.name || 'Region';
   button.appendChild(labelSpan);
 
   // Dropdown arrow
