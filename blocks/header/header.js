@@ -2,6 +2,7 @@ import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import languageSwitcherDecorate from '../language-switcher/language-switcher.js';
 import { getPageMappingsJSON, getCustomLabelsJSON } from '../language-switcher/page-mappings.js';
+import regionSwitcherDecorate from '../region-switcher/region-switcher.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -167,6 +168,56 @@ async function addLanguageSwitcher(navTools) {
   }
 }
 
+/**
+ * Creates and adds region switcher to nav-tools
+ * @param {Element} navTools The nav-tools container element
+ */
+async function addRegionSwitcher(navTools) {
+  // Create a container for the region switcher
+  const regionSwitcherContainer = document.createElement('div');
+  regionSwitcherContainer.className = 'region-switcher-header';
+
+  // Create a mock block structure for the region switcher
+  const mockBlock = document.createElement('div');
+  mockBlock.className = 'block region-switcher';
+
+  // Add default configuration as table structure (as expected by the block)
+  const configTable = document.createElement('div');
+  configTable.innerHTML = `
+    <div>
+      <div>Display Style</div>
+      <div>dropdown</div>
+    </div>
+    <div>
+      <div>Show Flags</div>
+      <div>true</div>
+    </div>
+    <div>
+      <div>Default Languages</div>
+      <div></div>
+    </div>
+  `;
+
+  // Add configuration to mock block
+  while (configTable.firstElementChild) {
+    mockBlock.appendChild(configTable.firstElementChild);
+  }
+
+  // Decorate the region switcher
+  try {
+    await regionSwitcherDecorate(mockBlock);
+
+    // Add the decorated block to the container
+    regionSwitcherContainer.appendChild(mockBlock);
+
+    // Add to nav-tools
+    navTools.appendChild(regionSwitcherContainer);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('Failed to load region switcher in header:', error);
+  }
+}
+
 function restructureNavSectionsMenu(navSectionsMenu) {
   // Find all p elements that are followed by a ul element
   const allChildren = Array.from(navSectionsMenu.children);
@@ -286,10 +337,11 @@ export default async function decorate(block) {
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
 
-  // Add language switcher to nav-tools
+  // Add language switcher and region switcher to nav-tools
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
     await addLanguageSwitcher(navTools);
+    await addRegionSwitcher(navTools);
   }
 
   const navWrapper = document.createElement('div');

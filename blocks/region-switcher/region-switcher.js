@@ -426,7 +426,7 @@ function createHorizontalSwitcher(regions, currentRegion, showFlags, pagePath) {
   wrapper.setAttribute('aria-label', 'Region selection');
 
   const list = document.createElement('ul');
-  list.className = 'region-list';
+  list.className = 'region-list horizontal';
   list.setAttribute('role', 'menubar');
 
   regions.forEach((region) => {
@@ -457,7 +457,7 @@ function createFlagsSwitcher(regions, currentRegion, pagePath) {
   wrapper.setAttribute('aria-label', 'Region selection');
 
   const list = document.createElement('ul');
-  list.className = 'region-flags';
+  list.className = 'region-list flags';
   list.setAttribute('role', 'menubar');
 
   regions.forEach((region) => {

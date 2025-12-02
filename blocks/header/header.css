@@ -517,15 +517,60 @@ header nav .nav-tools .language-switcher-header .language-option {
   padding: 0.5rem 0.75rem;
 }
 
-/* Mobile adjustments for header language switcher */
+/* Region switcher in header */
+header nav .nav-tools .region-switcher-header {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
+header nav .nav-tools .region-switcher-header .block.region-switcher {
+  margin: 0;
+  font-size: var(--body-font-size-xs);
+}
+
+header nav .nav-tools .region-switcher-header .region-current {
+  min-width: auto;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--body-font-size-xs);
+  border: 1px solid var(--light-color);
+  background: var(--background-color);
+}
+
+header nav .nav-tools .region-switcher-header .region-current:hover {
+  background: var(--light-color);
+}
+
+header nav .nav-tools .region-switcher-header .region-menu {
+  position: absolute;
+  right: 0;
+  left: auto;
+  min-width: 180px;
+}
+
+header nav .nav-tools .region-switcher-header .region-option {
+  font-size: var(--body-font-size-xs);
+  padding: 0.5rem 0.75rem;
+}
+
+/* Mobile adjustments for header switchers */
 @media (width <= 900px) {
   header nav[aria-expanded='true'] .nav-tools {
     justify-content: center;
     padding: 1rem 0;
     border-top: 1px solid var(--light-color);
+    gap: 0.5rem;
   }
   
   header nav .nav-tools .language-switcher-header .language-current {
     min-width: 150px;
+  }
+
+  header nav .nav-tools .region-switcher-header .region-current {
+    min-width: 150px;
+  }
+
+  header nav .nav-tools .region-switcher-header {
+    margin-left: 0;
   }
 }
