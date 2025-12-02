@@ -5,8 +5,6 @@
  * Each region uses its default language - no cross-language mapping
  */
 
-import { getMetadata } from '../../scripts/aem.js';
-
 // =============================================================================
 // CONFIGURATION
 // =============================================================================
@@ -24,13 +22,6 @@ const CONFIG = {
       flag: '🇨🇭',
       defaultLanguage: 'de',
       languages: ['de', 'fr', 'en'],
-    },
-    de: {
-      code: 'de',
-      name: 'Germany',
-      flag: '🇩🇪',
-      defaultLanguage: 'de',
-      languages: ['de', 'en'],
     },
   },
   cacheTimeout: 5 * 60 * 1000, // 5 minutes
