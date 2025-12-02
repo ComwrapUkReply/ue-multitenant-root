@@ -1,53 +1,29 @@
-/* Region Switcher Block Styles */
+/* Region Switcher Block */
 
 .block.region-switcher {
-  margin: 1rem 0;
-  font-family: var(--body-font-family, roboto, roboto-fallback, sans-serif);
+  font-family: var(--body-font-family, sans-serif);
 }
 
-/* Container */
-.region-switcher-container {
+/* Dropdown Container */
+.region-dropdown {
   position: relative;
   display: inline-block;
 }
 
-/* Common styles for flags */
-.region-switcher .flag {
-  font-size: 1.2em;
-  margin-right: 0.5rem;
-  display: inline-block;
-  line-height: 1;
-}
-
-.region-switcher .label {
-  display: inline-block;
-}
-
-/* =============================================================================
-   DROPDOWN STYLES
-   ============================================================================= */
-
-.region-dropdown,
-.region-switcher-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
+/* Current Region Button */
 .region-current {
-  background: var(--background-color, #fff);
-  border: 1px solid var(--light-color, #ddd);
-  border-radius: 4px;
-  padding: 0.75rem 1rem;
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: var(--body-font-size-s, 16px);
+  padding: 0.5rem 0.75rem;
+  background: var(--background-color, #fff);
+  border: 1px solid var(--light-color, #ddd);
+  border-radius: 4px;
+  font-size: var(--body-font-size-xs, 14px);
   color: var(--text-color, #333);
-  text-decoration: none;
-  transition: all 0.3s ease;
-  min-width: 180px;
-  justify-content: space-between;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  min-width: 140px;
 }
 
 .region-current:hover {
@@ -60,29 +36,44 @@
   outline-offset: 2px;
 }
 
+.region-current .flag {
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+.region-current .label {
+  flex: 1;
+}
+
 .region-current .arrow {
-  font-size: 0.8em;
-  transition: transform 0.3s ease;
-  margin-left: auto;
+  font-size: 0.7em;
+  transition: transform 0.2s;
+  opacity: 0.6;
 }
 
 .region-current[aria-expanded="true"] .arrow {
   transform: rotate(180deg);
 }
 
+/* Dropdown Menu */
 .region-menu {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
   background: var(--background-color, #fff);
   border: 1px solid var(--light-color, #ddd);
   border-radius: 4px;
   box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   z-index: 1000;
-  list-style: none;
-  margin: 2px 0 0;
-  padding: 0;
+  display: none;
+}
+
+.region-menu.open {
+  display: block;
 }
 
 .region-menu li {
@@ -90,20 +81,16 @@
   padding: 0;
 }
 
+/* Region Options */
 .region-option {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;
   color: var(--text-color, #333);
   text-decoration: none;
-  transition: background-color 0.3s ease;
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  font-size: var(--body-font-size-s, 16px);
+  font-size: var(--body-font-size-xs, 14px);
+  transition: background-color 0.2s;
 }
 
 .region-option:hover {
@@ -123,361 +110,64 @@
   cursor: default;
 }
 
-/* =============================================================================
-   HORIZONTAL LIST STYLES
-   ============================================================================= */
-
-.region-list.horizontal {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  align-items: center;
+.region-option .flag {
+  font-size: 1.1em;
+  line-height: 1;
 }
 
-.region-list.horizontal .region-item {
-  margin: 0;
-  padding: 0;
-}
-
-.region-list.horizontal .region-current,
-.region-list.horizontal .region-option {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  text-decoration: none;
-  color: var(--text-color, #333);
-  font-size: var(--body-font-size-s, 16px);
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
-}
-
-.region-list.horizontal .region-current {
-  background: var(--link-color, #06c);
-  color: var(--background-color, #fff);
-  border-color: var(--link-color, #06c);
-}
-
-.region-list.horizontal .region-option:hover {
-  background: var(--light-color, #f5f5f5);
-  border-color: var(--light-color, #ddd);
-  text-decoration: none;
-}
-
-.region-list.horizontal .region-option:focus {
-  outline: 2px solid var(--link-color, #06c);
-  outline-offset: 2px;
-}
-
-/* =============================================================================
-   FLAG-ONLY STYLES
-   ============================================================================= */
-
-.region-list.flags {
-  display: flex;
-  gap: 0.5rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  align-items: center;
-}
-
-.region-list.flags .region-item {
-  margin: 0;
-  padding: 0;
-}
-
-.region-flag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
-  border-radius: 50%;
-  text-decoration: none;
-  font-size: 1.5em;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-  width: 2.5rem;
-  height: 2.5rem;
-}
-
-.region-flag:hover {
-  background: var(--light-color, #f5f5f5);
-  transform: scale(1.1);
-}
-
-.region-flag:focus {
-  outline: 2px solid var(--link-color, #06c);
-  outline-offset: 2px;
-}
-
-.region-list.flags .current .region-flag {
-  border-color: var(--link-color, #06c);
-  background: var(--light-color, #f5f5f5);
-}
-
-.region-list.flags .region-flag .flag {
+/* Header Integration */
+.region-switcher-header .block.region-switcher {
   margin: 0;
 }
 
-/* =============================================================================
-   BLOCK OPTIONS
-   ============================================================================= */
-
-.block.region-switcher.compact {
-  margin: 0.5rem 0;
-}
-
-.block.region-switcher.compact .region-current,
-.block.region-switcher.compact .region-option {
-  padding: 0.5rem 0.75rem;
-  font-size: var(--body-font-size-xs, 14px);
-}
-
-.block.region-switcher.compact .region-current {
-  min-width: 150px;
-}
-
-.block.region-switcher.compact .region-flag {
-  width: 2rem;
-  height: 2rem;
-  font-size: 1.25em;
-}
-
-.block.region-switcher.large {
-  margin: 1.5rem 0;
-}
-
-.block.region-switcher.large .region-current,
-.block.region-switcher.large .region-option {
-  padding: 1rem 1.25rem;
-  font-size: var(--body-font-size-m, 18px);
-}
-
-.block.region-switcher.large .region-current {
-  min-width: 220px;
-}
-
-.block.region-switcher.left {
-  text-align: left;
-}
-
-.block.region-switcher.center {
-  text-align: center;
-}
-
-.block.region-switcher.right {
-  text-align: right;
-}
-
-/* Full Width */
-.block.region-switcher.full-width {
-  width: 100%;
-}
-
-.block.region-switcher.full-width .region-switcher-container {
-  width: 100%;
-}
-
-.block.region-switcher.full-width .region-dropdown {
-  width: 100%;
-}
-
-.block.region-switcher.full-width .region-current {
-  width: 100%;
-}
-
-.block.region-switcher.full-width .region-list.horizontal {
-  justify-content: center;
-}
-
-.block.region-switcher.full-width .region-list.flags {
-  justify-content: center;
-}
-
-/* =============================================================================
-   THEME VARIANTS
-   ============================================================================= */
-
-/* Dark Theme */
-.block.region-switcher.dark .region-current {
-  background: var(--dark-color, #333);
-  border-color: var(--dark-color, #555);
-  color: var(--background-color, #fff);
-}
-
-.block.region-switcher.dark .region-current:hover {
-  background: #444;
-}
-
-.block.region-switcher.dark .region-menu {
-  background: var(--dark-color, #333);
-  border-color: #555;
-}
-
-.block.region-switcher.dark .region-option {
-  color: var(--background-color, #fff);
-}
-
-.block.region-switcher.dark .region-option:hover {
-  background: #444;
-}
-
-.block.region-switcher.dark .region-option.current {
-  background: var(--link-color, #06c);
-}
-
-.block.region-switcher.dark .region-list.horizontal .region-option {
-  color: var(--background-color, #fff);
-}
-
-.block.region-switcher.dark .region-list.horizontal .region-option:hover {
-  background: #444;
-}
-
-.block.region-switcher.dark .region-flag:hover {
-  background: #444;
-}
-
-.block.region-switcher.dark .region-list.flags .current .region-flag {
-  background: var(--link-color, #06c);
-  border-color: var(--link-color, #06c);
-}
-
-/* Transparent Theme */
-.block.region-switcher.transparent .region-current {
-  background: transparent;
+.region-switcher-header .region-current {
+  min-width: auto;
+  padding: 0.4rem 0.6rem;
   border-color: transparent;
-}
-
-.block.region-switcher.transparent .region-current:hover {
-  background: rgb(0 0 0 / 5%);
-}
-
-.block.region-switcher.transparent .region-list.horizontal .region-option {
   background: transparent;
 }
 
-.block.region-switcher.transparent .region-list.horizontal .region-option:hover {
-  background: rgb(0 0 0 / 5%);
+.region-switcher-header .region-current:hover {
+  background: var(--light-color, #f5f5f5);
 }
 
-.block.region-switcher.transparent .region-flag {
-  background: transparent;
+.region-switcher-header .region-menu {
+  min-width: 160px;
+  right: 0;
+  left: auto;
 }
 
-.block.region-switcher.transparent .region-flag:hover {
-  background: rgb(0 0 0 / 5%);
-}
-
-/* =============================================================================
-   ERROR STATE
-   ============================================================================= */
-
-.region-switcher-error {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  color: var(--error-color, #c00);
-  font-size: var(--body-font-size-xs, 14px);
-}
-
-/* =============================================================================
-   RESPONSIVE DESIGN
-   ============================================================================= */
-
+/* Responsive */
 @media (width <= 768px) {
   .region-current {
-    min-width: 150px;
-    padding: 0.5rem 0.75rem;
-    font-size: var(--body-font-size-xs, 14px);
-  }
-
-  .region-list.horizontal {
-    gap: 0.5rem;
-  }
-
-  .region-list.horizontal .region-current,
-  .region-list.horizontal .region-option {
-    padding: 0.4rem 0.75rem;
-    font-size: var(--body-font-size-xs, 14px);
-  }
-
-  .region-flag {
-    padding: 0.4rem;
-    font-size: 1.2em;
-    width: 2.25rem;
-    height: 2.25rem;
-  }
-}
-
-@media (width <= 480px) {
-  .region-current {
     min-width: 120px;
+    padding: 0.4rem 0.6rem;
   }
 
-  .region-list.horizontal {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.25rem;
-  }
-
-  .region-list.horizontal .region-current,
-  .region-list.horizontal .region-option {
-    justify-content: center;
+  .region-switcher-header .region-current {
+    min-width: auto;
   }
 }
 
-/* =============================================================================
-   ACCESSIBILITY
-   ============================================================================= */
-
-/* High Contrast Mode Support */
-@media (prefers-contrast: more) {
-  .region-current,
-  .region-option {
-    border-width: 2px;
-  }
-
-  .region-menu {
-    border-width: 2px;
-  }
-
-  .region-option.current {
-    outline: 2px solid currentcolor;
-    outline-offset: -2px;
-  }
-}
-
-/* Reduced Motion Support */
+/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   .region-current,
   .region-option,
-  .region-flag,
   .region-current .arrow {
     transition: none;
   }
-
-  .region-flag:hover {
-    transform: none;
-  }
 }
 
-/* Focus Visible Support */
+/* Focus Visible */
 @supports selector(:focus-visible) {
-  .region-current:focus-visible,
-  .region-option:focus-visible,
-  .region-flag:focus-visible {
-    outline: 2px solid var(--link-color, #06c);
-    outline-offset: 2px;
+  .region-current:focus:not(:focus-visible),
+  .region-option:focus:not(:focus-visible) {
+    outline: none;
   }
 
-  .region-current:focus:not(:focus-visible),
-  .region-option:focus:not(:focus-visible),
-  .region-flag:focus:not(:focus-visible) {
-    outline: none;
+  .region-current:focus-visible,
+  .region-option:focus-visible {
+    outline: 2px solid var(--link-color, #06c);
+    outline-offset: 2px;
   }
 }

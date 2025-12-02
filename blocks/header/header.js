@@ -173,48 +173,24 @@ async function addLanguageSwitcher(navTools) {
  * @param {Element} navTools The nav-tools container element
  */
 async function addRegionSwitcher(navTools) {
-  // Create a container for the region switcher
-  const regionSwitcherContainer = document.createElement('div');
-  regionSwitcherContainer.className = 'region-switcher-header';
+  const container = document.createElement('div');
+  container.className = 'region-switcher-header';
 
-  // Create a mock block structure for the region switcher
   const mockBlock = document.createElement('div');
   mockBlock.className = 'block region-switcher';
 
-  // Add default configuration as table structure (as expected by the block)
-  const configTable = document.createElement('div');
-  configTable.innerHTML = `
-    <div>
-      <div>Display Style</div>
-      <div>dropdown</div>
-    </div>
-    <div>
-      <div>Show Flags</div>
-      <div>true</div>
-    </div>
-    <div>
-      <div>Default Languages</div>
-      <div></div>
-    </div>
+  // Simple config - show flags
+  mockBlock.innerHTML = `
+    <div><div>Show Flags</div><div>true</div></div>
   `;
 
-  // Add configuration to mock block
-  while (configTable.firstElementChild) {
-    mockBlock.appendChild(configTable.firstElementChild);
-  }
-
-  // Decorate the region switcher
   try {
     await regionSwitcherDecorate(mockBlock);
-
-    // Add the decorated block to the container
-    regionSwitcherContainer.appendChild(mockBlock);
-
-    // Add to nav-tools
-    navTools.appendChild(regionSwitcherContainer);
+    container.appendChild(mockBlock);
+    navTools.appendChild(container);
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.warn('Failed to load region switcher in header:', error);
+    console.warn('Failed to load region switcher:', error);
   }
 }
 

@@ -521,40 +521,10 @@ header nav .nav-tools .language-switcher-header .language-option {
   padding: 0.5rem 0.75rem;
 }
 
-/* Region switcher in header */
+/* Region switcher in header - uses styles from region-switcher.css */
 header nav .nav-tools .region-switcher-header {
   display: flex;
   align-items: center;
-  margin-left: 0.5rem;
-}
-
-header nav .nav-tools .region-switcher-header .block.region-switcher {
-  margin: 0;
-  font-size: var(--body-font-size-xs);
-}
-
-header nav .nav-tools .region-switcher-header .region-current {
-  min-width: auto;
-  padding: 0.5rem 0.75rem;
-  font-size: var(--body-font-size-xs);
-  border: 1px solid var(--light-color);
-  background: var(--background-color);
-}
-
-header nav .nav-tools .region-switcher-header .region-current:hover {
-  background: var(--light-color);
-}
-
-header nav .nav-tools .region-switcher-header .region-menu {
-  position: absolute;
-  right: 0;
-  left: auto;
-  min-width: 180px;
-}
-
-header nav .nav-tools .region-switcher-header .region-option {
-  font-size: var(--body-font-size-xs);
-  padding: 0.5rem 0.75rem;
 }
 
 /* Mobile adjustments for header switchers */
@@ -566,15 +536,8 @@ header nav .nav-tools .region-switcher-header .region-option {
     gap: 0.5rem;
   }
   
-  header nav .nav-tools .language-switcher-header .language-current {
-    min-width: 150px;
-  }
-
+  header nav .nav-tools .language-switcher-header .language-current,
   header nav .nav-tools .region-switcher-header .region-current {
-    min-width: 150px;
-  }
-
-  header nav .nav-tools .region-switcher-header {
-    margin-left: 0;
+    min-width: 140px;
   }
 }
