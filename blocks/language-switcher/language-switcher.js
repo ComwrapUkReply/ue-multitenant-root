@@ -121,7 +121,7 @@ function detectCurrentLocale() {
 
   // Check if we're on an Edge Delivery Services site
   const siteMatch = hostname.match(
-    /multi-lang--ue-multitenant-root-([^-]+)-([^-]+)--comwrapukreply\.aem\.page/,
+    /region-sel--ue-multitenant-root-([^-]+)-([^-]+)--comwrapukreply\.aem\.page/,
   );
 
   if (siteMatch) {
@@ -240,7 +240,7 @@ function generateTargetURL(targetLocale, pagePath) {
   }
 
   // Generate Edge Delivery Services URL
-  const baseURL = `https://multi-lang--${CONFIG.projectName}-${targetLocale.code}--${CONFIG.githubOrg}.aem.page`;
+  const baseURL = `https://region-sel--${CONFIG.projectName}-${targetLocale.code}--${CONFIG.githubOrg}.aem.page`;
 
   if (!pagePath) {
     return baseURL;
