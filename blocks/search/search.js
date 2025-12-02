@@ -130,11 +130,8 @@ function renderResult(result, searchTerms, titleTag) {
   if (result.title) {
     const title = document.createElement(titleTag);
     title.className = 'search-result-title';
-    const link = document.createElement('a');
-    link.href = result.path;
-    link.textContent = result.title;
-    highlightTextElements(searchTerms, [link]);
-    title.append(link);
+    title.textContent = result.title;
+    highlightTextElements(searchTerms, [title]);
     a.append(title);
   }
   if (result.description) {
@@ -327,6 +324,51 @@ function searchIcon() {
 }
 
 /**
+ * Toggles the search block visibility on mobile
+ * @param {HTMLElement} block - The search block element
+ * @param {HTMLButtonElement} button - The mobile search button
+ */
+function toggleMobileSearch(block, button) {
+  const isExpanded = block.getAttribute('aria-expanded') === 'true';
+  block.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+  button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+
+  // Focus input when opening
+  if (!isExpanded) {
+    const input = block.querySelector('.search-input');
+    if (input) {
+      input.focus();
+    }
+  }
+}
+
+/**
+ * Creates the mobile search toggle button
+ * @param {HTMLElement} block - The search block element
+ * @returns {HTMLButtonElement} Mobile search button element
+ */
+function createMobileSearchButton(block) {
+  const button = document.createElement('button');
+  button.className = 'search-button';
+  button.setAttribute('type', 'button');
+  button.setAttribute('aria-label', 'Toggle search');
+  button.setAttribute('aria-expanded', 'false');
+  button.setAttribute('aria-controls', 'search-panel');
+
+  // Add search icon to button
+  const icon = document.createElement('span');
+  icon.classList.add('icon', 'icon-search');
+  button.append(icon);
+
+  // Add click handler
+  button.addEventListener('click', () => {
+    toggleMobileSearch(block, button);
+  });
+
+  return button;
+}
+
+/**
  * Creates the search box container with icon and input
  * @param {HTMLElement} block - The search block element
  * @param {Object} config - Search configuration object
@@ -358,6 +400,18 @@ export default async function decorate(block) {
     searchBox(block, { source, placeholders: CONFIG.placeholders }),
     searchResultsContainer(block),
   );
+
+  // Add aria attributes for mobile toggle
+  block.setAttribute('id', 'search-panel');
+  block.setAttribute('aria-expanded', 'false');
+
+  // Create mobile search button and insert into wrapper
+  const wrapper = block.closest('.search-wrapper');
+  if (wrapper) {
+    const mobileButton = createMobileSearchButton(block);
+    wrapper.insertBefore(mobileButton, block);
+    decorateIcons(mobileButton);
+  }
 
   // Restore search query from URL if present
   const queryParam = searchParams.get('q');
