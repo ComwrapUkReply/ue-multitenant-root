@@ -18,25 +18,32 @@ const CONFIG = {
       name: 'Switzerland',
       flag: '🇨🇭',
       defaultLanguage: 'de',
+      languages: ['de', 'fr', 'en'],
     },
     de: {
       code: 'de',
       name: 'Germany',
       flag: '🇩🇪',
       defaultLanguage: 'de',
+      languages: ['de', 'en'],
     },
     us: {
       code: 'us',
       name: 'United States',
       flag: '🇺🇸',
       defaultLanguage: 'en',
+      languages: ['en'],
     },
     uk: {
       code: 'uk',
       name: 'United Kingdom',
       flag: '🇬🇧',
+      // defaultLanguage can be omitted - will use fallback mechanism
+      languages: ['en'],
     },
   },
+  // Default fallback language if region has no defaultLanguage or languages
+  defaultFallbackLanguage: 'en',
 };
 
 // Cache for performance
@@ -107,12 +114,54 @@ function detectCurrentRegion() {
 }
 
 /**
+ * Gets the default language for a region with fallback support
+ * @param {Object} region Region object
+ * @returns {string} Language code to use
+ */
+function getRegionLanguage(region) {
+  if (!region || !region.code) {
+    // eslint-disable-next-line no-console
+    console.warn('[Region Switcher] Invalid region object provided');
+    return CONFIG.defaultFallbackLanguage;
+  }
+
+  // Priority 1: Use explicit defaultLanguage if defined
+  if (region.defaultLanguage) {
+    return region.defaultLanguage;
+  }
+
+  // Priority 2: Use first language from languages array if available
+  if (region.languages && Array.isArray(region.languages) && region.languages.length > 0) {
+    // Log warning to encourage proper configuration (only in non-production)
+    const isProduction = window.location.hostname.includes('.aem.live');
+    if (!isProduction) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[Region Switcher] Region "${region.code}" (${region.name}) does not have defaultLanguage defined. Using first available language: ${region.languages[0]}`,
+      );
+    }
+    return region.languages[0];
+  }
+
+  // Priority 3: Use global fallback language
+  const isProduction = window.location.hostname.includes('.aem.live');
+  if (!isProduction) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[Region Switcher] Region "${region.code}" (${region.name}) has no defaultLanguage or languages array. Using fallback: ${CONFIG.defaultFallbackLanguage}`,
+    );
+  }
+  return CONFIG.defaultFallbackLanguage;
+}
+
+/**
  * Generates the target URL for a region (always homepage)
  * @param {Object} targetRegion Target region object
  * @returns {string} Target URL (homepage of the region)
  */
 function generateRegionURL(targetRegion) {
-  const lang = targetRegion.defaultLanguage;
+  // Use fallback mechanism to get language
+  const lang = getRegionLanguage(targetRegion);
   const { hostname, search } = window.location;
 
   // AEM Authoring - redirect to homepage
