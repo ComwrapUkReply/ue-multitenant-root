@@ -29,7 +29,8 @@ User switches to Germany
 
 The Region Switcher:
 - Shows available countries/regions (not individual languages)
-- Each region uses its default language when switching
+- **Always redirects to the homepage** of the target region
+- Uses the region's default language when switching
 - Works with Language Switcher for complete locale control
 
 ## How It Works
@@ -39,14 +40,12 @@ The Region Switcher:
 The block detects the current region from the URL:
 
 **Edge Delivery Services URL Pattern:**
-`https://multi-lang--ue-multitenant-root-{region}-{lang}--comwrapukreply.aem.page/`
+`https://region-sel--ue-multitenant-root-{region}-{lang}--comwrapukreply.aem.page/`
 
 **AEM Authoring URL Pattern:**
 `/content/ue-multitenant-root/{region}/{lang}/`
 
 ### Available Regions
-
-Regions are extracted from `placeholders.json`:
 
 | Region Code | Name | Flag | Default Language | Available Languages |
 |-------------|------|------|------------------|---------------------|
@@ -55,12 +54,15 @@ Regions are extracted from `placeholders.json`:
 
 ### URL Generation
 
-When switching regions, the block generates URLs using the region's default language:
+**Important:** When switching regions, users are **always redirected to the homepage** of the target region (not the equivalent inner page).
 
 | Current URL | Target Region | Generated URL |
 |-------------|---------------|---------------|
-| `.../ch-de/ueber-uns` | Germany | `.../de-de/ueber-uns` |
-| `.../de-en/about-us` | Switzerland | `.../ch-de/about-us` |
+| `.../ch-de/ueber-uns` | Germany | `.../de-de/` (homepage) |
+| `.../de-en/about-us` | Switzerland | `.../ch-de/` (homepage) |
+| `.../ch-fr/` | Germany | `.../de-de/` (homepage) |
+
+This ensures users always land on the homepage when exploring a new region.
 
 ## Usage
 
@@ -73,11 +75,9 @@ Add the Region Switcher block to any page:
 | Display Style: dropdown |
 | Show Flags: true |
 
-### Display Styles
+### Display Style
 
-1. **Dropdown** (default) - Compact dropdown menu
-2. **Horizontal** - Inline list of regions
-3. **Flags** - Flag icons only
+**Dropdown** - Compact dropdown menu (default and only style)
 
 ### Configuration Options
 

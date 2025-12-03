@@ -96,53 +96,22 @@ function detectCurrentRegion() {
 }
 
 /**
- * Gets the current page path (without locale prefix)
- * @returns {string} Current page path
- */
-function getCurrentPagePath() {
-  const { pathname } = window.location;
-  const currentRegion = detectCurrentRegion();
-
-  if (!currentRegion || !cache.currentLanguage) {
-    return '';
-  }
-
-  // For EDS URLs
-  if (!isAEMAuthoring()) {
-    return pathname.startsWith('/') ? pathname.substring(1) : pathname;
-  }
-
-  // For AEM authoring
-  const contentPath = getAEMContentPath();
-  if (contentPath) {
-    const basePath = `/content/ue-multitenant-root/${currentRegion.code}/${cache.currentLanguage}`;
-    if (contentPath.startsWith(basePath)) {
-      const relativePath = contentPath.substring(basePath.length).replace(/\.html$/, '');
-      return relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
-    }
-  }
-
-  return '';
-}
-
-/**
- * Generates the target URL for a region
+ * Generates the target URL for a region (always homepage)
  * @param {Object} targetRegion Target region object
- * @param {string} pagePath Page path
- * @returns {string} Target URL
+ * @returns {string} Target URL (homepage of the region)
  */
-function generateRegionURL(targetRegion, pagePath = '') {
+function generateRegionURL(targetRegion) {
   const lang = targetRegion.defaultLanguage;
   const { hostname, search } = window.location;
 
+  // AEM Authoring - redirect to homepage
   if (isAEMAuthoring()) {
-    const pagePathPart = pagePath ? `/${pagePath}` : '';
-    const contentPath = `/content/ue-multitenant-root/${targetRegion.code}/${lang}${pagePathPart}`;
+    const contentPath = `/content/ue-multitenant-root/${targetRegion.code}/${lang}`;
     return `${window.location.protocol}//${hostname}${contentPath}.html${search}`;
   }
 
-  const baseURL = `https://${CONFIG.branch}--${CONFIG.projectName}-${targetRegion.code}-${lang}--${CONFIG.githubOrg}.aem.page`;
-  return pagePath ? `${baseURL}/${pagePath}` : baseURL;
+  // Edge Delivery Services - redirect to homepage
+  return `https://${CONFIG.branch}--${CONFIG.projectName}-${targetRegion.code}-${lang}--${CONFIG.githubOrg}.aem.page`;
 }
 
 // =============================================================================
@@ -154,10 +123,9 @@ function generateRegionURL(targetRegion, pagePath = '') {
  * @param {Array} regions Available regions
  * @param {Object} currentRegion Current region
  * @param {boolean} showFlags Whether to show flags
- * @param {string} pagePath Current page path
  * @returns {HTMLElement} Dropdown element
  */
-function createDropdownSwitcher(regions, currentRegion, showFlags, pagePath) {
+function createDropdownSwitcher(regions, currentRegion, showFlags) {
   const wrapper = document.createElement('div');
   wrapper.className = 'region-dropdown';
 
@@ -198,7 +166,8 @@ function createDropdownSwitcher(regions, currentRegion, showFlags, pagePath) {
 
     const link = document.createElement('a');
     link.className = `region-option${isCurrent ? ' current' : ''}`;
-    link.href = isCurrent ? '#' : generateRegionURL(region, pagePath);
+    // Always redirect to homepage when switching regions
+    link.href = isCurrent ? '#' : generateRegionURL(region);
     link.setAttribute('role', 'menuitem');
 
     if (isCurrent) {
@@ -284,7 +253,6 @@ export default async function decorate(block) {
   const config = parseBlockConfig(block);
   const regions = Object.values(CONFIG.regions);
   const currentRegion = detectCurrentRegion();
-  const pagePath = getCurrentPagePath();
 
   // Clear and rebuild
   block.textContent = '';
@@ -293,7 +261,8 @@ export default async function decorate(block) {
     return;
   }
 
-  const switcher = createDropdownSwitcher(regions, currentRegion, config.showFlags, pagePath);
+  // Region switcher always redirects to homepage of target region
+  const switcher = createDropdownSwitcher(regions, currentRegion, config.showFlags);
   block.appendChild(switcher);
   block.classList.add('loaded');
 }
