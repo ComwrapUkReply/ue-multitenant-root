@@ -35,7 +35,6 @@ const CONFIG = {
       code: 'uk',
       name: 'United Kingdom',
       flag: '🇬🇧',
-      defaultLanguage: 'en',
     },
   },
 };
