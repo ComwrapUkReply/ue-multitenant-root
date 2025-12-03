@@ -39,7 +39,7 @@ const CONFIG = {
       name: 'United Kingdom',
       flag: '🇬🇧',
       // defaultLanguage can be omitted - will use fallback mechanism
-      languages: ['en'],
+      languages: [],
     },
   },
   // Default fallback language if region has no defaultLanguage or languages
