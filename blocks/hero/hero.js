@@ -97,35 +97,49 @@ function processButtons(block) {
         button.classList.add('secondary');
       }
 
-      // Wrap button in container
+      // Wrap button in container (required for styling)
       const buttonContainer = document.createElement('p');
       buttonContainer.classList.add('button-container');
       buttonContainer.appendChild(button);
 
-      // Replace the button block content with the collapsed button
-      buttonBlock.innerHTML = '';
-      buttonBlock.appendChild(buttonContainer);
+      // Preserve Universal Editor attributes by removing only child divs, not the block itself
+      // Remove all child divs but keep the buttonBlock's data attributes
+      const childDivs = [...buttonBlock.querySelectorAll(':scope > div')];
+      childDivs.forEach((div) => div.remove());
+
+      // Create a single div wrapper to maintain structure (Universal Editor expects this)
+      // This structure helps Universal Editor identify and highlight the button correctly
+      const wrapperDiv = document.createElement('div');
+      wrapperDiv.appendChild(buttonContainer);
+
+      // Add the collapsed button container within the wrapper
+      buttonBlock.appendChild(wrapperDiv);
+
+      // Remove any remaining text elements that are siblings (they should be processed/removed)
+      // This ensures Universal Editor highlights the button, not a text element below it
+      const remainingTextDivs = [...buttonBlock.querySelectorAll(':scope > div')].filter((div) => {
+        const p = div.querySelector('p');
+        return p && p.textContent.trim() === 'text' && !p.querySelector('a.button');
+      });
+      remainingTextDivs.forEach((div) => div.remove());
+
+      // Ensure the button block itself is set up for proper Universal Editor selection
+      // The button block should contain only the button wrapper, making selection clear
+      buttonBlock.setAttribute('data-block-status', 'loaded');
     }
   });
 
-  // Find all button components (both button and custom-button) that are already collapsed
-  const buttonComponents = block.querySelectorAll('.button-container');
+  // Don't move button blocks - keep them in place so Universal Editor can track them
+  // Instead, just add a wrapper class to group them visually via CSS
+  const buttonBlocks = [...block.children].filter(
+    (child) => child.getAttribute('data-block-name') === 'button',
+  );
 
-  if (buttonComponents.length > 0) {
-    // Create a wrapper for all buttons
-    const ctaWrapper = document.createElement('div');
-    ctaWrapper.classList.add('hero-buttons');
-
-    // Move all button components into the wrapper
-    buttonComponents.forEach((buttonComponent) => {
-      ctaWrapper.appendChild(buttonComponent);
+  if (buttonBlocks.length > 0) {
+    // Add a class to the button blocks for styling, but don't move them
+    buttonBlocks.forEach((buttonBlock) => {
+      buttonBlock.classList.add('hero-button-block');
     });
-
-    // Add the button wrapper to the content area
-    const contentDiv = block.querySelector('.hero-content');
-    if (contentDiv) {
-      contentDiv.appendChild(ctaWrapper);
-    }
   }
 
   // Clean up any empty paragraphs left behind
@@ -199,9 +213,6 @@ function processButtonText(block) {
  * @param {HTMLElement} block - The block's DOM element/tree
  */
 export default function decorate(block) {
-  // Sync button text fields with text content of button elements
-  processButtonText(block);
-
   // Process classes field first (before other processing)
   processClasses(block);
 
@@ -211,6 +222,9 @@ export default function decorate(block) {
   // Add semantic CSS classes
   addSemanticClasses(block);
 
-  // Process button components
+  // Process button components (this creates the button structure)
   processButtons(block);
+
+  // Sync button text fields with text content of button elements (after buttons are created)
+  processButtonText(block);
 }
