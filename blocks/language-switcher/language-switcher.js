@@ -1,706 +1,332 @@
 /**
  * Language Switcher Block
- * Provides navigation between different language versions within the SAME REGION
- * Works in conjunction with Region Switcher - shows only languages available in current region
- * Supports automatic locale detection and intelligent page mapping
+ * Switches languages within the same region
  */
 
 import { PAGE_MAPPINGS } from './page-mappings.js';
 
-// Configuration for the multitenant setup
+// Configuration
 const CONFIG = {
   projectName: 'ue-multitenant-root',
   githubOrg: 'comwrapukreply',
   branch: 'region-sel',
-  // Region definitions with available languages
-  regions: {
-    ch: {
-      code: 'ch',
-      name: 'Switzerland',
-      flag: '🇨🇭',
-      languages: ['de', 'fr', 'en'],
-    },
-    de: {
-      code: 'de',
-      name: 'Germany',
-      flag: '🇩🇪',
-      languages: ['de', 'en'],
-    },
-  },
-  // Language metadata
-  languages: {
-    de: { code: 'de', name: 'Deutsch', nativeName: 'Deutsch' },
-    fr: { code: 'fr', name: 'Français', nativeName: 'Français' },
-    en: { code: 'en', name: 'English', nativeName: 'English' },
-  },
-  // All locale combinations (for backwards compatibility)
   locales: [
     {
-      code: 'ch-de',
-      path: '/ch/de/',
-      label: 'Deutsch',
-      flag: '🇨🇭',
-      country: 'ch',
-      language: 'de',
+      code: 'ch-de', path: '/ch/de/', label: 'Deutsch', flag: '🇨🇭', country: 'ch',
     },
     {
-      code: 'ch-fr',
-      path: '/ch/fr/',
-      label: 'Français',
-      flag: '🇨🇭',
-      country: 'ch',
-      language: 'fr',
+      code: 'ch-fr', path: '/ch/fr/', label: 'Français', flag: '🇨🇭', country: 'ch',
     },
     {
-      code: 'ch-en',
-      path: '/ch/en/',
-      label: 'English',
-      flag: '🇨🇭',
-      country: 'ch',
-      language: 'en',
+      code: 'ch-en', path: '/ch/en/', label: 'English', flag: '🇨🇭', country: 'ch',
     },
     {
-      code: 'de-de',
-      path: '/de/de/',
-      label: 'Deutsch',
-      flag: '🇩🇪',
-      country: 'de',
-      language: 'de',
-      default: true,
+      code: 'de-de', path: '/de/de/', label: 'Deutsch', flag: '🇩🇪', country: 'de', default: true,
     },
     {
-      code: 'de-en',
-      path: '/de/en/',
-      label: 'English',
-      flag: '🇩🇪',
-      country: 'de',
-      language: 'en',
+      code: 'de-en', path: '/de/en/', label: 'English', flag: '🇩🇪', country: 'de',
     },
   ],
 };
 
-// Cache for performance optimization
+// Cache
 const cache = {
-  currentLocale: null,
-  currentPagePath: null,
-  isAEMAuthoring: null,
-  placeholdersMappings: null,
-  placeholdersPromise: null,
+  locale: null,
+  pagePath: null,
+  mappings: null,
+  mappingsPromise: null,
+};
+
+// Helpers
+const isAEMAuthoring = () => {
+  const { hostname } = window.location;
+  return hostname.includes('adobeaemcloud.com') || hostname.includes('author-');
+};
+
+const getContentPath = () => {
+  const { pathname, search } = window.location;
+  if (pathname.includes('/content/')) return pathname;
+  const param = new URLSearchParams(search).get('contentPath') || new URLSearchParams(search).get('path');
+  if (param) return param;
+  try {
+    const ref = new URL(document.referrer);
+    if (ref.pathname.includes('/content/')) return ref.pathname;
+  } catch { /* ignore */ }
+  return null;
 };
 
 /**
- * Fetches placeholders.json and converts it to PAGE_MAPPINGS format
- * @returns {Promise<Object>} Promise resolving to mappings object
+ * Fetches placeholders.json mappings
  */
-async function fetchPlaceholdersMappings() {
-  // Return cached promise if already fetching
-  if (cache.placeholdersPromise) {
-    return cache.placeholdersPromise;
-  }
+async function fetchMappings() {
+  if (cache.mappings) return cache.mappings;
+  if (cache.mappingsPromise) return cache.mappingsPromise;
 
-  // Return cached result if already loaded
-  if (cache.placeholdersMappings) {
-    return cache.placeholdersMappings;
-  }
-
-  // Create fetch promise
-  cache.placeholdersPromise = (async () => {
+  cache.mappingsPromise = (async () => {
     try {
-      const baseURL = `https://${CONFIG.branch}--${CONFIG.projectName}--${CONFIG.githubOrg}.aem.page`;
-      const response = await fetch(`${baseURL}/placeholders.json`);
+      const url = `https://${CONFIG.branch}--${CONFIG.projectName}--${CONFIG.githubOrg}.aem.page/placeholders.json`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch placeholders: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await res.json();
       const mappings = {};
 
-      // Convert placeholders.json format to PAGE_MAPPINGS format
-      // placeholders.json format: { source: "/ch/de/ueber-uns", target: "/ch/fr/a-propos" }
-      // PAGE_MAPPINGS format: { "ch-de": { "ueber-uns": { "ch-fr": "a-propos" } } }
-      if (data.data && Array.isArray(data.data)) {
-        data.data.forEach((item) => {
-          if (item.source && item.target && item.type === 'page') {
-            // Parse source: "/ch/de/ueber-uns" -> locale: "ch-de", path: "ueber-uns"
-            const sourceMatch = item.source.match(/^\/([^/]+)\/([^/]+)\/(.+)$/);
-            const targetMatch = item.target.match(/^\/([^/]+)\/([^/]+)\/(.+)$/);
+      (data.data || []).forEach((item) => {
+        if (!item.source || !item.target || item.type !== 'page') return;
 
-            if (sourceMatch && targetMatch) {
-              const [, sourceRegion, sourceLang, sourcePath] = sourceMatch;
-              const [, targetRegion, targetLang, targetPath] = targetMatch;
-              const sourceLocale = `${sourceRegion}-${sourceLang}`;
-              const targetLocale = `${targetRegion}-${targetLang}`;
+        const srcMatch = item.source.match(/^\/([^/]+)\/([^/]+)\/(.+)$/);
+        const tgtMatch = item.target.match(/^\/([^/]+)\/([^/]+)\/(.+)$/);
+        if (!srcMatch || !tgtMatch) return;
 
-              // Remove leading/trailing slashes and normalize path
-              const cleanSourcePath = sourcePath.replace(/^\/+|\/+$/g, '');
-              const cleanTargetPath = targetPath.replace(/^\/+|\/+$/g, '');
+        const srcLocale = `${srcMatch[1]}-${srcMatch[2]}`;
+        const tgtLocale = `${tgtMatch[1]}-${tgtMatch[2]}`;
+        const srcPath = srcMatch[3].replace(/^\/+|\/+$/g, '');
+        const tgtPath = tgtMatch[3].replace(/^\/+|\/+$/g, '');
 
-              // Initialize nested structure if needed
-              if (!mappings[sourceLocale]) {
-                mappings[sourceLocale] = {};
-              }
-              if (!mappings[sourceLocale][cleanSourcePath]) {
-                mappings[sourceLocale][cleanSourcePath] = {};
-              }
+        mappings[srcLocale] = mappings[srcLocale] || {};
+        mappings[srcLocale][srcPath] = mappings[srcLocale][srcPath] || {};
+        mappings[srcLocale][srcPath][tgtLocale] = tgtPath;
+      });
 
-              // Set mapping
-              mappings[sourceLocale][cleanSourcePath][targetLocale] = cleanTargetPath;
-            }
-          }
-        });
-      }
-
-      cache.placeholdersMappings = mappings;
+      cache.mappings = mappings;
       return mappings;
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn('[Language Switcher] Failed to fetch placeholders.json, using static mappings:', error);
-      // Return empty object to fall back to PAGE_MAPPINGS
+    } catch {
       return {};
     } finally {
-      // Clear promise cache after completion
-      cache.placeholdersPromise = null;
+      cache.mappingsPromise = null;
     }
   })();
 
-  return cache.placeholdersPromise;
+  return cache.mappingsPromise;
 }
 
 /**
- * Gets AEM content path from URL or referrer
- * @returns {string|null} Content path or null
+ * Detects current locale from URL
  */
-function getAEMContentPath() {
-  const { pathname, search } = window.location;
+function detectLocale() {
+  if (cache.locale) return cache.locale;
 
-  // Check if path contains content path
-  if (pathname.includes('/content/')) {
-    return pathname;
+  const { hostname, pathname } = window.location;
+
+  // EDS URL
+  const edsMatch = hostname.match(/ue-multitenant-root-([^-]+)-([^-]+)--/);
+  if (edsMatch) {
+    cache.locale = CONFIG.locales.find((l) => l.code === `${edsMatch[1]}-${edsMatch[2]}`);
+    return cache.locale;
   }
 
-  // Check URL parameters for content path
-  const urlParams = new URLSearchParams(search);
-  const contentParam = urlParams.get('contentPath') || urlParams.get('path');
-  if (contentParam) {
-    return contentParam;
-  }
-
-  // Check referrer
-  if (document.referrer) {
-    try {
-      const referrerUrl = new URL(document.referrer);
-      if (referrerUrl.pathname.includes('/content/')) {
-        return referrerUrl.pathname;
-      }
-    } catch {
-      // Ignore invalid referrer URLs
-    }
-  }
-
-  return null;
-}
-
-/**
- * Checks if we're in AEM authoring mode (cached)
- * @returns {boolean} True if in AEM authoring mode
- */
-function isAEMAuthoring() {
-  if (cache.isAEMAuthoring === null) {
-    const { hostname } = window.location;
-    cache.isAEMAuthoring = hostname.includes('adobeaemcloud.com') || hostname.includes('author-');
-  }
-  return cache.isAEMAuthoring;
-}
-
-/**
- * Detects the current locale from the URL (cached)
- * @returns {Object|null} Current locale object or null if not detected
- */
-function detectCurrentLocale() {
-  if (cache.currentLocale) {
-    return cache.currentLocale;
-  }
-
-  const { hostname } = window.location;
-
-  // Check if we're on an Edge Delivery Services site
-  const siteMatch = hostname.match(
-    /region-sel--ue-multitenant-root-([^-]+)-([^-]+)--comwrapukreply\.aem\.page/,
-  );
-
-  if (siteMatch) {
-    const [, country, language] = siteMatch;
-    const localeCode = `${country}-${language}`;
-    cache.currentLocale = CONFIG.locales.find((locale) => locale.code === localeCode);
-    return cache.currentLocale;
-  }
-
-  // Check if we're on AEM authoring (for Universal Editor)
+  // AEM authoring
   if (isAEMAuthoring()) {
-    // Parse AEM content path from URL or referrer
-    const contentPath = getAEMContentPath();
-    if (contentPath) {
-      const pathMatch = contentPath.match(
-        /\/content\/ue-multitenant-root\/([^/]+)\/([^/]+)/,
-      );
-      if (pathMatch) {
-        const [, country, language] = pathMatch;
-        const localeCode = `${country}-${language}`;
-        cache.currentLocale = CONFIG.locales.find((locale) => locale.code === localeCode);
-        return cache.currentLocale;
-      }
+    const path = getContentPath() || pathname;
+    const aemMatch = path.match(/\/content\/ue-multitenant-root\/([^/]+)\/([^/]+)/);
+    if (aemMatch) {
+      cache.locale = CONFIG.locales.find((l) => l.code === `${aemMatch[1]}-${aemMatch[2]}`);
+      return cache.locale;
     }
   }
 
-  // Fallback to default locale
-  cache.currentLocale = CONFIG.locales.find((locale) => locale.default) || CONFIG.locales[0];
-  return cache.currentLocale;
+  cache.locale = CONFIG.locales.find((l) => l.default) || CONFIG.locales[0];
+  return cache.locale;
 }
 
 /**
- * Gets available languages for the current region
- * @param {Object} currentLocale Current locale object
- * @returns {Array} Array of locale objects for the current region
+ * Gets current page path
  */
-function getLanguagesForCurrentRegion(currentLocale) {
-  if (!currentLocale?.country) {
-    return CONFIG.locales;
+function getPagePath(locale) {
+  if (cache.pagePath !== null) return cache.pagePath;
+
+  const { pathname, hostname } = window.location;
+
+  if (hostname.includes('.aem.page')) {
+    cache.pagePath = pathname === '/' ? '' : pathname.replace(/^\//, '');
+    return cache.pagePath;
   }
 
-  const region = CONFIG.regions[currentLocale.country];
-  if (!region) {
-    return CONFIG.locales;
-  }
-
-  // Filter locales to only those in the current region
-  return CONFIG.locales.filter((locale) => locale.country === currentLocale.country);
-}
-
-/**
- * Gets the current page path relative to the locale (cached)
- * @param {Object} currentLocale Current locale object
- * @returns {string} Page path
- */
-function getCurrentPagePath(currentLocale) {
-  if (cache.currentPagePath !== null) {
-    return cache.currentPagePath;
-  }
-
-  const { pathname } = window.location;
-
-  // For Edge Delivery Services sites, the path is already relative
-  if (window.location.hostname.includes('.aem.page')) {
-    if (pathname === '/') {
-      cache.currentPagePath = '';
-    } else {
-      // Remove leading slash for consistency with page mappings
-      cache.currentPagePath = pathname.startsWith('/') ? pathname.substring(1) : pathname;
+  if (isAEMAuthoring() && locale) {
+    const content = getContentPath();
+    const base = `/content/ue-multitenant-root${locale.path}`;
+    if (content?.startsWith(base)) {
+      cache.pagePath = content.substring(base.length).replace(/\.html$/, '').replace(/^\//, '');
+      return cache.pagePath;
     }
-    return cache.currentPagePath;
   }
 
-  // For AEM authoring, extract from content path
+  cache.pagePath = '';
+  return cache.pagePath;
+}
+
+/**
+ * Maps page path to target locale (falls back to homepage)
+ */
+function mapPath(path, fromLocale, toLocale, customMap, dynamicMap) {
+  if (!path || path === '/') return '';
+
+  const clean = path.replace(/^\//, '');
+
+  // Check mappings in priority order
+  const sources = [customMap, dynamicMap, PAGE_MAPPINGS];
+  const found = sources.find((src) => src?.[fromLocale.code]?.[clean]?.[toLocale.code]);
+  if (found) return found[fromLocale.code][clean][toLocale.code];
+
+  return ''; // Fallback to homepage
+}
+
+/**
+ * Generates target URL
+ */
+function generateURL(locale, path) {
   if (isAEMAuthoring()) {
-    const contentPath = getAEMContentPath();
-    if (contentPath && currentLocale) {
-      const basePath = `/content/ue-multitenant-root${currentLocale.path}`;
-      if (contentPath.startsWith(basePath)) {
-        const relativePath = contentPath.substring(basePath.length);
-        const cleanPath = relativePath.replace(/\.html$/, '');
-        // Remove leading slash for consistency with page mappings
-        cache.currentPagePath = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
-        return cache.currentPagePath;
-      }
-    }
-  }
-
-  cache.currentPagePath = '';
-  return cache.currentPagePath;
-}
-
-/**
- * Maps a page path to equivalent paths in other locales
- * Falls back to homepage if no mapping exists to avoid 404 errors
- * @param {string} currentPath Current page path
- * @param {Object} currentLocale Current locale
- * @param {Object} targetLocale Target locale
- * @param {Object} customMapping Custom page mappings from block configuration
- * @param {Object} dynamicMappings Dynamic mappings from placeholders.json (optional)
- * @returns {string} Mapped path for target locale (empty string = homepage)
- */
-function mapPagePath(
-  currentPath,
-  currentLocale,
-  targetLocale,
-  customMapping = {},
-  dynamicMappings = null,
-) {
-  // If no path or already on homepage, return homepage
-  if (!currentPath || currentPath === '/' || currentPath === '') {
-    return '';
-  }
-
-  // Remove leading slash for consistency
-  const cleanPath = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
-
-  // Priority 1: Use custom mapping if provided
-  if (Object.keys(customMapping).length > 0) {
-    const mappedPath = customMapping[currentLocale.code]?.[cleanPath]?.[targetLocale.code];
-    if (mappedPath) {
-      return mappedPath;
-    }
-  }
-
-  // Priority 2: Use dynamic mappings from placeholders.json if available
-  if (dynamicMappings && Object.keys(dynamicMappings).length > 0) {
-    const mappedPath = dynamicMappings[currentLocale.code]?.[cleanPath]?.[targetLocale.code];
-    if (mappedPath) {
-      return mappedPath;
-    }
-  }
-
-  // Priority 3: Use static PAGE_MAPPINGS as fallback
-  const mappedPath = PAGE_MAPPINGS[currentLocale.code]?.[cleanPath]?.[targetLocale.code];
-  if (mappedPath) {
-    return mappedPath;
-  }
-
-  // No mapping found - fallback to homepage to avoid 404 errors
-  // Example: User on /about-us (English) switches to French, but /a-propos doesn't exist
-  // → Redirects to French homepage instead of showing 404
-  // This ensures users always land on a valid page when switching languages
-  return '';
-}
-
-/**
- * Generates the target URL for a specific locale
- * @param {Object} targetLocale Target locale object
- * @param {string} pagePath Page path
- * @returns {string} Complete target URL
- */
-function generateTargetURL(targetLocale, pagePath) {
-  if (isAEMAuthoring()) {
-    // Generate AEM authoring URL
-    const pagePathPart = pagePath ? `/${pagePath}` : '';
-    const contentPath = `/content/ue-multitenant-root${targetLocale.path}${pagePathPart}`;
     const { protocol, hostname, search } = window.location;
-    return `${protocol}//${hostname}${contentPath}.html${search}`;
+    const pagePath = path ? `/${path}` : '';
+    return `${protocol}//${hostname}/content/ue-multitenant-root${locale.path}${pagePath}.html${search}`;
   }
 
-  // Generate Edge Delivery Services URL
-  const baseURL = `https://${CONFIG.branch}--${CONFIG.projectName}-${targetLocale.code}--${CONFIG.githubOrg}.aem.page`;
-
-  if (!pagePath) {
-    return baseURL;
-  }
-
-  const cleanPath = pagePath.startsWith('/') ? pagePath : `/${pagePath}`;
-  return `${baseURL}${cleanPath}`;
+  const base = `https://${CONFIG.branch}--${CONFIG.projectName}-${locale.code}--${CONFIG.githubOrg}.aem.page`;
+  return path ? `${base}/${path}` : base;
 }
 
 /**
- * Creates a language option element
- * @param {Object} locale Locale object
- * @param {Object} options Switcher options
- * @param {string} href Target URL
- * @param {boolean} isCurrent Whether this is the current locale
- * @returns {HTMLElement} Language option element
+ * Creates language option element
  */
-function createLanguageOption(locale, options, href, isCurrent = false) {
-  const element = document.createElement(isCurrent ? 'span' : 'a');
-  element.className = isCurrent ? 'language-current' : 'language-option';
-
+function createOption(locale, opts, href, isCurrent = false) {
+  const el = document.createElement(isCurrent ? 'span' : 'a');
+  el.className = isCurrent ? 'language-current' : 'language-option';
   if (!isCurrent) {
-    element.href = href;
-    element.setAttribute('role', 'menuitem');
+    el.href = href;
+    el.setAttribute('role', 'menuitem');
   }
-
-  const label = options.customLabels[locale.code] || locale.label;
-  element.innerHTML = `
-    ${options.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
+  const label = opts.customLabels?.[locale.code] || locale.label;
+  el.innerHTML = `
+    ${opts.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
     <span class="label">${label}</span>
   `;
-
-  return element;
+  return el;
 }
 
 /**
- * Creates dropdown style language switcher
+ * Creates dropdown switcher
  */
-function createDropdownSwitcher(container, currentLocale, availableLocales, options) {
-  const dropdown = document.createElement('div');
-  dropdown.className = 'language-dropdown';
+function createDropdown(container, current, locales, opts) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'language-dropdown';
 
-  // Current language button
-  const currentButton = createLanguageOption(currentLocale, options, '', true);
-  currentButton.className = 'language-current';
-  currentButton.setAttribute('aria-haspopup', 'true');
-  currentButton.setAttribute('aria-expanded', 'false');
+  const btn = createOption(current, opts, '', true);
+  btn.setAttribute('aria-haspopup', 'true');
+  btn.setAttribute('aria-expanded', 'false');
+  btn.innerHTML += '<span class="arrow">▼</span>';
 
-  // Add arrow to current button
-  const arrow = document.createElement('span');
-  arrow.className = 'arrow';
-  arrow.textContent = '▼';
-  currentButton.appendChild(arrow);
-
-  // Dropdown menu
   const menu = document.createElement('ul');
   menu.className = 'language-menu';
   menu.setAttribute('role', 'menu');
-  menu.style.display = 'none';
 
-  // Create menu items for other locales
-  availableLocales
-    .filter((locale) => locale.code !== currentLocale.code)
-    .forEach((locale) => {
-      const item = document.createElement('li');
-      item.setAttribute('role', 'none');
-
-      const mappedPath = mapPagePath(
-        options.currentPagePath,
-        currentLocale,
-        locale,
-        options.pageMapping,
-        options.dynamicMappings,
-      );
-      const href = generateTargetURL(locale, mappedPath);
-      const link = createLanguageOption(locale, options, href);
-
-      item.appendChild(link);
-      menu.appendChild(item);
-    });
-
-  // Toggle functionality
-  const toggleMenu = (show) => {
-    menu.style.display = show ? 'block' : 'none';
-    currentButton.setAttribute('aria-expanded', show);
-  };
-
-  currentButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    toggleMenu(menu.style.display === 'none');
+  locales.filter((l) => l.code !== current.code).forEach((locale) => {
+    const li = document.createElement('li');
+    const path = mapPath(opts.pagePath, current, locale, opts.customMap, opts.dynamicMap);
+    const link = createOption(locale, opts, generateURL(locale, path));
+    li.appendChild(link);
+    menu.appendChild(li);
   });
 
-  // Close on outside click
-  const closeOnOutsideClick = (e) => {
-    if (!dropdown.contains(e.target)) {
-      toggleMenu(false);
-    }
+  wrapper.append(btn, menu);
+
+  // Toggle
+  const toggle = (open) => {
+    menu.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open);
   };
 
-  document.addEventListener('click', closeOnOutsideClick);
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    toggle(!menu.classList.contains('open'));
+  });
 
-  // Keyboard navigation
-  currentButton.addEventListener('keydown', (e) => {
+  document.addEventListener('click', (e) => {
+    if (!wrapper.contains(e.target)) toggle(false);
+  });
+
+  btn.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') toggle(false);
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      toggleMenu(menu.style.display === 'none');
-    } else if (e.key === 'Escape') {
-      toggleMenu(false);
+      toggle(!menu.classList.contains('open'));
     }
   });
 
-  dropdown.appendChild(currentButton);
-  dropdown.appendChild(menu);
-  container.appendChild(dropdown);
-
-  // Store cleanup function for memory management
-  dropdown.cleanupFunction = () => {
-    document.removeEventListener('click', closeOnOutsideClick);
-  };
+  container.appendChild(wrapper);
 }
 
 /**
- * Creates horizontal list style language switcher
+ * Creates horizontal list switcher
  */
-function createHorizontalSwitcher(container, currentLocale, availableLocales, options) {
+function createList(container, current, locales, opts, flagsOnly = false) {
   const list = document.createElement('ul');
-  list.className = 'language-list horizontal';
+  list.className = `language-list ${flagsOnly ? 'flags' : 'horizontal'}`;
   list.setAttribute('role', 'list');
 
-  availableLocales.forEach((locale) => {
-    const item = document.createElement('li');
-    item.className = `language-item ${locale.code === currentLocale.code ? 'current' : ''}`;
-    item.setAttribute('role', 'listitem');
+  locales.forEach((locale) => {
+    const li = document.createElement('li');
+    li.className = `language-item${locale.code === current.code ? ' current' : ''}`;
 
-    if (locale.code === currentLocale.code) {
-      const current = createLanguageOption(locale, options, '', true);
-      item.appendChild(current);
-    } else {
-      const mappedPath = mapPagePath(
-        options.currentPagePath,
-        currentLocale,
-        locale,
-        options.pageMapping,
-        options.dynamicMappings,
-      );
-      const href = generateTargetURL(locale, mappedPath);
-      const link = createLanguageOption(locale, options, href);
-      item.appendChild(link);
-    }
-
-    list.appendChild(item);
-  });
-
-  container.appendChild(list);
-}
-
-/**
- * Creates flag-only style language switcher
- */
-function createFlagSwitcher(container, currentLocale, availableLocales, options) {
-  const list = document.createElement('ul');
-  list.className = 'language-list flags';
-  list.setAttribute('role', 'list');
-
-  availableLocales.forEach((locale) => {
-    const item = document.createElement('li');
-    item.className = `language-item ${locale.code === currentLocale.code ? 'current' : ''}`;
-    item.setAttribute('role', 'listitem');
-
-    const label = options.customLabels[locale.code] || locale.label;
-
-    if (locale.code === currentLocale.code) {
-      const current = document.createElement('span');
-      current.className = 'language-current flag-only';
-      current.title = label;
-      current.innerHTML = `<span class="flag">${locale.flag}</span>`;
-      item.appendChild(current);
-    } else {
-      const mappedPath = mapPagePath(
-        options.currentPagePath,
-        currentLocale,
-        locale,
-        options.pageMapping,
-        options.dynamicMappings,
-      );
-      const href = generateTargetURL(locale, mappedPath);
-      const link = document.createElement('a');
-      link.className = 'language-option flag-only';
-      link.href = href;
-      link.title = label;
-      link.innerHTML = `<span class="flag">${locale.flag}</span>`;
-      item.appendChild(link);
-    }
-
-    list.appendChild(item);
-  });
-
-  container.appendChild(list);
-}
-
-/**
- * Creates the language switcher UI
- * @param {HTMLElement} block Block element
- * @param {Object} currentLocale Current locale
- * @param {Array} availableLocales Available locales
- * @param {Object} config Block configuration
- * @param {Object} dynamicMappings Dynamic mappings from placeholders.json (optional)
- */
-function createLanguageSwitcher(
-  block,
-  currentLocale,
-  availableLocales,
-  config,
-  dynamicMappings = null,
-) {
-  const {
-    displayStyle = 'dropdown',
-    showFlags = 'true',
-    customLabels = {},
-    pageMapping = PAGE_MAPPINGS,
-    fallbackPage = '/',
-  } = config;
-
-  const currentPagePath = getCurrentPagePath(currentLocale);
-
-  // Create container
-  const container = document.createElement('div');
-  container.className = 'language-switcher-container';
-
-  const switcherOptions = {
-    showFlags: showFlags === 'true',
-    customLabels,
-    pageMapping,
-    currentPagePath,
-    fallbackPage,
-    dynamicMappings, // Pass dynamic mappings to switcher options
-  };
-
-  // Create appropriate switcher type
-  const switcherCreators = {
-    dropdown: createDropdownSwitcher,
-    horizontal: createHorizontalSwitcher,
-    flags: createFlagSwitcher,
-  };
-
-  const createSwitcher = switcherCreators[displayStyle] || switcherCreators.dropdown;
-  createSwitcher(container, currentLocale, availableLocales, switcherOptions);
-
-  block.appendChild(container);
-}
-
-/**
- * Parses JSON configuration from block content
- * @param {string} jsonString JSON string from rich text field
- * @returns {Object} Parsed object or empty object
- */
-function parseJSONConfig(jsonString) {
-  if (!jsonString?.trim()) {
-    return {};
-  }
-
-  try {
-    // Remove HTML tags if present
-    const cleanJson = jsonString.replace(/<[^>]*>/g, '').trim();
-    return JSON.parse(cleanJson);
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn('Language Switcher: Invalid JSON configuration', error);
-    return {};
-  }
-}
-
-/**
- * Extracts configuration from block content
- * @param {HTMLElement} block Block element
- * @returns {Object} Configuration object
- */
-function extractBlockConfig(block) {
-  const config = {};
-  const rows = [...block.children];
-
-  const configMap = {
-    displaystyle: 'displayStyle',
-    excludelocales: (value) => ({
-      excludeLocales: value.split(',').map((s) => s.trim()).filter(Boolean),
-    }),
-    advancedconfig: (value) => {
-      const advancedConfig = parseJSONConfig(value);
-      return {
-        showFlags: advancedConfig.showFlags !== false ? 'true' : 'false',
-        customLabels: advancedConfig.customLabels || {},
-        pageMapping: advancedConfig.pageMapping || PAGE_MAPPINGS,
-        fallbackPage: advancedConfig.fallbackPage || '/',
-      };
-    },
-  };
-
-  rows.forEach((row) => {
-    const cells = [...row.children];
-    if (cells.length >= 2) {
-      const key = cells[0].textContent.trim().toLowerCase().replace(/\s+/g, '');
-      const value = cells[1].textContent.trim();
-      const mapping = configMap[key];
-
-      if (mapping) {
-        if (typeof mapping === 'string') {
-          config[mapping] = value;
-        } else if (typeof mapping === 'function') {
-          Object.assign(config, mapping(value));
-        }
+    if (locale.code === current.code) {
+      const el = document.createElement('span');
+      el.className = `language-current${flagsOnly ? ' flag-only' : ''}`;
+      if (flagsOnly) {
+        el.title = opts.customLabels?.[locale.code] || locale.label;
+        el.innerHTML = `<span class="flag">${locale.flag}</span>`;
+      } else {
+        el.innerHTML = `
+          ${opts.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
+          <span class="label">${opts.customLabels?.[locale.code] || locale.label}</span>
+        `;
       }
+      li.appendChild(el);
+    } else {
+      const path = mapPath(opts.pagePath, current, locale, opts.customMap, opts.dynamicMap);
+      const link = document.createElement('a');
+      link.className = `language-option${flagsOnly ? ' flag-only' : ''}`;
+      link.href = generateURL(locale, path);
+      if (flagsOnly) {
+        link.title = opts.customLabels?.[locale.code] || locale.label;
+        link.innerHTML = `<span class="flag">${locale.flag}</span>`;
+      } else {
+        link.innerHTML = `
+          ${opts.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
+          <span class="label">${opts.customLabels?.[locale.code] || locale.label}</span>
+        `;
+      }
+      li.appendChild(link);
+    }
+
+    list.appendChild(li);
+  });
+
+  container.appendChild(list);
+}
+
+/**
+ * Parses block configuration
+ */
+function parseConfig(block) {
+  const config = {};
+
+  [...block.children].forEach((row) => {
+    const cells = [...row.children];
+    if (cells.length < 2) return;
+
+    const key = cells[0].textContent.trim().toLowerCase().replace(/\s+/g, '');
+    const value = cells[1].textContent.trim();
+
+    if (key === 'displaystyle') config.displayStyle = value;
+    if (key === 'excludelocales') {
+      config.excludeLocales = value.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+    if (key === 'advancedconfig') {
+      try {
+        const adv = JSON.parse(value.replace(/<[^>]*>/g, ''));
+        config.showFlags = adv.showFlags !== false;
+        config.customLabels = adv.customLabels || {};
+        config.customMap = adv.pageMapping || null;
+      } catch { /* ignore */ }
     }
   });
 
@@ -708,21 +334,17 @@ function extractBlockConfig(block) {
 }
 
 /**
- * Adds analytics tracking for language switcher interactions
- * @param {HTMLElement} block Block element
+ * Adds analytics tracking
  */
-function addAnalyticsTracking(block) {
-  const links = block.querySelectorAll('.language-option');
-
-  links.forEach((link) => {
+function addAnalytics(block) {
+  block.querySelectorAll('.language-option').forEach((link) => {
     link.addEventListener('click', () => {
-      const targetLocale = link.href.match(/--ue-multitenant-root-([^-]+)-([^-]+)--/);
-
-      if (targetLocale && window.dataLayer) {
+      const match = link.href?.match(/ue-multitenant-root-([^-]+)-([^-]+)--/);
+      if (match && window.dataLayer) {
         window.dataLayer.push({
           event: 'language_switch',
-          language_from: detectCurrentLocale()?.code,
-          language_to: `${targetLocale[1]}-${targetLocale[2]}`,
+          language_from: detectLocale()?.code,
+          language_to: `${match[1]}-${match[2]}`,
           page_path: window.location.pathname,
         });
       }
@@ -731,86 +353,57 @@ function addAnalyticsTracking(block) {
 }
 
 /**
- * Cleanup function for memory management
- * @param {HTMLElement} block Block element
- */
-function cleanup(block) {
-  // Clean up event listeners
-  const dropdown = block.querySelector('.language-dropdown');
-  if (dropdown?.cleanupFunction) {
-    dropdown.cleanupFunction();
-  }
-
-  // Clear cache
-  Object.keys(cache).forEach((key) => {
-    cache[key] = null;
-  });
-}
-
-/**
  * Main decoration function
- * @param {HTMLElement} block The block DOM element
  */
 export default async function decorate(block) {
   try {
-    // Extract configuration from block content
-    const config = extractBlockConfig(block);
+    const config = parseConfig(block);
+    const locale = detectLocale();
 
-    // Detect current locale
-    const currentLocale = detectCurrentLocale();
-
-    if (!currentLocale) {
-      // eslint-disable-next-line no-console
-      console.warn('Language Switcher: Could not detect current locale');
+    if (!locale) {
       block.innerHTML = '<p>Language switcher not available</p>';
       return;
     }
 
-    // Get languages available for the current region only
-    let availableLocales = getLanguagesForCurrentRegion(currentLocale);
-
-    // Apply additional exclusions from config
-    if (config.excludeLocales?.length > 0) {
-      availableLocales = availableLocales.filter(
-        (locale) => !config.excludeLocales.includes(locale.code),
-      );
+    // Get locales for current region
+    let locales = CONFIG.locales.filter((l) => l.country === locale.country);
+    if (config.excludeLocales?.length) {
+      locales = locales.filter((l) => !config.excludeLocales.includes(l.code));
     }
 
-    // If only one language available (current), hide the switcher
-    if (availableLocales.length <= 1) {
-      block.innerHTML = '';
+    if (locales.length <= 1) {
       block.style.display = 'none';
       return;
     }
 
-    // Clear block content
-    block.innerHTML = '';
-
-    // Add semantic classes
+    block.textContent = '';
     block.classList.add('language-switcher-block');
 
-    // Store cleanup function on block for later use
-    block.cleanupFunction = () => cleanup(block);
+    const dynamicMap = await fetchMappings().catch(() => null);
+    const container = document.createElement('div');
+    container.className = 'language-switcher-container';
 
-    // Fetch dynamic mappings from placeholders.json (non-blocking, uses cache)
-    // This will use cached result if already fetched, or fetch in background
-    const dynamicMappings = await fetchPlaceholdersMappings().catch(() => null);
+    const opts = {
+      showFlags: config.showFlags !== false,
+      customLabels: config.customLabels || {},
+      customMap: config.customMap,
+      dynamicMap,
+      pagePath: getPagePath(locale),
+    };
 
-    // Create language switcher with dynamic mappings
-    createLanguageSwitcher(block, currentLocale, availableLocales, config, dynamicMappings);
+    const style = config.displayStyle || 'dropdown';
+    if (style === 'horizontal') createList(container, locale, locales, opts);
+    else if (style === 'flags') createList(container, locale, locales, opts, true);
+    else createDropdown(container, locale, locales, opts);
 
-    // Add analytics tracking
-    addAnalyticsTracking(block);
+    block.appendChild(container);
+    addAnalytics(block);
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Language Switcher: Failed to initialize', error);
+    console.error('Language Switcher error:', error);
     block.innerHTML = '<p>Language switcher unavailable</p>';
   }
 }
 
-// Export utilities for external use
-export {
-  detectCurrentLocale,
-  getLanguagesForCurrentRegion,
-  CONFIG,
-};
+// Exports
+export { detectLocale, CONFIG };

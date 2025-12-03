@@ -78,6 +78,11 @@
   margin: 0;
   padding: 0;
   margin-top: 2px;
+  display: none;
+}
+
+.language-menu.open {
+  display: block;
 }
 
 .language-menu li {
