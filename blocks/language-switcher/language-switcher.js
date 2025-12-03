@@ -321,12 +321,13 @@ function getCurrentPagePath(currentLocale) {
 
 /**
  * Maps a page path to equivalent paths in other locales
+ * Falls back to homepage if no mapping exists to avoid 404 errors
  * @param {string} currentPath Current page path
  * @param {Object} currentLocale Current locale
  * @param {Object} targetLocale Target locale
  * @param {Object} customMapping Custom page mappings from block configuration
  * @param {Object} dynamicMappings Dynamic mappings from placeholders.json (optional)
- * @returns {string} Mapped path for target locale
+ * @returns {string} Mapped path for target locale (empty string = homepage)
  */
 function mapPagePath(
   currentPath,
@@ -335,8 +336,8 @@ function mapPagePath(
   customMapping = {},
   dynamicMappings = null,
 ) {
-  // If no path, return root
-  if (!currentPath || currentPath === '/') {
+  // If no path or already on homepage, return homepage
+  if (!currentPath || currentPath === '/' || currentPath === '') {
     return '';
   }
 
@@ -345,25 +346,31 @@ function mapPagePath(
 
   // Priority 1: Use custom mapping if provided
   if (Object.keys(customMapping).length > 0) {
-    if (customMapping[currentLocale.code]?.[cleanPath]?.[targetLocale.code]) {
-      return customMapping[currentLocale.code][cleanPath][targetLocale.code];
+    const mappedPath = customMapping[currentLocale.code]?.[cleanPath]?.[targetLocale.code];
+    if (mappedPath) {
+      return mappedPath;
     }
   }
 
   // Priority 2: Use dynamic mappings from placeholders.json if available
   if (dynamicMappings && Object.keys(dynamicMappings).length > 0) {
-    if (dynamicMappings[currentLocale.code]?.[cleanPath]?.[targetLocale.code]) {
-      return dynamicMappings[currentLocale.code][cleanPath][targetLocale.code];
+    const mappedPath = dynamicMappings[currentLocale.code]?.[cleanPath]?.[targetLocale.code];
+    if (mappedPath) {
+      return mappedPath;
     }
   }
 
   // Priority 3: Use static PAGE_MAPPINGS as fallback
-  if (PAGE_MAPPINGS[currentLocale.code]?.[cleanPath]?.[targetLocale.code]) {
-    return PAGE_MAPPINGS[currentLocale.code][cleanPath][targetLocale.code];
+  const mappedPath = PAGE_MAPPINGS[currentLocale.code]?.[cleanPath]?.[targetLocale.code];
+  if (mappedPath) {
+    return mappedPath;
   }
 
-  // Default mapping logic - use the same path
-  return cleanPath;
+  // No mapping found - fallback to homepage to avoid 404 errors
+  // Example: User on /about-us (English) switches to French, but /a-propos doesn't exist
+  // → Redirects to French homepage instead of showing 404
+  // This ensures users always land on a valid page when switching languages
+  return '';
 }
 
 /**
