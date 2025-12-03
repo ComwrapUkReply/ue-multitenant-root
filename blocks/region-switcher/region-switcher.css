@@ -1,29 +1,28 @@
 /* Region Switcher Block */
-
 .block.region-switcher {
   font-family: var(--body-font-family, sans-serif);
 }
 
-/* Dropdown Container */
+/* Dropdown */
 .region-dropdown {
   position: relative;
   display: inline-block;
 }
 
-/* Current Region Button */
+/* Button */
 .region-current {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
+  min-width: 140px;
   background: var(--background-color, #fff);
   border: 1px solid var(--light-color, #ddd);
   border-radius: 4px;
   font-size: var(--body-font-size-xs, 14px);
   color: var(--text-color, #333);
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
-  min-width: 140px;
+  transition: background 0.2s, border-color 0.2s;
 }
 
 .region-current:hover {
@@ -31,9 +30,13 @@
   border-color: var(--link-color, #06c);
 }
 
-.region-current:focus {
+.region-current:focus-visible {
   outline: 2px solid var(--link-color, #06c);
   outline-offset: 2px;
+}
+
+.region-current .label {
+  flex: 1;
 }
 
 .region-current .flag {
@@ -41,21 +44,17 @@
   line-height: 1;
 }
 
-.region-current .label {
-  flex: 1;
-}
-
 .region-current .arrow {
   font-size: 0.7em;
-  transition: transform 0.2s;
   opacity: 0.6;
+  transition: transform 0.2s;
 }
 
 .region-current[aria-expanded="true"] .arrow {
   transform: rotate(180deg);
 }
 
-/* Dropdown Menu */
+/* Menu */
 .region-menu {
   position: absolute;
   top: 100%;
@@ -81,7 +80,7 @@
   padding: 0;
 }
 
-/* Region Options */
+/* Options */
 .region-option {
   display: flex;
   align-items: center;
@@ -90,7 +89,7 @@
   color: var(--text-color, #333);
   text-decoration: none;
   font-size: var(--body-font-size-xs, 14px);
-  transition: background-color 0.2s;
+  transition: background 0.2s;
 }
 
 .region-option:hover {
@@ -98,7 +97,7 @@
   text-decoration: none;
 }
 
-.region-option:focus {
+.region-option:focus-visible {
   background: var(--light-color, #f5f5f5);
   outline: 2px solid var(--link-color, #06c);
   outline-offset: -2px;
@@ -116,10 +115,6 @@
 }
 
 /* Header Integration */
-.region-switcher-header .block.region-switcher {
-  margin: 0;
-}
-
 .region-switcher-header .region-current {
   min-width: auto;
   padding: 0.4rem 0.6rem;
@@ -155,19 +150,5 @@
   .region-option,
   .region-current .arrow {
     transition: none;
-  }
-}
-
-/* Focus Visible */
-@supports selector(:focus-visible) {
-  .region-current:focus:not(:focus-visible),
-  .region-option:focus:not(:focus-visible) {
-    outline: none;
-  }
-
-  .region-current:focus-visible,
-  .region-option:focus-visible {
-    outline: 2px solid var(--link-color, #06c);
-    outline-offset: 2px;
   }
 }
