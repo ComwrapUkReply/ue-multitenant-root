@@ -76,7 +76,6 @@ export const PAGE_MAPPINGS = {
   // Swiss English (ch-en) page mappings
   'ch-en': {
     'about-us': {
-      'ch-fr': 'a-propos',
       'ch-de': 'ueber-uns',
       'de-de': 'ueber-uns-de',
       'de-en': 'about-us',
