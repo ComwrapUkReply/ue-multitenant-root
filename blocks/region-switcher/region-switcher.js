@@ -25,6 +25,18 @@ const CONFIG = {
       flag: '🇩🇪',
       defaultLanguage: 'de',
     },
+    us: {
+      code: 'us',
+      name: 'United States',
+      flag: '🇺🇸',
+      defaultLanguage: 'en',
+    },
+    uk: {
+      code: 'uk',
+      name: 'United Kingdom',
+      flag: '🇬🇧',
+      defaultLanguage: 'en',
+    },
   },
 };
 
