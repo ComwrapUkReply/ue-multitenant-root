@@ -4,7 +4,14 @@ import { previewURL } from '../../scripts/constants.js';
 
 export default async function decorate(block) {
   if (isEditorMode()) {
-    block.textContent = `Dynamic Content and Content Filtering are not available in editor mode. Please publish the page to preview and go to ${previewURL}`;
+    block.textContent = `Dynamic Content and Content Filtering are not available in editor mode. \n Please publish the page to preview and go to ${previewURL}`;
+    block.style.textAlign = 'center';
+    block.style.padding = '20px';
+    block.style.border = '1px solid #ccc';
+    block.style.borderRadius = '5px';
+    block.style.backgroundColor = '#f0f0f0';
+    block.style.color = '#333';
+    block.style.fontSize = '16px';
     return;
   }
 
