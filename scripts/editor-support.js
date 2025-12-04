@@ -99,7 +99,7 @@ async function applyChanges(event) {
 }
 
 /**
- * Disables publish/live button for contributor group users
+ * Disables publish/live button for eds-editor group users
  * @param {Object} userData - Current user data including group memberships
  */
 function disablePublishForContributors(userData) {
