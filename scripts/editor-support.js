@@ -102,23 +102,23 @@ async function applyChanges(event) {
  * Disables publish/live button for eds-editor group users
  * @param {Object} userData - Current user data including group memberships
  */
-// function disablePublishForContributors(userData) {
-//   if (!userData?.memberOf) return;
+function disablePublishForContributors(userData) {
+  if (!userData?.memberOf) return;
 
   const userGroups = userData.memberOf;
   const isContributor = userGroups.some((group) => group.authorizableId === 'eds-editor');
 
-//   if (isContributor) {
-//     // Check if meta tag already exists
-//     const existingMeta = document.querySelector('meta[name="urn:adobe:aue:config:disable"]');
-//     if (!existingMeta) {
-//       const meta = document.createElement('meta');
-//       meta.setAttribute('name', 'urn:adobe:aue:config:disable');
-//       meta.setAttribute('content', 'publish-live');
-//       document.head.appendChild(meta);
-//     }
-//   }
-// }
+  if (isContributor) {
+    // Check if meta tag already exists
+    const existingMeta = document.querySelector('meta[name="urn:adobe:aue:config:disable"]');
+    if (!existingMeta) {
+      const meta = document.createElement('meta');
+      meta.setAttribute('name', 'urn:adobe:aue:config:disable');
+      meta.setAttribute('content', 'publish-live');
+      document.head.appendChild(meta);
+    }
+  }
+}
 
 function attachEventListners(main) {
   [
