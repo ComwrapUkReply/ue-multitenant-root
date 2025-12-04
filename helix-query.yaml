@@ -41,6 +41,9 @@ indices:
       image:
         select: head > meta[property="og:image"]
         value: match(attribute(el, "content"), "https://[^/]+(/.*)")
+      tags:
+        select: head > meta[name="cq-tags"]
+        value: attribute(el, "content")
 
   blog:
     include:

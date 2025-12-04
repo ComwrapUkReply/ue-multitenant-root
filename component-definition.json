@@ -221,6 +221,37 @@
           }
         },
         {
+          "title": "Dynamic Content Filter",
+          "id": "dynamiccontentfilter",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Dynamic Content Filter",
+                  "model": "dynamiccontentfilter"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Dynamic Content",
+          "id": "dynamiccontent",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "dynamic content",
+                  "model": "dynamiccontent",
+                  "filter": "dynamiccontent"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Embed",
           "id": "embed",
           "plugins": {
@@ -299,6 +330,36 @@
           }
         },
         {
+          "title": "Info Counter",
+          "id": "info-counter",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Info Counter",
+                  "model": "info-counter"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Modal",
+          "id": "modal",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Modal",
+                  "model": "modal"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Quote",
           "id": "quote",
           "plugins": {
@@ -308,6 +369,21 @@
                 "template": {
                   "name": "Quote",
                   "model": "quote"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Search",
+          "id": "search",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Search",
+                  "model": "search"
                 }
               }
             }
@@ -409,6 +485,37 @@
                   "column2text": "Column2",
                   "column3text": "Column3",
                   "column4text": "Column4"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Tabs",
+          "id": "tabs",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Tabs",
+                  "model": "tabs",
+                  "filter": "tabs"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Tab",
+          "id": "tab",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Tab",
+                  "model": "tab"
                 }
               }
             }
