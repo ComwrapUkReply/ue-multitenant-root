@@ -103,6 +103,8 @@ export const moveClassToTargetedChild = (block, target, removeBlockClass = false
   }
 };
 
+export const isAuthorMode = Boolean(window.location.hostname.includes('author'));
+
 /**
  * Check if the page is currently in editor mode
  * Editor mode is detected by the presence of the 'appContainer' class element
