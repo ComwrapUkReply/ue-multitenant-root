@@ -221,6 +221,37 @@
           }
         },
         {
+          "title": "Dynamic Content Filter",
+          "id": "dynamiccontentfilter",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Dynamic Content Filter",
+                  "model": "dynamiccontentfilter"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Dynamic Content",
+          "id": "dynamiccontent",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "dynamic content",
+                  "model": "dynamiccontent",
+                  "filter": "dynamiccontent"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Embed",
           "id": "embed",
           "plugins": {

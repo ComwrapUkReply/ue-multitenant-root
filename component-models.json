@@ -597,6 +597,34 @@
     ]
   },
   {
+    "id": "dynamiccontentfilter",
+    "fields": [
+      {
+        "component": "boolean",
+        "name": "multipleSelect",
+        "label": "Multiple Select",
+        "description": "Allow multiple tags to be selected",
+        "valueType": "boolean",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "dynamiccontent",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Parent page",
+        "value": "",
+        "valueType": "string",
+        "validation": {
+          "rootPath": "/content/comwrap-whitelabel-eds"
+        }
+      }
+    ]
+  },
+  {
     "id": "embed",
     "fields": [
       {
