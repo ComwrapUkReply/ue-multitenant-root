@@ -1,8 +1,13 @@
-import {
-  getCurrentCountryLanguage,
-} from '../helpers.js';
+import { getCurrentCountryLanguage } from '../helpers.js';
+import { isEditorMode } from '../../scripts/utils.js';
+import { previewURL } from '../../scripts/constants.js';
 
 export default async function decorate(block) {
+  if (isEditorMode()) {
+    block.textContent = `Dynamic Content and Content Filtering are not available in editor mode. Please publish the page to preview and go to ${previewURL}`;
+    return;
+  }
+
   const referenceLink = block.querySelector('a');
   const referencePath = referenceLink ? referenceLink.getAttribute('href').replace('/content/comwrap-whitelabel-eds', '') : '';
 
@@ -62,7 +67,7 @@ export default async function decorate(block) {
       tagArray.forEach((tag) => {
         const tagPill = document.createElement('span');
         tagPill.classList.add('tag-pill');
-        tagPill.textContent = tag.trim();
+        tagPill.textContent = tag.split(':').pop().trim();
         tagsContainer.appendChild(tagPill);
       });
       contentBody.appendChild(tagsContainer);

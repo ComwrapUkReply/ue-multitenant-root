@@ -21,7 +21,7 @@ export default async function decorate(block) {
         // Show items that have ANY of the selected tags
         const tagsAttr = link.getAttribute('data-tags');
         if (tagsAttr) {
-          const tagArray = tagsAttr.split(', ').map((tag) => tag.trim());
+          const tagArray = tagsAttr.split(', ').map((tag) => tag.split(':').pop().trim());
           const hasSelectedTag = selectedTags.some((selectedTag) => tagArray.includes(selectedTag));
           if (hasSelectedTag) {
             link.style.display = '';
@@ -67,7 +67,7 @@ export default async function decorate(block) {
       const tagsAttr = link.getAttribute('data-tags');
       if (tagsAttr) {
         // Split by ', ' and add each tag to the array
-        const tags = tagsAttr.split(', ').map((tag) => tag.trim());
+        const tags = tagsAttr.split(', ').map((tag) => tag.split(':').pop().trim());
         tagPills.push(...tags);
       }
     });
