@@ -4,7 +4,7 @@ import { previewURL } from '../../scripts/constants.js';
 
 export default async function decorate(block) {
   if (isEditorMode() || isAuthorMode()) {
-    block.innerHTML = `Dynamic Content and Content Filtering are not available in editor mode. Please publish the page to preview and go to <a href="${previewURL}" target="_blank">${previewURL}</a>`;
+    block.innerHTML = `Dynamic Content and Content Filtering are not available in editor mode. <br> Please publish the page to preview and go to <a href="${previewURL}" target="_blank">${previewURL}</a>`;
     block.style.textAlign = 'center';
     block.style.padding = '20px';
     block.style.border = '1px solid #ccc';

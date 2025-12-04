@@ -103,7 +103,7 @@ export const moveClassToTargetedChild = (block, target, removeBlockClass = false
   }
 };
 
-export const isAuthorMode = Boolean(window.location.hostname.includes('author'));
+export const isAuthorMode = () => window.location.hostname.includes('author');
 
 /**
  * Check if the page is currently in editor mode
