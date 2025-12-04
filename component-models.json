@@ -18,6 +18,10 @@
           {
             "name": "Events",
             "value": "events"
+          },
+          {
+            "name": "Product",
+            "value": "product"
           }
         ],
         "condition": {
@@ -91,6 +95,10 @@
           {
             "name": "Events",
             "value": "events"
+          },
+          {
+            "name": "Product",
+            "value": "product"
           }
         ],
         "condition": {
@@ -164,6 +172,10 @@
           {
             "name": "Events",
             "value": "events"
+          },
+          {
+            "name": "Product",
+            "value": "product"
           }
         ],
         "condition": {
@@ -191,6 +203,61 @@
               "var": "template"
             },
             "events"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "product-metadata",
+    "fields": [
+      {
+        "component": "select",
+        "name": "template",
+        "label": "Template",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Article",
+            "value": "article"
+          },
+          {
+            "name": "Events",
+            "value": "events"
+          },
+          {
+            "name": "Product",
+            "value": "product"
+          }
+        ],
+        "condition": {
+          "===": [
+            {
+              "var": "initialContentRefTarget"
+            },
+            "true"
+          ]
+        }
+      },
+      {
+        "component": "aem-tag",
+        "name": "tags",
+        "label": "Tags",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "product:organizer",
+        "label": "Organizer",
+        "condition": {
+          "===": [
+            {
+              "var": "template"
+            },
+            "product"
           ]
         }
       }
@@ -307,16 +374,8 @@
         "label": "Style",
         "options": [
           {
-            "name": "Default",
-            "value": "Default"
-          },
-          {
             "name": "Highlight",
             "value": "highlight"
-          },
-          {
-            "name": "Gradient",
-            "value": "gradient"
           }
         ]
       }
@@ -593,34 +652,6 @@
             ]
           }
         ]
-      }
-    ]
-  },
-  {
-    "id": "dynamiccontentfilter",
-    "fields": [
-      {
-        "component": "boolean",
-        "name": "multipleSelect",
-        "label": "Multiple Select",
-        "description": "Allow multiple tags to be selected",
-        "valueType": "boolean",
-        "value": true
-      }
-    ]
-  },
-  {
-    "id": "dynamiccontent",
-    "fields": [
-      {
-        "component": "aem-content",
-        "name": "link",
-        "label": "Parent page",
-        "value": "",
-        "valueType": "string",
-        "validation": {
-          "rootPath": "/content/comwrap-whitelabel-eds"
-        }
       }
     ]
   },
@@ -977,41 +1008,6 @@
     ]
   },
   {
-    "id": "info-counter",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "number",
-        "label": "Target Number",
-        "value": ""
-      },
-      {
-        "component": "richtext",
-        "name": "text",
-        "value": "",
-        "label": "Description Text",
-        "valueType": "string"
-      },
-      {
-        "component": "select",
-        "name": "mode",
-        "label": "Color Mode",
-        "options": [
-          {
-            "name": "On Dark (White Text)",
-            "value": "dark"
-          },
-          {
-            "name": "On Light (Brand Blue Text)",
-            "value": "light"
-          }
-        ],
-        "value": "light"
-      }
-    ]
-  },
-  {
     "id": "language-switcher",
     "fields": [
       {
@@ -1140,39 +1136,6 @@
           }
         ],
         "value": ""
-      }
-    ]
-  },
-  {
-    "id": "modal",
-    "fields": [
-      {
-        "component": "aem-content",
-        "name": "reference",
-        "label": "Modal Content Reference"
-      },
-      {
-        "component": "text",
-        "name": "triggerText",
-        "label": "Trigger Link Text",
-        "valueType": "string",
-        "value": "Open Modal"
-      },
-      {
-        "component": "select",
-        "name": "classes",
-        "label": "Style",
-        "options": [
-          {
-            "name": "link",
-            "value": ""
-          },
-          {
-            "name": "button",
-            "value": "button"
-          }
-        ],
-        "value": "link"
       }
     ]
   },
@@ -1515,51 +1478,6 @@
         "valueType": "string",
         "name": "column4text",
         "label": "Column4"
-      }
-    ]
-  },
-  {
-    "id": "tabs",
-    "fields": [
-      {
-        "component": "select",
-        "name": "classes",
-        "value": "",
-        "label": "Style",
-        "description": "Style for the tabs (e.g., 'default', 'primary')",
-        "valueType": "string",
-        "options": [
-          {
-            "name": "Default",
-            "value": ""
-          },
-          {
-            "name": "Primary",
-            "value": "primary"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "tab",
-    "fields": [
-      {
-        "component": "text",
-        "name": "title",
-        "value": "",
-        "label": "Tab Title",
-        "description": "Short descriptive title for the tab (e.g., 'Tab 1', 'Getting Started')",
-        "valueType": "string",
-        "required": true
-      },
-      {
-        "component": "richtext",
-        "name": "content",
-        "value": "",
-        "label": "Tab Content",
-        "description": "Rich content displayed when tab is active (headings, paragraphs, lists, images, links)",
-        "valueType": "string"
       }
     ]
   },
