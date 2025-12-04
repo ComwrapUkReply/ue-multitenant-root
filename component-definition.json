@@ -345,6 +345,21 @@
           }
         },
         {
+          "title": "Language Switcher",
+          "id": "language-switcher",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Language Switcher",
+                  "model": "language-switcher"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Modal",
           "id": "modal",
           "plugins": {
@@ -369,6 +384,24 @@
                 "template": {
                   "name": "Quote",
                   "model": "quote"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Region Switcher",
+          "id": "region-switcher",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Region Switcher",
+                  "model": "region-switcher",
+                  "displayStyle": "dropdown",
+                  "showFlags": "true",
+                  "defaultLanguages": ""
                 }
               }
             }

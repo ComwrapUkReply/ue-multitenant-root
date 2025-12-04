@@ -1,3 +1,7 @@
+@import url('../language-switcher/language-switcher.css');
+@import url('../region-switcher/region-switcher.css');
+
+
 /* header and nav layout */
 header .nav-wrapper {
   background-color: var(--background-color);
@@ -146,6 +150,9 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 
   header nav .nav-tools {
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 }
 
@@ -477,4 +484,60 @@ header nav .nav-tools {
   z-index: 1;
   right: 0;
   top: 0.5rem;
+}
+
+/* Language switcher in header */
+header nav .nav-tools .language-switcher-header {
+  display: flex;
+  align-items: center;
+}
+
+header nav .nav-tools .language-switcher-header .block.language-switcher {
+  margin: 0;
+  font-size: var(--body-font-size-xs);
+}
+
+header nav .nav-tools .language-switcher-header .language-current {
+  min-width: auto;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--body-font-size-xs);
+  border: 1px solid var(--light-color);
+  background: var(--background-color);
+}
+
+header nav .nav-tools .language-switcher-header .language-current:hover {
+  background: var(--light-color);
+}
+
+header nav .nav-tools .language-switcher-header .language-menu {
+  position: absolute;
+  right: 0;
+  left: auto;
+  min-width: 180px;
+}
+
+header nav .nav-tools .language-switcher-header .language-option {
+  font-size: var(--body-font-size-xs);
+  padding: 0.5rem 0.75rem;
+}
+
+/* Region switcher in header - uses styles from region-switcher.css */
+header nav .nav-tools .region-switcher-header {
+  display: flex;
+  align-items: center;
+}
+
+/* Mobile adjustments for header switchers */
+@media (width <= 900px) {
+  header nav[aria-expanded='true'] .nav-tools {
+    justify-content: center;
+    padding: 1rem 0;
+    border-top: 1px solid var(--light-color);
+    gap: 0.5rem;
+  }
+  
+  header nav .nav-tools .language-switcher-header .language-current,
+  header nav .nav-tools .region-switcher-header .region-current {
+    min-width: 140px;
+  }
 }
