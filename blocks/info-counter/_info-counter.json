@@ -36,19 +36,20 @@
         },
         {
           "component": "select",
-          "name": "mode",
-          "label": "Color Mode",
+          "name": "classes",
+          "label": "Style",
+          "valueType": "string",
+          "value": "",
           "options": [
             {
-              "name": "On Dark (White Text)",
-              "value": "dark"
+              "name": "Default",
+              "value": ""
             },
             {
-              "name": "On Light (Brand Blue Text)",
-              "value": "light"
+              "name": "Primary",
+              "value": "primary"
             }
-          ],
-          "value": "light"
+          ]
         }
       ]
     }
