@@ -27,5 +27,10 @@
       ]
     }
   ],
-  "filters": []
+  "filters": [
+    {
+      "id": "custom-button",
+      "components": []
+    }
+  ]
 }

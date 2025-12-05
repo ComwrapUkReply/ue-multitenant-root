@@ -82,6 +82,10 @@
     ]
   },
   {
+    "id": "custom-button",
+    "components": []
+  },
+  {
     "id": "facts-figures-cards",
     "components": [
       "facts-figures-card"
