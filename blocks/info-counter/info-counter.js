@@ -4,6 +4,8 @@
  * Animation triggers when block enters viewport and counts from 0 to target
  */
 
+import { isEditorMode as checkEditorMode, observeEditorMode } from '../../scripts/utils.js';
+
 const ANIMATION_CONFIG = {
   DURATION: 10000, // Animation duration in milliseconds
   EASING: 'ease-out', // Animation easing function
@@ -360,4 +362,11 @@ export default function decorate(block) {
 
   // Initialize animation
   initializeCounterAnimation(block);
+}
+
+if (checkEditorMode()) {
+  observeEditorMode(() => {
+    const blocks = document.querySelectorAll('.info-counter');
+    blocks.forEach((block) => initializeCounterAnimation(block));
+  });
 }
