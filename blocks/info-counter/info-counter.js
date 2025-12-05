@@ -4,7 +4,7 @@
  * Animation triggers when block enters viewport and counts from 0 to target
  */
 
-import { isEditorMode as checkEditorMode, observeEditorMode } from '../../scripts/utils.js';
+import { isEditorMode as checkEditorMode } from '../../scripts/utils.js';
 
 const ANIMATION_CONFIG = {
   DURATION: 10000, // Animation duration in milliseconds
@@ -93,6 +93,13 @@ function initializeCounterAnimation(block) {
 
   // Mark as animated to prevent re-animation
   if (block.dataset.animated === 'true') {
+    return;
+  }
+
+  // Check if in editor mode - skip animation and set final value immediately
+  if (checkEditorMode()) {
+    updateCounterDisplay(counterElement, targetNumber);
+    block.dataset.animated = 'true';
     return;
   }
 
@@ -362,11 +369,4 @@ export default function decorate(block) {
 
   // Initialize animation
   initializeCounterAnimation(block);
-}
-
-if (checkEditorMode()) {
-  observeEditorMode(() => {
-    const blocks = document.querySelectorAll('.info-counter');
-    blocks.forEach((block) => initializeCounterAnimation(block));
-  });
 }
