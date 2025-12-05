@@ -16,7 +16,7 @@ export default async function decorate(block) {
   }
 
   const referenceLink = block.querySelector('a');
-  const referencePath = referenceLink ? referenceLink.getAttribute('href').replace('/content/comwrap-whitelabel-eds', '') : '';
+  const referencePath = referenceLink ? referenceLink.getAttribute('href').replace('/content/ue-multitenant-root', '') : '';
 
   const [currentCountry, currentLanguage] = getCurrentCountryLanguage();
   let response = await fetch('/query-index.json');
