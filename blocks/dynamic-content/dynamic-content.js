@@ -1,8 +1,20 @@
-import {
-  getCurrentCountryLanguage,
-} from '../helpers.js';
+import { getCurrentCountryLanguage } from '../helpers.js';
+import { isEditorMode, isAuthorMode } from '../../scripts/utils.js';
+import { previewURL } from '../../scripts/constants.js';
 
 export default async function decorate(block) {
+  if (isEditorMode() || isAuthorMode()) {
+    block.innerHTML = `Dynamic Content and Content Filtering are not available in editor mode. <br> Please publish the page to preview and go to <a href="${previewURL}" target="_blank">${previewURL}</a>`;
+    block.style.textAlign = 'center';
+    block.style.padding = '20px';
+    block.style.border = '1px solid #ccc';
+    block.style.borderRadius = '5px';
+    block.style.backgroundColor = '#f0f0f0';
+    block.style.color = '#333';
+    block.style.fontSize = '16px';
+    return;
+  }
+
   const referenceLink = block.querySelector('a');
   const referencePath = referenceLink ? referenceLink.getAttribute('href').replace('/content/comwrap-whitelabel-eds', '') : '';
 
@@ -62,7 +74,7 @@ export default async function decorate(block) {
       tagArray.forEach((tag) => {
         const tagPill = document.createElement('span');
         tagPill.classList.add('tag-pill');
-        tagPill.textContent = tag.trim();
+        tagPill.textContent = tag.split(':').pop().trim();
         tagsContainer.appendChild(tagPill);
       });
       contentBody.appendChild(tagsContainer);
