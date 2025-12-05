@@ -259,73 +259,73 @@
   }
 }
 
-.tabs-container:has(.tabs.primary) {
+.tabs.primary {
     background-color: var(--color-white);
+}
+
+.tabs.primary .tabs-block {
+    background-color: var(--color-white);
+}
+
+.tabs.primary .tabs-tab-button-content {
+  color: var(--color-secondary);
+}
+
+.tabs.primary .tabs-tab-button.active .tabs-tab-button-content {
+  color: var(--color-secondary);
+}
   
-    .tabs-block {
-      background-color: var(--color-white);
-    }
+.tabs.primary .tabs-tab-button:focus-visible,
+.tabs.primary .tabs-tab-button:focus {
+  outline: none;
+  color: var(--color-secondary) !important;
+  background: transparent;
+}
+
+.tabs.primary .tabs-tab-button:focus-visible {
+  outline: 2px solid var(--color-secondary);
+}
   
-    .tabs-tab-button-content {
-      color: var(--color-secondary);
-    }
-  
-    .tabs-tab-button.active .tabs-tab-button-content {
-      color: var(--color-secondary);
-    }
-  
-    .tabs-tab-button:focus-visible,
-    .tabs-tab-button:focus {
-      outline: none;
-      color: var(--color-secondary) !important;
-      background: transparent;
-    }
-  
-    .tabs-tab-button:focus-visible {
-      outline: 2px solid var(--color-secondary);
-    }
-  
-    .tabs-tab-panel {
-      color: var(--color-secondary);
-    }
-  
-    .tabs-tab-panel.active {
+.tabs.primary .tabs-tab-panel {
+  color: var(--color-secondary);
+}
+
+.tabs.primary .tabs-tab-panel.active {
       display: block;
     }
   
-    .tabs-tab-panel[hidden] {
+.tabs.primary .tabs-tab-panel[hidden] {
       display: none;
     }
   
-    .tabs-tab-panel h2 {
+.tabs.primary .tabs-tab-panel h2 {
       color: var(--color-secondary);
     }
   
-    .tabs-tab-panel p {
+.tabs.primary .tabs-tab-panel p {
       color: var(--color-secondary);
     }
   
-    .tabs-tab-panel sup {
+.tabs.primary .tabs-tab-panel sup {
       color: var(--color-secondary);
     }
   
-    .tabs-tab-panel a {
+.tabs.primary .tabs-tab-panel a {
       color: var(--color-secondary);
     }
   
-    .tabs-tab-panel .footnotes {
+.tabs.primary .tabs-tab-panel .footnotes {
       color: var(--color-secondary);
     }
   
-    .tabs-tab-panel .footnotes p {
+.tabs.primary .tabs-tab-panel .footnotes p {
       color: var(--color-secondary);
     }
   
-    .tabs-tab-panel .footnotes sup {
+.tabs.primary .tabs-tab-panel .footnotes sup {
       color: var(--color-secondary);
     }
 
-    .tabs-indicator {
+.tabs.primary .tabs-indicator {
       background-color: var(--color-secondary);
     }
-  }
