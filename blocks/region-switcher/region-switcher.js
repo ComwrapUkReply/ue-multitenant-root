@@ -10,16 +10,16 @@ const CONFIG = {
   branch: 'region-sel',
   regions: {
     ch: {
-      code: 'ch', name: 'Switzerland', flag: '🇨🇭', defaultLanguage: 'de',
+      code: 'ch', name: 'CH', flag: '🇨🇭', defaultLanguage: 'de',
     },
     de: {
-      code: 'de', name: 'Germany', flag: '🇩🇪', defaultLanguage: 'de',
+      code: 'de', name: 'DE', flag: '🇩🇪', defaultLanguage: 'de',
     },
     us: {
-      code: 'us', name: 'United States', flag: '🇺🇸', defaultLanguage: 'en',
+      code: 'us', name: 'US', flag: '🇺🇸', defaultLanguage: 'en',
     },
     uk: {
-      code: 'uk', name: 'United Kingdom', flag: '🇬🇧', defaultLanguage: 'en',
+      code: 'uk', name: 'UK', flag: '🇬🇧', defaultLanguage: 'en',
     },
   },
 };
@@ -95,7 +95,7 @@ function createDropdown(regions, currentRegion, showFlags) {
   const buttonHTML = `
     ${showFlags && currentRegion ? `<span class="flag" aria-hidden="true">${currentRegion.flag}</span>` : ''}
     <span class="label">${currentRegion?.name || 'Region'}</span>
-    <span class="arrow">▼</span>
+    <span class="arrow" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="chevron-down"><path d="M4.47 6.97a.75.75 0 0 1 1.06 0L8 9.44l2.47-2.47a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 0-1.06z" fill="currentColor"/></svg></span>
   `;
 
   const button = document.createElement('button');

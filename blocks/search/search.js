@@ -324,22 +324,54 @@ function searchIcon() {
 }
 
 /**
+ * Finds the search block element on the page
+ * @returns {HTMLElement|null} The search block element or null if not found
+ */
+function findSearchBlock() {
+  return document.querySelector('.search.block');
+}
+
+/**
+ * Toggles the search block visibility
+ * @param {HTMLElement} block - The search block element
+ * @param {HTMLButtonElement|null} button - Optional button element to sync aria-expanded
+ */
+function toggleSearchBlock(block, button = null) {
+  if (!block) return;
+
+  const isExpanded = block.getAttribute('aria-expanded') === 'true';
+  const newState = !isExpanded;
+
+  block.setAttribute('aria-expanded', newState.toString());
+
+  if (button) {
+    button.setAttribute('aria-expanded', newState.toString());
+  }
+
+  // Sync all search buttons on the page
+  const allSearchButtons = document.querySelectorAll('.search-button');
+  allSearchButtons.forEach((btn) => {
+    btn.setAttribute('aria-expanded', newState.toString());
+  });
+
+  // Focus input when opening
+  if (newState) {
+    const input = block.querySelector('.search-input');
+    if (input) {
+      setTimeout(() => {
+        input.focus();
+      }, 100);
+    }
+  }
+}
+
+/**
  * Toggles the search block visibility on mobile
  * @param {HTMLElement} block - The search block element
  * @param {HTMLButtonElement} button - The mobile search button
  */
 function toggleMobileSearch(block, button) {
-  const isExpanded = block.getAttribute('aria-expanded') === 'true';
-  block.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
-  button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
-
-  // Focus input when opening
-  if (!isExpanded) {
-    const input = block.querySelector('.search-input');
-    if (input) {
-      input.focus();
-    }
-  }
+  toggleSearchBlock(block, button);
 }
 
 /**
@@ -422,6 +454,40 @@ export default async function decorate(block) {
       input.dispatchEvent(new Event('input'));
     }
   }
+
+  // Attach toggle handlers to all search buttons on the page
+  const allSearchButtons = document.querySelectorAll('.search-button');
+  allSearchButtons.forEach((button) => {
+    // Remove existing listeners to avoid duplicates
+    const newButton = button.cloneNode(true);
+    button.parentNode.replaceChild(newButton, button);
+
+    // Set aria attributes if not already set
+    if (!newButton.hasAttribute('aria-label')) {
+      newButton.setAttribute('aria-label', 'Toggle search');
+    }
+    if (!newButton.hasAttribute('aria-expanded')) {
+      newButton.setAttribute('aria-expanded', 'false');
+    }
+    if (!newButton.hasAttribute('aria-controls')) {
+      newButton.setAttribute('aria-controls', 'search-panel');
+    }
+
+    // Add click handler to toggle search block
+    newButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const searchBlock = findSearchBlock();
+      if (searchBlock) {
+        toggleSearchBlock(searchBlock, newButton);
+      }
+    });
+
+    // Decorate icons if this button has icons
+    if (newButton.querySelector('.icon')) {
+      decorateIcons(newButton);
+    }
+  });
 
   decorateIcons(block);
 }
