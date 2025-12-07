@@ -1,0 +1,36 @@
+/**
+ * Experience Fragment Block Styles
+ * Styling for the experience fragment container and its sections.
+ */
+
+/* Block wrapper - minimal styling to not interfere with fragment content */
+.experience-fragment-wrapper {
+  width: 100%;
+}
+
+/* Block container */
+.experience-fragment {
+  width: 100%;
+}
+
+/* Section wrapper for multiple sections */
+.experience-fragment .experience-fragment-section {
+  width: 100%;
+}
+
+/* Dark variant */
+.experience-fragment.dark {
+  background-color: var(--dark-color, #1a1a1a);
+  color: var(--background-color, #fff);
+}
+
+.experience-fragment.dark a {
+  color: var(--link-color-dark, #6ea8fe);
+}
+
+/* Light variant */
+.experience-fragment.light {
+  background-color: var(--light-color, #f5f5f5);
+  color: var(--text-color, #131313);
+}
+

@@ -1,5 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { loadExperienceFragment, isNavFragment } from '../experience-fragment/experience-fragment.js';
 import languageSwitcherDecorate from '../language-switcher/language-switcher.js';
 import { getPageMappingsJSON, getCustomLabelsJSON } from '../language-switcher/page-mappings.js';
 import regionSwitcherDecorate from '../region-switcher/region-switcher.js';
@@ -248,14 +249,47 @@ function restructureNavSectionsMenu(navSectionsMenu) {
 }
 
 /**
+ * Determines the navigation source based on metadata
+ * Checks for experience fragment first, falls back to default nav
+ * @returns {Promise<{fragment: HTMLElement|null, isExperienceFragment: boolean}>}
+ */
+async function getNavigationFragment() {
+  // Check for experience fragment metadata
+  const experienceFragmentMeta = getMetadata('experience-fragment');
+
+  // If experience fragment is configured and is a nav fragment, use it
+  if (experienceFragmentMeta) {
+    const fragmentPath = new URL(experienceFragmentMeta, window.location).pathname;
+
+    if (isNavFragment(fragmentPath)) {
+      const experienceFragment = await loadExperienceFragment(fragmentPath);
+      if (experienceFragment) {
+        return { fragment: experienceFragment, isExperienceFragment: true };
+      }
+    }
+  }
+
+  // Fall back to default nav
+  const navMeta = getMetadata('nav');
+  const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
+  const fragment = await loadFragment(navPath);
+
+  return { fragment, isExperienceFragment: false };
+}
+
+/**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
-  // load nav as fragment
-  const navMeta = getMetadata('nav');
-  const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  const fragment = await loadFragment(navPath);
+  // load nav as fragment (checks for experience fragment first)
+  const { fragment, isExperienceFragment } = await getNavigationFragment();
+
+  // Log for debugging when using experience fragment
+  if (isExperienceFragment) {
+    // eslint-disable-next-line no-console
+    console.info('Header: Using experience fragment navigation');
+  }
 
   // decorate nav DOM
   block.textContent = '';
