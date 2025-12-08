@@ -41,6 +41,14 @@
   top: 3rem;
 }
 
+/* search box */
+.search .search-box {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1ch;
+    align-items: center;
+  }
+
 .search-wrapper .search.block .search-box {
     border: 2px solid var(--color-primary);
     background-color: var(--color-tertiary);
@@ -82,14 +90,6 @@
     display: block;
   }
 }
-
-/* search box */
-.search .search-box {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1ch;
-    align-items: center;
-  }
   
   .search .search-box input {
     box-sizing: border-box;
