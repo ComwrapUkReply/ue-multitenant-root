@@ -58,6 +58,7 @@
 }
 
 .language-current .arrow {
+    opacity: 0.6;
   font-size: 0.8em;
   transition: transform var(--transition-base);
 }

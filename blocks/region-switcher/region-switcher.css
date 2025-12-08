@@ -1,9 +1,4 @@
 /* Region Switcher Block */
-.block.region-switcher {
-  font-family: var(--font-family-body);
-}
-
-/* Dropdown */
 .region-dropdown {
   position: relative;
   display: inline-block;
