@@ -1,6 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { loadExperienceFragment, isNavFragment } from '../experience-fragment/experience-fragment.js';
+import { loadExperienceFragmentForHeader, isNavFragment } from '../experience-fragment/experience-fragment.js';
 import languageSwitcherDecorate from '../language-switcher/language-switcher.js';
 import { getPageMappingsJSON, getCustomLabelsJSON } from '../language-switcher/page-mappings.js';
 import regionSwitcherDecorate from '../region-switcher/region-switcher.js';
@@ -262,7 +262,8 @@ async function getNavigationFragment() {
     const fragmentPath = new URL(experienceFragmentMeta, window.location).pathname;
 
     if (isNavFragment(fragmentPath)) {
-      const experienceFragment = await loadExperienceFragment(fragmentPath);
+      // Use specialized function for header replacement
+      const experienceFragment = await loadExperienceFragmentForHeader(fragmentPath);
       if (experienceFragment) {
         return { fragment: experienceFragment, isExperienceFragment: true };
       }
@@ -278,20 +279,38 @@ async function getNavigationFragment() {
 }
 
 /**
- * loads and decorates the header, mainly the nav
- * @param {Element} block The header block element
+ * Decorates header with experience fragment navigation
+ * Experience fragments get their own styling without standard nav decoration
+ * @param {Element} block - The header block element
+ * @param {HTMLElement} fragment - The experience fragment container
  */
-export default async function decorate(block) {
-  // load nav as fragment (checks for experience fragment first)
-  const { fragment, isExperienceFragment } = await getNavigationFragment();
+function decorateExperienceFragmentHeader(block, fragment) {
+  block.textContent = '';
+  block.classList.add('experience-fragment-header');
 
-  // Log for debugging when using experience fragment
-  if (isExperienceFragment) {
-    // eslint-disable-next-line no-console
-    console.info('Header: Using experience fragment navigation');
-  }
+  // Create wrapper for the experience fragment nav
+  const navWrapper = document.createElement('div');
+  navWrapper.className = 'nav-wrapper experience-fragment-nav-wrapper';
 
-  // decorate nav DOM
+  // Create nav element with experience fragment class
+  const nav = document.createElement('nav');
+  nav.id = 'nav';
+  nav.classList.add('nav', 'experience-fragment-nav');
+  nav.setAttribute('aria-expanded', 'false');
+
+  // Append the experience fragment content directly
+  nav.appendChild(fragment);
+
+  navWrapper.appendChild(nav);
+  block.appendChild(navWrapper);
+}
+
+/**
+ * Decorates header with default navigation
+ * @param {Element} block - The header block element
+ * @param {HTMLElement} fragment - The navigation fragment
+ */
+async function decorateDefaultHeader(block, fragment) {
   block.textContent = '';
   const nav = document.createElement('nav');
   nav.id = 'nav';
@@ -305,10 +324,12 @@ export default async function decorate(block) {
   });
 
   const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
-  if (brandLink) {
-    brandLink.className = '';
-    brandLink.closest('.button-container').className = '';
+  if (navBrand) {
+    const brandLink = navBrand.querySelector('.button');
+    if (brandLink) {
+      brandLink.className = '';
+      brandLink.closest('.button-container').className = '';
+    }
   }
 
   const navSections = nav.querySelector('.nav-sections');
@@ -359,4 +380,29 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+}
+
+/**
+ * loads and decorates the header, mainly the nav
+ * @param {Element} block The header block element
+ */
+export default async function decorate(block) {
+  // load nav as fragment (checks for experience fragment first)
+  const { fragment, isExperienceFragment } = await getNavigationFragment();
+
+  if (!fragment) {
+    // eslint-disable-next-line no-console
+    console.warn('Header: No navigation fragment found');
+    return;
+  }
+
+  if (isExperienceFragment) {
+    // Experience fragment gets its own decoration without standard nav classes
+    // eslint-disable-next-line no-console
+    console.info('Header: Using experience fragment navigation');
+    decorateExperienceFragmentHeader(block, fragment);
+  } else {
+    // Default navigation with standard decoration
+    await decorateDefaultHeader(block, fragment);
+  }
 }

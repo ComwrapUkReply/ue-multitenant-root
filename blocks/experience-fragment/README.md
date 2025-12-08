@@ -21,7 +21,6 @@ blocks/experience-fragment/
 ├── _experience-fragment.json    # Block definition and model
 ├── experience-fragment.js       # Core JavaScript functionality
 ├── experience-fragment.css      # Block styling
-├── index.js                     # Public exports
 └── README.md                    # This documentation
 ```
 
@@ -104,7 +103,8 @@ Available in page properties for all templates:
 
 ```javascript
 import { 
-  loadExperienceFragment, 
+  loadExperienceFragment,
+  loadExperienceFragmentForHeader,
   isNavFragment 
 } from '../experience-fragment/experience-fragment.js';
 ```
@@ -117,7 +117,7 @@ Loads an experience fragment with all its sections.
 - `path` (string) - The path to the fragment page
 
 **Returns:**
-- `Promise<HTMLElement|null>` - The root element containing all sections, or null if loading fails
+- `Promise<HTMLElement|null>` - The main element containing all sections, or null if loading fails
 
 **Example:**
 ```javascript
@@ -125,6 +125,26 @@ const fragment = await loadExperienceFragment('/experience-fragment/nav-secondar
 if (fragment) {
   const sections = fragment.querySelectorAll('.section');
   // Process sections...
+}
+```
+
+#### `loadExperienceFragmentForHeader(path)`
+
+Loads an experience fragment specifically for header replacement. Returns a container with all sections structured for header use.
+
+**Parameters:**
+- `path` (string) - The path to the fragment page
+
+**Returns:**
+- `Promise<HTMLElement|null>` - Container with `.experience-fragment-nav` class and all sections as `.experience-fragment-nav-section` children
+
+**Example:**
+```javascript
+const headerFragment = await loadExperienceFragmentForHeader('/experience-fragment/nav-product');
+if (headerFragment) {
+  // headerFragment is a div.experience-fragment-nav
+  // with div.experience-fragment-nav-section children
+  nav.appendChild(headerFragment);
 }
 ```
 
@@ -189,7 +209,7 @@ Create a page at `/experience-fragment/nav-secondary` with this structure:
 
 ## Styling
 
-### CSS Classes
+### CSS Classes - Standard Block Usage
 
 | Class | Description |
 |-------|-------------|
@@ -197,6 +217,19 @@ Create a page at `/experience-fragment/nav-secondary` with this structure:
 | `.experience-fragment-section` | Wrapper for each section from the fragment |
 | `.experience-fragment.dark` | Dark theme variant |
 | `.experience-fragment.light` | Light theme variant |
+
+### CSS Classes - Navigation Replacement
+
+When used as header navigation replacement:
+
+| Class | Description |
+|-------|-------------|
+| `.experience-fragment-header` | Added to header block |
+| `.experience-fragment-nav-wrapper` | Wrapper for the nav |
+| `.nav.experience-fragment-nav` | Nav element with experience fragment styling |
+| `.experience-fragment-nav-section` | Each section from fragment |
+| `.experience-fragment-nav-section-1` | First section (numbered) |
+| `.experience-fragment-nav-section-2` | Second section (numbered) |
 
 ### Custom Styling Example
 
@@ -231,11 +264,26 @@ Create a page at `/experience-fragment/nav-secondary` with this structure:
 2. **Verify the page exists**: The fragment page must be published
 3. **Check console**: Look for "Failed to load experience fragment" warnings
 
+### Single Section Fragment Not Loading
+
+1. **Verify section exists**: The fragment page must have at least one section with content
+2. **Check decoration**: Ensure the page content is properly structured as a section
+3. **Console warnings**: Look for "Experience fragment has no sections" warning
+
 ### Header Not Being Replaced
 
 1. **Check fragment name**: Must start with `nav` (case-insensitive)
 2. **Verify metadata**: Ensure `experience-fragment` is set in page metadata
 3. **Check console**: Look for "Header: Using experience fragment navigation" log
+
+### Navigation Styles Not Applied
+
+When using an experience fragment as navigation:
+
+1. **Standard nav classes are NOT applied**: `.nav-brand`, `.nav-sections`, `.nav-tools` won't be added
+2. **Use experience fragment classes**: Style with `.experience-fragment-nav-section` and `.experience-fragment-nav-section-{n}`
+3. **Target the nav container**: Custom CSS should use `.nav.experience-fragment-nav` selector
+4. **Header block has extra class**: Use `.header.experience-fragment-header` for header-specific overrides
 
 ### Styling Issues
 

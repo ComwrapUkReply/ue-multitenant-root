@@ -34,3 +34,118 @@
   color: var(--text-color, #131313);
 }
 
+/* ============================================
+   Experience Fragment Navigation Styles
+   Used when experience fragment replaces header
+   ============================================ */
+
+/* Header block when using experience fragment */
+.header.block.experience-fragment-header {
+  height: auto;
+  min-height: var(--nav-height, 64px);
+}
+
+/* Nav wrapper for experience fragment */
+.experience-fragment-nav-wrapper {
+  width: 100%;
+  max-width: var(--max-content-width, 1200px);
+  margin: 0 auto;
+}
+
+/* Nav container for experience fragment */
+.nav.experience-fragment-nav {
+  display: block;
+  width: 100%;
+  background-color: var(--background-color, #fff);
+}
+
+/* Experience fragment nav container */
+.experience-fragment-nav-wrapper .experience-fragment-nav {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Section styling within experience fragment nav */
+.experience-fragment-nav-section {
+  width: 100%;
+  padding: 0;
+}
+
+/* Default content wrapper within experience fragment nav */
+.experience-fragment-nav-section .default-content-wrapper {
+  max-width: var(--max-content-width, 1200px);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Responsive: Desktop layout */
+@media (min-width: 900px) {
+  .experience-fragment-nav-wrapper .experience-fragment-nav {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .experience-fragment-nav-section {
+    flex: 1;
+  }
+
+  .experience-fragment-nav-section .default-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+/* Links styling in experience fragment nav */
+.experience-fragment-nav a {
+  color: var(--text-color, #131313);
+  text-decoration: none;
+}
+
+.experience-fragment-nav a:hover {
+  color: var(--link-hover-color, #1d3ecf);
+}
+
+/* Button styling in experience fragment nav */
+.experience-fragment-nav .button-container {
+  margin: 0;
+}
+
+.experience-fragment-nav .button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+}
+
+/* Images in experience fragment nav (logos, icons) */
+.experience-fragment-nav img {
+  max-height: 40px;
+  width: auto;
+}
+
+/* Lists in experience fragment nav (navigation menus) */
+.experience-fragment-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.experience-fragment-nav li {
+  margin: 0;
+}
+
+/* Headings in experience fragment nav */
+.experience-fragment-nav h1,
+.experience-fragment-nav h2,
+.experience-fragment-nav h3,
+.experience-fragment-nav h4,
+.experience-fragment-nav h5,
+.experience-fragment-nav h6 {
+  margin: 0;
+  font-size: 1rem;
+}
+

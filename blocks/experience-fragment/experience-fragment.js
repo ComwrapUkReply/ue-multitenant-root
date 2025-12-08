@@ -72,12 +72,61 @@ export async function loadExperienceFragment(path) {
 
     decorateMain(main);
     await loadSections(main);
+
+    // Ensure we have content even with single section
+    const sections = main.querySelectorAll('.section');
+    if (sections.length === 0) {
+      // eslint-disable-next-line no-console
+      console.warn('Experience fragment has no sections:', path);
+      return null;
+    }
+
     return main;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn('Failed to load experience fragment:', error);
     return null;
   }
+}
+
+/**
+ * Loads an experience fragment for header replacement.
+ * Returns the fragment content ready to be used as header.
+ * @param {string} path - The path to the fragment
+ * @returns {Promise<HTMLElement|null>} Container with all fragment sections or null
+ */
+export async function loadExperienceFragmentForHeader(path) {
+  const main = await loadExperienceFragment(path);
+  if (!main) {
+    return null;
+  }
+
+  // Create a container for all sections
+  const container = document.createElement('div');
+  container.className = 'experience-fragment-nav';
+
+  // Get all sections and move their content to container
+  const sections = main.querySelectorAll('.section');
+  sections.forEach((section, index) => {
+    const sectionWrapper = document.createElement('div');
+    sectionWrapper.className = `experience-fragment-nav-section experience-fragment-nav-section-${index + 1}`;
+
+    // Copy section classes (except 'section')
+    section.classList.forEach((cls) => {
+      if (cls !== 'section') {
+        sectionWrapper.classList.add(cls);
+      }
+    });
+
+    // Move all children from section to wrapper
+    while (section.firstChild) {
+      sectionWrapper.appendChild(section.firstChild);
+    }
+
+    container.appendChild(sectionWrapper);
+  });
+
+  return container;
 }
 
 /**
