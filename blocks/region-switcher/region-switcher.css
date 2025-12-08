@@ -1,9 +1,4 @@
 /* Region Switcher Block */
-.block.region-switcher {
-  font-family: var(--body-font-family, sans-serif);
-}
-
-/* Dropdown */
 .region-dropdown {
   position: relative;
   display: inline-block;
@@ -13,25 +8,27 @@
 .region-current {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-12);
   min-width: 140px;
-  background: var(--background-color, #fff);
-  border: 1px solid var(--light-color, #ddd);
-  border-radius: 4px;
-  font-size: var(--body-font-size-xs, 14px);
-  color: var(--text-color, #333);
+  background: var(--color-white);
+  border: 2px solid var(--color-cloud-grey);
+  border-radius: var(--space-4);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-mob-label);
+  color: var(--color-black);
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .region-current:hover {
-  background: var(--light-color, #f5f5f5);
-  border-color: var(--link-color, #06c);
+  background: var(--color-light-grey);
+  border-color: var(--color-primary-blue);
 }
 
 .region-current:focus-visible {
-  outline: 2px solid var(--link-color, #06c);
+  outline: 2px solid var(--color-primary-blue);
   outline-offset: 2px;
 }
 
@@ -47,7 +44,7 @@
 .region-current .arrow {
   font-size: 0.7em;
   opacity: 0.6;
-  transition: transform 0.2s;
+  transition: transform var(--transition-fast);
 }
 
 .region-current[aria-expanded="true"] .arrow {
@@ -60,12 +57,12 @@
   top: 100%;
   left: 0;
   right: 0;
-  margin: 2px 0 0;
+  margin: var(--space-4) 0 0;
   padding: 0;
   list-style: none;
-  background: var(--background-color, #fff);
-  border: 1px solid var(--light-color, #ddd);
-  border-radius: 4px;
+  background: var(--color-white);
+  border: 2px solid var(--color-cloud-grey);
+  border-radius: var(--space-4);
   box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   z-index: 1000;
   display: none;
@@ -84,27 +81,29 @@
 .region-option {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  color: var(--text-color, #333);
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-12);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-mob-label);
+  line-height: var(--line-height-mob-label);
+  color: var(--color-black);
   text-decoration: none;
-  font-size: var(--body-font-size-xs, 14px);
-  transition: background 0.2s;
+  transition: background var(--transition-fast);
 }
 
 .region-option:hover {
-  background: var(--light-color, #f5f5f5);
+  background: var(--color-light-grey);
   text-decoration: none;
 }
 
 .region-option:focus-visible {
-  background: var(--light-color, #f5f5f5);
-  outline: 2px solid var(--link-color, #06c);
+  background: var(--color-light-grey);
+  outline: 2px solid var(--color-primary-blue);
   outline-offset: -2px;
 }
 
 .region-option.current {
-  background: var(--light-color, #f0f4f8);
+  background: var(--color-info);
   font-weight: 600;
   cursor: default;
 }
@@ -117,26 +116,25 @@
 /* Header Integration */
 .region-switcher-header .region-current {
   min-width: auto;
-  padding: 0.4rem 0.6rem;
+  padding: var(--space-4) var(--space-8);
   border-color: transparent;
   background: transparent;
 }
 
 .region-switcher-header .region-current:hover {
-  background: var(--light-color, #f5f5f5);
+  background: var(--color-light-grey);
 }
 
 .region-switcher-header .region-menu {
-  min-width: 160px;
   right: 0;
   left: auto;
 }
 
 /* Responsive */
-@media (width <= 768px) {
+@media screen and (width <= 768px) {
   .region-current {
     min-width: 120px;
-    padding: 0.4rem 0.6rem;
+    padding: var(--space-4) var(--space-8);
   }
 
   .region-switcher-header .region-current {
