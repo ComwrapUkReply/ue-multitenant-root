@@ -14,8 +14,9 @@ main>.section.hero-container {
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
   line-height: var(--line-height-body);
+}
 
-  &::before {
+.hero::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -24,7 +25,6 @@ main>.section.hero-container {
     background-color: var(--color-black);
     opacity: 0.6;
     z-index: 1;
-  }
 }
 
 .hero h1 {
