@@ -35,7 +35,7 @@ Add the Experience Fragment block to any page and select a fragment reference:
 2. Select a fragment page from the AEM content picker
 3. Optionally choose a style variant (Default, Dark, or Light)
 
-### As a Navigation Replacement
+### As a Navigation Replacement (Page Properties)
 
 To replace the default header navigation with a custom experience fragment:
 
@@ -44,12 +44,25 @@ To replace the default header navigation with a custom experience fragment:
    - Name the page starting with `nav` (e.g., `nav-secondary`, `nav-product-hub`)
    - Add your navigation content to the page
 
-2. **Configure in page metadata**:
-   - Edit the page properties in Universal Editor
-   - Find the "Experience Fragment" field
-   - Select your navigation fragment
+2. **Configure in page properties**:
+   - Open the page in Universal Editor
+   - Click on the page properties panel
+   - Find the **"Experience Fragment (Navigation)"** field
+   - Select your navigation fragment using the content picker
 
 3. **Result**: The header will automatically use your experience fragment instead of the default navigation
+
+### Template-Specific Configuration
+
+The experience fragment field is available in all template metadata models:
+
+| Template | Metadata Model | Field Available |
+|----------|---------------|-----------------|
+| Default | `page-metadata` | ✅ Experience Fragment (Navigation) |
+| Article | `article-metadata` | ✅ Experience Fragment (Navigation) |
+| Events | `events-metadata` | ✅ Experience Fragment (Navigation) |
+
+This allows you to configure different navigation fragments for different page templates.
 
 ## Navigation Fragment Naming Convention
 
@@ -73,9 +86,17 @@ To replace the default header navigation with a custom experience fragment:
 
 ### Page Metadata Field
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `experience-fragment` | `aem-content` | Fragment for header replacement |
+Available in page properties for all templates:
+
+| Field | Type | Label | Description |
+|-------|------|-------|-------------|
+| `experience-fragment` | `aem-content` | Experience Fragment (Navigation) | Select a fragment to replace header. Must start with 'nav'. |
+
+**Location in Universal Editor:**
+1. Select the page (click outside any block)
+2. Open the properties panel (right side)
+3. Find "Experience Fragment (Navigation)" field
+4. Use content picker to select fragment
 
 ## API Reference
 

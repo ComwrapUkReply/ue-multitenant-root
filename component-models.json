@@ -49,6 +49,12 @@
         "label": "Keywords"
       },
       {
+        "component": "aem-content",
+        "name": "experience-fragment",
+        "label": "Experience Fragment (Navigation)",
+        "description": "Select an experience fragment to replace the header navigation. Fragment name must start with 'nav' (e.g., nav-secondary, nav-product). Leave empty to use default navigation."
+      },
+      {
         "component": "container",
         "name": "meta",
         "label": "Meta",
