@@ -67,6 +67,7 @@ function detectCurrentRegion() {
     }
   }
 
+  return null;
 }
 
 /**

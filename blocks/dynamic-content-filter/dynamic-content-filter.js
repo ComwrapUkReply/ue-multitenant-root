@@ -4,6 +4,7 @@ export default async function decorate(block) {
   const dynamicContentBlock = contentWrapper?.querySelector('.dynamic-content.block');
 
   if (!dynamicContentBlock) {
+    // eslint-disable-next-line no-console
     console.log('No dynamic content block found');
     return;
   }
