@@ -7,7 +7,7 @@
 const CONFIG = {
   projectName: 'ue-multitenant-root',
   githubOrg: 'comwrapukreply',
-  branch: 'region-sel',
+  branch: 'main',
   regions: {
     ch: {
       code: 'ch', name: 'CH', flag: '🇨🇭', defaultLanguage: 'de',
@@ -67,7 +67,6 @@ function detectCurrentRegion() {
     }
   }
 
-  return null;
 }
 
 /**

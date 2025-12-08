@@ -9,7 +9,7 @@ import { PAGE_MAPPINGS } from './page-mappings.js';
 const CONFIG = {
   projectName: 'ue-multitenant-root',
   githubOrg: 'comwrapukreply',
-  branch: 'region-sel',
+  branch: 'main',
   locales: [
     {
       code: 'ch-de', path: '/ch/de/', label: 'DE', flag: '🇨🇭', country: 'ch',
