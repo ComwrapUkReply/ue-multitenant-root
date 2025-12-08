@@ -9,22 +9,22 @@ import { PAGE_MAPPINGS } from './page-mappings.js';
 const CONFIG = {
   projectName: 'ue-multitenant-root',
   githubOrg: 'comwrapukreply',
-  branch: 'region-sel',
+  branch: 'main',
   locales: [
     {
-      code: 'ch-de', path: '/ch/de/', label: 'Deutsch', flag: '🇨🇭', country: 'ch',
+      code: 'ch-de', path: '/ch/de/', label: 'DE', flag: '🇨🇭', country: 'ch',
     },
     {
-      code: 'ch-fr', path: '/ch/fr/', label: 'Français', flag: '🇨🇭', country: 'ch',
+      code: 'ch-fr', path: '/ch/fr/', label: 'FR', flag: '🇨🇭', country: 'ch',
     },
     {
-      code: 'ch-en', path: '/ch/en/', label: 'English', flag: '🇨🇭', country: 'ch',
+      code: 'ch-en', path: '/ch/en/', label: 'EN', flag: '🇨🇭', country: 'ch',
     },
     {
-      code: 'de-de', path: '/de/de/', label: 'Deutsch', flag: '🇩🇪', country: 'de', default: true,
+      code: 'de-de', path: '/de/de/', label: 'DE', flag: '🇩🇪', country: 'de', default: true,
     },
     {
-      code: 'de-en', path: '/de/en/', label: 'English', flag: '🇩🇪', country: 'de',
+      code: 'de-en', path: '/de/en/', label: 'EN', flag: '🇩🇪', country: 'de',
     },
   ],
 };
@@ -213,7 +213,7 @@ function createDropdown(container, current, locales, opts) {
   const btn = createOption(current, opts, '', true);
   btn.setAttribute('aria-haspopup', 'true');
   btn.setAttribute('aria-expanded', 'false');
-  btn.innerHTML += '<span class="arrow">▼</span>';
+  btn.innerHTML += '<span class="arrow" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="chevron-down"><path d="M4.47 6.97a.75.75 0 0 1 1.06 0L8 9.44l2.47-2.47a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 0-1.06z" fill="currentColor"/></svg></span>';
 
   const menu = document.createElement('ul');
   menu.className = 'language-menu';

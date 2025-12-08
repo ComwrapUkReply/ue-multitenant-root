@@ -592,6 +592,38 @@
     ]
   },
   {
+    "id": "download",
+    "fields": [
+      {
+        "component": "text",
+        "name": "downloadtitle",
+        "value": "",
+        "label": "Title"
+      },
+      {
+        "component": "richtext",
+        "name": "downloaddescription",
+        "value": "",
+        "label": "Description"
+      },
+      {
+        "component": "text",
+        "name": "downloadbuttonlabel",
+        "label": "Download Button Label"
+      },
+      {
+        "component": "aem-content",
+        "name": "downloadfile",
+        "label": "Asset",
+        "value": "",
+        "valueType": "string",
+        "validation": {
+          "rootPath": "/content/dam/aem-xwalk"
+        }
+      }
+    ]
+  },
+  {
     "id": "dynamiccontentfilter",
     "fields": [
       {

@@ -148,6 +148,7 @@ async function updateFooterFilter() {
         if (index > 1) {
           section.remove();
           main.addEventListener('aue:content-add', () => {
+            // eslint-disable-next-line no-console
             console.log('ADDING THE SECTION WITH aue:content-add');
             main.disabled = true;
           });
