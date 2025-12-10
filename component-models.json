@@ -1290,23 +1290,23 @@
         "component": "select",
         "name": "classes_teaserColumns",
         "label": "Teaser Columns",
-        "value": "teaser-list-columns-4",
+        "value": "list-teaser-columns-4",
         "options": [
           {
             "name": "1",
-            "value": "teaser-list-columns-1"
+            "value": "list-teaser-columns-1"
           },
           {
             "name": "2",
-            "value": "teaser-list-columns-2"
+            "value": "list-teaser-columns-2"
           },
           {
             "name": "3",
-            "value": "teaser-list-columns-3"
+            "value": "list-teaser-columns-3"
           },
           {
             "name": "4",
-            "value": "teaser-list-columns-4"
+            "value": "list-teaser-columns-4"
           }
         ]
       }
