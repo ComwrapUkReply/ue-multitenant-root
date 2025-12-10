@@ -1,12 +1,10 @@
 import useBlockConfig from '../../scripts/global/useBlockConfig.js';
-import * as helpers from '../helpers.js';
-
-const {
+import {
   createImageWithModal,
   getQueryIndex,
   getDictionary,
   mapPath,
-} = helpers;
+} from '../helpers.js';
 
 const TEASER_LIST_BUTTON_LABEL = 'Read more';
 const BLOCK_CONFIG = Object.freeze({
