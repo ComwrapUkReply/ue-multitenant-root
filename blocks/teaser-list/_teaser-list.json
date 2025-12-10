@@ -48,7 +48,7 @@
           "value": "",
           "valueType": "string",
           "validation": {
-            "rootPath": "/content/aemfeboot"
+            "rootPath": "/content/ue-multitenant-root"
           },
           "condition": { "==": [{ "var": "teaser-list-type" }, "parent_page"] }
         },
@@ -60,7 +60,7 @@
           "description": "Enter the paths of individual pages, without starting with a slash ('/').",
           "multi": true,
           "validation": {
-            "rootPath": "/content/aemfeboot"
+            "rootPath": "/content/ue-multitenant-root"
           },
           "condition": { "==": [{ "var": "teaser-list-type" }, "individual_pages"] }
         },
@@ -71,7 +71,7 @@
           "value": "",
           "valueType": "string",
           "validation": {
-            "rootPath": "/content/aemfeboot"
+            "rootPath": "/content/ue-multitenant-root"
           },
           "condition": { "==": [{ "var": "teaser-list-type" }, "tag"] }
         },
