@@ -1,4 +1,4 @@
-import useBlockConfig from '../../scripts/global/useBlockConfig.js';
+import useBlockConfig from '../../scripts/useBlockConfig.js';
 import {
   createImageWithModal,
   getQueryIndex,
