@@ -1,4 +1,4 @@
-import useBlockConfig from '../../scripts/useBlockConfig.js';
+import useBlockConfig from '../../scripts/global/useBlockConfig.js';
 import {
   createImageWithModal,
   getQueryIndex,
@@ -94,7 +94,7 @@ export default async function decorate(block) {
   }
 
   const teaserList = document.createElement('div');
-  teaserList.className = 'list-teaser-inner';
+  teaserList.className = 'teaser-list-inner';
   pagesData.forEach((page) => {
     const teaserImage = page.teaserimage || page.image;
     const title = page.teasertitle || page.title;
@@ -104,7 +104,7 @@ export default async function decorate(block) {
 
     const description = page.teaserdescription || page.description;
     const teaserListItem = document.createRange().createContextualFragment(`
-      <article class="list-teaser">
+      <article class="teaser">
         <div class="teaser-image" role="img" aria-label="${title}"></div>
         <div class="teaser-title">
           <${titleElement} class="teaser-headline heading-responsive-4-3">${title}</${titleElement}>
