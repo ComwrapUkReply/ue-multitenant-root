@@ -2,7 +2,8 @@
   {
     "id": "main",
     "components": [
-      "section"
+      "section",
+      "marginal"
     ]
   },
   {
@@ -43,7 +44,8 @@
       "info-counter",
       "dynamiccontent",
       "dynamiccontentfilter",
-      "download"
+      "download",
+      "teaser-list"
     ]
   },
   {

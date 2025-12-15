@@ -3,33 +3,6 @@
     "id": "page-metadata",
     "fields": [
       {
-        "component": "select",
-        "name": "template",
-        "label": "Template",
-        "options": [
-          {
-            "name": "Default",
-            "value": ""
-          },
-          {
-            "name": "Article",
-            "value": "article"
-          },
-          {
-            "name": "Events",
-            "value": "events"
-          }
-        ],
-        "condition": {
-          "===": [
-            {
-              "var": "initialContentRefTarget"
-            },
-            "true"
-          ]
-        }
-      },
-      {
         "component": "text",
         "valueType": "string",
         "name": "jcr:title",
@@ -39,7 +12,64 @@
         "component": "text",
         "valueType": "string",
         "name": "jcr:description",
-        "label": "Description"
+        "label": "Intro Text"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "og:title",
+        "label": "Meta Title"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "og:description",
+        "label": "Meta Description"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "og:image",
+        "label": "Image"
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "robots",
+        "label": "Robots",
+        "options": [
+          {
+            "name": "index, follow",
+            "value": "index, follow"
+          },
+          {
+            "name": "noindex, follow",
+            "value": "noindex, follow"
+          },
+          {
+            "name": "index, nofollow",
+            "value": "index, nofollow"
+          },
+          {
+            "name": "noindex, nofollow",
+            "value": "noindex, nofollow"
+          }
+        ]
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "validation": {
+          "rootPath": "/content/ue-multitenant-root"
+        },
+        "name": "cq:canonicalUrl",
+        "label": "Canonical URL"
+      },
+      {
+        "component": "aem-tag",
+        "valueType": "string",
+        "name": "cq:tags",
+        "label": "Tags"
       },
       {
         "component": "text",
@@ -49,150 +79,85 @@
         "label": "Keywords"
       },
       {
-        "component": "container",
-        "name": "meta",
-        "label": "Meta",
-        "fields": [
-          {
-            "component": "text",
-            "name": "og:title",
-            "label": "Title"
-          },
-          {
-            "component": "aem-content",
-            "name": "link",
-            "label": "Link"
-          },
-          {
-            "component": "text",
-            "name": "linkText",
-            "label": "Text"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "article-metadata",
-    "fields": [
+        "component": "text",
+        "valueType": "string",
+        "name": "topics",
+        "multi": true,
+        "label": "Topics"
+      },
       {
         "component": "select",
         "name": "template",
-        "label": "Template",
+        "label": "Template name",
         "options": [
           {
-            "name": "Default",
-            "value": ""
+            "name": "Library",
+            "value": "library"
           },
           {
-            "name": "Article",
-            "value": "article"
+            "name": "Author",
+            "value": "author"
           },
           {
-            "name": "Events",
-            "value": "events"
-          }
-        ],
-        "condition": {
-          "===": [
-            {
-              "var": "initialContentRefTarget"
-            },
-            "true"
-          ]
-        }
-      },
-      {
-        "component": "aem-tag",
-        "name": "tags",
-        "label": "Tags",
-        "valueType": "string"
-      },
-      {
-        "component": "container",
-        "name": "meta",
-        "label": "Meta",
-        "fields": [
-          {
-            "component": "text",
-            "name": "og:title",
-            "label": "Title"
+            "name": "Blog Post",
+            "value": "blogpost"
           },
           {
-            "component": "aem-content",
-            "name": "link",
-            "label": "Link"
-          },
-          {
-            "component": "text",
-            "name": "linkText",
-            "label": "Text"
-          },
-          {
-            "component": "text",
-            "name": "article:author",
-            "label": "Author",
-            "condition": {
-              "===": [
-                {
-                  "var": "template"
-                },
-                "article"
-              ]
-            }
+            "name": "Category",
+            "value": "category"
           }
         ]
-      }
-    ]
-  },
-  {
-    "id": "events-metadata",
-    "fields": [
-      {
-        "component": "select",
-        "name": "template",
-        "label": "Template",
-        "options": [
-          {
-            "name": "Default",
-            "value": ""
-          },
-          {
-            "name": "Article",
-            "value": "article"
-          },
-          {
-            "name": "Events",
-            "value": "events"
-          }
-        ],
-        "condition": {
-          "===": [
-            {
-              "var": "initialContentRefTarget"
-            },
-            "true"
-          ]
-        }
-      },
-      {
-        "component": "aem-tag",
-        "name": "tags",
-        "label": "Tags",
-        "valueType": "string"
       },
       {
         "component": "text",
-        "name": "events:organizer",
-        "label": "Organizer",
-        "condition": {
-          "===": [
-            {
-              "var": "template"
-            },
-            "events"
-          ]
-        }
+        "valueType": "string",
+        "name": "author",
+        "label": "Author"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "position",
+        "label": "Author Position"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "e-mail",
+        "label": "Author Email"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "brand",
+        "label": "Brand"
+      },
+      {
+        "component": "text",
+        "valueType": "number",
+        "name": "readingTime",
+        "label": "Reading Time"
+      },
+      {
+        "component": "date-time",
+        "valueType": "date-time",
+        "name": "publishDate",
+        "label": "Publish Date",
+        "placeholder": "YYYY-MM-DD",
+        "displayFormat": null,
+        "valueFormat": null
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "language",
+        "label": "Language"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "primary-language-url",
+        "label": "Primary Language URL"
       }
     ]
   },
@@ -263,8 +228,13 @@
       },
       {
         "component": "text",
-        "name": "text",
+        "name": "linkText",
         "label": "Text"
+      },
+      {
+        "component": "text",
+        "name": "linkTitle",
+        "label": "Title"
       },
       {
         "component": "select",
@@ -282,6 +252,25 @@
           {
             "name": "secondary",
             "value": "secondary"
+          },
+          {
+            "name": "tertiary",
+            "value": "tertiary"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "linkTarget",
+        "label": "Link Target",
+        "options": [
+          {
+            "name": "self",
+            "value": ""
+          },
+          {
+            "name": "blank",
+            "value": "_blank"
           }
         ]
       }
@@ -312,6 +301,47 @@
           {
             "name": "Gradient",
             "value": "gradient"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "marginal",
+    "fields": [
+      {
+        "component": "text",
+        "name": "id",
+        "label": "Id"
+      },
+      {
+        "component": "multiselect",
+        "name": "style",
+        "label": "Style",
+        "options": [
+          {
+            "name": "Highlight",
+            "value": "highlight"
+          },
+          {
+            "name": "Dark",
+            "value": "dark"
+          },
+          {
+            "name": "Light",
+            "value": "light"
+          },
+          {
+            "name": "Two columns",
+            "value": "grid-layout-two-columns"
+          },
+          {
+            "name": "Three columns",
+            "value": "grid-layout-three-columns"
+          },
+          {
+            "name": "Four columns",
+            "value": "grid-layout-four-columns"
           }
         ]
       }
@@ -523,17 +553,22 @@
     "fields": [
       {
         "component": "aem-content",
-        "name": "custom-button-link",
-        "label": "Button Link"
+        "name": "custombutton-link",
+        "label": "Link"
       },
       {
         "component": "text",
-        "name": "custom-button-label",
-        "label": "Button Label"
+        "name": "custombutton-link-text",
+        "label": "Text"
+      },
+      {
+        "component": "text",
+        "name": "custombutton-link-title",
+        "label": "Title"
       },
       {
         "component": "select",
-        "name": "custom-button-target",
+        "name": "custombutton-link-target",
         "label": "Link Target",
         "options": [
           {
@@ -547,47 +582,58 @@
         ]
       },
       {
-        "component": "multiselect",
-        "name": "classes",
-        "label": "Style",
-        "valueType": "string",
-        "maxSize": 2,
+        "component": "select",
+        "name": "custombutton-type",
+        "label": "Button Type",
         "options": [
           {
-            "name": "Style",
-            "children": [
-              {
-                "name": "Primary",
-                "value": "primary"
-              },
-              {
-                "name": "Secondary",
-                "value": "secondary"
-              },
-              {
-                "name": "Text",
-                "value": "text"
-              }
-            ]
+            "name": "Link",
+            "value": "link"
           },
           {
-            "name": "Type",
-            "children": [
-              {
-                "name": "Download",
-                "value": "download"
-              },
-              {
-                "name": "Email",
-                "value": "email"
-              },
-              {
-                "name": "Telephone",
-                "value": "telephone"
-              }
-            ]
+            "name": "Download",
+            "value": "download"
+          },
+          {
+            "name": "Email",
+            "value": "email"
+          },
+          {
+            "name": "Telephone",
+            "value": "telephone"
           }
         ]
+      },
+      {
+        "component": "select",
+        "name": "custombutton-style",
+        "label": "Button Style",
+        "options": [
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Secondary",
+            "value": "secondary"
+          },
+          {
+            "name": "Tertiary",
+            "value": "tertiary"
+          },
+          {
+            "name": "Text",
+            "value": "text"
+          }
+        ]
+      },
+      {
+        "component": "reference",
+        "name": "custombutton-icon",
+        "label": "Icon Picker",
+        "validation": {
+          "rootPath": "/content/ue-multitenant-root"
+        }
       }
     ]
   },
@@ -1594,6 +1640,147 @@
   {
     "id": "tags",
     "fields": []
+  },
+  {
+    "id": "teaser-list",
+    "fields": [
+      {
+        "component": "select",
+        "name": "teaser-list-type",
+        "label": "Get Pages By",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Parent Page",
+            "value": "parent_page"
+          },
+          {
+            "name": "Individual Pages",
+            "value": "individual_pages"
+          },
+          {
+            "name": "Tag",
+            "value": "tag"
+          }
+        ]
+      },
+      {
+        "component": "aem-content",
+        "name": "parent-page-link",
+        "label": "Parent page",
+        "value": "",
+        "valueType": "string",
+        "validation": {
+          "rootPath": "/content/ue-multitenant-root"
+        },
+        "condition": {
+          "==": [
+            {
+              "var": "teaser-list-type"
+            },
+            "parent_page"
+          ]
+        }
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "individual-pages-link",
+        "label": "Individual pages link",
+        "description": "Enter the paths of individual pages, without starting with a slash ('/').",
+        "multi": true,
+        "validation": {
+          "rootPath": "/content/ue-multitenant-root"
+        },
+        "condition": {
+          "==": [
+            {
+              "var": "teaser-list-type"
+            },
+            "individual_pages"
+          ]
+        }
+      },
+      {
+        "component": "aem-tag",
+        "name": "tag",
+        "label": "tags",
+        "value": "",
+        "valueType": "string",
+        "validation": {
+          "rootPath": "/content/ue-multitenant-root"
+        },
+        "condition": {
+          "==": [
+            {
+              "var": "teaser-list-type"
+            },
+            "tag"
+          ]
+        }
+      },
+      {
+        "component": "tab",
+        "name": "teasers",
+        "label": "Teasers"
+      },
+      {
+        "component": "select",
+        "name": "teasersTitleElement",
+        "label": "Teasers Title Type",
+        "options": [
+          {
+            "name": "h2",
+            "value": "h2"
+          },
+          {
+            "name": "h3",
+            "value": "h3"
+          },
+          {
+            "name": "h4",
+            "value": "h4"
+          },
+          {
+            "name": "h5",
+            "value": "h5"
+          },
+          {
+            "name": "h6",
+            "value": "h6"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "name": "teasersLinkLabel",
+        "label": "Teasers Link Label"
+      },
+      {
+        "component": "select",
+        "name": "classes_teaserColumns",
+        "label": "Teaser Columns",
+        "value": "teaser-list-columns-4",
+        "options": [
+          {
+            "name": "1",
+            "value": "teaser-list-columns-1"
+          },
+          {
+            "name": "2",
+            "value": "teaser-list-columns-2"
+          },
+          {
+            "name": "3",
+            "value": "teaser-list-columns-3"
+          },
+          {
+            "name": "4",
+            "value": "teaser-list-columns-4"
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "teaser",
