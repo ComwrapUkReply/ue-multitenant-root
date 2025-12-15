@@ -9,12 +9,15 @@ export default function decorate(block) {
   const downloadData = {
     title: rows[0]?.textContent,
     description: rows[1]?.innerHTML,
-    buttonLabel: rows[2]?.textContent,
+    color: rows[2]?.textContent?.trim(),
+    buttonLabel: rows[3]?.textContent,
     downloadLink,
-    color: rows[4]?.textContent?.trim(),
   };
 
-  // Set block class and optional color variant
+  // Clear existing content
+  block.innerHTML = '';
+
+  // Set block class and optional color variant after clearing
   block.className = 'download-wrapper-inner';
   const colorClassMap = {
     grey: 'color-grey',
@@ -24,9 +27,6 @@ export default function decorate(block) {
   };
   const colorClass = colorClassMap[downloadData.color?.toLowerCase?.()] || '';
   if (colorClass) block.classList.add(colorClass);
-
-  // Clear existing content
-  block.innerHTML = '';
 
   // Create content wrapper for visible content
   const contentWrapper = document.createElement('div');
