@@ -67,7 +67,6 @@ function decorateTeaser(video, teaserPicture, target) {
 
   videoTag.innerHTML = `<source src="${video.href}" type="video/mp4">`;
   target.prepend(videoTag);
-  videoTag.muted = true;
   video.remove();
 }
 
