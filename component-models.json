@@ -641,10 +641,7 @@
         "name": "downloadfile",
         "label": "Asset",
         "value": "",
-        "valueType": "string",
-        "validation": {
-          "rootPath": "/content/dam/aem-xwalk"
-        }
+        "valueType": "string"
       }
     ]
   },
