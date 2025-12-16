@@ -67,7 +67,6 @@ function decorateTeaser(video, teaserPicture, target) {
 
   videoTag.innerHTML = `<source src="${video.href}" type="video/mp4">`;
   target.prepend(videoTag);
-  videoTag.muted = true;
   video.remove();
 }
 
@@ -206,7 +205,10 @@ export default function decorate(block) {
   decorateVideoOptions(block);
 
   const overlay = videoBanner.children[1];
-  overlay.classList = 'overlay';
+
+  if (overlay) {
+    overlay.classList = 'overlay';
+  }
 
   const fullScreenVideoLink = overlay.querySelector('a:last-of-type');
   if (!fullScreenVideoLink) {
