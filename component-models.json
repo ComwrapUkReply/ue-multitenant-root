@@ -607,6 +607,31 @@
         "label": "Description"
       },
       {
+        "component": "select",
+        "name": "downloadcolor",
+        "label": "Card Color",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Grey",
+            "value": "grey"
+          },
+          {
+            "name": "Light Blue",
+            "value": "light blue"
+          },
+          {
+            "name": "Dark Blue",
+            "value": "dark blue"
+          },
+          {
+            "name": "White",
+            "value": "white"
+          }
+        ],
+        "value": "white"
+      },
+      {
         "component": "text",
         "name": "downloadbuttonlabel",
         "label": "Download Button Label"
@@ -616,10 +641,7 @@
         "name": "downloadfile",
         "label": "Asset",
         "value": "",
-        "valueType": "string",
-        "validation": {
-          "rootPath": "/content/dam/aem-xwalk"
-        }
+        "valueType": "string"
       }
     ]
   },
