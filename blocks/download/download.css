@@ -150,31 +150,7 @@ main > .section > div.download-wrapper {
 .download-wrapper-inner .download-button .download-icon {
   width: 1.25rem;
   height: 1.25rem;
-  position: relative;
-  rotate: 180deg;
-}
-
-.download-wrapper-inner .download-button .download-icon::before {
-  content: "";
-  position: absolute;
-  top: 0.125rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0.125rem;
-  height: 0.75rem;
-  background-color: currentcolor;
-}
-
-.download-wrapper-inner .download-button .download-icon::after {
-  content: "";
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  width: 0.625rem;
-  height: 0.625rem;
-  border: 0.125rem solid currentcolor;
-  border-top: 0;
-  border-left: 0;
-  transform-origin: center;
-  transform: translateX(-50%) rotate(45deg);
+  display: inline-block;
+  flex: 0 0 auto;
+  transform: rotate(180deg);
 }

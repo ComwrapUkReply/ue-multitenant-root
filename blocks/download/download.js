@@ -88,10 +88,33 @@ export default function decorate(block) {
     buttonText.textContent = downloadData.buttonLabel;
     button.appendChild(buttonText);
 
-    const buttonIcon = document.createElement('img');
-    buttonIcon.src = `${window.hlx.codeBasePath}/icons/arrow-up.svg`;
-    buttonIcon.alt = 'Back to top';
-    buttonIcon.className = 'download-icon';
+    // Inline SVG so it can inherit `currentColor` (per-card button/icon colors)
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const buttonIcon = document.createElementNS(svgNS, 'svg');
+    buttonIcon.setAttribute('xmlns', svgNS);
+    buttonIcon.setAttribute('width', '24');
+    buttonIcon.setAttribute('height', '24');
+    buttonIcon.setAttribute('viewBox', '0 0 24 24');
+    buttonIcon.setAttribute('fill', 'none');
+    buttonIcon.setAttribute('stroke', 'currentColor');
+    buttonIcon.setAttribute('stroke-width', '2');
+    buttonIcon.setAttribute('stroke-linecap', 'round');
+    buttonIcon.setAttribute('stroke-linejoin', 'round');
+    buttonIcon.setAttribute('aria-hidden', 'true');
+    buttonIcon.setAttribute('focusable', 'false');
+    buttonIcon.classList.add('download-icon');
+
+    const line = document.createElementNS(svgNS, 'line');
+    line.setAttribute('x1', '12');
+    line.setAttribute('y1', '19');
+    line.setAttribute('x2', '12');
+    line.setAttribute('y2', '5');
+    buttonIcon.appendChild(line);
+
+    const polyline = document.createElementNS(svgNS, 'polyline');
+    polyline.setAttribute('points', '5 12 12 5 19 12');
+    buttonIcon.appendChild(polyline);
+
     button.appendChild(buttonIcon);
 
     contentWrapper.appendChild(button);
