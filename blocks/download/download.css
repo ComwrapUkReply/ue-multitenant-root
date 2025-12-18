@@ -37,6 +37,7 @@ main > .section > div.download-wrapper {
 .download-wrapper-inner.color-white {
   background: var(--color-white, #fff);
   color: rgb(var(--text-color));
+  border: 3px solid #000;
 }
 
 /* Card hover effects - only when there's no button */
