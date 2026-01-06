@@ -56,11 +56,18 @@ function decorateTeaser(video, teaserPicture, target) {
     videoTag.setAttribute('preload', 'metadata');
   } else {
     videoTag.toggleAttribute('autoplay', true);
+    // Ensure muted for autoplay (browsers require muted videos for autoplay)
+    // The muted state will be properly set in decorateVideoOptions, but set it here too
+    videoTag.toggleAttribute('muted', true);
+    videoTag.muted = true;
   }
 
   mql.onchange = (e) => {
     if (!e.matches && !videoTag.hasAttribute('autoplay')) {
       videoTag.toggleAttribute('autoplay', true);
+      // Ensure muted when enabling autoplay
+      videoTag.toggleAttribute('muted', true);
+      videoTag.muted = true;
       videoTag.play();
     }
   };
@@ -174,10 +181,21 @@ function decorateVideoOptions(block) {
   const mutedValue = muted.querySelector('p').textContent.trim();
   const controls = block.children[5];
   const controlsValue = controls.querySelector('p').textContent.trim();
-  video.toggleAttribute('autoplay', autoplayValue === 'true');
-  video.toggleAttribute('loop', loopValue === 'true');
-  video.toggleAttribute('muted', mutedValue === 'true');
-  video.toggleAttribute('controls', controlsValue === 'true');
+  const autoplayEnabled = autoplayValue === 'true';
+  const loopEnabled = loopValue === 'true';
+  const mutedEnabled = mutedValue === 'true';
+  const controlsEnabled = controlsValue === 'true';
+
+  video.toggleAttribute('autoplay', autoplayEnabled);
+  video.toggleAttribute('loop', loopEnabled);
+  video.toggleAttribute('muted', mutedEnabled);
+  video.toggleAttribute('controls', controlsEnabled);
+
+  // Set JavaScript properties (not just attributes) for proper video behavior
+  video.muted = mutedEnabled;
+  video.loop = loopEnabled;
+  video.autoplay = autoplayEnabled;
+  video.controls = controlsEnabled;
   autoplay.remove();
   loop.remove();
   muted.remove();
