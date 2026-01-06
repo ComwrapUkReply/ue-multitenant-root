@@ -169,18 +169,20 @@ function decorateVideoOptions(block) {
         videoContainer.style.width = widthValue;
       }
     }
+  } else {
+    video.style.width = '100%';
   }
 
   // Handle boolean options (autoplay, loop, muted, controls)
   // Indices shift after removing width field, so autoplay is now at index 2
   const autoplay = block.children[2];
-  const autoplayValue = autoplay.querySelector('p').textContent.trim();
+  const autoplayValue = autoplay?.querySelector('p')?.textContent.trim() || 'false';
   const loop = block.children[3];
-  const loopValue = loop.querySelector('p').textContent.trim();
+  const loopValue = loop?.querySelector('p')?.textContent.trim() || 'false';
   const muted = block.children[4];
-  const mutedValue = muted.querySelector('p').textContent.trim();
+  const mutedValue = muted?.querySelector('p')?.textContent.trim() || 'false';
   const controls = block.children[5];
-  const controlsValue = controls.querySelector('p').textContent.trim();
+  const controlsValue = controls?.querySelector('p')?.textContent.trim() || 'false';
   const autoplayEnabled = autoplayValue === 'true';
   const loopEnabled = loopValue === 'true';
   const mutedEnabled = mutedValue === 'true';
