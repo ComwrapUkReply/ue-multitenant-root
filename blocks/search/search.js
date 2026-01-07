@@ -194,7 +194,7 @@ async function renderResults(block, config, filteredData, searchTerms) {
 
   // Limit results if we're not on the result page (show suggestions only)
   const isResultPage = isOnResultPage(config.resultPage);
-  const dataToRender = isResultPage ? filteredData : filteredData.slice(0, config.suggestionsLimit || 5);
+  const dataToRender = isResultPage ? filteredData : filteredData.slice(0, config.suggestionsLimit || 1);
 
   if (dataToRender.length) {
     searchResults.classList.remove('no-results');
