@@ -1411,6 +1411,12 @@
         "description": "Link to the query index JSON file. Leave empty to use the default /query-index.json"
       },
       {
+        "component": "aem-content",
+        "name": "resultpage",
+        "label": "Result Page",
+        "description": "Link to the search results page. When set, clicking the search icon or pressing Enter will navigate to this page with search results."
+      },
+      {
         "component": "select",
         "name": "classes",
         "label": "Display Style",

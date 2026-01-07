@@ -12,6 +12,7 @@ const CONFIG = {
     searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
   },
+  suggestionsLimit: 5, // Number of suggestions to show in inline mode
 };
 
 /** URL search params for managing query state */
@@ -168,6 +169,18 @@ function clearSearch(block) {
 }
 
 /**
+ * Checks if we're currently on the result page
+ * @param {string|null} resultPageUrl - The configured result page URL
+ * @returns {boolean} True if we're on the result page
+ */
+function isOnResultPage(resultPageUrl) {
+  if (!resultPageUrl) return false;
+  const currentPath = window.location.pathname;
+  const resultPagePath = new URL(resultPageUrl, window.location.origin).pathname;
+  return currentPath === resultPagePath;
+}
+
+/**
  * Renders search results into the results container
  * @param {HTMLElement} block - The search block element
  * @param {Object} config - Search configuration object
@@ -179,12 +192,29 @@ async function renderResults(block, config, filteredData, searchTerms) {
   const searchResults = block.querySelector('.search-results');
   const headingTag = searchResults.dataset.h;
 
-  if (filteredData.length) {
+  // Limit results if we're not on the result page (show suggestions only)
+  const isResultPage = isOnResultPage(config.resultPage);
+  const dataToRender = isResultPage ? filteredData : filteredData.slice(0, config.suggestionsLimit || 5);
+
+  if (dataToRender.length) {
     searchResults.classList.remove('no-results');
-    filteredData.forEach((result) => {
+    dataToRender.forEach((result) => {
       const li = renderResult(result, searchTerms, headingTag);
       searchResults.append(li);
     });
+
+    // Add "View all results" link if there are more results and we're not on result page
+    if (!isResultPage && config.resultPage && filteredData.length > dataToRender.length) {
+      const viewAllLi = document.createElement('li');
+      viewAllLi.className = 'search-view-all';
+      const viewAllLink = document.createElement('a');
+      const input = block.querySelector('.search-input');
+      const searchQuery = input ? input.value : '';
+      viewAllLink.href = `${config.resultPage}?q=${encodeURIComponent(searchQuery)}`;
+      viewAllLink.textContent = `View all ${filteredData.length} results`;
+      viewAllLi.append(viewAllLink);
+      searchResults.append(viewAllLi);
+    }
   } else {
     const noResultsMessage = document.createElement('li');
     searchResults.classList.add('no-results');
@@ -290,6 +320,18 @@ function searchResultsContainer(block) {
 }
 
 /**
+ * Navigates to the result page with the search query
+ * @param {string} resultPageUrl - URL of the result page
+ * @param {string} searchQuery - The search query
+ */
+function navigateToResultPage(resultPageUrl, searchQuery) {
+  if (!resultPageUrl || !searchQuery) return;
+  const url = new URL(resultPageUrl, window.location.origin);
+  url.searchParams.set('q', searchQuery);
+  window.location.href = url.toString();
+}
+
+/**
  * Creates the search input element
  * @param {HTMLElement} block - The search block element
  * @param {Object} config - Search configuration object
@@ -308,16 +350,58 @@ function searchInput(block, config) {
     handleSearch(e, block, config);
   });
 
-  input.addEventListener('keyup', (e) => { if (e.code === 'Escape') { clearSearch(block); } });
+  input.addEventListener('keyup', (e) => {
+    if (e.code === 'Escape') {
+      clearSearch(block);
+    }
+  });
+
+  // Add Enter key handler to navigate to result page if configured
+  input.addEventListener('keydown', (e) => {
+    if (e.code === 'Enter' && config.resultPage) {
+      e.preventDefault();
+      const searchQuery = input.value.trim();
+      if (searchQuery.length >= 3) {
+        navigateToResultPage(config.resultPage, searchQuery);
+      }
+    }
+  });
 
   return input;
 }
 
 /**
  * Creates the search icon element
- * @returns {HTMLSpanElement} Search icon span element
+ * @param {HTMLElement} block - The search block element
+ * @param {Object} config - Search configuration object
+ * @returns {HTMLSpanElement|HTMLButtonElement} Search icon element
  */
-function searchIcon() {
+function searchIcon(block, config) {
+  // If result page is configured, make icon clickable
+  if (config.resultPage) {
+    const button = document.createElement('button');
+    button.classList.add('search-icon-button');
+    button.setAttribute('type', 'button');
+    button.setAttribute('aria-label', 'Search');
+
+    const icon = document.createElement('span');
+    icon.classList.add('icon', 'icon-search');
+    button.append(icon);
+
+    button.addEventListener('click', () => {
+      const input = block.querySelector('.search-input');
+      if (input) {
+        const searchQuery = input.value.trim();
+        if (searchQuery.length >= 3) {
+          navigateToResultPage(config.resultPage, searchQuery);
+        }
+      }
+    });
+
+    return button;
+  }
+
+  // Default non-clickable icon
   const icon = document.createElement('span');
   icon.classList.add('icon', 'icon-search');
   return icon;
@@ -410,7 +494,7 @@ function searchBox(block, config) {
   const box = document.createElement('div');
   box.classList.add('search-box');
   box.append(
-    searchIcon(),
+    searchIcon(block, config),
     searchInput(block, config),
   );
 
@@ -422,20 +506,43 @@ function searchBox(block, config) {
  * @param {HTMLElement} block - The search block element
  */
 export default async function decorate(block) {
-  // Extract data source from block content or use default
-  const sourceLink = block.querySelector('a[href]');
-  const source = sourceLink ? sourceLink.href : CONFIG.defaultSource;
+  // Extract data source and result page from block content
+  const allLinks = block.querySelectorAll('a[href]');
+  let source = CONFIG.defaultSource;
+  let resultPage = null;
+
+  // First link is data source, second link (if exists) is result page
+  if (allLinks.length > 0) {
+    source = allLinks[0].href;
+  }
+  if (allLinks.length > 1) {
+    resultPage = allLinks[1].href;
+  }
+
+  // Build configuration object
+  const config = {
+    source,
+    resultPage,
+    placeholders: CONFIG.placeholders,
+    suggestionsLimit: CONFIG.suggestionsLimit,
+  };
 
   // Clear block content and build search UI
   block.innerHTML = '';
   block.append(
-    searchBox(block, { source, placeholders: CONFIG.placeholders }),
+    searchBox(block, config),
     searchResultsContainer(block),
   );
 
   // Add aria attributes for mobile toggle
   block.setAttribute('id', 'search-panel');
   block.setAttribute('aria-expanded', 'false');
+
+  // Add class if we're on the result page
+  if (isOnResultPage(resultPage)) {
+    block.classList.add('result-page-mode');
+    block.setAttribute('aria-expanded', 'true'); // Always expanded on result page
+  }
 
   // Create mobile search button and insert into wrapper
   const wrapper = block.closest('.search-wrapper');
@@ -450,6 +557,15 @@ export default async function decorate(block) {
   if (queryParam) {
     const input = block.querySelector('input');
     if (input) {
+      input.value = queryParam;
+      input.dispatchEvent(new Event('input'));
+    }
+  }
+
+  // If we're on the result page, always show results (even with empty search)
+  if (isOnResultPage(resultPage) && queryParam) {
+    const input = block.querySelector('input');
+    if (input && !input.value) {
       input.value = queryParam;
       input.dispatchEvent(new Event('input'));
     }
