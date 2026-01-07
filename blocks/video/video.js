@@ -163,24 +163,22 @@ function decorateVideoOptions(block) {
   const widthField = block.children[1];
   if (widthField) {
     const widthValue = widthField.querySelector('p')?.textContent.trim();
-    if (widthValue) {
-      const videoContainer = video.closest('.teaser-video-container') || video.parentElement;
-      if (videoContainer) {
-        videoContainer.style.width = widthValue;
-      }
+    const videoContainer = video.closest('.teaser-video-container') || video.parentElement;
+    if (videoContainer) {
+      videoContainer.style.width = widthValue ?? '100%';
     }
   }
 
   // Handle boolean options (autoplay, loop, muted, controls)
   // Indices shift after removing width field, so autoplay is now at index 2
   const autoplay = block.children[2];
-  const autoplayValue = autoplay.querySelector('p').textContent.trim();
+  const autoplayValue = autoplay?.querySelector('p')?.textContent.trim() || 'false';
   const loop = block.children[3];
-  const loopValue = loop.querySelector('p').textContent.trim();
+  const loopValue = loop?.querySelector('p')?.textContent.trim() || 'false';
   const muted = block.children[4];
-  const mutedValue = muted.querySelector('p').textContent.trim();
+  const mutedValue = muted?.querySelector('p')?.textContent.trim() || 'false';
   const controls = block.children[5];
-  const controlsValue = controls.querySelector('p').textContent.trim();
+  const controlsValue = controls?.querySelector('p')?.textContent.trim() || 'false';
   const autoplayEnabled = autoplayValue === 'true';
   const loopEnabled = loopValue === 'true';
   const mutedEnabled = mutedValue === 'true';
@@ -190,7 +188,6 @@ function decorateVideoOptions(block) {
   video.toggleAttribute('loop', loopEnabled);
   video.toggleAttribute('muted', mutedEnabled);
   video.toggleAttribute('controls', controlsEnabled);
-
   // Set JavaScript properties (not just attributes) for proper video behavior
   video.muted = mutedEnabled;
   video.loop = loopEnabled;
