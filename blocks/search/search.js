@@ -539,7 +539,7 @@ export default async function decorate(block) {
   let source = CONFIG.defaultSource;
   let resultPage = null;
 
-  // Block structure: each row is a div containing two divs (label and value)
+  // Block structure: rows contain divs with links
   const rows = [...block.children];
 
   // Debug: log block structure
@@ -553,22 +553,43 @@ export default async function decorate(block) {
       cellCount: cells.length,
       cell0: cells[0]?.textContent,
       cell1: cells[1]?.textContent,
-      cell1HTML: cells[1]?.innerHTML,
     });
 
+    // Handle different block structures
     if (cells.length >= 2) {
+      // Two-column structure: label | value
       const label = cells[0].textContent.trim().toLowerCase();
       const valueCell = cells[1];
       const link = valueCell.querySelector('a[href]');
-      const linkHref = link ? link.href : null;
-
-      // eslint-disable-next-line no-console
-      console.log(`Processing row ${index}:`, { label, linkHref });
 
       if (label.includes('source') && link) {
         source = link.href;
       } else if ((label.includes('result') || label.includes('page')) && link) {
         resultPage = link.href;
+      }
+    } else if (cells.length === 1) {
+      // Single-column structure: just the link
+      const cell = cells[0];
+      const link = cell.querySelector('a[href]');
+
+      // eslint-disable-next-line no-console
+      console.log(`Row ${index} - single cell:`, {
+        hasLink: !!link,
+        linkHref: link?.href,
+        innerHTML: cell.innerHTML,
+      });
+
+      if (link) {
+        // First non-empty row with link is data source, second is result page
+        if (index === 0 && link.href) {
+          source = link.href;
+          // eslint-disable-next-line no-console
+          console.log('Set source from row 0:', source);
+        } else if (index === 1 && link.href) {
+          resultPage = link.href;
+          // eslint-disable-next-line no-console
+          console.log('Set resultPage from row 1:', resultPage);
+        }
       }
     }
   });
