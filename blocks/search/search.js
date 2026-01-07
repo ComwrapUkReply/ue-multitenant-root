@@ -383,8 +383,6 @@ function searchInput(block, config) {
     if (e.key === 'Enter' && config.resultPage) {
       e.preventDefault();
       const searchQuery = input.value.trim();
-      // eslint-disable-next-line no-console
-      console.log('Enter key pressed, navigating to:', config.resultPage, 'with query:', searchQuery);
       if (searchQuery.length >= 1) {
         navigateToResultPage(config.resultPage, searchQuery);
       }
@@ -418,10 +416,7 @@ function searchIcon(block, config) {
       const input = block.querySelector('.search-input');
       if (input) {
         const searchQuery = input.value.trim();
-        // Navigate even with empty search (will show empty results page)
         if (searchQuery.length >= 1) {
-          // eslint-disable-next-line no-console
-          console.log('Search icon clicked, navigating to:', config.resultPage, 'with query:', searchQuery);
           navigateToResultPage(config.resultPage, searchQuery);
         }
       }
@@ -542,18 +537,8 @@ export default async function decorate(block) {
   // Block structure: rows contain divs with links
   const rows = [...block.children];
 
-  // Debug: log block structure
-  // eslint-disable-next-line no-console
-  console.log('Block rows:', rows.length);
-
   rows.forEach((row, index) => {
     const cells = [...row.children];
-    // eslint-disable-next-line no-console
-    console.log(`Row ${index}:`, {
-      cellCount: cells.length,
-      cell0: cells[0]?.textContent,
-      cell1: cells[1]?.textContent,
-    });
 
     // Handle different block structures
     if (cells.length >= 2) {
@@ -568,35 +553,30 @@ export default async function decorate(block) {
         resultPage = link.href;
       }
     } else if (cells.length === 1) {
-      // Single-column structure: just the link
+      // Single-column structure: just the link or text
       const cell = cells[0];
       const link = cell.querySelector('a[href]');
+      const textContent = cell.textContent.trim();
 
-      // eslint-disable-next-line no-console
-      console.log(`Row ${index} - single cell:`, {
-        hasLink: !!link,
-        linkHref: link?.href,
-        innerHTML: cell.innerHTML,
-      });
-
+      // Get URL from link or text content
+      let url = null;
       if (link) {
-        // First non-empty row with link is data source, second is result page
-        if (index === 0 && link.href) {
-          source = link.href;
-          // eslint-disable-next-line no-console
-          console.log('Set source from row 0:', source);
-        } else if (index === 1 && link.href) {
-          resultPage = link.href;
-          // eslint-disable-next-line no-console
-          console.log('Set resultPage from row 1:', resultPage);
+        url = link.href;
+      } else if (textContent && textContent.length > 0) {
+        // Use text content as URL (AEM might provide path as text)
+        url = textContent;
+      }
+
+      if (url) {
+        // First non-empty row is data source, second is result page
+        if (index === 0) {
+          source = url;
+        } else if (index === 1) {
+          resultPage = url;
         }
       }
     }
   });
-
-  // Debug logging
-  // eslint-disable-next-line no-console
-  console.log('Search block config:', { source, resultPage });
 
   // Build configuration object
   const config = {
