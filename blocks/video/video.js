@@ -163,14 +163,10 @@ function decorateVideoOptions(block) {
   const widthField = block.children[1];
   if (widthField) {
     const widthValue = widthField.querySelector('p')?.textContent.trim();
-    if (widthValue) {
-      const videoContainer = video.closest('.teaser-video-container') || video.parentElement;
-      if (videoContainer) {
-        videoContainer.style.width = widthValue;
-      }
+    const videoContainer = video.closest('.teaser-video-container') || video.parentElement;
+    if (videoContainer) {
+      videoContainer.style.width = widthValue ?? '100%';
     }
-  } else {
-    video.style.width = '100%';
   }
 
   // Handle boolean options (autoplay, loop, muted, controls)
@@ -192,7 +188,6 @@ function decorateVideoOptions(block) {
   video.toggleAttribute('loop', loopEnabled);
   video.toggleAttribute('muted', mutedEnabled);
   video.toggleAttribute('controls', controlsEnabled);
-
   // Set JavaScript properties (not just attributes) for proper video behavior
   video.muted = mutedEnabled;
   video.loop = loopEnabled;
