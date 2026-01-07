@@ -185,24 +185,6 @@
     border: none;
   }
 
-  /* result page mode - always show search block */
-  .search.result-page-mode {
-    display: block !important;
-    position: static !important;
-    width: 100% !important;
-    height: auto !important;
-  }
-
-  .search-wrapper .search.result-page-mode .search-box {
-    max-width: 600px;
-    margin: 0 auto 24px;
-  }
-
-  /* hide mobile button when on result page */
-  .search-wrapper:has(.search.result-page-mode) .search-button {
-    display: none;
-  }
-
   /* minimal variant */
   .search.minimal ul.search-results {
     display: block;

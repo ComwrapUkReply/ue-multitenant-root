@@ -193,18 +193,6 @@ function clearSearch(block) {
 }
 
 /**
- * Checks if we're currently on the result page
- * @param {string|null} resultPageUrl - The configured result page URL
- * @returns {boolean} True if we're on the result page
- */
-function isOnResultPage(resultPageUrl) {
-  if (!resultPageUrl) return false;
-  const currentPath = window.location.pathname;
-  const resultPagePath = new URL(resultPageUrl, window.location.origin).pathname;
-  return currentPath === resultPagePath;
-}
-
-/**
  * Renders search results into the results container
  * @param {HTMLElement} block - The search block element
  * @param {Object} config - Search configuration object
@@ -216,10 +204,9 @@ async function renderResults(block, config, filteredData, searchTerms) {
   const searchResults = block.querySelector('.search-results');
   const headingTag = searchResults.dataset.h;
 
-  // Limit results if we're not on the result page (show suggestions only)
-  const isResultPage = isOnResultPage(config.resultPage);
-  const limit = config.suggestionsLimit || 1;
-  const dataToRender = isResultPage ? filteredData : filteredData.slice(0, limit);
+  // Show limited suggestions (max 5)
+  const limit = config.suggestionsLimit || 5;
+  const dataToRender = filteredData.slice(0, limit);
 
   if (dataToRender.length) {
     searchResults.classList.remove('no-results');
@@ -228,8 +215,8 @@ async function renderResults(block, config, filteredData, searchTerms) {
       searchResults.append(li);
     });
 
-    // Add "View all results" link if there are more results and we're not on result page
-    if (!isResultPage && config.resultPage && filteredData.length > dataToRender.length) {
+    // Add "View all results" link if there are more results and result page is configured
+    if (config.resultPage && filteredData.length > dataToRender.length) {
       const viewAllLi = document.createElement('li');
       viewAllLi.className = 'search-view-all';
       const viewAllLink = document.createElement('a');
@@ -582,12 +569,6 @@ export default async function decorate(block) {
   block.setAttribute('id', 'search-panel');
   block.setAttribute('aria-expanded', 'false');
 
-  // Add class if we're on the result page
-  if (isOnResultPage(resultPage)) {
-    block.classList.add('result-page-mode');
-    block.setAttribute('aria-expanded', 'true'); // Always expanded on result page
-  }
-
   // Create mobile search button and insert into wrapper
   const wrapper = block.closest('.search-wrapper');
   if (wrapper) {
@@ -601,15 +582,6 @@ export default async function decorate(block) {
   if (queryParam) {
     const input = block.querySelector('input');
     if (input) {
-      input.value = queryParam;
-      input.dispatchEvent(new Event('input'));
-    }
-  }
-
-  // If we're on the result page, always show results (even with empty search)
-  if (isOnResultPage(resultPage) && queryParam) {
-    const input = block.querySelector('input');
-    if (input && !input.value) {
       input.value = queryParam;
       input.dispatchEvent(new Event('input'));
     }

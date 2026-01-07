@@ -1402,6 +1402,17 @@
     ]
   },
   {
+    "id": "search-results",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "source",
+        "label": "Data Source",
+        "description": "Link to the query index JSON file. Leave empty to use the default /query-index.json"
+      }
+    ]
+  },
+  {
     "id": "search",
     "fields": [
       {
