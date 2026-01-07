@@ -541,18 +541,27 @@ function searchBox(block, config) {
  * @param {HTMLElement} block - The search block element
  */
 export default async function decorate(block) {
-  // Extract data source and result page from block content
-  const allLinks = block.querySelectorAll('a[href]');
+  // Extract data source and result page from block rows
   let source = CONFIG.defaultSource;
   let resultPage = null;
 
-  // First link is data source, second link (if exists) is result page
-  if (allLinks.length > 0) {
-    source = allLinks[0].href;
-  }
-  if (allLinks.length > 1) {
-    resultPage = allLinks[1].href;
-  }
+  // Block structure: each row is a div containing two divs (label and value)
+  const rows = [...block.children];
+
+  rows.forEach((row) => {
+    const cells = [...row.children];
+    if (cells.length >= 2) {
+      const label = cells[0].textContent.trim().toLowerCase();
+      const valueCell = cells[1];
+      const link = valueCell.querySelector('a[href]');
+
+      if (label.includes('source') && link) {
+        source = link.href;
+      } else if (label.includes('result') && link) {
+        resultPage = link.href;
+      }
+    }
+  });
 
   // Build configuration object
   const config = {
