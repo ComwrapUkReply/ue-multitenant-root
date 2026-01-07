@@ -380,10 +380,12 @@ function searchInput(block, config) {
 
   // Add Enter key handler to navigate to result page if configured
   input.addEventListener('keydown', (e) => {
-    if (e.code === 'Enter' && config.resultPage) {
+    if (e.key === 'Enter' && config.resultPage) {
       e.preventDefault();
       const searchQuery = input.value.trim();
-      if (searchQuery.length >= 3) {
+      // eslint-disable-next-line no-console
+      console.log('Enter key pressed, navigating to:', config.resultPage, 'with query:', searchQuery);
+      if (searchQuery.length >= 1) {
         navigateToResultPage(config.resultPage, searchQuery);
       }
     }
@@ -399,7 +401,7 @@ function searchInput(block, config) {
  * @returns {HTMLSpanElement|HTMLButtonElement} Search icon element
  */
 function searchIcon(block, config) {
-  // If result page is configured, make icon clickable
+  // Always make icon clickable if result page is configured
   if (config.resultPage) {
     const button = document.createElement('button');
     button.classList.add('search-icon-button');
@@ -410,11 +412,16 @@ function searchIcon(block, config) {
     icon.classList.add('icon', 'icon-search');
     button.append(icon);
 
-    button.addEventListener('click', () => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const input = block.querySelector('.search-input');
       if (input) {
         const searchQuery = input.value.trim();
-        if (searchQuery.length >= 3) {
+        // Navigate even with empty search (will show empty results page)
+        if (searchQuery.length >= 1) {
+          // eslint-disable-next-line no-console
+          console.log('Search icon clicked, navigating to:', config.resultPage, 'with query:', searchQuery);
           navigateToResultPage(config.resultPage, searchQuery);
         }
       }
@@ -544,11 +551,15 @@ export default async function decorate(block) {
 
       if (label.includes('source') && link) {
         source = link.href;
-      } else if (label.includes('result') && link) {
+      } else if ((label.includes('result') || label.includes('page')) && link) {
         resultPage = link.href;
       }
     }
   });
+
+  // Debug logging
+  // eslint-disable-next-line no-console
+  console.log('Search block config:', { source, resultPage });
 
   // Build configuration object
   const config = {
