@@ -93,21 +93,45 @@ function highlightTextElements(terms, elements) {
  * @returns {Promise<Array|null>} Array of data items or null on error
  */
 export async function fetchData(source) {
-  const response = await fetch(source);
-  if (!response.ok) {
+  try {
+    const response = await fetch(source);
+    if (!response.ok) {
+      // eslint-disable-next-line no-console
+      console.error('Error loading search data:', response.status, response.statusText);
+      // eslint-disable-next-line no-console
+      console.error('Source URL:', source);
+      return null;
+    }
+
+    // Check if response is JSON before parsing
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      // eslint-disable-next-line no-console
+      console.error('Expected JSON but got:', contentType);
+      // eslint-disable-next-line no-console
+      console.error('Source URL:', source);
+      return null;
+    }
+
+    const json = await response.json();
+    if (!json) {
+      // eslint-disable-next-line no-console
+      console.error('Empty API response from:', source);
+      return null;
+    }
+
+    if (!json.data) {
+      // eslint-disable-next-line no-console
+      console.error('API response missing "data" property:', source);
+      return null;
+    }
+
+    return json.data;
+  } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('error loading API response', response);
+    console.error('Failed to fetch search data from:', source, error);
     return null;
   }
-
-  const json = await response.json();
-  if (!json) {
-    // eslint-disable-next-line no-console
-    console.error('empty API response', source);
-    return null;
-  }
-
-  return json.data;
 }
 
 /**
@@ -194,7 +218,8 @@ async function renderResults(block, config, filteredData, searchTerms) {
 
   // Limit results if we're not on the result page (show suggestions only)
   const isResultPage = isOnResultPage(config.resultPage);
-  const dataToRender = isResultPage ? filteredData : filteredData.slice(0, config.suggestionsLimit || 1);
+  const limit = config.suggestionsLimit || 1;
+  const dataToRender = isResultPage ? filteredData : filteredData.slice(0, limit);
 
   if (dataToRender.length) {
     searchResults.classList.remove('no-results');
@@ -297,6 +322,16 @@ async function handleSearch(e, block, config) {
   const searchTerms = searchValue.toLowerCase().split(/\s+/).filter((term) => !!term);
 
   const data = await fetchData(config.source);
+  if (!data) {
+    // Show error message if data couldn't be loaded
+    const searchResults = block.querySelector('.search-results');
+    searchResults.innerHTML = '';
+    searchResults.classList.add('no-results');
+    const errorMessage = document.createElement('li');
+    errorMessage.textContent = 'Unable to load search data. Please try again later.';
+    searchResults.append(errorMessage);
+    return;
+  }
   const filteredData = filterData(searchTerms, data);
   await renderResults(block, config, filteredData, searchTerms);
 }

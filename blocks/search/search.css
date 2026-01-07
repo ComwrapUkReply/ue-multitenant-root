@@ -244,7 +244,7 @@
   .search ul.search-results > li.search-view-all a {
     display: inline-block;
     padding: 12px 24px;
-    background-color: var(--color-primary, #0066cc);
+    background-color: var(--color-primary, #06c);
     color: white;
     text-decoration: none;
     border-radius: 4px;
