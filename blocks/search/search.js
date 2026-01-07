@@ -542,12 +542,28 @@ export default async function decorate(block) {
   // Block structure: each row is a div containing two divs (label and value)
   const rows = [...block.children];
 
-  rows.forEach((row) => {
+  // Debug: log block structure
+  // eslint-disable-next-line no-console
+  console.log('Block rows:', rows.length);
+
+  rows.forEach((row, index) => {
     const cells = [...row.children];
+    // eslint-disable-next-line no-console
+    console.log(`Row ${index}:`, {
+      cellCount: cells.length,
+      cell0: cells[0]?.textContent,
+      cell1: cells[1]?.textContent,
+      cell1HTML: cells[1]?.innerHTML,
+    });
+
     if (cells.length >= 2) {
       const label = cells[0].textContent.trim().toLowerCase();
       const valueCell = cells[1];
       const link = valueCell.querySelector('a[href]');
+      const linkHref = link ? link.href : null;
+
+      // eslint-disable-next-line no-console
+      console.log(`Processing row ${index}:`, { label, linkHref });
 
       if (label.includes('source') && link) {
         source = link.href;
