@@ -461,6 +461,7 @@ export default async function decorate(block) {
     console.log(`Row ${rowIndex}: ${cells.length} cells`);
 
     if (cells.length >= 2) {
+      // Two-column structure: label | value
       const label = cells[0].textContent.trim().toLowerCase();
       const valueCell = cells[1];
       const link = valueCell.querySelector('a[href]');
@@ -495,6 +496,62 @@ export default async function decorate(block) {
         if (folderInput) {
           // Parse folder paths (can be comma-separated)
           folders = folderInput
+            .split(',')
+            .map((f) => {
+              let folder = f.trim();
+              // Transform AEM content path to published path
+              // Remove /content/ue-multitenant-root prefix if present
+              if (folder.startsWith('/content/ue-multitenant-root')) {
+                folder = folder.replace('/content/ue-multitenant-root', '');
+              }
+              // Ensure folder starts with /
+              if (folder && !folder.startsWith('/')) {
+                folder = `/${folder}`;
+              }
+              return folder;
+            })
+            .filter((f) => f.length > 0);
+
+          // eslint-disable-next-line no-console
+          console.log('Folder filter configured:', folders);
+        }
+      }
+    } else if (cells.length === 1) {
+      // Single-column structure: just the link or text
+      const cell = cells[0];
+      const link = cell.querySelector('a[href]');
+      const textContent = cell.textContent.trim();
+
+      // eslint-disable-next-line no-console
+      console.log(`  Has link: ${!!link}, Text: "${textContent}"`);
+
+      // Get value from link or text content
+      let value = null;
+      if (link && link.href) {
+        // Extract pathname from full URL for aem-content fields
+        try {
+          const url = new URL(link.href);
+          value = url.pathname;
+        } catch (e) {
+          // If URL parsing fails, use href as-is
+          value = link.href;
+        }
+      } else if (textContent && textContent.length > 0) {
+        value = textContent;
+      }
+
+      // eslint-disable-next-line no-console
+      console.log(`  Extracted value: "${value}"`);
+
+      if (value) {
+        // First non-empty row is data source, second is folder filter
+        if (rowIndex === 0) {
+          source = value;
+          // eslint-disable-next-line no-console
+          console.log('Source configured:', source);
+        } else if (rowIndex === 1) {
+          // Parse folder paths (can be comma-separated)
+          folders = value
             .split(',')
             .map((f) => {
               let folder = f.trim();
