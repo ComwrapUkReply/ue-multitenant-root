@@ -48,10 +48,21 @@
             }
           ],
           "value": ""
+        },
+        {
+          "component": "text",
+          "name": "searchPlaceholder",
+          "label": "Search Placeholder",
+          "description": "Placeholder text shown in the search input field. Default: 'Search...'"
+        },
+        {
+          "component": "text",
+          "name": "searchNoResults",
+          "label": "No Results Message",
+          "description": "Message shown when no results are found. Default: 'No results found.'"
         }
       ]
     }
   ],
   "filters": []
 }
-

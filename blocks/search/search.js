@@ -550,31 +550,35 @@ function searchBox(block, config) {
 }
 
 /**
- * Decorates the search block
- * @param {HTMLElement} block - The search block element
+ * Parses block configuration from block content
+ * @param {HTMLElement} block - The block element
+ * @returns {Object} Configuration object with source, resultPage, and placeholders
  */
-export default async function decorate(block) {
-  // Extract data source and result page from block rows
+function parseBlockConfig(block) {
   let source = CONFIG.defaultSource;
   let resultPage = null;
+  const placeholders = { ...CONFIG.placeholders };
 
-  // Block structure: rows contain divs with links
   const rows = [...block.children];
 
-  rows.forEach((row, index) => {
+  rows.forEach((row, rowIndex) => {
     const cells = [...row.children];
 
-    // Handle different block structures
     if (cells.length >= 2) {
       // Two-column structure: label | value
       const label = cells[0].textContent.trim().toLowerCase();
       const valueCell = cells[1];
       const link = valueCell.querySelector('a[href]');
+      const textContent = valueCell.textContent.trim();
 
       if (label.includes('source') && link) {
         source = link.href;
       } else if ((label.includes('result') || label.includes('page')) && link) {
         resultPage = link.href;
+      } else if (label.includes('placeholder') && textContent) {
+        placeholders.searchPlaceholder = textContent;
+      } else if (label.includes('no results') && textContent) {
+        placeholders.searchNoResults = textContent;
       }
     } else if (cells.length === 1) {
       // Single-column structure: just the link or text
@@ -582,31 +586,52 @@ export default async function decorate(block) {
       const link = cell.querySelector('a[href]');
       const textContent = cell.textContent.trim();
 
-      // Get URL from link or text content
-      let url = null;
+      // Get value from link or text content
+      let value = null;
       if (link) {
-        url = link.href;
+        value = link.href;
       } else if (textContent && textContent.length > 0) {
-        // Use text content as URL (AEM might provide path as text)
-        url = textContent;
+        value = textContent;
       }
 
-      if (url) {
-        // First non-empty row is data source, second is result page
-        if (index === 0) {
-          source = url;
-        } else if (index === 1) {
-          resultPage = url;
+      if (value) {
+        // Fields in order: source, resultpage, (classes is auto), searchPlaceholder, searchNoResults
+        switch (rowIndex) {
+          case 0:
+            source = value;
+            break;
+          case 1:
+            resultPage = value;
+            break;
+          case 2:
+            placeholders.searchPlaceholder = value;
+            break;
+          case 3:
+            placeholders.searchNoResults = value;
+            break;
+          default:
+            break;
         }
       }
     }
   });
 
+  return { source, resultPage, placeholders };
+}
+
+/**
+ * Decorates the search block
+ * @param {HTMLElement} block - The search block element
+ */
+export default async function decorate(block) {
+  // Parse configuration from block content
+  const { source, resultPage, placeholders } = parseBlockConfig(block);
+
   // Build configuration object
   const config = {
     source,
     resultPage,
-    placeholders: CONFIG.placeholders,
+    placeholders,
     suggestionsLimit: CONFIG.suggestionsLimit,
   };
 

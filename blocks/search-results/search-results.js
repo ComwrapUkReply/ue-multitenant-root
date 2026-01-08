@@ -3,10 +3,6 @@ import {
   decorateIcons,
 } from '../../scripts/aem.js';
 
-// Module-level log to confirm file is loaded
-// eslint-disable-next-line no-console
-console.log('🔍 search-results.js module loaded');
-
 /**
  * Default configuration for search results block
  */
@@ -116,48 +112,28 @@ function highlightTextElements(terms, elements) {
 async function fetchData(source) {
   // Skip search data fetch in authoring mode (query-index.json doesn't exist there)
   if (isAuthoringMode()) {
-    // eslint-disable-next-line no-console
-    console.info('Search is disabled in AEM authoring mode');
     return null;
   }
 
   try {
     const response = await fetch(source);
     if (!response.ok) {
-      // eslint-disable-next-line no-console
-      console.error('Error loading search data:', response.status, response.statusText);
-      // eslint-disable-next-line no-console
-      console.error('Source URL:', source);
       return null;
     }
 
     // Check if response is JSON before parsing
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      // eslint-disable-next-line no-console
-      console.error('Expected JSON but got:', contentType);
-      // eslint-disable-next-line no-console
-      console.error('Source URL:', source);
       return null;
     }
 
     const json = await response.json();
-    if (!json) {
-      // eslint-disable-next-line no-console
-      console.error('Empty API response from:', source);
-      return null;
-    }
-
-    if (!json.data) {
-      // eslint-disable-next-line no-console
-      console.error('API response missing "data" property:', source);
+    if (!json || !json.data) {
       return null;
     }
 
     return json.data;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to fetch search data from:', source, error);
     return null;
   }
 }
@@ -218,27 +194,11 @@ function filterByFolder(data, folders) {
     return data;
   }
 
-  let debugCount = 0;
-  const filtered = data.filter((item) => {
-    // Check if item path starts with any of the specified folders
-    const matches = folders.some((folder) => {
-      const normalizedFolder = folder.trim().toLowerCase();
-      const normalizedPath = item.path.toLowerCase();
-      const isMatch = normalizedPath.startsWith(normalizedFolder);
-
-      // Log first few items for debugging
-      if (debugCount < 3) {
-        // eslint-disable-next-line no-console
-        console.log(`Checking: "${normalizedPath}" starts with "${normalizedFolder}"? ${isMatch}`);
-        debugCount += 1;
-      }
-
-      return isMatch;
-    });
-    return matches;
-  });
-
-  return filtered;
+  return data.filter((item) => folders.some((folder) => {
+    const normalizedFolder = folder.trim().toLowerCase();
+    const normalizedPath = item.path.toLowerCase();
+    return normalizedPath.startsWith(normalizedFolder);
+  }));
 }
 
 /**
@@ -320,7 +280,7 @@ function renderResults(block, config, filteredData, searchTerms, headingTag) {
   } else {
     const noResultsMessage = document.createElement('li');
     resultsContainer.classList.add('no-results');
-    noResultsMessage.textContent = config.placeholders.searchNoResults || 'No results found.';
+    noResultsMessage.textContent = config.placeholders.searchNoResults;
     resultsContainer.append(noResultsMessage);
 
     // Update results count
@@ -367,13 +327,7 @@ async function executeSearch(block, config, searchValue) {
   // Apply folder filtering first (if configured)
   let dataToSearch = data;
   if (config.folders && config.folders.length > 0) {
-    // eslint-disable-next-line no-console
-    console.log('Applying folder filter:', config.folders);
-    // eslint-disable-next-line no-console
-    console.log('Total pages before filter:', data.length);
     dataToSearch = filterByFolder(data, config.folders);
-    // eslint-disable-next-line no-console
-    console.log('Pages after folder filter:', dataToSearch.length);
   }
 
   // Then apply search term filtering
@@ -393,7 +347,7 @@ function createSearchInput(block, config) {
   input.setAttribute('type', 'search');
   input.className = 'search-results-input';
 
-  const searchPlaceholder = config.placeholders.searchPlaceholder || 'Search...';
+  const searchPlaceholder = config.placeholders.searchPlaceholder;
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
@@ -440,27 +394,51 @@ function createSearchIcon() {
 }
 
 /**
- * Decorates the search results block
- * @param {HTMLElement} block - The search results block element
+ * Extracts pathname from a URL or returns the value as-is
+ * @param {string} href - The URL or path
+ * @returns {string} The pathname or original value
  */
-export default async function decorate(block) {
-  // eslint-disable-next-line no-console
-  console.log('🔍 SEARCH-RESULTS BLOCK: decorate() function called!');
-  // eslint-disable-next-line no-console
-  console.log('Block element:', block);
+function extractPathname(href) {
+  try {
+    const url = new URL(href);
+    return url.pathname;
+  } catch (e) {
+    return href;
+  }
+}
 
-  // Extract data source and folder filter from block content
+/**
+ * Transforms AEM content path to published path
+ * @param {string} path - The AEM content path
+ * @returns {string} The transformed path
+ */
+function transformAEMPath(path) {
+  let folder = path.trim();
+  // Remove /content/ue-multitenant-root prefix if present
+  if (folder.startsWith('/content/ue-multitenant-root')) {
+    folder = folder.replace('/content/ue-multitenant-root', '');
+  }
+  // Ensure folder starts with /
+  if (folder && !folder.startsWith('/')) {
+    folder = `/${folder}`;
+  }
+  return folder;
+}
+
+/**
+ * Parses block configuration from block content
+ * @param {HTMLElement} block - The block element
+ * @returns {Object} Configuration object with source, folders, and placeholders
+ */
+function parseBlockConfig(block) {
   let source = CONFIG.defaultSource;
   let folders = [];
+  const placeholders = { ...CONFIG.placeholders };
 
   const rows = [...block.children];
-  // eslint-disable-next-line no-console
-  console.log('Block rows count:', rows.length);
 
   rows.forEach((row, rowIndex) => {
     const cells = [...row.children];
-    // eslint-disable-next-line no-console
-    console.log(`Row ${rowIndex}: ${cells.length} cells`);
 
     if (cells.length >= 2) {
       // Two-column structure: label | value
@@ -469,54 +447,28 @@ export default async function decorate(block) {
       const link = valueCell.querySelector('a[href]');
       const textContent = valueCell.textContent.trim();
 
-      // eslint-disable-next-line no-console
-      console.log(`  Label: "${label}"`);
-      // eslint-disable-next-line no-console
-      console.log(`  Has link: ${!!link}, Text: "${textContent}"`);
-
       if (label.includes('source') && link) {
         source = link.href;
       } else if (label.includes('folder')) {
-        // Get folder path from link href or text content
         let folderInput = '';
         if (link && link.href) {
-          // Extract pathname from full URL
-          try {
-            const url = new URL(link.href);
-            folderInput = url.pathname;
-          } catch (e) {
-            // If URL parsing fails, use href as-is
-            folderInput = link.href;
-          }
+          folderInput = extractPathname(link.href);
         } else if (textContent) {
           folderInput = textContent;
         }
 
-        // eslint-disable-next-line no-console
-        console.log('Raw folder input:', folderInput);
-
         if (folderInput) {
-          // Parse folder paths (can be comma-separated)
           folders = folderInput
             .split(',')
-            .map((f) => {
-              let folder = f.trim();
-              // Transform AEM content path to published path
-              // Remove /content/ue-multitenant-root prefix if present
-              if (folder.startsWith('/content/ue-multitenant-root')) {
-                folder = folder.replace('/content/ue-multitenant-root', '');
-              }
-              // Ensure folder starts with /
-              if (folder && !folder.startsWith('/')) {
-                folder = `/${folder}`;
-              }
-              return folder;
-            })
+            .map((f) => transformAEMPath(f))
             .filter((f) => f.length > 0);
-
-          // eslint-disable-next-line no-console
-          console.log('Folder filter configured:', folders);
         }
+      } else if (label.includes('placeholder') && textContent) {
+        placeholders.searchPlaceholder = textContent;
+      } else if (label.includes('no results') && textContent) {
+        placeholders.searchNoResults = textContent;
+      } else if (label.includes('title') && textContent) {
+        placeholders.searchResultsTitle = textContent;
       }
     } else if (cells.length === 1) {
       // Single-column structure: just the link or text
@@ -524,64 +476,58 @@ export default async function decorate(block) {
       const link = cell.querySelector('a[href]');
       const textContent = cell.textContent.trim();
 
-      // eslint-disable-next-line no-console
-      console.log(`  Has link: ${!!link}, Text: "${textContent}"`);
-
       // Get value from link or text content
       let value = null;
       if (link && link.href) {
-        // Extract pathname from full URL for aem-content fields
-        try {
-          const url = new URL(link.href);
-          value = url.pathname;
-        } catch (e) {
-          // If URL parsing fails, use href as-is
-          value = link.href;
-        }
+        value = extractPathname(link.href);
       } else if (textContent && textContent.length > 0) {
         value = textContent;
       }
 
-      // eslint-disable-next-line no-console
-      console.log(`  Extracted value: "${value}"`);
-
       if (value) {
-        // First non-empty row is data source, second is folder filter
-        if (rowIndex === 0) {
-          source = value;
-          // eslint-disable-next-line no-console
-          console.log('Source configured:', source);
-        } else if (rowIndex === 1) {
-          // Parse folder paths (can be comma-separated)
-          folders = value
-            .split(',')
-            .map((f) => {
-              let folder = f.trim();
-              // Transform AEM content path to published path
-              // Remove /content/ue-multitenant-root prefix if present
-              if (folder.startsWith('/content/ue-multitenant-root')) {
-                folder = folder.replace('/content/ue-multitenant-root', '');
-              }
-              // Ensure folder starts with /
-              if (folder && !folder.startsWith('/')) {
-                folder = `/${folder}`;
-              }
-              return folder;
-            })
-            .filter((f) => f.length > 0);
-
-          // eslint-disable-next-line no-console
-          console.log('Folder filter configured:', folders);
+        // Fields in order: source, folder, searchPlaceholder, searchNoResults, searchResultsTitle
+        switch (rowIndex) {
+          case 0:
+            source = value;
+            break;
+          case 1:
+            folders = value
+              .split(',')
+              .map((f) => transformAEMPath(f))
+              .filter((f) => f.length > 0);
+            break;
+          case 2:
+            placeholders.searchPlaceholder = value;
+            break;
+          case 3:
+            placeholders.searchNoResults = value;
+            break;
+          case 4:
+            placeholders.searchResultsTitle = value;
+            break;
+          default:
+            break;
         }
       }
     }
   });
 
+  return { source, folders, placeholders };
+}
+
+/**
+ * Decorates the search results block
+ * @param {HTMLElement} block - The search results block element
+ */
+export default async function decorate(block) {
+  // Parse configuration from block content
+  const { source, folders, placeholders } = parseBlockConfig(block);
+
   // Build configuration object
   const config = {
     source,
     folders,
-    placeholders: CONFIG.placeholders,
+    placeholders,
   };
 
   // Clear block content and build search results UI

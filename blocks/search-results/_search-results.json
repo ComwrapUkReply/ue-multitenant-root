@@ -31,6 +31,24 @@
           "name": "folder",
           "label": "Filter by Folder",
           "description": "Filter results to show only pages from this folder path (e.g., /products or /blog). Leave empty to show all results. You can specify multiple folders separated by commas (e.g., /products, /blog)."
+        },
+        {
+          "component": "text",
+          "name": "searchPlaceholder",
+          "label": "Search Placeholder",
+          "description": "Placeholder text shown in the search input field. Default: 'Search...'"
+        },
+        {
+          "component": "text",
+          "name": "searchNoResults",
+          "label": "No Results Message",
+          "description": "Message shown when no results are found. Default: 'No results found.'"
+        },
+        {
+          "component": "text",
+          "name": "searchResultsTitle",
+          "label": "Results Title",
+          "description": "Title for the search results section. Default: 'Search Results'"
         }
       ]
     }
