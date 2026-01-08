@@ -106,10 +106,9 @@
   transition: all var(--transition-base);
 }
 
-.search-results .search-results-list > li:hover {
+.search-results .search-results-list > li:hover,
+.search-results .search-results-list > li:focus-within {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgb(0 0 0 / 15%);
-  border-top: 4px solid var(--color-primary);
 }
 
 .search-results .search-results-list > li > a {
