@@ -3,6 +3,10 @@ import {
   decorateIcons,
 } from '../../scripts/aem.js';
 
+// Module-level log to confirm file is loaded
+// eslint-disable-next-line no-console
+console.log('🔍 search-results.js module loaded');
+
 /**
  * Default configuration for search results block
  */
@@ -438,18 +442,34 @@ function createSearchIcon() {
  * @param {HTMLElement} block - The search results block element
  */
 export default async function decorate(block) {
+  // eslint-disable-next-line no-console
+  console.log('🔍 SEARCH-RESULTS BLOCK: decorate() function called!');
+  // eslint-disable-next-line no-console
+  console.log('Block element:', block);
+
   // Extract data source and folder filter from block content
   let source = CONFIG.defaultSource;
   let folders = [];
 
   const rows = [...block.children];
-  rows.forEach((row) => {
+  // eslint-disable-next-line no-console
+  console.log('Block rows count:', rows.length);
+
+  rows.forEach((row, rowIndex) => {
     const cells = [...row.children];
+    // eslint-disable-next-line no-console
+    console.log(`Row ${rowIndex}: ${cells.length} cells`);
+
     if (cells.length >= 2) {
       const label = cells[0].textContent.trim().toLowerCase();
       const valueCell = cells[1];
       const link = valueCell.querySelector('a[href]');
       const textContent = valueCell.textContent.trim();
+
+      // eslint-disable-next-line no-console
+      console.log(`  Label: "${label}"`);
+      // eslint-disable-next-line no-console
+      console.log(`  Has link: ${!!link}, Text: "${textContent}"`);
 
       if (label.includes('source') && link) {
         source = link.href;
