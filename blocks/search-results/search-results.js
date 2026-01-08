@@ -204,6 +204,27 @@ function compareFound(hit1, hit2) {
 }
 
 /**
+ * Filters data by folder path(s)
+ * @param {Array} data - Array of data items to filter
+ * @param {string[]} folders - Array of folder paths to filter by
+ * @returns {Array} Filtered array of results matching folder paths
+ */
+function filterByFolder(data, folders) {
+  if (!folders || folders.length === 0) {
+    return data;
+  }
+
+  return data.filter((item) => {
+    // Check if item path starts with any of the specified folders
+    return folders.some((folder) => {
+      const normalizedFolder = folder.trim().toLowerCase();
+      const normalizedPath = item.path.toLowerCase();
+      return normalizedPath.startsWith(normalizedFolder);
+    });
+  });
+}
+
+/**
  * Filters data based on search terms
  * @param {string[]} searchTerms - Array of search terms
  * @param {Array} data - Array of data items to filter
@@ -269,7 +290,15 @@ function renderResults(block, config, filteredData, searchTerms, headingTag) {
     if (resultsCount) {
       const count = filteredData.length;
       const query = searchTerms.join(' ');
-      resultsCount.textContent = `Found ${count} result${count !== 1 ? 's' : ''} for "${query}"`;
+      let message = `Found ${count} result${count !== 1 ? 's' : ''} for "${query}"`;
+
+      // Add folder filter info if active
+      if (config.folders && config.folders.length > 0) {
+        const folderList = config.folders.join(', ');
+        message += ` in ${folderList}`;
+      }
+
+      resultsCount.textContent = message;
     }
   } else {
     const noResultsMessage = document.createElement('li');
@@ -281,7 +310,15 @@ function renderResults(block, config, filteredData, searchTerms, headingTag) {
     const resultsCount = block.querySelector('.search-results-count');
     if (resultsCount) {
       const query = searchTerms.join(' ');
-      resultsCount.textContent = `No results found for "${query}"`;
+      let message = `No results found for "${query}"`;
+
+      // Add folder filter info if active
+      if (config.folders && config.folders.length > 0) {
+        const folderList = config.folders.join(', ');
+        message += ` in ${folderList}`;
+      }
+
+      resultsCount.textContent = message;
     }
   }
 }
@@ -310,7 +347,14 @@ async function executeSearch(block, config, searchValue) {
     return;
   }
 
-  const filteredData = filterData(searchTerms, data);
+  // Apply folder filtering first (if configured)
+  let dataToSearch = data;
+  if (config.folders && config.folders.length > 0) {
+    dataToSearch = filterByFolder(data, config.folders);
+  }
+
+  // Then apply search term filtering
+  const filteredData = filterData(searchTerms, dataToSearch);
   const headingTag = findNextHeading(block);
   renderResults(block, config, filteredData, searchTerms, headingTag);
 }
@@ -377,8 +421,9 @@ function createSearchIcon() {
  * @param {HTMLElement} block - The search results block element
  */
 export default async function decorate(block) {
-  // Extract data source from block content
+  // Extract data source and folder filter from block content
   let source = CONFIG.defaultSource;
+  let folders = [];
 
   const rows = [...block.children];
   rows.forEach((row) => {
@@ -387,9 +432,16 @@ export default async function decorate(block) {
       const label = cells[0].textContent.trim().toLowerCase();
       const valueCell = cells[1];
       const link = valueCell.querySelector('a[href]');
+      const textContent = valueCell.textContent.trim();
 
       if (label.includes('source') && link) {
         source = link.href;
+      } else if (label.includes('folder') && textContent) {
+        // Parse folder paths (can be comma-separated)
+        folders = textContent
+          .split(',')
+          .map((f) => f.trim())
+          .filter((f) => f.length > 0);
       }
     }
   });
@@ -397,6 +449,7 @@ export default async function decorate(block) {
   // Build configuration object
   const config = {
     source,
+    folders,
     placeholders: CONFIG.placeholders,
   };
 
