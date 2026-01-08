@@ -63,9 +63,8 @@ export default function decorate(block) {
 
     if (answerDiv && answerDiv.firstChild) {
       textButtonWrapper.innerHTML = answerDiv.innerHTML;
-      textButtonWrapper.firstChild.classList.add('accordion-text');
+      textButtonWrapper.classList.add('accordion-text');
     }
-
     // Process button fields (divs 4-6)
     const buttonLinkDiv = row.querySelector(':scope > div:nth-child(5)');
     const buttonTextDiv = row.querySelector(':scope > div:nth-child(6)');
