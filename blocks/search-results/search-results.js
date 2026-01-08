@@ -214,14 +214,25 @@ function filterByFolder(data, folders) {
     return data;
   }
 
-  return data.filter((item) => {
+  const filtered = data.filter((item) => {
     // Check if item path starts with any of the specified folders
-    return folders.some((folder) => {
+    const matches = folders.some((folder) => {
       const normalizedFolder = folder.trim().toLowerCase();
       const normalizedPath = item.path.toLowerCase();
-      return normalizedPath.startsWith(normalizedFolder);
+      const isMatch = normalizedPath.startsWith(normalizedFolder);
+
+      // Log first few items for debugging
+      if (filtered.length < 3) {
+        // eslint-disable-next-line no-console
+        console.log(`Checking: "${normalizedPath}" starts with "${normalizedFolder}"? ${isMatch}`);
+      }
+
+      return isMatch;
     });
+    return matches;
   });
+
+  return filtered;
 }
 
 /**
@@ -350,7 +361,13 @@ async function executeSearch(block, config, searchValue) {
   // Apply folder filtering first (if configured)
   let dataToSearch = data;
   if (config.folders && config.folders.length > 0) {
+    // eslint-disable-next-line no-console
+    console.log('Applying folder filter:', config.folders);
+    // eslint-disable-next-line no-console
+    console.log('Total pages before filter:', data.length);
     dataToSearch = filterByFolder(data, config.folders);
+    // eslint-disable-next-line no-console
+    console.log('Pages after folder filter:', dataToSearch.length);
   }
 
   // Then apply search term filtering
@@ -436,24 +453,38 @@ export default async function decorate(block) {
 
       if (label.includes('source') && link) {
         source = link.href;
-      } else if (label.includes('folder') && textContent) {
-        // Parse folder paths (can be comma-separated)
-        folders = textContent
-          .split(',')
-          .map((f) => {
-            let folder = f.trim();
-            // Transform AEM content path to published path
-            // Remove /content/ue-multitenant-root prefix if present
-            if (folder.startsWith('/content/ue-multitenant-root')) {
-              folder = folder.replace('/content/ue-multitenant-root', '');
-            }
-            // Ensure folder starts with /
-            if (folder && !folder.startsWith('/')) {
-              folder = `/${folder}`;
-            }
-            return folder;
-          })
-          .filter((f) => f.length > 0);
+      } else if (label.includes('folder')) {
+        // Get folder path from link href or text content
+        let folderInput = '';
+        if (link && link.href) {
+          // Extract path from link href
+          folderInput = link.href;
+        } else if (textContent) {
+          folderInput = textContent;
+        }
+
+        if (folderInput) {
+          // Parse folder paths (can be comma-separated)
+          folders = folderInput
+            .split(',')
+            .map((f) => {
+              let folder = f.trim();
+              // Transform AEM content path to published path
+              // Remove /content/ue-multitenant-root prefix if present
+              if (folder.startsWith('/content/ue-multitenant-root')) {
+                folder = folder.replace('/content/ue-multitenant-root', '');
+              }
+              // Ensure folder starts with /
+              if (folder && !folder.startsWith('/')) {
+                folder = `/${folder}`;
+              }
+              return folder;
+            })
+            .filter((f) => f.length > 0);
+
+          // eslint-disable-next-line no-console
+          console.log('Folder filter configured:', folders);
+        }
       }
     }
   });
