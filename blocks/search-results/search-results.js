@@ -457,11 +457,20 @@ export default async function decorate(block) {
         // Get folder path from link href or text content
         let folderInput = '';
         if (link && link.href) {
-          // Extract path from link href
-          folderInput = link.href;
+          // Extract pathname from full URL
+          try {
+            const url = new URL(link.href);
+            folderInput = url.pathname;
+          } catch (e) {
+            // If URL parsing fails, use href as-is
+            folderInput = link.href;
+          }
         } else if (textContent) {
           folderInput = textContent;
         }
+
+        // eslint-disable-next-line no-console
+        console.log('Raw folder input:', folderInput);
 
         if (folderInput) {
           // Parse folder paths (can be comma-separated)
