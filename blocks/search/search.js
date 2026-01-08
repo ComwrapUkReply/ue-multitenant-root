@@ -19,6 +19,23 @@ const CONFIG = {
 const searchParams = new URLSearchParams(window.location.search);
 
 /**
+ * Checks if we're in AEM authoring mode
+ * @returns {boolean} True if in authoring mode
+ */
+function isAuthoringMode() {
+  const { hostname, pathname } = window.location;
+  // Check for AEM Cloud authoring environment
+  if (hostname.includes('adobeaemcloud.com') && (hostname.includes('author-') || pathname.includes('/editor.html'))) {
+    return true;
+  }
+  // Check for Universal Editor
+  if (pathname.includes('/editor.html') || searchParams.has('editor')) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * Finds the appropriate heading level for search results based on context
  * @param {HTMLElement} el - Element to find heading context from
  * @returns {string} Heading tag name (e.g., 'H2', 'H3')
@@ -93,6 +110,13 @@ function highlightTextElements(terms, elements) {
  * @returns {Promise<Array|null>} Array of data items or null on error
  */
 export async function fetchData(source) {
+  // Skip search data fetch in authoring mode (query-index.json doesn't exist there)
+  if (isAuthoringMode()) {
+    // eslint-disable-next-line no-console
+    console.info('Search is disabled in AEM authoring mode');
+    return null;
+  }
+
   try {
     const response = await fetch(source);
     if (!response.ok) {
