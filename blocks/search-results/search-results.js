@@ -218,6 +218,7 @@ function filterByFolder(data, folders) {
     return data;
   }
 
+  let debugCount = 0;
   const filtered = data.filter((item) => {
     // Check if item path starts with any of the specified folders
     const matches = folders.some((folder) => {
@@ -226,9 +227,10 @@ function filterByFolder(data, folders) {
       const isMatch = normalizedPath.startsWith(normalizedFolder);
 
       // Log first few items for debugging
-      if (filtered.length < 3) {
+      if (debugCount < 3) {
         // eslint-disable-next-line no-console
         console.log(`Checking: "${normalizedPath}" starts with "${normalizedFolder}"? ${isMatch}`);
+        debugCount += 1;
       }
 
       return isMatch;
