@@ -440,7 +440,19 @@ export default async function decorate(block) {
         // Parse folder paths (can be comma-separated)
         folders = textContent
           .split(',')
-          .map((f) => f.trim())
+          .map((f) => {
+            let folder = f.trim();
+            // Transform AEM content path to published path
+            // Remove /content/ue-multitenant-root prefix if present
+            if (folder.startsWith('/content/ue-multitenant-root')) {
+              folder = folder.replace('/content/ue-multitenant-root', '');
+            }
+            // Ensure folder starts with /
+            if (folder && !folder.startsWith('/')) {
+              folder = `/${folder}`;
+            }
+            return folder;
+          })
           .filter((f) => f.length > 0);
       }
     }
