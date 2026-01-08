@@ -1426,7 +1426,13 @@
         "component": "text",
         "name": "searchNoResults",
         "label": "No Results Message",
-        "description": "Message shown when no results are found. Default: 'No results found.'"
+        "description": "Message shown in the results list when no results are found. Default: 'No results found.'"
+      },
+      {
+        "component": "text",
+        "name": "searchNoResultsFor",
+        "label": "No Results For Query",
+        "description": "Message shown in the count area when no results are found, followed by the search query. Default: 'No results found for'"
       },
       {
         "component": "text",

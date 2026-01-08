@@ -11,6 +11,7 @@ const CONFIG = {
   placeholders: {
     searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
+    searchNoResultsFor: 'No results found for',
     searchResultsTitle: 'Search Results',
   },
 };
@@ -287,7 +288,7 @@ function renderResults(block, config, filteredData, searchTerms, headingTag) {
     const resultsCount = block.querySelector('.search-results-count');
     if (resultsCount) {
       const query = searchTerms.join(' ');
-      let message = `No results found for "${query}"`;
+      let message = `${config.placeholders.searchNoResultsFor} "${query}"`;
 
       // Add folder filter info if active
       if (config.folders && config.folders.length > 0) {
@@ -465,6 +466,8 @@ function parseBlockConfig(block) {
         }
       } else if (label.includes('placeholder') && textContent) {
         placeholders.searchPlaceholder = textContent;
+      } else if (label.includes('no results') && label.includes('for') && textContent) {
+        placeholders.searchNoResultsFor = textContent;
       } else if (label.includes('no results') && textContent) {
         placeholders.searchNoResults = textContent;
       } else if (label.includes('title') && textContent) {
@@ -485,7 +488,7 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Fields in order: source, folder, searchPlaceholder, searchNoResults, searchResultsTitle
+        // Fields in order: source, folder, searchPlaceholder, searchNoResults, searchNoResultsFor, searchResultsTitle
         switch (rowIndex) {
           case 0:
             source = value;
@@ -503,6 +506,9 @@ function parseBlockConfig(block) {
             placeholders.searchNoResults = value;
             break;
           case 4:
+            placeholders.searchNoResultsFor = value;
+            break;
+          case 5:
             placeholders.searchResultsTitle = value;
             break;
           default:
