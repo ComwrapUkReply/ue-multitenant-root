@@ -169,13 +169,7 @@ function renderResult(result, searchTerms, titleTag) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.href = result.path;
-  if (result.image) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'search-result-image';
-    const pic = createOptimizedPicture(result.image, '', false, [{ width: '375' }]);
-    wrapper.append(pic);
-    a.append(wrapper);
-  }
+  // Skip images for header search results - display only title and description
   if (result.title) {
     const title = document.createElement(titleTag);
     title.className = 'search-result-title';
@@ -185,6 +179,7 @@ function renderResult(result, searchTerms, titleTag) {
   }
   if (result.description) {
     const description = document.createElement('p');
+    description.className = 'search-result-description';
     description.textContent = result.description;
     highlightTextElements(searchTerms, [description]);
     a.append(description);
