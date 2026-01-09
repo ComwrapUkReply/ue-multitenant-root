@@ -582,10 +582,9 @@ function searchBox(block, config) {
 /**
  * Parses block configuration from block content
  * @param {HTMLElement} block - The block element
- * @returns {Object} Configuration object with source, resultPage, and placeholders
+ * @returns {Object} Configuration object with resultPage and placeholders
  */
 function parseBlockConfig(block) {
-  let source = CONFIG.defaultSource;
   let resultPage = null;
   const placeholders = { ...CONFIG.placeholders };
 
@@ -601,9 +600,7 @@ function parseBlockConfig(block) {
       const link = valueCell.querySelector('a[href]');
       const textContent = valueCell.textContent.trim();
 
-      if (label.includes('source') && link) {
-        source = link.href;
-      } else if ((label.includes('result') || label.includes('page')) && link) {
+      if ((label.includes('result') || label.includes('page')) && link) {
         resultPage = link.href;
       } else if (label.includes('placeholder') && textContent) {
         placeholders.searchPlaceholder = textContent;
@@ -625,18 +622,15 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Fields in order: source, resultpage, (classes is auto), searchPlaceholder, searchNoResults
+        // Fields in order: resultpage, searchPlaceholder, searchNoResults
         switch (rowIndex) {
           case 0:
-            source = value;
-            break;
-          case 1:
             resultPage = value;
             break;
-          case 2:
+          case 1:
             placeholders.searchPlaceholder = value;
             break;
-          case 3:
+          case 2:
             placeholders.searchNoResults = value;
             break;
           default:
@@ -646,7 +640,7 @@ function parseBlockConfig(block) {
     }
   });
 
-  return { source, resultPage, placeholders };
+  return { resultPage, placeholders };
 }
 
 /**
@@ -655,11 +649,11 @@ function parseBlockConfig(block) {
  */
 export default async function decorate(block) {
   // Parse configuration from block content
-  const { source, resultPage, placeholders } = parseBlockConfig(block);
+  const { resultPage, placeholders } = parseBlockConfig(block);
 
-  // Build configuration object
+  // Build configuration object (always use default query-index.json)
   const config = {
-    source,
+    source: CONFIG.defaultSource,
     resultPage,
     placeholders,
     suggestionsLimit: CONFIG.suggestionsLimit,

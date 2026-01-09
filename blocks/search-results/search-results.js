@@ -429,10 +429,9 @@ function transformAEMPath(path) {
 /**
  * Parses block configuration from block content
  * @param {HTMLElement} block - The block element
- * @returns {Object} Configuration object with source, folders, and placeholders
+ * @returns {Object} Configuration object with folders and placeholders
  */
 function parseBlockConfig(block) {
-  let source = CONFIG.defaultSource;
   let folders = [];
   const placeholders = { ...CONFIG.placeholders };
 
@@ -448,9 +447,7 @@ function parseBlockConfig(block) {
       const link = valueCell.querySelector('a[href]');
       const textContent = valueCell.textContent.trim();
 
-      if (label.includes('source') && link) {
-        source = link.href;
-      } else if (label.includes('folder')) {
+      if (label.includes('folder')) {
         let folderInput = '';
         if (link && link.href) {
           folderInput = extractPathname(link.href);
@@ -488,27 +485,24 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Fields in order: source, folder, searchPlaceholder, searchNoResults, searchNoResultsFor, searchResultsTitle
+        // Fields in order: folder, searchPlaceholder, searchNoResults, searchNoResultsFor, searchResultsTitle
         switch (rowIndex) {
           case 0:
-            source = value;
-            break;
-          case 1:
             folders = value
               .split(',')
               .map((f) => transformAEMPath(f))
               .filter((f) => f.length > 0);
             break;
-          case 2:
+          case 1:
             placeholders.searchPlaceholder = value;
             break;
-          case 3:
+          case 2:
             placeholders.searchNoResults = value;
             break;
-          case 4:
+          case 3:
             placeholders.searchNoResultsFor = value;
             break;
-          case 5:
+          case 4:
             placeholders.searchResultsTitle = value;
             break;
           default:
@@ -518,7 +512,7 @@ function parseBlockConfig(block) {
     }
   });
 
-  return { source, folders, placeholders };
+  return { folders, placeholders };
 }
 
 /**
@@ -527,11 +521,11 @@ function parseBlockConfig(block) {
  */
 export default async function decorate(block) {
   // Parse configuration from block content
-  const { source, folders, placeholders } = parseBlockConfig(block);
+  const { folders, placeholders } = parseBlockConfig(block);
 
-  // Build configuration object
+  // Build configuration object (always use default query-index.json)
   const config = {
-    source,
+    source: CONFIG.defaultSource,
     folders,
     placeholders,
   };
