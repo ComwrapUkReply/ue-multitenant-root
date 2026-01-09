@@ -23,6 +23,7 @@
   cursor: pointer;
   border-radius: var(--space-4);
   transition: var(--transition-fast);
+  z-index: 1;
 }
 
 .search-wrapper .search-button:hover,
@@ -42,7 +43,7 @@
   width: 0;
   height: 0;
   left: 0;
-  z-index: 10001;
+  /* z-index: 1; */
   transition: var(--transition-base);
   top: 3rem;
 }
@@ -50,6 +51,7 @@
 /* ===== SEARCH BOX ===== */
 .search .search-box {
   display: grid;
+  max-width: 600px;
   grid-template-columns: auto 1fr;
   gap: 1ch;
   align-items: center;
@@ -91,6 +93,7 @@
   border-radius: var(--space-8);
   box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
   transition: var(--transition-base);
+  margin: var(--space-48) auto 0;
 }
 
 .search-wrapper .search.block .search-box:focus-within {
@@ -101,12 +104,6 @@
 /* Search block visibility states */
 .search-wrapper .search.block[aria-expanded="false"] {
   display: none;
-}
-
-.search-wrapper .search.block[aria-expanded="true"] {
-  display: block;
-  width: 300px;
-  animation: dropdown-slide var(--transition-fast) ease-out;
 }
 
 /* Dropdown slide animation */
@@ -121,6 +118,32 @@
     transform: translateY(0);
   }
 }
+
+.search-wrapper .search.block[aria-expanded="true"] {
+  display: block;
+  background-color: var(--color-secondary);
+  width: 1200px;
+  min-height: 300px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 0 auto;
+  left: 0;
+  animation: dropdown-slide var(--transition-fast) ease-out;
+}
+
+.search-wrapper .search.block::before {
+  content: "";
+  background: var(--color-secondary);
+  height: 100%;
+  left: 0;
+  margin: 0 calc(-50vw + 50%);
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  z-index: -1;
+}
+
 
 /* Search input field */
 .search .search-box input {
@@ -381,6 +404,11 @@
     position: relative;
   }
 
+  .search-wrapper .search.block .search-box {
+    padding: var(--space-16);
+    margin-inline: var(--space-16);
+  }
+
   .search-wrapper .search.block[aria-expanded="false"] {
     display: none;
     position: absolute;
@@ -395,9 +423,7 @@
   }
 
   .search-wrapper .search.block[aria-expanded="true"] {
-    right: 0;
-    left: auto;
-    display: block;
+    width: 100%;
   }
 
   .search ul.search-results {

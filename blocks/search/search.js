@@ -464,6 +464,38 @@ function findSearchBlock() {
 }
 
 /**
+ * Calculates the height of the header element
+ * @returns {number} The height of the header in pixels
+ */
+function calculateHeaderHeight() {
+  const header = document.querySelector('header.block, header');
+  if (!header) return 0;
+
+  const navWrapper = header.querySelector('.nav-wrapper');
+  if (navWrapper) {
+    return navWrapper.offsetHeight;
+  }
+
+  return header.offsetHeight;
+}
+
+/**
+ * Applies margin-top to search block based on header height when expanded
+ * @param {HTMLElement} block - The search block element
+ * @param {boolean} isExpanded - Whether the search block is expanded
+ */
+function applySearchBlockMargin(block, isExpanded) {
+  if (!block) return;
+
+  if (isExpanded) {
+    const headerHeight = calculateHeaderHeight();
+    block.style.marginTop = `${headerHeight}px`;
+  } else {
+    block.style.marginTop = '';
+  }
+}
+
+/**
  * Toggles the search block visibility
  * @param {HTMLElement} block - The search block element
  * @param {HTMLButtonElement|null} button - Optional button element to sync aria-expanded
@@ -485,6 +517,9 @@ function toggleSearchBlock(block, button = null) {
   allSearchButtons.forEach((btn) => {
     btn.setAttribute('aria-expanded', newState.toString());
   });
+
+  // Apply margin-top based on header height when expanded
+  applySearchBlockMargin(block, newState);
 
   // Focus input when opening
   if (newState) {
@@ -697,6 +732,20 @@ export default async function decorate(block) {
       decorateIcons(newButton);
     }
   });
+
+  // Handle window resize to recalculate header height
+  let resizeTimeout;
+  const handleResize = () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      const isExpanded = block.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        applySearchBlockMargin(block, true);
+      }
+    }, 100);
+  };
+
+  window.addEventListener('resize', handleResize);
 
   decorateIcons(block);
 }
