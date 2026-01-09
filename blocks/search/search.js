@@ -12,10 +12,28 @@ const CONFIG = {
     searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
   },
+  suggestionsLimit: 5, // Number of suggestions to show in inline mode
 };
 
 /** URL search params for managing query state */
 const searchParams = new URLSearchParams(window.location.search);
+
+/**
+ * Checks if we're in AEM authoring mode
+ * @returns {boolean} True if in authoring mode
+ */
+function isAuthoringMode() {
+  const { hostname, pathname } = window.location;
+  // Check for AEM Cloud authoring environment
+  if (hostname.includes('adobeaemcloud.com') && (hostname.includes('author-') || pathname.includes('/editor.html'))) {
+    return true;
+  }
+  // Check for Universal Editor
+  if (pathname.includes('/editor.html') || searchParams.has('editor')) {
+    return true;
+  }
+  return false;
+}
 
 /**
  * Finds the appropriate heading level for search results based on context
@@ -92,21 +110,52 @@ function highlightTextElements(terms, elements) {
  * @returns {Promise<Array|null>} Array of data items or null on error
  */
 export async function fetchData(source) {
-  const response = await fetch(source);
-  if (!response.ok) {
+  // Skip search data fetch in authoring mode (query-index.json doesn't exist there)
+  if (isAuthoringMode()) {
     // eslint-disable-next-line no-console
-    console.error('error loading API response', response);
+    console.info('Search is disabled in AEM authoring mode');
     return null;
   }
 
-  const json = await response.json();
-  if (!json) {
+  try {
+    const response = await fetch(source);
+    if (!response.ok) {
+      // eslint-disable-next-line no-console
+      console.error('Error loading search data:', response.status, response.statusText);
+      // eslint-disable-next-line no-console
+      console.error('Source URL:', source);
+      return null;
+    }
+
+    // Check if response is JSON before parsing
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      // eslint-disable-next-line no-console
+      console.error('Expected JSON but got:', contentType);
+      // eslint-disable-next-line no-console
+      console.error('Source URL:', source);
+      return null;
+    }
+
+    const json = await response.json();
+    if (!json) {
+      // eslint-disable-next-line no-console
+      console.error('Empty API response from:', source);
+      return null;
+    }
+
+    if (!json.data) {
+      // eslint-disable-next-line no-console
+      console.error('API response missing "data" property:', source);
+      return null;
+    }
+
+    return json.data;
+  } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('empty API response', source);
+    console.error('Failed to fetch search data from:', source, error);
     return null;
   }
-
-  return json.data;
 }
 
 /**
@@ -120,13 +169,7 @@ function renderResult(result, searchTerms, titleTag) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.href = result.path;
-  if (result.image) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'search-result-image';
-    const pic = createOptimizedPicture(result.image, '', false, [{ width: '375' }]);
-    wrapper.append(pic);
-    a.append(wrapper);
-  }
+  // Skip images for header search results - display only title and description
   if (result.title) {
     const title = document.createElement(titleTag);
     title.className = 'search-result-title';
@@ -136,6 +179,7 @@ function renderResult(result, searchTerms, titleTag) {
   }
   if (result.description) {
     const description = document.createElement('p');
+    description.className = 'search-result-description';
     description.textContent = result.description;
     highlightTextElements(searchTerms, [description]);
     a.append(description);
@@ -179,12 +223,29 @@ async function renderResults(block, config, filteredData, searchTerms) {
   const searchResults = block.querySelector('.search-results');
   const headingTag = searchResults.dataset.h;
 
-  if (filteredData.length) {
+  // Show limited suggestions (max 5)
+  const limit = config.suggestionsLimit || 5;
+  const dataToRender = filteredData.slice(0, limit);
+
+  if (dataToRender.length) {
     searchResults.classList.remove('no-results');
-    filteredData.forEach((result) => {
+    dataToRender.forEach((result) => {
       const li = renderResult(result, searchTerms, headingTag);
       searchResults.append(li);
     });
+
+    // Add "View all results" link if there are more results and result page is configured
+    if (config.resultPage && filteredData.length > dataToRender.length) {
+      const viewAllLi = document.createElement('li');
+      viewAllLi.className = 'search-view-all';
+      const viewAllLink = document.createElement('a');
+      const input = block.querySelector('.search-input');
+      const searchQuery = input ? input.value : '';
+      viewAllLink.href = `${config.resultPage}?q=${encodeURIComponent(searchQuery)}`;
+      viewAllLink.textContent = `View all ${filteredData.length} results`;
+      viewAllLi.append(viewAllLink);
+      searchResults.append(viewAllLi);
+    }
   } else {
     const noResultsMessage = document.createElement('li');
     searchResults.classList.add('no-results');
@@ -267,6 +328,16 @@ async function handleSearch(e, block, config) {
   const searchTerms = searchValue.toLowerCase().split(/\s+/).filter((term) => !!term);
 
   const data = await fetchData(config.source);
+  if (!data) {
+    // Show error message if data couldn't be loaded
+    const searchResults = block.querySelector('.search-results');
+    searchResults.innerHTML = '';
+    searchResults.classList.add('no-results');
+    const errorMessage = document.createElement('li');
+    errorMessage.textContent = 'Unable to load search data. Please try again later.';
+    searchResults.append(errorMessage);
+    return;
+  }
   const filteredData = filterData(searchTerms, data);
   await renderResults(block, config, filteredData, searchTerms);
 }
@@ -290,6 +361,18 @@ function searchResultsContainer(block) {
 }
 
 /**
+ * Navigates to the result page with the search query
+ * @param {string} resultPageUrl - URL of the result page
+ * @param {string} searchQuery - The search query
+ */
+function navigateToResultPage(resultPageUrl, searchQuery) {
+  if (!resultPageUrl || !searchQuery) return;
+  const url = new URL(resultPageUrl, window.location.origin);
+  url.searchParams.set('q', searchQuery);
+  window.location.href = url.toString();
+}
+
+/**
  * Creates the search input element
  * @param {HTMLElement} block - The search block element
  * @param {Object} config - Search configuration object
@@ -308,16 +391,60 @@ function searchInput(block, config) {
     handleSearch(e, block, config);
   });
 
-  input.addEventListener('keyup', (e) => { if (e.code === 'Escape') { clearSearch(block); } });
+  input.addEventListener('keyup', (e) => {
+    if (e.code === 'Escape') {
+      clearSearch(block);
+    }
+  });
+
+  // Add Enter key handler to navigate to result page if configured
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && config.resultPage) {
+      e.preventDefault();
+      const searchQuery = input.value.trim();
+      if (searchQuery.length >= 1) {
+        navigateToResultPage(config.resultPage, searchQuery);
+      }
+    }
+  });
 
   return input;
 }
 
 /**
  * Creates the search icon element
- * @returns {HTMLSpanElement} Search icon span element
+ * @param {HTMLElement} block - The search block element
+ * @param {Object} config - Search configuration object
+ * @returns {HTMLSpanElement|HTMLButtonElement} Search icon element
  */
-function searchIcon() {
+function searchIcon(block, config) {
+  // Always make icon clickable if result page is configured
+  if (config.resultPage) {
+    const button = document.createElement('button');
+    button.classList.add('search-icon-button');
+    button.setAttribute('type', 'button');
+    button.setAttribute('aria-label', 'Search');
+
+    const icon = document.createElement('span');
+    icon.classList.add('icon', 'icon-search');
+    button.append(icon);
+
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const input = block.querySelector('.search-input');
+      if (input) {
+        const searchQuery = input.value.trim();
+        if (searchQuery.length >= 1) {
+          navigateToResultPage(config.resultPage, searchQuery);
+        }
+      }
+    });
+
+    return button;
+  }
+
+  // Default non-clickable icon
   const icon = document.createElement('span');
   icon.classList.add('icon', 'icon-search');
   return icon;
@@ -329,6 +456,38 @@ function searchIcon() {
  */
 function findSearchBlock() {
   return document.querySelector('.search.block');
+}
+
+/**
+ * Calculates the height of the header element
+ * @returns {number} The height of the header in pixels
+ */
+function calculateHeaderHeight() {
+  const header = document.querySelector('header.block, header');
+  if (!header) return 0;
+
+  const navWrapper = header.querySelector('.nav-wrapper');
+  if (navWrapper) {
+    return navWrapper.offsetHeight;
+  }
+
+  return header.offsetHeight;
+}
+
+/**
+ * Applies margin-top to search block based on header height when expanded
+ * @param {HTMLElement} block - The search block element
+ * @param {boolean} isExpanded - Whether the search block is expanded
+ */
+function applySearchBlockMargin(block, isExpanded) {
+  if (!block) return;
+
+  if (isExpanded) {
+    const headerHeight = calculateHeaderHeight();
+    block.style.marginTop = `${headerHeight}px`;
+  } else {
+    block.style.marginTop = '';
+  }
 }
 
 /**
@@ -353,6 +512,9 @@ function toggleSearchBlock(block, button = null) {
   allSearchButtons.forEach((btn) => {
     btn.setAttribute('aria-expanded', newState.toString());
   });
+
+  // Apply margin-top based on header height when expanded
+  applySearchBlockMargin(block, newState);
 
   // Focus input when opening
   if (newState) {
@@ -410,7 +572,7 @@ function searchBox(block, config) {
   const box = document.createElement('div');
   box.classList.add('search-box');
   box.append(
-    searchIcon(),
+    searchIcon(block, config),
     searchInput(block, config),
   );
 
@@ -418,18 +580,89 @@ function searchBox(block, config) {
 }
 
 /**
+ * Parses block configuration from block content
+ * @param {HTMLElement} block - The block element
+ * @returns {Object} Configuration object with resultPage and placeholders
+ */
+function parseBlockConfig(block) {
+  let resultPage = null;
+  const placeholders = { ...CONFIG.placeholders };
+
+  const rows = [...block.children];
+
+  rows.forEach((row, rowIndex) => {
+    const cells = [...row.children];
+
+    if (cells.length >= 2) {
+      // Two-column structure: label | value
+      const label = cells[0].textContent.trim().toLowerCase();
+      const valueCell = cells[1];
+      const link = valueCell.querySelector('a[href]');
+      const textContent = valueCell.textContent.trim();
+
+      if ((label.includes('result') || label.includes('page')) && link) {
+        resultPage = link.href;
+      } else if (label.includes('placeholder') && textContent) {
+        placeholders.searchPlaceholder = textContent;
+      } else if (label.includes('no results') && textContent) {
+        placeholders.searchNoResults = textContent;
+      }
+    } else if (cells.length === 1) {
+      // Single-column structure: just the link or text
+      const cell = cells[0];
+      const link = cell.querySelector('a[href]');
+      const textContent = cell.textContent.trim();
+
+      // Get value from link or text content
+      let value = null;
+      if (link) {
+        value = link.href;
+      } else if (textContent && textContent.length > 0) {
+        value = textContent;
+      }
+
+      if (value) {
+        // Fields in order: resultpage, searchPlaceholder, searchNoResults
+        switch (rowIndex) {
+          case 0:
+            resultPage = value;
+            break;
+          case 1:
+            placeholders.searchPlaceholder = value;
+            break;
+          case 2:
+            placeholders.searchNoResults = value;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  });
+
+  return { resultPage, placeholders };
+}
+
+/**
  * Decorates the search block
  * @param {HTMLElement} block - The search block element
  */
 export default async function decorate(block) {
-  // Extract data source from block content or use default
-  const sourceLink = block.querySelector('a[href]');
-  const source = sourceLink ? sourceLink.href : CONFIG.defaultSource;
+  // Parse configuration from block content
+  const { resultPage, placeholders } = parseBlockConfig(block);
+
+  // Build configuration object (always use default query-index.json)
+  const config = {
+    source: CONFIG.defaultSource,
+    resultPage,
+    placeholders,
+    suggestionsLimit: CONFIG.suggestionsLimit,
+  };
 
   // Clear block content and build search UI
   block.innerHTML = '';
   block.append(
-    searchBox(block, { source, placeholders: CONFIG.placeholders }),
+    searchBox(block, config),
     searchResultsContainer(block),
   );
 
@@ -488,6 +721,20 @@ export default async function decorate(block) {
       decorateIcons(newButton);
     }
   });
+
+  // Handle window resize to recalculate header height
+  let resizeTimeout;
+  const handleResize = () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      const isExpanded = block.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        applySearchBlockMargin(block, true);
+      }
+    }, 100);
+  };
+
+  window.addEventListener('resize', handleResize);
 
   decorateIcons(block);
 }

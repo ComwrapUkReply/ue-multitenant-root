@@ -22,9 +22,9 @@
       "fields": [
         {
           "component": "aem-content",
-          "name": "source",
-          "label": "Data Source",
-          "description": "Link to the query index JSON file. Leave empty to use the default /query-index.json"
+          "name": "resultpage",
+          "label": "Result Page",
+          "description": "Link to the search results page. When set, clicking the search icon or pressing Enter will navigate to this page with search results."
         },
         {
           "component": "select",
@@ -42,10 +42,21 @@
             }
           ],
           "value": ""
+        },
+        {
+          "component": "text",
+          "name": "searchPlaceholder",
+          "label": "Search Placeholder",
+          "description": "Placeholder text shown in the search input field. Default: 'Search...'"
+        },
+        {
+          "component": "text",
+          "name": "searchNoResults",
+          "label": "No Results Message",
+          "description": "Message shown when no results are found. Default: 'No results found.'"
         }
       ]
     }
   ],
   "filters": []
 }
-

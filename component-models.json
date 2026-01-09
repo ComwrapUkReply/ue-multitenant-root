@@ -1402,13 +1402,48 @@
     ]
   },
   {
+    "id": "search-results",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "folder",
+        "label": "Filter by Folder",
+        "description": "Filter results to show only pages from this folder path (e.g., /products or /blog). Leave empty to show all results. You can specify multiple folders separated by commas (e.g., /products, /blog)."
+      },
+      {
+        "component": "text",
+        "name": "searchPlaceholder",
+        "label": "Search Placeholder",
+        "description": "Placeholder text shown in the search input field. Default: 'Search...'"
+      },
+      {
+        "component": "text",
+        "name": "searchNoResults",
+        "label": "No Results Message",
+        "description": "Message shown in the results list when no results are found. Default: 'No results found.'"
+      },
+      {
+        "component": "text",
+        "name": "searchNoResultsFor",
+        "label": "No Results For Query",
+        "description": "Message shown in the count area when no results are found, followed by the search query. Default: 'No results found for'"
+      },
+      {
+        "component": "text",
+        "name": "searchResultsTitle",
+        "label": "Results Title",
+        "description": "Title for the search results section. Default: 'Search Results'"
+      }
+    ]
+  },
+  {
     "id": "search",
     "fields": [
       {
         "component": "aem-content",
-        "name": "source",
-        "label": "Data Source",
-        "description": "Link to the query index JSON file. Leave empty to use the default /query-index.json"
+        "name": "resultpage",
+        "label": "Result Page",
+        "description": "Link to the search results page. When set, clicking the search icon or pressing Enter will navigate to this page with search results."
       },
       {
         "component": "select",
@@ -1426,6 +1461,18 @@
           }
         ],
         "value": ""
+      },
+      {
+        "component": "text",
+        "name": "searchPlaceholder",
+        "label": "Search Placeholder",
+        "description": "Placeholder text shown in the search input field. Default: 'Search...'"
+      },
+      {
+        "component": "text",
+        "name": "searchNoResults",
+        "label": "No Results Message",
+        "description": "Message shown when no results are found. Default: 'No results found.'"
       }
     ]
   },
