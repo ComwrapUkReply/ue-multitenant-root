@@ -54,6 +54,12 @@
           "name": "searchNoResults",
           "label": "No Results Message",
           "description": "Message shown when no results are found. Default: 'No results found.'"
+        },
+        {
+          "component": "text",
+          "name": "viewAllButtonText",
+          "label": "View All Results Button Text",
+          "description": "Text for the 'View all results' button shown when there are more than 6 results. Default: 'View all {count} results' (where {count} is replaced with the actual number of results)."
         }
       ]
     }
