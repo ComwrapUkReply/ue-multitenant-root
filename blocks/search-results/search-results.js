@@ -10,6 +10,7 @@ const CONFIG = {
   defaultSource: '/query-index.json',
   placeholders: {
     searchNoResultsFor: 'No results found for',
+    searchResultsTitle: 'Search Results',
   },
 };
 
@@ -494,6 +495,8 @@ function parseBlockConfig(block) {
         classes = textContent.trim();
       } else if (label.includes('no results') && label.includes('for') && textContent) {
         placeholders.searchNoResultsFor = textContent;
+      } else if (label.includes('search results title') && textContent) {
+        placeholders.searchResultsTitle = textContent;
       }
     } else if (cells.length === 1) {
       // Single-column structure: just the link or text
@@ -510,7 +513,7 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Fields in order: folder, classes, searchNoResultsFor
+        // Fields in order: folder, classes, searchNoResultsFor, searchResultsTitle
         switch (rowIndex) {
           case 0:
             folders = value
@@ -524,6 +527,9 @@ function parseBlockConfig(block) {
             break;
           case 2:
             placeholders.searchNoResultsFor = value;
+            break;
+          case 3:
+            placeholders.searchResultsTitle = value;
             break;
           default:
             break;
@@ -566,6 +572,11 @@ export default async function decorate(block) {
   // Clear block content and build search results UI
   block.innerHTML = '';
 
+  // Create title
+  const title = document.createElement('h1');
+  title.className = 'search-results-title';
+  title.textContent = placeholders.searchResultsTitle || CONFIG.placeholders.searchResultsTitle;
+
   // Create search box
   const searchBox = document.createElement('div');
   searchBox.className = 'search-results-box';
@@ -582,7 +593,7 @@ export default async function decorate(block) {
   const resultsList = document.createElement('ul');
   resultsList.className = 'search-results-list';
 
-  block.append(searchBox, resultsCount, resultsList);
+  block.append(title, searchBox, resultsCount, resultsList);
 
   decorateIcons(block);
 
