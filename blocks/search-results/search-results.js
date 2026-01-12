@@ -12,7 +12,6 @@ const CONFIG = {
     searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
     searchNoResultsFor: 'No results found for',
-    searchResultsTitle: 'Search Results',
   },
 };
 
@@ -144,16 +143,18 @@ async function fetchData(source) {
  * @param {Object} result - Search result data
  * @param {string[]} searchTerms - Array of search terms for highlighting
  * @param {string} titleTag - HTML tag to use for result title
+ * @param {boolean} showImages - Whether to include images in results
  * @returns {HTMLLIElement} List item element for the result
  */
-function renderResult(result, searchTerms, titleTag) {
+function renderResult(result, searchTerms, titleTag, showImages) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.href = result.path;
-  if (result.image) {
+  if (showImages && result.image) {
     const wrapper = document.createElement('div');
     wrapper.className = 'search-result-image';
-    const pic = createOptimizedPicture(result.image, '', false, [{ width: '375' }]);
+    const alt = result.title || '';
+    const pic = createOptimizedPicture(result.image, alt, false, [{ width: '375' }]);
     wrapper.append(pic);
     a.append(wrapper);
   }
@@ -251,15 +252,16 @@ function filterData(searchTerms, data) {
  * @param {Array} filteredData - Filtered search results
  * @param {string[]} searchTerms - Array of search terms for highlighting
  * @param {string} headingTag - HTML tag to use for result titles
+ * @param {boolean} showImages - Whether to include images in results
  */
-function renderResults(block, config, filteredData, searchTerms, headingTag) {
+function renderResults(block, config, filteredData, searchTerms, headingTag, showImages) {
   const resultsContainer = block.querySelector('.search-results-list');
   resultsContainer.innerHTML = '';
 
   if (filteredData.length) {
     resultsContainer.classList.remove('no-results');
     filteredData.forEach((result) => {
-      const li = renderResult(result, searchTerms, headingTag);
+      const li = renderResult(result, searchTerms, headingTag, showImages);
       resultsContainer.append(li);
     });
 
@@ -334,7 +336,8 @@ async function executeSearch(block, config, searchValue) {
   // Then apply search term filtering
   const filteredData = filterData(searchTerms, dataToSearch);
   const headingTag = findNextHeading(block);
-  renderResults(block, config, filteredData, searchTerms, headingTag);
+  const showImages = block.classList.contains('cards') || block.classList.contains('minimal');
+  renderResults(block, config, filteredData, searchTerms, headingTag, showImages);
 }
 
 /**
@@ -348,7 +351,7 @@ function createSearchInput(block, config) {
   input.setAttribute('type', 'search');
   input.className = 'search-results-input';
 
-  const searchPlaceholder = config.placeholders.searchPlaceholder;
+  const { searchPlaceholder } = config.placeholders;
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
@@ -427,12 +430,38 @@ function transformAEMPath(path) {
 }
 
 /**
+ * Extracts classes value from block content using fallback method
+ * Looks for a div containing "classes" or "display style" text
+ * @param {HTMLElement} block - The block element
+ * @returns {string} Classes value or empty string
+ */
+function extractClassesFallback(block) {
+  const allDivs = [...block.querySelectorAll('div')];
+  const classesDiv = allDivs.find((div) => {
+    const text = div.textContent.trim().toLowerCase();
+    const hasClassesText = text === 'classes' || text === 'display style';
+    const hasNextSibling = div.nextElementSibling;
+    const nextSiblingIsDiv = div.nextElementSibling && div.nextElementSibling.tagName === 'DIV';
+    return hasClassesText && hasNextSibling && nextSiblingIsDiv;
+  });
+
+  if (classesDiv && classesDiv.nextElementSibling) {
+    const classesValue = classesDiv.nextElementSibling.textContent.trim();
+    if (classesValue && classesValue !== 'classes' && classesValue !== 'display style') {
+      return classesValue;
+    }
+  }
+  return '';
+}
+
+/**
  * Parses block configuration from block content
  * @param {HTMLElement} block - The block element
- * @returns {Object} Configuration object with folders and placeholders
+ * @returns {Object} Configuration object with folders, placeholders, and classes
  */
 function parseBlockConfig(block) {
   let folders = [];
+  let classes = '';
   const placeholders = { ...CONFIG.placeholders };
 
   const rows = [...block.children];
@@ -461,14 +490,15 @@ function parseBlockConfig(block) {
             .map((f) => transformAEMPath(f))
             .filter((f) => f.length > 0);
         }
+      } else if ((label.includes('display style') || label.includes('classes')) && textContent) {
+        // Extract classes value
+        classes = textContent.trim();
       } else if (label.includes('placeholder') && textContent) {
         placeholders.searchPlaceholder = textContent;
       } else if (label.includes('no results') && label.includes('for') && textContent) {
         placeholders.searchNoResultsFor = textContent;
       } else if (label.includes('no results') && textContent) {
         placeholders.searchNoResults = textContent;
-      } else if (label.includes('title') && textContent) {
-        placeholders.searchResultsTitle = textContent;
       }
     } else if (cells.length === 1) {
       // Single-column structure: just the link or text
@@ -485,7 +515,8 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Fields in order: folder, searchPlaceholder, searchNoResults, searchNoResultsFor, searchResultsTitle
+        // Fields in order: folder, classes, searchPlaceholder, searchNoResults,
+        // searchNoResultsFor
         switch (rowIndex) {
           case 0:
             folders = value
@@ -494,16 +525,17 @@ function parseBlockConfig(block) {
               .filter((f) => f.length > 0);
             break;
           case 1:
-            placeholders.searchPlaceholder = value;
+            // Classes field
+            classes = value;
             break;
           case 2:
-            placeholders.searchNoResults = value;
+            placeholders.searchPlaceholder = value;
             break;
           case 3:
-            placeholders.searchNoResultsFor = value;
+            placeholders.searchNoResults = value;
             break;
           case 4:
-            placeholders.searchResultsTitle = value;
+            placeholders.searchNoResultsFor = value;
             break;
           default:
             break;
@@ -512,7 +544,12 @@ function parseBlockConfig(block) {
     }
   });
 
-  return { folders, placeholders };
+  // Fallback: try to extract classes using direct DOM search if not found
+  if (!classes) {
+    classes = extractClassesFallback(block);
+  }
+
+  return { folders, placeholders, classes };
 }
 
 /**
@@ -521,7 +558,15 @@ function parseBlockConfig(block) {
  */
 export default async function decorate(block) {
   // Parse configuration from block content
-  const { folders, placeholders } = parseBlockConfig(block);
+  const { folders, placeholders, classes } = parseBlockConfig(block);
+
+  // Apply classes to block before clearing content
+  if (classes && classes.trim()) {
+    const classNames = classes.trim().split(/\s+/).filter((c) => c);
+    if (classNames.length > 0) {
+      block.classList.add(...classNames);
+    }
+  }
 
   // Build configuration object (always use default query-index.json)
   const config = {
