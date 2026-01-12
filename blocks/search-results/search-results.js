@@ -352,7 +352,7 @@ function createSearchInput(block, config) {
   input.setAttribute('type', 'search');
   input.className = 'search-results-input';
 
-  const searchPlaceholder = config.placeholders.searchPlaceholder;
+  const { searchPlaceholder } = config.placeholders;
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
@@ -431,12 +431,38 @@ function transformAEMPath(path) {
 }
 
 /**
+ * Extracts classes value from block content using fallback method
+ * Looks for a div containing "classes" or "display style" text
+ * @param {HTMLElement} block - The block element
+ * @returns {string} Classes value or empty string
+ */
+function extractClassesFallback(block) {
+  const allDivs = [...block.querySelectorAll('div')];
+  const classesDiv = allDivs.find((div) => {
+    const text = div.textContent.trim().toLowerCase();
+    const hasClassesText = text === 'classes' || text === 'display style';
+    const hasNextSibling = div.nextElementSibling;
+    const nextSiblingIsDiv = div.nextElementSibling && div.nextElementSibling.tagName === 'DIV';
+    return hasClassesText && hasNextSibling && nextSiblingIsDiv;
+  });
+
+  if (classesDiv && classesDiv.nextElementSibling) {
+    const classesValue = classesDiv.nextElementSibling.textContent.trim();
+    if (classesValue && classesValue !== 'classes' && classesValue !== 'display style') {
+      return classesValue;
+    }
+  }
+  return '';
+}
+
+/**
  * Parses block configuration from block content
  * @param {HTMLElement} block - The block element
- * @returns {Object} Configuration object with folders and placeholders
+ * @returns {Object} Configuration object with folders, placeholders, and classes
  */
 function parseBlockConfig(block) {
   let folders = [];
+  let classes = '';
   const placeholders = { ...CONFIG.placeholders };
 
   const rows = [...block.children];
@@ -465,6 +491,9 @@ function parseBlockConfig(block) {
             .map((f) => transformAEMPath(f))
             .filter((f) => f.length > 0);
         }
+      } else if ((label.includes('display style') || label.includes('classes')) && textContent) {
+        // Extract classes value
+        classes = textContent.trim();
       } else if (label.includes('placeholder') && textContent) {
         placeholders.searchPlaceholder = textContent;
       } else if (label.includes('no results') && label.includes('for') && textContent) {
@@ -489,7 +518,8 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Fields in order: folder, searchPlaceholder, searchNoResults, searchNoResultsFor, searchResultsTitle
+        // Fields in order: folder, classes, searchPlaceholder, searchNoResults,
+        // searchNoResultsFor, searchResultsTitle
         switch (rowIndex) {
           case 0:
             folders = value
@@ -498,15 +528,19 @@ function parseBlockConfig(block) {
               .filter((f) => f.length > 0);
             break;
           case 1:
-            placeholders.searchPlaceholder = value;
+            // Classes field
+            classes = value;
             break;
           case 2:
-            placeholders.searchNoResults = value;
+            placeholders.searchPlaceholder = value;
             break;
           case 3:
-            placeholders.searchNoResultsFor = value;
+            placeholders.searchNoResults = value;
             break;
           case 4:
+            placeholders.searchNoResultsFor = value;
+            break;
+          case 5:
             placeholders.searchResultsTitle = value;
             break;
           default:
@@ -516,7 +550,12 @@ function parseBlockConfig(block) {
     }
   });
 
-  return { folders, placeholders };
+  // Fallback: try to extract classes using direct DOM search if not found
+  if (!classes) {
+    classes = extractClassesFallback(block);
+  }
+
+  return { folders, placeholders, classes };
 }
 
 /**
@@ -525,7 +564,12 @@ function parseBlockConfig(block) {
  */
 export default async function decorate(block) {
   // Parse configuration from block content
-  const { folders, placeholders } = parseBlockConfig(block);
+  const { folders, placeholders, classes } = parseBlockConfig(block);
+
+  // Apply classes to block before clearing content
+  if (classes && classes.trim()) {
+    block.classList.add(classes.trim());
+  }
 
   // Build configuration object (always use default query-index.json)
   const config = {
