@@ -500,8 +500,12 @@ function parseBlockConfig(block) {
         placeholders.searchNoResultsFor = textContent;
       } else if (label.includes('no results') && textContent) {
         placeholders.searchNoResults = textContent;
-      } else if (label.includes('title') && textContent) {
-        placeholders.searchResultsTitle = textContent;
+      } else if ((label.includes('results') && label.includes('title'))
+        || label.includes('searchresultstitle')
+        || label === 'title') {
+        if (textContent) {
+          placeholders.searchResultsTitle = textContent;
+        }
       }
     } else if (cells.length === 1) {
       // Single-column structure: just the link or text
