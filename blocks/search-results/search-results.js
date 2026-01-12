@@ -281,7 +281,7 @@ function renderResults(block, config, filteredData, searchTerms, headingTag, sho
   } else {
     const noResultsMessage = document.createElement('li');
     resultsContainer.classList.add('no-results');
-    noResultsMessage.textContent = 'No results found.';
+    noResultsMessage.textContent = config.placeholders.searchNoResultsFor || 'No results found.';
     resultsContainer.append(noResultsMessage);
 
     // Update results count
