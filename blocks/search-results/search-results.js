@@ -496,7 +496,7 @@ function parseBlockConfig(block) {
 
   const rows = [...block.children];
 
-  rows.forEach((row, rowIndex) => {
+  rows.forEach((row) => {
     const cells = [...row.children];
 
     if (cells.length >= 2) {
@@ -528,13 +528,24 @@ function parseBlockConfig(block) {
       } else if ((label.includes('search results title') || label.includes('searchresultstitle') || label === 'title') && textContent) {
         placeholders.searchResultsTitle = textContent;
       }
-    } else if (cells.length === 1) {
-      // Single-column structure: just the link or text
+    }
+  });
+
+  // Single-column structure: collect all values and assign by content type
+  // AEM may compress rows, so we can't rely on row index matching field index
+  const collectedValues = {
+    paths: [],
+    knownClasses: [],
+    textValues: [],
+  };
+
+  rows.forEach((row) => {
+    const cells = [...row.children];
+    if (cells.length === 1) {
       const cell = cells[0];
       const link = cell.querySelector('a[href]');
       const textContent = cell.textContent.trim();
 
-      // Get value from link or text content
       let value = null;
       if (link && link.href) {
         value = extractPathname(link.href);
@@ -543,52 +554,43 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Detect content type based on value pattern
         const isPath = value.startsWith('/') || link;
         const isKnownClass = ['cards', 'minimal'].includes(value.toLowerCase());
-        const totalRows = rows.length;
-        const isLastRow = rowIndex === totalRows - 1;
 
-        // Fields in order: folder, classes, searchNoResultsFor, searchResultsTitle
-        // AEM may output fewer rows if trailing fields are empty
-        if (rowIndex === 0 && isPath) {
-          // Row 0 with path = folder
-          folders = value
-            .split(',')
-            .map((f) => transformAEMPath(f))
-            .filter((f) => f.length > 0);
-        } else if (rowIndex === 1 && isKnownClass) {
-          // Row 1 with known class = classes
-          classes = value;
-        } else if (isLastRow && !isPath && !isKnownClass && totalRows < 4) {
-          // Last row with plain text and fewer rows than fields = likely title
-          // (AEM truncates rows after last filled field)
-          placeholders.searchResultsTitle = value;
+        if (isPath) {
+          collectedValues.paths.push(value);
+        } else if (isKnownClass) {
+          collectedValues.knownClasses.push(value);
         } else {
-          // Standard row index mapping
-          switch (rowIndex) {
-            case 0:
-              folders = value
-                .split(',')
-                .map((f) => transformAEMPath(f))
-                .filter((f) => f.length > 0);
-              break;
-            case 1:
-              classes = value;
-              break;
-            case 2:
-              placeholders.searchNoResultsFor = value;
-              break;
-            case 3:
-              placeholders.searchResultsTitle = value;
-              break;
-            default:
-              break;
-          }
+          collectedValues.textValues.push(value);
         }
       }
     }
   });
+
+  // Assign collected values to appropriate fields
+  // Paths → folder
+  if (collectedValues.paths.length > 0 && folders.length === 0) {
+    folders = collectedValues.paths[0]
+      .split(',')
+      .map((f) => transformAEMPath(f))
+      .filter((f) => f.length > 0);
+  }
+
+  // Known classes → classes
+  if (collectedValues.knownClasses.length > 0 && !classes) {
+    classes = collectedValues.knownClasses[0];
+  }
+
+  // Text values: first = searchNoResultsFor, second = searchResultsTitle
+  if (collectedValues.textValues.length === 1) {
+    // Only one text value - it's the title (last field)
+    placeholders.searchResultsTitle = collectedValues.textValues[0];
+  } else if (collectedValues.textValues.length >= 2) {
+    // Two text values - first is no results message, second is title
+    placeholders.searchNoResultsFor = collectedValues.textValues[0];
+    placeholders.searchResultsTitle = collectedValues.textValues[1];
+  }
 
   // Fallback: try to extract classes using direct DOM search if not found
   if (!classes) {
