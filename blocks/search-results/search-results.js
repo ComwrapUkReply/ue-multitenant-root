@@ -11,6 +11,7 @@ const CONFIG = {
   placeholders: {
     searchNoResultsFor: 'No results found for',
     searchResultsTitle: 'Search Results',
+    searchPlaceholder: 'Search...',
   },
 };
 
@@ -350,8 +351,8 @@ function createSearchInput(block, config) {
   input.setAttribute('type', 'search');
   input.className = 'search-results-input';
 
-  // Use hardcoded placeholder text
-  const searchPlaceholder = 'Search...';
+  // Use configured placeholder text with fallback
+  const searchPlaceholder = config.placeholders.searchPlaceholder || CONFIG.placeholders.searchPlaceholder;
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
@@ -527,6 +528,8 @@ function parseBlockConfig(block) {
         placeholders.searchNoResultsFor = textContent;
       } else if ((label.includes('search results title') || label.includes('searchresultstitle') || label === 'title') && textContent) {
         placeholders.searchResultsTitle = textContent;
+      } else if (label.includes('search placeholder') && textContent) {
+        placeholders.searchPlaceholder = textContent;
       }
     }
   });
@@ -582,14 +585,20 @@ function parseBlockConfig(block) {
     classes = collectedValues.knownClasses[0];
   }
 
-  // Text values: first = searchNoResultsFor, second = searchResultsTitle
+  // Text values assignment based on field order:
+  // searchPlaceholder, searchNoResultsFor, searchResultsTitle
   if (collectedValues.textValues.length === 1) {
     // Only one text value - it's the title (last field)
     placeholders.searchResultsTitle = collectedValues.textValues[0];
-  } else if (collectedValues.textValues.length >= 2) {
+  } else if (collectedValues.textValues.length === 2) {
     // Two text values - first is no results message, second is title
     placeholders.searchNoResultsFor = collectedValues.textValues[0];
     placeholders.searchResultsTitle = collectedValues.textValues[1];
+  } else if (collectedValues.textValues.length >= 3) {
+    // Three text values - placeholder, no results message, title
+    placeholders.searchPlaceholder = collectedValues.textValues[0];
+    placeholders.searchNoResultsFor = collectedValues.textValues[1];
+    placeholders.searchResultsTitle = collectedValues.textValues[2];
   }
 
   // Fallback: try to extract classes using direct DOM search if not found

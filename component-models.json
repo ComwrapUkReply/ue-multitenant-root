@@ -1429,6 +1429,12 @@
       },
       {
         "component": "text",
+        "name": "searchPlaceholder",
+        "label": "Search Placeholder",
+        "description": "Placeholder text shown in the search input field. Default: 'Search...'"
+      },
+      {
+        "component": "text",
         "name": "searchNoResultsFor",
         "label": "No Results For Query",
         "description": "Message shown in the count area when no results are found, followed by the search query. Default: 'No results found for'"
