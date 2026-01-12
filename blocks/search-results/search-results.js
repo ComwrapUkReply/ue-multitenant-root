@@ -589,8 +589,16 @@ function parseBlockConfig(block) {
  * @param {HTMLElement} block - The search results block element
  */
 export default async function decorate(block) {
+  // DEBUG: Log raw block HTML to understand AEM structure
+  // eslint-disable-next-line no-console
+  console.log('Search Results Block - Raw HTML:', block.innerHTML);
+
   // Parse configuration from block content
   const { folders, placeholders, classes } = parseBlockConfig(block);
+
+  // DEBUG: Log parsed values
+  // eslint-disable-next-line no-console
+  console.log('Parsed placeholders:', placeholders);
 
   // Apply classes to block before clearing content
   if (classes && classes.trim()) {
