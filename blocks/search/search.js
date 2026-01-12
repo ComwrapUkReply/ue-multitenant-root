@@ -12,7 +12,7 @@ const CONFIG = {
     searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
   },
-  suggestionsLimit: 5, // Number of suggestions to show in inline mode
+  suggestionsLimit: 3, // Number of suggestions to show in inline mode
 };
 
 /** URL search params for managing query state */
