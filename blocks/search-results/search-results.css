@@ -10,6 +10,17 @@
   padding: var(--space-48) var(--space-16);
 }
 
+/* ===== SEARCH RESULTS TITLE ===== */
+.search-results .search-results-title {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-h2);
+  font-weight: 600;
+  line-height: var(--line-height-h2);
+  color: var(--color-black);
+  text-align: center;
+  margin: 0 0 var(--space-32) 0;
+}
+
 /* ===== SEARCH BOX ===== */
 .search-results .search-results-box {
   display: grid;

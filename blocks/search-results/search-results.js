@@ -581,6 +581,13 @@ export default async function decorate(block) {
   // Clear block content and build search results UI
   block.innerHTML = '';
 
+  // Create search results title
+  const title = document.createElement('h1');
+  title.className = 'search-results-title';
+  const titleText = config.placeholders.searchResultsTitle
+    || CONFIG.placeholders.searchResultsTitle;
+  title.textContent = titleText;
+
   // Create search box
   const searchBox = document.createElement('div');
   searchBox.className = 'search-results-box';
@@ -597,7 +604,7 @@ export default async function decorate(block) {
   const resultsList = document.createElement('ul');
   resultsList.className = 'search-results-list';
 
-  block.append(searchBox, resultsCount, resultsList);
+  block.append(title, searchBox, resultsCount, resultsList);
 
   decorateIcons(block);
 
