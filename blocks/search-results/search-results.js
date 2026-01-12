@@ -455,6 +455,36 @@ function extractClassesFallback(block) {
 }
 
 /**
+ * Extracts search results title from block content using fallback method
+ * Looks for a div containing "searchresultstitle" or "title" text
+ * @param {HTMLElement} block - The block element
+ * @returns {string} Title value or empty string
+ */
+function extractTitleFallback(block) {
+  const allDivs = [...block.querySelectorAll('div')];
+  const titleDiv = allDivs.find((div) => {
+    const text = div.textContent.trim().toLowerCase();
+    const hasTitleText = text === 'searchresultstitle'
+      || text === 'search results title'
+      || text === 'title';
+    const hasNextSibling = div.nextElementSibling;
+    const nextSiblingIsDiv = div.nextElementSibling && div.nextElementSibling.tagName === 'DIV';
+    return hasTitleText && hasNextSibling && nextSiblingIsDiv;
+  });
+
+  if (titleDiv && titleDiv.nextElementSibling) {
+    const titleValue = titleDiv.nextElementSibling.textContent.trim();
+    if (titleValue
+      && titleValue.toLowerCase() !== 'searchresultstitle'
+      && titleValue.toLowerCase() !== 'search results title'
+      && titleValue.toLowerCase() !== 'title') {
+      return titleValue;
+    }
+  }
+  return '';
+}
+
+/**
  * Parses block configuration from block content
  * @param {HTMLElement} block - The block element
  * @returns {Object} Configuration object with folders, placeholders, and classes
@@ -495,7 +525,7 @@ function parseBlockConfig(block) {
         classes = textContent.trim();
       } else if (label.includes('no results') && label.includes('for') && textContent) {
         placeholders.searchNoResultsFor = textContent;
-      } else if (label.includes('search results title') && textContent) {
+      } else if ((label.includes('search results title') || label.includes('searchresultstitle') || label === 'title') && textContent) {
         placeholders.searchResultsTitle = textContent;
       }
     } else if (cells.length === 1) {
@@ -541,6 +571,14 @@ function parseBlockConfig(block) {
   // Fallback: try to extract classes using direct DOM search if not found
   if (!classes) {
     classes = extractClassesFallback(block);
+  }
+
+  // Fallback: try to extract title using direct DOM search if not found
+  if (!placeholders.searchResultsTitle || placeholders.searchResultsTitle === CONFIG.placeholders.searchResultsTitle) {
+    const titleFallback = extractTitleFallback(block);
+    if (titleFallback) {
+      placeholders.searchResultsTitle = titleFallback;
+    }
   }
 
   return { folders, placeholders, classes };
