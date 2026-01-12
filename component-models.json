@@ -1469,12 +1469,12 @@
         "valueType": "string",
         "options": [
           {
-            "name": "Default (Grid Results)",
+            "name": "Default (List Results)",
             "value": ""
           },
           {
-            "name": "Minimal (List Results)",
-            "value": "minimal"
+            "name": "Cards (Grid Results)",
+            "value": "cards"
           }
         ],
         "value": ""
