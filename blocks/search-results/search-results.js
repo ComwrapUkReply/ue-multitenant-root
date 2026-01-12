@@ -9,7 +9,6 @@ import {
 const CONFIG = {
   defaultSource: '/query-index.json',
   placeholders: {
-    searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
     searchNoResultsFor: 'No results found for',
   },
@@ -351,9 +350,8 @@ function createSearchInput(block, config) {
   input.setAttribute('type', 'search');
   input.className = 'search-results-input';
 
-  // Use placeholder from config or fallback to default
-  const searchPlaceholder = config.placeholders.searchPlaceholder
-    || CONFIG.placeholders.searchPlaceholder;
+  // Use hardcoded placeholder text
+  const searchPlaceholder = 'Search...';
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
@@ -495,9 +493,6 @@ function parseBlockConfig(block) {
       } else if ((label.includes('display style') || label.includes('classes')) && textContent) {
         // Extract classes value
         classes = textContent.trim();
-      } else if (label.includes('search placeholder') && textContent) {
-        // Specifically match "Search Placeholder" field
-        placeholders.searchPlaceholder = textContent.trim();
       } else if (label.includes('no results') && label.includes('for') && textContent) {
         placeholders.searchNoResultsFor = textContent;
       } else if (label.includes('no results') && textContent) {
@@ -518,8 +513,7 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Fields in order: folder, classes, searchPlaceholder, searchNoResults,
-        // searchNoResultsFor
+        // Fields in order: folder, classes, searchNoResults, searchNoResultsFor
         switch (rowIndex) {
           case 0:
             folders = value
@@ -532,12 +526,9 @@ function parseBlockConfig(block) {
             classes = value;
             break;
           case 2:
-            placeholders.searchPlaceholder = value;
-            break;
-          case 3:
             placeholders.searchNoResults = value;
             break;
-          case 4:
+          case 3:
             placeholders.searchNoResultsFor = value;
             break;
           default:
