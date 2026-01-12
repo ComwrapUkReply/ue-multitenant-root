@@ -8,6 +8,7 @@ import {
  */
 const CONFIG = {
   defaultSource: '/query-index.json',
+  itemsPerPage: 3, // Number of results per page (set to 3 for testing)
   placeholders: {
     searchNoResultsFor: 'No results found for',
     searchResultsTitle: 'Search Results',
@@ -186,6 +187,140 @@ function compareFound(hit1, hit2) {
 }
 
 /**
+ * Creates accessible pagination controls
+ * @param {number} currentPage - Current active page (1-indexed)
+ * @param {number} totalPages - Total number of pages
+ * @param {Function} onPageChange - Callback when page changes
+ * @returns {HTMLElement} Pagination nav element
+ */
+function createPagination(currentPage, totalPages, onPageChange) {
+  const nav = document.createElement('nav');
+  nav.className = 'search-results-pagination';
+  nav.setAttribute('aria-label', 'Search results pagination');
+  nav.setAttribute('role', 'navigation');
+
+  const list = document.createElement('ul');
+  list.className = 'pagination-list';
+
+  // Previous button
+  const prevLi = document.createElement('li');
+  const prevButton = document.createElement('button');
+  prevButton.className = 'pagination-arrow pagination-prev';
+  prevButton.innerHTML = '<span class="pagination-arrow-icon" aria-hidden="true">&lt;</span>';
+  prevButton.setAttribute('aria-label', 'Go to previous page');
+  prevButton.disabled = currentPage === 1;
+  if (currentPage === 1) {
+    prevButton.setAttribute('aria-disabled', 'true');
+  }
+  prevButton.addEventListener('click', () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  });
+  prevLi.append(prevButton);
+  list.append(prevLi);
+
+  // Calculate which page numbers to show
+  const maxVisiblePages = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+  const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+  // Adjust start if we're near the end
+  if (endPage - startPage < maxVisiblePages - 1) {
+    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+  }
+
+  // First page + ellipsis if needed
+  if (startPage > 1) {
+    const firstLi = document.createElement('li');
+    const firstButton = document.createElement('button');
+    firstButton.className = 'pagination-number';
+    firstButton.textContent = '1';
+    firstButton.setAttribute('aria-label', 'Go to page 1');
+    firstButton.addEventListener('click', () => onPageChange(1));
+    firstLi.append(firstButton);
+    list.append(firstLi);
+
+    if (startPage > 2) {
+      const ellipsisLi = document.createElement('li');
+      ellipsisLi.className = 'pagination-ellipsis';
+      ellipsisLi.setAttribute('aria-hidden', 'true');
+      ellipsisLi.innerHTML = '<span>…</span>';
+      list.append(ellipsisLi);
+    }
+  }
+
+  // Page numbers
+  for (let i = startPage; i <= endPage; i += 1) {
+    const pageLi = document.createElement('li');
+    const pageButton = document.createElement('button');
+    pageButton.className = 'pagination-number';
+    pageButton.textContent = i.toString();
+
+    if (i === currentPage) {
+      pageButton.classList.add('active');
+      pageButton.setAttribute('aria-current', 'page');
+      pageButton.setAttribute('aria-label', `Page ${i}, current page`);
+    } else {
+      pageButton.setAttribute('aria-label', `Go to page ${i}`);
+      pageButton.addEventListener('click', () => onPageChange(i));
+    }
+
+    pageLi.append(pageButton);
+    list.append(pageLi);
+  }
+
+  // Last page + ellipsis if needed
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      const ellipsisLi = document.createElement('li');
+      ellipsisLi.className = 'pagination-ellipsis';
+      ellipsisLi.setAttribute('aria-hidden', 'true');
+      ellipsisLi.innerHTML = '<span>…</span>';
+      list.append(ellipsisLi);
+    }
+
+    const lastLi = document.createElement('li');
+    const lastButton = document.createElement('button');
+    lastButton.className = 'pagination-number';
+    lastButton.textContent = totalPages.toString();
+    lastButton.setAttribute('aria-label', `Go to page ${totalPages}`);
+    lastButton.addEventListener('click', () => onPageChange(totalPages));
+    lastLi.append(lastButton);
+    list.append(lastLi);
+  }
+
+  // Next button
+  const nextLi = document.createElement('li');
+  const nextButton = document.createElement('button');
+  nextButton.className = 'pagination-arrow pagination-next';
+  nextButton.innerHTML = '<span class="pagination-arrow-icon" aria-hidden="true">&gt;</span>';
+  nextButton.setAttribute('aria-label', 'Go to next page');
+  nextButton.disabled = currentPage === totalPages;
+  if (currentPage === totalPages) {
+    nextButton.setAttribute('aria-disabled', 'true');
+  }
+  nextButton.addEventListener('click', () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  });
+  nextLi.append(nextButton);
+  list.append(nextLi);
+
+  nav.append(list);
+
+  // Add live region for screen reader announcements
+  const liveRegion = document.createElement('div');
+  liveRegion.className = 'sr-only';
+  liveRegion.setAttribute('aria-live', 'polite');
+  liveRegion.setAttribute('aria-atomic', 'true');
+  nav.append(liveRegion);
+
+  return nav;
+}
+
+/**
  * Filters data by folder path(s)
  * @param {Array} data - Array of data items to filter
  * @param {string[]} folders - Array of folder paths to filter by
@@ -246,31 +381,47 @@ function filterData(searchTerms, data) {
 }
 
 /**
- * Renders all search results
+ * Renders all search results with pagination
  * @param {HTMLElement} block - The search results block element
  * @param {Object} config - Search configuration object
  * @param {Array} filteredData - Filtered search results
  * @param {string[]} searchTerms - Array of search terms for highlighting
  * @param {string} headingTag - HTML tag to use for result titles
  * @param {boolean} showImages - Whether to include images in results
+ * @param {number} currentPage - Current page number (1-indexed)
  */
-function renderResults(block, config, filteredData, searchTerms, headingTag, showImages) {
+function renderResults(block, config, filteredData, searchTerms, headingTag, showImages, currentPage = 1) {
   const resultsContainer = block.querySelector('.search-results-list');
   resultsContainer.innerHTML = '';
 
+  // Remove existing pagination
+  const existingPagination = block.querySelector('.search-results-pagination');
+  if (existingPagination) {
+    existingPagination.remove();
+  }
+
   if (filteredData.length) {
     resultsContainer.classList.remove('no-results');
-    filteredData.forEach((result) => {
+
+    // Calculate pagination
+    const totalResults = filteredData.length;
+    const itemsPerPage = CONFIG.itemsPerPage;
+    const totalPages = Math.ceil(totalResults / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, totalResults);
+    const paginatedData = filteredData.slice(startIndex, endIndex);
+
+    // Render paginated results
+    paginatedData.forEach((result) => {
       const li = renderResult(result, searchTerms, headingTag, showImages);
       resultsContainer.append(li);
     });
 
-    // Update results count
+    // Update results count with pagination info
     const resultsCount = block.querySelector('.search-results-count');
     if (resultsCount) {
-      const count = filteredData.length;
       const query = searchTerms.join(' ');
-      let message = `Found ${count} result${count !== 1 ? 's' : ''} for "${query}"`;
+      let message = `Found ${totalResults} result${totalResults !== 1 ? 's' : ''} for "${query}"`;
 
       // Add folder filter info if active
       if (config.folders && config.folders.length > 0) {
@@ -278,7 +429,29 @@ function renderResults(block, config, filteredData, searchTerms, headingTag, sho
         message += ` in ${folderList}`;
       }
 
+      // Add pagination info
+      if (totalPages > 1) {
+        message += ` (showing ${startIndex + 1}-${endIndex} of ${totalResults})`;
+      }
+
       resultsCount.textContent = message;
+    }
+
+    // Add pagination if more than one page
+    if (totalPages > 1) {
+      const pagination = createPagination(currentPage, totalPages, (newPage) => {
+        renderResults(block, config, filteredData, searchTerms, headingTag, showImages, newPage);
+
+        // Scroll to top of results
+        block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Announce page change to screen readers
+        const liveRegion = block.querySelector('.search-results-pagination .sr-only');
+        if (liveRegion) {
+          liveRegion.textContent = `Page ${newPage} of ${totalPages}`;
+        }
+      });
+      block.append(pagination);
     }
   } else {
     const noResultsMessage = document.createElement('li');
@@ -622,16 +795,8 @@ function parseBlockConfig(block) {
  * @param {HTMLElement} block - The search results block element
  */
 export default async function decorate(block) {
-  // DEBUG: Log raw block HTML to understand AEM structure
-  // eslint-disable-next-line no-console
-  console.log('Search Results Block - Raw HTML:', block.innerHTML);
-
   // Parse configuration from block content
   const { folders, placeholders, classes } = parseBlockConfig(block);
-
-  // DEBUG: Log parsed values
-  // eslint-disable-next-line no-console
-  console.log('Parsed placeholders:', placeholders);
 
   // Apply classes to block before clearing content
   if (classes && classes.trim()) {
@@ -652,7 +817,7 @@ export default async function decorate(block) {
   block.innerHTML = '';
 
   // Create title
-  const title = document.createElement('h1');
+  const title = document.createElement('h3');
   title.className = 'search-results-title';
   title.textContent = placeholders.searchResultsTitle || CONFIG.placeholders.searchResultsTitle;
 
