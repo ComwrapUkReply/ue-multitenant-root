@@ -543,26 +543,48 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
+        // Detect content type based on value pattern
+        const isPath = value.startsWith('/') || link;
+        const isKnownClass = ['cards', 'minimal'].includes(value.toLowerCase());
+        const totalRows = rows.length;
+        const isLastRow = rowIndex === totalRows - 1;
+
         // Fields in order: folder, classes, searchNoResultsFor, searchResultsTitle
-        switch (rowIndex) {
-          case 0:
-            folders = value
-              .split(',')
-              .map((f) => transformAEMPath(f))
-              .filter((f) => f.length > 0);
-            break;
-          case 1:
-            // Classes field
-            classes = value;
-            break;
-          case 2:
-            placeholders.searchNoResultsFor = value;
-            break;
-          case 3:
-            placeholders.searchResultsTitle = value;
-            break;
-          default:
-            break;
+        // AEM may output fewer rows if trailing fields are empty
+        if (rowIndex === 0 && isPath) {
+          // Row 0 with path = folder
+          folders = value
+            .split(',')
+            .map((f) => transformAEMPath(f))
+            .filter((f) => f.length > 0);
+        } else if (rowIndex === 1 && isKnownClass) {
+          // Row 1 with known class = classes
+          classes = value;
+        } else if (isLastRow && !isPath && !isKnownClass && totalRows < 4) {
+          // Last row with plain text and fewer rows than fields = likely title
+          // (AEM truncates rows after last filled field)
+          placeholders.searchResultsTitle = value;
+        } else {
+          // Standard row index mapping
+          switch (rowIndex) {
+            case 0:
+              folders = value
+                .split(',')
+                .map((f) => transformAEMPath(f))
+                .filter((f) => f.length > 0);
+              break;
+            case 1:
+              classes = value;
+              break;
+            case 2:
+              placeholders.searchNoResultsFor = value;
+              break;
+            case 3:
+              placeholders.searchResultsTitle = value;
+              break;
+            default:
+              break;
+          }
         }
       }
     }
