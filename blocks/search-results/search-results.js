@@ -351,7 +351,9 @@ function createSearchInput(block, config) {
   input.setAttribute('type', 'search');
   input.className = 'search-results-input';
 
-  const { searchPlaceholder } = config.placeholders;
+  // Use placeholder from config or fallback to default
+  const searchPlaceholder = config.placeholders.searchPlaceholder
+    || CONFIG.placeholders.searchPlaceholder;
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
@@ -493,8 +495,9 @@ function parseBlockConfig(block) {
       } else if ((label.includes('display style') || label.includes('classes')) && textContent) {
         // Extract classes value
         classes = textContent.trim();
-      } else if (label.includes('placeholder') && textContent) {
-        placeholders.searchPlaceholder = textContent;
+      } else if (label.includes('search placeholder') && textContent) {
+        // Specifically match "Search Placeholder" field
+        placeholders.searchPlaceholder = textContent.trim();
       } else if (label.includes('no results') && label.includes('for') && textContent) {
         placeholders.searchNoResultsFor = textContent;
       } else if (label.includes('no results') && textContent) {
