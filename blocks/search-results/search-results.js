@@ -9,7 +9,6 @@ import {
 const CONFIG = {
   defaultSource: '/query-index.json',
   placeholders: {
-    searchNoResults: 'No results found.',
     searchNoResultsFor: 'No results found for',
   },
 };
@@ -282,7 +281,7 @@ function renderResults(block, config, filteredData, searchTerms, headingTag, sho
   } else {
     const noResultsMessage = document.createElement('li');
     resultsContainer.classList.add('no-results');
-    noResultsMessage.textContent = config.placeholders.searchNoResults;
+    noResultsMessage.textContent = 'No results found.';
     resultsContainer.append(noResultsMessage);
 
     // Update results count
@@ -495,8 +494,6 @@ function parseBlockConfig(block) {
         classes = textContent.trim();
       } else if (label.includes('no results') && label.includes('for') && textContent) {
         placeholders.searchNoResultsFor = textContent;
-      } else if (label.includes('no results') && textContent) {
-        placeholders.searchNoResults = textContent;
       }
     } else if (cells.length === 1) {
       // Single-column structure: just the link or text
@@ -513,7 +510,7 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Fields in order: folder, classes, searchNoResults, searchNoResultsFor
+        // Fields in order: folder, classes, searchNoResultsFor
         switch (rowIndex) {
           case 0:
             folders = value
@@ -526,9 +523,6 @@ function parseBlockConfig(block) {
             classes = value;
             break;
           case 2:
-            placeholders.searchNoResults = value;
-            break;
-          case 3:
             placeholders.searchNoResultsFor = value;
             break;
           default:
