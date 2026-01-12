@@ -640,9 +640,6 @@ function parseBlockConfig(block) {
           case 1:
             placeholders.searchPlaceholder = value;
             break;
-          case 2:
-            placeholders.searchNoResults = value;
-            break;
           default:
             break;
         }
