@@ -568,7 +568,10 @@ export default async function decorate(block) {
 
   // Apply classes to block before clearing content
   if (classes && classes.trim()) {
-    block.classList.add(classes.trim());
+    const classNames = classes.trim().split(/\s+/).filter((c) => c);
+    if (classNames.length > 0) {
+      block.classList.add(...classNames);
+    }
   }
 
   // Build configuration object (always use default query-index.json)
