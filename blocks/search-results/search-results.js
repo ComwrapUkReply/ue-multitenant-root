@@ -12,7 +12,7 @@ const CONFIG = {
     searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
     searchNoResultsFor: 'No results found for',
-    searchResultsTitle: 'Search..',
+    searchResultsTitle: 'Search Results',
   },
 };
 
@@ -144,18 +144,16 @@ async function fetchData(source) {
  * @param {Object} result - Search result data
  * @param {string[]} searchTerms - Array of search terms for highlighting
  * @param {string} titleTag - HTML tag to use for result title
- * @param {boolean} showImages - Whether to include images in results
  * @returns {HTMLLIElement} List item element for the result
  */
-function renderResult(result, searchTerms, titleTag, showImages) {
+function renderResult(result, searchTerms, titleTag) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.href = result.path;
-  if (showImages && result.image) {
+  if (result.image) {
     const wrapper = document.createElement('div');
     wrapper.className = 'search-result-image';
-    const alt = result.title || '';
-    const pic = createOptimizedPicture(result.image, alt, false, [{ width: '375' }]);
+    const pic = createOptimizedPicture(result.image, '', false, [{ width: '375' }]);
     wrapper.append(pic);
     a.append(wrapper);
   }
@@ -253,16 +251,15 @@ function filterData(searchTerms, data) {
  * @param {Array} filteredData - Filtered search results
  * @param {string[]} searchTerms - Array of search terms for highlighting
  * @param {string} headingTag - HTML tag to use for result titles
- * @param {boolean} showImages - Whether to include images in results
  */
-function renderResults(block, config, filteredData, searchTerms, headingTag, showImages) {
+function renderResults(block, config, filteredData, searchTerms, headingTag) {
   const resultsContainer = block.querySelector('.search-results-list');
   resultsContainer.innerHTML = '';
 
   if (filteredData.length) {
     resultsContainer.classList.remove('no-results');
     filteredData.forEach((result) => {
-      const li = renderResult(result, searchTerms, headingTag, showImages);
+      const li = renderResult(result, searchTerms, headingTag);
       resultsContainer.append(li);
     });
 
@@ -337,8 +334,7 @@ async function executeSearch(block, config, searchValue) {
   // Then apply search term filtering
   const filteredData = filterData(searchTerms, dataToSearch);
   const headingTag = findNextHeading(block);
-  const showImages = block.classList.contains('cards') || block.classList.contains('minimal');
-  renderResults(block, config, filteredData, searchTerms, headingTag, showImages);
+  renderResults(block, config, filteredData, searchTerms, headingTag);
 }
 
 /**
@@ -352,7 +348,7 @@ function createSearchInput(block, config) {
   input.setAttribute('type', 'search');
   input.className = 'search-results-input';
 
-  const { searchPlaceholder } = config.placeholders;
+  const searchPlaceholder = config.placeholders.searchPlaceholder;
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
@@ -431,38 +427,12 @@ function transformAEMPath(path) {
 }
 
 /**
- * Extracts classes value from block content using fallback method
- * Looks for a div containing "classes" or "display style" text
- * @param {HTMLElement} block - The block element
- * @returns {string} Classes value or empty string
- */
-function extractClassesFallback(block) {
-  const allDivs = [...block.querySelectorAll('div')];
-  const classesDiv = allDivs.find((div) => {
-    const text = div.textContent.trim().toLowerCase();
-    const hasClassesText = text === 'classes' || text === 'display style';
-    const hasNextSibling = div.nextElementSibling;
-    const nextSiblingIsDiv = div.nextElementSibling && div.nextElementSibling.tagName === 'DIV';
-    return hasClassesText && hasNextSibling && nextSiblingIsDiv;
-  });
-
-  if (classesDiv && classesDiv.nextElementSibling) {
-    const classesValue = classesDiv.nextElementSibling.textContent.trim();
-    if (classesValue && classesValue !== 'classes' && classesValue !== 'display style') {
-      return classesValue;
-    }
-  }
-  return '';
-}
-
-/**
  * Parses block configuration from block content
  * @param {HTMLElement} block - The block element
- * @returns {Object} Configuration object with folders, placeholders, and classes
+ * @returns {Object} Configuration object with folders and placeholders
  */
 function parseBlockConfig(block) {
   let folders = [];
-  let classes = '';
   const placeholders = { ...CONFIG.placeholders };
 
   const rows = [...block.children];
@@ -491,21 +461,14 @@ function parseBlockConfig(block) {
             .map((f) => transformAEMPath(f))
             .filter((f) => f.length > 0);
         }
-      } else if ((label.includes('display style') || label.includes('classes')) && textContent) {
-        // Extract classes value
-        classes = textContent.trim();
       } else if (label.includes('placeholder') && textContent) {
         placeholders.searchPlaceholder = textContent;
       } else if (label.includes('no results') && label.includes('for') && textContent) {
         placeholders.searchNoResultsFor = textContent;
       } else if (label.includes('no results') && textContent) {
         placeholders.searchNoResults = textContent;
-      } else if ((label.includes('results') && label.includes('title'))
-        || label.includes('searchresultstitle')
-        || label === 'title') {
-        if (textContent) {
-          placeholders.searchResultsTitle = textContent;
-        }
+      } else if (label.includes('title') && textContent) {
+        placeholders.searchResultsTitle = textContent;
       }
     } else if (cells.length === 1) {
       // Single-column structure: just the link or text
@@ -522,8 +485,7 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Fields in order: folder, classes, searchPlaceholder, searchNoResults,
-        // searchNoResultsFor, searchResultsTitle
+        // Fields in order: folder, searchPlaceholder, searchNoResults, searchNoResultsFor, searchResultsTitle
         switch (rowIndex) {
           case 0:
             folders = value
@@ -532,19 +494,15 @@ function parseBlockConfig(block) {
               .filter((f) => f.length > 0);
             break;
           case 1:
-            // Classes field
-            classes = value;
-            break;
-          case 2:
             placeholders.searchPlaceholder = value;
             break;
-          case 3:
+          case 2:
             placeholders.searchNoResults = value;
             break;
-          case 4:
+          case 3:
             placeholders.searchNoResultsFor = value;
             break;
-          case 5:
+          case 4:
             placeholders.searchResultsTitle = value;
             break;
           default:
@@ -554,12 +512,7 @@ function parseBlockConfig(block) {
     }
   });
 
-  // Fallback: try to extract classes using direct DOM search if not found
-  if (!classes) {
-    classes = extractClassesFallback(block);
-  }
-
-  return { folders, placeholders, classes };
+  return { folders, placeholders };
 }
 
 /**
@@ -568,15 +521,7 @@ function parseBlockConfig(block) {
  */
 export default async function decorate(block) {
   // Parse configuration from block content
-  const { folders, placeholders, classes } = parseBlockConfig(block);
-
-  // Apply classes to block before clearing content
-  if (classes && classes.trim()) {
-    const classNames = classes.trim().split(/\s+/).filter((c) => c);
-    if (classNames.length > 0) {
-      block.classList.add(...classNames);
-    }
-  }
+  const { folders, placeholders } = parseBlockConfig(block);
 
   // Build configuration object (always use default query-index.json)
   const config = {
@@ -587,13 +532,6 @@ export default async function decorate(block) {
 
   // Clear block content and build search results UI
   block.innerHTML = '';
-
-  // Create search results title
-  const title = document.createElement('h1');
-  title.className = 'search-results-title';
-  const titleText = (config.placeholders.searchResultsTitle || '').trim()
-    || CONFIG.placeholders.searchResultsTitle;
-  title.textContent = titleText;
 
   // Create search box
   const searchBox = document.createElement('div');
@@ -611,7 +549,7 @@ export default async function decorate(block) {
   const resultsList = document.createElement('ul');
   resultsList.className = 'search-results-list';
 
-  block.append(title, searchBox, resultsCount, resultsList);
+  block.append(searchBox, resultsCount, resultsList);
 
   decorateIcons(block);
 
