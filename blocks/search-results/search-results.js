@@ -144,16 +144,18 @@ async function fetchData(source) {
  * @param {Object} result - Search result data
  * @param {string[]} searchTerms - Array of search terms for highlighting
  * @param {string} titleTag - HTML tag to use for result title
+ * @param {boolean} showImages - Whether to include images in results
  * @returns {HTMLLIElement} List item element for the result
  */
-function renderResult(result, searchTerms, titleTag) {
+function renderResult(result, searchTerms, titleTag, showImages) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.href = result.path;
-  if (result.image) {
+  if (showImages && result.image) {
     const wrapper = document.createElement('div');
     wrapper.className = 'search-result-image';
-    const pic = createOptimizedPicture(result.image, '', false, [{ width: '375' }]);
+    const alt = result.title || '';
+    const pic = createOptimizedPicture(result.image, alt, false, [{ width: '375' }]);
     wrapper.append(pic);
     a.append(wrapper);
   }
@@ -251,15 +253,16 @@ function filterData(searchTerms, data) {
  * @param {Array} filteredData - Filtered search results
  * @param {string[]} searchTerms - Array of search terms for highlighting
  * @param {string} headingTag - HTML tag to use for result titles
+ * @param {boolean} showImages - Whether to include images in results
  */
-function renderResults(block, config, filteredData, searchTerms, headingTag) {
+function renderResults(block, config, filteredData, searchTerms, headingTag, showImages) {
   const resultsContainer = block.querySelector('.search-results-list');
   resultsContainer.innerHTML = '';
 
   if (filteredData.length) {
     resultsContainer.classList.remove('no-results');
     filteredData.forEach((result) => {
-      const li = renderResult(result, searchTerms, headingTag);
+      const li = renderResult(result, searchTerms, headingTag, showImages);
       resultsContainer.append(li);
     });
 
@@ -334,7 +337,8 @@ async function executeSearch(block, config, searchValue) {
   // Then apply search term filtering
   const filteredData = filterData(searchTerms, dataToSearch);
   const headingTag = findNextHeading(block);
-  renderResults(block, config, filteredData, searchTerms, headingTag);
+  const showImages = block.classList.contains('cards') || block.classList.contains('minimal');
+  renderResults(block, config, filteredData, searchTerms, headingTag, showImages);
 }
 
 /**

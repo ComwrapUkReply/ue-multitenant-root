@@ -1411,6 +1411,23 @@
         "description": "Filter results to show only pages from this folder path (e.g., /products or /blog). Leave empty to show all results. You can specify multiple folders separated by commas (e.g., /products, /blog)."
       },
       {
+        "component": "select",
+        "name": "classes",
+        "label": "Display Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default (List Results)",
+            "value": ""
+          },
+          {
+            "name": "Cards (Grid Results)",
+            "value": "cards"
+          }
+        ],
+        "value": ""
+      },
+      {
         "component": "text",
         "name": "searchPlaceholder",
         "label": "Search Placeholder",

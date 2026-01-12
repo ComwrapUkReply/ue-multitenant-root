@@ -90,31 +90,25 @@
 
 /* ===== RESULTS LIST ===== */
 .search-results .search-results-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--space-32);
-  padding-left: 0;
+  display: block;
+  margin: 0;
+  padding: 0;
   list-style: none;
 }
 
-/* Result card */
+/* List results */
 .search-results .search-results-list > li {
-  border: 1px solid var(--color-cloud-grey);
-  border-radius: var(--space-8);
-  overflow: hidden;
-  background-color: var(--color-white);
-  transition: all var(--transition-base);
+  border-bottom: 1px solid var(--color-cloud-grey);
+  padding: var(--space-16) 0;
+  background-color: transparent;
 }
 
-.search-results .search-results-list > li:hover,
-.search-results .search-results-list > li:focus-within {
-  transform: translateY(-4px);
+.search-results .search-results-list > li:last-child {
+  border-bottom: none;
 }
 
 .search-results .search-results-list > li > a {
   display: block;
-  height: 100%;
-  background-color: var(--color-white);
   color: currentcolor;
   text-decoration: none;
 }
@@ -127,7 +121,7 @@
 /* Result card content */
 .search-results .search-results-list > li .search-result-title,
 .search-results .search-results-list > li p {
-  padding: 0 var(--space-16);
+  margin: 0;
 }
 
 .search-results .search-results-list > li .search-result-title {
@@ -135,7 +129,7 @@
   font-size: var(--font-size-h5);
   font-weight: 600;
   line-height: var(--line-height-h5);
-  margin: var(--space-16) 0 var(--space-8);
+  margin-bottom: var(--space-8);
   color: var(--color-black);
   transition: color var(--transition-fast);
 }
@@ -149,7 +143,7 @@
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--color-sonic-silver);
-  margin: 0 0 var(--space-16);
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -157,14 +151,47 @@
   overflow: hidden;
 }
 
-/* Result image */
-.search-results .search-results-list > li .search-result-image {
+/* Cards (grid) results */
+.search-results:is(.cards, .minimal) .search-results-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-32);
+}
+
+.search-results:is(.cards, .minimal) .search-results-list > li {
+  border: 1px solid var(--color-cloud-grey);
+  border-radius: var(--space-8);
+  overflow: hidden;
+  background-color: var(--color-white);
+  padding: 0;
+  transition: transform var(--transition-base);
+}
+
+.search-results:is(.cards, .minimal) .search-results-list > li:hover,
+.search-results:is(.cards, .minimal) .search-results-list > li:focus-within {
+  transform: translateY(-4px);
+}
+
+.search-results:is(.cards, .minimal) .search-results-list > li .search-result-title,
+.search-results:is(.cards, .minimal) .search-results-list > li p {
+  padding: 0 var(--space-16);
+}
+
+.search-results:is(.cards, .minimal) .search-results-list > li .search-result-title {
+  margin: var(--space-16) 0 var(--space-8);
+}
+
+.search-results:is(.cards, .minimal) .search-results-list > li p {
+  margin: 0 0 var(--space-16);
+}
+
+.search-results:is(.cards, .minimal) .search-results-list > li .search-result-image {
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
 }
 
-.search-results .search-results-list > li picture img {
+.search-results:is(.cards, .minimal) .search-results-list > li picture img {
   display: block;
   width: 100%;
   height: 100%;
@@ -172,7 +199,7 @@
   transition: transform var(--transition-base);
 }
 
-.search-results .search-results-list > li:hover picture img {
+.search-results:is(.cards, .minimal) .search-results-list > li:hover picture img {
   transform: scale(1.05);
 }
 
@@ -266,8 +293,8 @@
 
 /* Tablet (768px - 1024px) */
 @media (width >= 768px) and (width < 1024px) {
-  .search-results .search-results-list {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  .search-results:is(.cards, .minimal) .search-results-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-24);
   }
 }
@@ -295,6 +322,10 @@
   }
 
   .search-results .search-results-list {
+    padding: 0;
+  }
+
+  .search-results:is(.cards, .minimal) .search-results-list {
     grid-template-columns: 1fr;
     gap: var(--space-16);
   }
