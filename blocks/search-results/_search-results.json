@@ -48,6 +48,12 @@
           "name": "searchNoResultsFor",
           "label": "No Results For Query",
           "description": "Message shown in the count area when no results are found, followed by the search query. Default: 'No results found for'"
+        },
+        {
+          "component": "text",
+          "name": "searchResultsTitle",
+          "label": "Search Results Title",
+          "description": "Title shown above the search results. Default: 'Search Results'"
         }
       ]
     }
