@@ -12,7 +12,7 @@ const CONFIG = {
     searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
     searchNoResultsFor: 'No results found for',
-    searchResultsTitle: 'Search Results',
+    searchResultsTitle: 'Search..',
   },
 };
 
@@ -587,7 +587,7 @@ export default async function decorate(block) {
   // Create search results title
   const title = document.createElement('h1');
   title.className = 'search-results-title';
-  const titleText = config.placeholders.searchResultsTitle
+  const titleText = (config.placeholders.searchResultsTitle || '').trim()
     || CONFIG.placeholders.searchResultsTitle;
   title.textContent = titleText;
 

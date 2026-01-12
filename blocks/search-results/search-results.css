@@ -76,6 +76,18 @@
   color: var(--color-sonic-silver);
 }
 
+/* ===== NO RESULTS MESSAGE ===== */
+.search-results .search-results-no-results-message {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-sonic-silver);
+  text-align: center;
+  margin: var(--space-16) auto var(--space-32);
+  padding: var(--space-16);
+  max-width: 700px;
+}
+
 /* ===== RESULTS COUNT ===== */
 .search-results .search-results-count {
   font-family: var(--font-family-base);
