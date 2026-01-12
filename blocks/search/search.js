@@ -12,8 +12,7 @@ const CONFIG = {
     searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
   },
-  suggestionsLimit: 3, // Number of suggestions to show in inline mode
-  viewAllButtonText: 'View all {count} results', // Default button text with {count} placeholder
+  suggestionsLimit: 5, // Number of suggestions to show in inline mode
 };
 
 /** URL search params for managing query state */
@@ -233,8 +232,8 @@ async function renderResults(block, config, filteredData, searchTerms, showImage
   const searchResults = block.querySelector('.search-results');
   const headingTag = searchResults.dataset.h;
 
-  // Show limited suggestions (max 6)
-  const limit = config.suggestionsLimit || CONFIG.suggestionsLimit;
+  // Show limited suggestions (max 5)
+  const limit = config.suggestionsLimit || 5;
   const dataToRender = filteredData.slice(0, limit);
 
   if (dataToRender.length) {
@@ -244,21 +243,16 @@ async function renderResults(block, config, filteredData, searchTerms, showImage
       searchResults.append(li);
     });
 
-    // Add "View all results" button if there are more results and result page is configured
+    // Add "View all results" link if there are more results and result page is configured
     if (config.resultPage && filteredData.length > dataToRender.length) {
       const viewAllLi = document.createElement('li');
       viewAllLi.className = 'search-view-all';
-      const viewAllButton = document.createElement('a');
-      viewAllButton.className = 'button';
+      const viewAllLink = document.createElement('a');
       const input = block.querySelector('.search-input');
       const searchQuery = input ? input.value : '';
-      viewAllButton.href = `${config.resultPage}?q=${encodeURIComponent(searchQuery)}`;
-
-      // Use custom button text or default, replacing {count} with actual count
-      const buttonText = config.viewAllButtonText || CONFIG.viewAllButtonText;
-      viewAllButton.textContent = buttonText.replace('{count}', filteredData.length.toString());
-
-      viewAllLi.append(viewAllButton);
+      viewAllLink.href = `${config.resultPage}?q=${encodeURIComponent(searchQuery)}`;
+      viewAllLink.textContent = `View all ${filteredData.length} results`;
+      viewAllLi.append(viewAllLink);
       searchResults.append(viewAllLi);
     }
   } else {
@@ -596,39 +590,12 @@ function searchBox(block, config) {
 }
 
 /**
- * Extracts classes value from block content using fallback method
- * Looks for a div containing "classes" or "display style" text
- * @param {HTMLElement} block - The block element
- * @returns {string} Classes value or empty string
- */
-function extractClassesFallback(block) {
-  const allDivs = [...block.querySelectorAll('div')];
-  const classesDiv = allDivs.find((div) => {
-    const text = div.textContent.trim().toLowerCase();
-    const hasClassesText = text === 'classes' || text === 'display style';
-    const hasNextSibling = div.nextElementSibling;
-    const nextSiblingIsDiv = div.nextElementSibling && div.nextElementSibling.tagName === 'DIV';
-    return hasClassesText && hasNextSibling && nextSiblingIsDiv;
-  });
-
-  if (classesDiv && classesDiv.nextElementSibling) {
-    const classesValue = classesDiv.nextElementSibling.textContent.trim();
-    if (classesValue && classesValue !== 'classes' && classesValue !== 'display style') {
-      return classesValue;
-    }
-  }
-  return '';
-}
-
-/**
  * Parses block configuration from block content
  * @param {HTMLElement} block - The block element
- * @returns {Object} Configuration object with resultPage, placeholders, viewAllButtonText, and classes
+ * @returns {Object} Configuration object with resultPage and placeholders
  */
 function parseBlockConfig(block) {
   let resultPage = null;
-  let viewAllButtonText = CONFIG.viewAllButtonText;
-  let classes = '';
   const placeholders = { ...CONFIG.placeholders };
 
   const rows = [...block.children];
@@ -645,15 +612,10 @@ function parseBlockConfig(block) {
 
       if ((label.includes('result') || label.includes('page')) && link) {
         resultPage = link.href;
-      } else if ((label.includes('display style') || label.includes('classes')) && textContent) {
-        // Extract classes value
-        classes = textContent.trim();
       } else if (label.includes('placeholder') && textContent) {
         placeholders.searchPlaceholder = textContent;
       } else if (label.includes('no results') && textContent) {
         placeholders.searchNoResults = textContent;
-      } else if ((label.includes('view all') || label.includes('button')) && textContent) {
-        viewAllButtonText = textContent;
       }
     } else if (cells.length === 1) {
       // Single-column structure: just the link or text
@@ -670,23 +632,16 @@ function parseBlockConfig(block) {
       }
 
       if (value) {
-        // Fields in order: resultpage, classes, searchPlaceholder, searchNoResults, viewAllButtonText
+        // Fields in order: resultpage, searchPlaceholder, searchNoResults
         switch (rowIndex) {
           case 0:
             resultPage = value;
             break;
           case 1:
-            // Classes field
-            classes = value;
-            break;
-          case 2:
             placeholders.searchPlaceholder = value;
             break;
-          case 3:
+          case 2:
             placeholders.searchNoResults = value;
-            break;
-          case 4:
-            viewAllButtonText = value;
             break;
           default:
             break;
@@ -695,12 +650,7 @@ function parseBlockConfig(block) {
     }
   });
 
-  // Fallback: try to extract classes using direct DOM search if not found
-  if (!classes) {
-    classes = extractClassesFallback(block);
-  }
-
-  return { resultPage, placeholders, viewAllButtonText, classes };
+  return { resultPage, placeholders };
 }
 
 /**
@@ -709,12 +659,7 @@ function parseBlockConfig(block) {
  */
 export default async function decorate(block) {
   // Parse configuration from block content
-  const { resultPage, placeholders, viewAllButtonText, classes } = parseBlockConfig(block);
-
-  // Apply classes to block before clearing content
-  if (classes && classes.trim()) {
-    block.classList.add(classes.trim());
-  }
+  const { resultPage, placeholders } = parseBlockConfig(block);
 
   // Build configuration object (always use default query-index.json)
   const config = {
@@ -722,7 +667,6 @@ export default async function decorate(block) {
     resultPage,
     placeholders,
     suggestionsLimit: CONFIG.suggestionsLimit,
-    viewAllButtonText,
   };
 
   // Clear block content and build search UI
