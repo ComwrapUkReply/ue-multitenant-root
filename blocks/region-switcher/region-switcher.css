@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-8);
-  margin: var(--space-8) var(--space-12);
+  margin: 0;
   min-width: 140px;
   background: var(--color-white);
   border: 2px solid var(--color-cloud-grey);
