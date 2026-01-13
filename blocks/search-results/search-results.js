@@ -1,3 +1,7 @@
+/* eslint-disable max-len */
+/* eslint-disable prefer-destructuring */
+
+
 import {
   createOptimizedPicture,
   decorateIcons,
@@ -405,7 +409,7 @@ function renderResults(block, config, filteredData, searchTerms, headingTag, sho
 
     // Calculate pagination
     const totalResults = filteredData.length;
-    const itemsPerPage = CONFIG.itemsPerPage;
+    const { itemsPerPage } = CONFIG;
     const totalPages = Math.ceil(totalResults / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, totalResults);

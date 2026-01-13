@@ -1,3 +1,6 @@
+/* eslint-disable max-len */
+/* eslint-disable prefer-destructuring */
+
 import {
   createOptimizedPicture,
   decorateIcons,
@@ -604,7 +607,7 @@ function searchBox(block, config) {
  * @returns {Object} Configuration object with autosuggest, resultPage, and placeholders
  */
 function parseBlockConfig(block) {
-  let autosuggest = CONFIG.autosuggest;
+  let { autosuggest } = CONFIG;
   let resultPage = null;
   const placeholders = { ...CONFIG.placeholders };
 
