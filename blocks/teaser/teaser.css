@@ -244,6 +244,14 @@
     min-height: 400px;
   }
 
+  .block.teaser.image-top {
+    width: 100%
+  }
+
+  .block.teaser.image-bottom {
+    width: 100%
+  }
+
   .teaser-content {
     width: 50%;
   }
@@ -274,7 +282,7 @@
 
   .teaser-content {
     width: 100% !important;
-    padding: 0 !important;
+    padding: 2rem !important;
     gap: 2rem;
   }
 
