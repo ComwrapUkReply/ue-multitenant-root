@@ -246,12 +246,68 @@
 
     --button-background-color: var(--color-primary);
     --button-color: var(--color-white);
-    --button-radius: 1.5rem;
-    --button-font-size: 1.375rem;
-    --button-line-height: 2rem;
-    --button-border-style: solid;
-    --button-border-weight: 2px;
-    --button-border-weight-hover: 3px;
+    --button-border-radius: var(--border-radius-lg);
+    --button-font-size: var(--font-size-body);
+    --button-line-height: var(--line-height-body);
+    --button-border-style: var(--border-style-solid);
+    --button-border-width: var(--border-width-md);
+    --button-border-color: var(--color-white);
+    --button-hover-background-color: var(--color-primary-hover);
+    --button-focus-background-color: var(--color-primary-focus);
     
+    /* ===== Inputs ===== */
+
+    --input-background-color: var(--color-white);
+    --input-color: var(--color-black);
+    --input-font-size: var(--font-size-body);
+    --input-line-height: var(--line-height-body);
+    --input-border-radius: var(--border-radius-lg);
+    --input-border-style: var(--border-style-solid);
+    --input-border-width: var(--border-width-md);
+    --input-border-color: var(--color-grey-100);
+    --input-hover-background-color: var(--color-grey-100);
+    --input-focus-background-color: var(--color-grey-100);
+    --input-disabled-background-color: var(--color-grey-100);
+    --input-padding: var(--space-12) var(--space-16);
+    --input-placeholder-color: var(--color-grey-100);
+    --input-placeholder-font-size: var(--font-size-body);
+    --input-placeholder-line-height: var(--line-height-body);
+    --input-placeholder-font-weight: 400;
+
+    --select-background-color: var(--color-white);
+    --select-color: var(--color-black);
+    --select-font-size: var(--font-size-body);
+    --select-line-height: var(--line-height-body);
+    --select-border-radius: var(--border-radius-lg);
+    --select-border-style: var(--border-style-solid);
+    --select-border-width: var(--border-width-md);
+    --select-border-color: var(--color-grey-100);
+    --select-hover-background-color: var(--color-grey-100);
+    --select-focus-background-color: var(--color-grey-100);
+    --select-disabled-background-color: var(--color-grey-100);
+
+    /* ===== Cards ===== */
+
+    --card-background-color: var(--color-white);
+    --card-border-radius: var(--border-radius-lg);
+    --card-border-style: var(--border-style-solid);
+    --card-border-width: var(--border-width-md);
+    --card-border-color: var(--color-grey-100);
+    --card-padding: var(--space-12) var(--space-16);
+    --card-margin: var(--space-12) 0;
+    --card-shadow: var(--box-shadow-text-link);
+
+    /* ===== Modal ===== */
+
+    --modal-background-color: var(--color-white);
+    --modal-border-radius: var(--border-radius-lg);
+    --modal-border-style: var(--border-style-solid);
+    --modal-border-width: var(--border-width-md);
+    --modal-border-color: var(--color-grey-100);
+    --modal-padding: var(--space-12) var(--space-16);
+    --modal-margin: var(--space-12) 0;
+    --modal-shadow: var(--box-shadow-text-link);
+    
+
     
 }
