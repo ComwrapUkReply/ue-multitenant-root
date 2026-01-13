@@ -29,7 +29,6 @@
 .search-wrapper .search-button:hover,
 .search-wrapper .search-button:focus {
   background-color: var(--color-light-grey);
-  outline: none;
 }
 
 .search-wrapper .search-button .icon {
