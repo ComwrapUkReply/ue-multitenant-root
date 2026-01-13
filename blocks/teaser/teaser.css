@@ -7,12 +7,14 @@
 .block.teaser {
   margin: 2rem 0;
   padding: 0;
+  width: 100%;
 }
 
 /* Wrapper - main container */
 .teaser-wrapper {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 20px;
   width: 100%;
   min-height: 513px;
@@ -21,7 +23,6 @@
 /* Image container */
 .teaser-image {
   position: relative;
-  flex-shrink: 0;
   width: 50%;
   height: 513px;
   overflow: hidden;
@@ -46,9 +47,7 @@
   display: flex;
   flex-direction: column;
   gap: 48px;
-  padding-left: 20px;
   width: 50%;
-  flex-shrink: 0;
 }
 
 /* Heading wrapper with arrow */
@@ -117,7 +116,7 @@
 
 .block.teaser.image-right .teaser-content {
   padding-left: 0;
-  padding-right: 20px;
+  padding-right: 0;
 }
 
 .block.teaser.image-right .teaser-description-wrapper,
@@ -127,6 +126,10 @@
 }
 
 /* Image Top */
+.block.teaser.image-top {
+  width: 50%
+}
+
 .block.teaser.image-top .teaser-wrapper {
   flex-direction: column;
   align-items: stretch;
@@ -158,6 +161,10 @@
 }
 
 /* Image Bottom */
+.block.teaser.image-bottom {
+  width: 50%
+}
+
 .block.teaser.image-bottom .teaser-wrapper {
   flex-direction: column-reverse;
   align-items: stretch;
@@ -297,6 +304,7 @@
   }
 
   .block.teaser.image-background .teaser-wrapper {
+    justify-content: center;
     padding: 1.5rem;
     min-height: 500px;
   }

@@ -1208,6 +1208,10 @@ blockquote::before {
   }
 }
 
+input:focus {
+  outline: none;
+}
+
 /* =======================================
    END OF FOUNDATION STYLES
    ======================================== */

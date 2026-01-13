@@ -263,13 +263,8 @@
       },
       {
         "component": "text",
-        "name": "linkText",
+        "name": "text",
         "label": "Text"
-      },
-      {
-        "component": "text",
-        "name": "linkTitle",
-        "label": "Title"
       },
       {
         "component": "select",
@@ -307,8 +302,16 @@
         "label": "Style",
         "options": [
           {
+            "name": "Default",
+            "value": "Default"
+          },
+          {
             "name": "Highlight",
             "value": "highlight"
+          },
+          {
+            "name": "Gradient",
+            "value": "gradient"
           }
         ]
       }
@@ -585,6 +588,120 @@
             ]
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "download",
+    "fields": [
+      {
+        "component": "tab",
+        "label": "Content",
+        "name": "content"
+      },
+      {
+        "component": "text",
+        "name": "downloadtitle",
+        "value": "",
+        "label": "Title"
+      },
+      {
+        "component": "richtext",
+        "name": "downloaddescription",
+        "value": "",
+        "label": "Description"
+      },
+      {
+        "component": "text",
+        "name": "downloadbuttonlabel",
+        "label": "Download Button Label"
+      },
+      {
+        "component": "aem-content",
+        "name": "downloadfile",
+        "label": "Asset",
+        "value": "",
+        "valueType": "string"
+      },
+      {
+        "component": "tab",
+        "label": "Styles",
+        "name": "downloadstyles"
+      },
+      {
+        "component": "select",
+        "name": "downloadcolor",
+        "label": "Card Color",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Grey",
+            "value": "grey"
+          },
+          {
+            "name": "Light Blue",
+            "value": "light blue"
+          },
+          {
+            "name": "Dark Blue",
+            "value": "dark blue"
+          },
+          {
+            "name": "White",
+            "value": "white"
+          }
+        ],
+        "value": "white"
+      },
+      {
+        "component": "select",
+        "name": "downloadwidth",
+        "label": "Width",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Full Width",
+            "value": "full-width"
+          },
+          {
+            "name": "Half Width",
+            "value": "half-width"
+          }
+        ]
+      },
+      {
+        "component": "boolean",
+        "name": "downloadbutton",
+        "label": "Show Download Button",
+        "valueType": "boolean"
+      }
+    ]
+  },
+  {
+    "id": "dynamiccontentfilter",
+    "fields": [
+      {
+        "component": "boolean",
+        "name": "multipleSelect",
+        "label": "Multiple Select",
+        "description": "Allow multiple tags to be selected",
+        "valueType": "boolean",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "dynamiccontent",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Parent page",
+        "value": "",
+        "valueType": "string",
+        "validation": {
+          "rootPath": "/content/ue-multitenant-root"
+        }
       }
     ]
   },
@@ -917,7 +1034,7 @@
       },
       {
         "component": "richtext",
-        "name": "text",
+        "name": "heroText",
         "value": "",
         "label": "Text",
         "valueType": "string"
@@ -937,6 +1054,207 @@
           }
         ],
         "value": "white"
+      }
+    ]
+  },
+  {
+    "id": "info-counter",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "number",
+        "label": "Target Number",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Description Text",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Style",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Primary",
+            "value": "primary"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "language-switcher",
+    "fields": [
+      {
+        "component": "select",
+        "name": "displayStyle",
+        "label": "Display Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Dropdown",
+            "value": "dropdown"
+          },
+          {
+            "name": "Horizontal List",
+            "value": "horizontal"
+          },
+          {
+            "name": "Flag Icons",
+            "value": "flags"
+          }
+        ],
+        "value": "dropdown"
+      },
+      {
+        "component": "select",
+        "name": "showFlags",
+        "label": "Show Country Flags",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Yes",
+            "value": "true"
+          },
+          {
+            "name": "No",
+            "value": "false"
+          }
+        ],
+        "value": "true"
+      },
+      {
+        "component": "richtext",
+        "name": "customLabels",
+        "label": "Custom Labels (JSON format)",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "pageMapping",
+        "label": "Page Mapping (JSON format)",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "multiselect",
+        "name": "excludeLocales",
+        "label": "Exclude Locales",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Switzerland German",
+            "value": "ch-de"
+          },
+          {
+            "name": "Switzerland French",
+            "value": "ch-fr"
+          },
+          {
+            "name": "Switzerland English",
+            "value": "ch-en"
+          },
+          {
+            "name": "Germany German",
+            "value": "de-de"
+          },
+          {
+            "name": "Germany English",
+            "value": "de-en"
+          }
+        ],
+        "value": ""
+      },
+      {
+        "component": "text",
+        "name": "fallbackPage",
+        "label": "Fallback Page Path",
+        "valueType": "string",
+        "value": "/"
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Block Options",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Style",
+            "children": [
+              {
+                "name": "Compact",
+                "value": "compact"
+              },
+              {
+                "name": "Large",
+                "value": "large"
+              }
+            ]
+          },
+          {
+            "name": "Position",
+            "children": [
+              {
+                "name": "Left Aligned",
+                "value": "left"
+              },
+              {
+                "name": "Center Aligned",
+                "value": "center"
+              },
+              {
+                "name": "Right Aligned",
+                "value": "right"
+              }
+            ]
+          }
+        ],
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "modal",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "reference",
+        "label": "Modal Content Reference"
+      },
+      {
+        "component": "text",
+        "name": "triggerText",
+        "label": "Trigger Link Text",
+        "valueType": "string",
+        "value": "Open Modal"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Style",
+        "options": [
+          {
+            "name": "link",
+            "value": ""
+          },
+          {
+            "name": "button",
+            "value": "button"
+          }
+        ],
+        "value": "link"
       }
     ]
   },
@@ -986,6 +1304,128 @@
             "description": "The light background style"
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "region-switcher",
+    "fields": [
+      {
+        "component": "select",
+        "name": "displayStyle",
+        "label": "Display Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Dropdown",
+            "value": "dropdown"
+          },
+          {
+            "name": "Horizontal List",
+            "value": "horizontal"
+          },
+          {
+            "name": "Flag Icons Only",
+            "value": "flags"
+          }
+        ],
+        "value": "dropdown"
+      },
+      {
+        "component": "select",
+        "name": "showFlags",
+        "label": "Show Country Flags",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Yes",
+            "value": "true"
+          },
+          {
+            "name": "No",
+            "value": "false"
+          }
+        ],
+        "value": "true"
+      },
+      {
+        "component": "richtext",
+        "name": "defaultLanguages",
+        "label": "Default Languages per Region (JSON)",
+        "description": "Override default language per region. Format: {\"ch\": \"de\", \"de\": \"de\"}",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Style Options",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Layout",
+            "children": [
+              {
+                "name": "Default",
+                "value": ""
+              },
+              {
+                "name": "Compact",
+                "value": "compact"
+              },
+              {
+                "name": "Full Width",
+                "value": "full-width"
+              }
+            ]
+          },
+          {
+            "name": "Theme",
+            "children": [
+              {
+                "name": "Light",
+                "value": "light"
+              },
+              {
+                "name": "Dark",
+                "value": "dark"
+              },
+              {
+                "name": "Transparent",
+                "value": "transparent"
+              }
+            ]
+          }
+        ],
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "search",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "source",
+        "label": "Data Source",
+        "description": "Link to the query index JSON file. Leave empty to use the default /query-index.json"
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Display Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default (Grid Results)",
+            "value": ""
+          },
+          {
+            "name": "Minimal (List Results)",
+            "value": "minimal"
+          }
+        ],
+        "value": ""
       }
     ]
   },
@@ -1157,6 +1597,51 @@
         "valueType": "string",
         "name": "column4text",
         "label": "Column4"
+      }
+    ]
+  },
+  {
+    "id": "tabs",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "value": "",
+        "label": "Style",
+        "description": "Style for the tabs (e.g., 'default', 'primary')",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Primary",
+            "value": "primary"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tab",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "value": "",
+        "label": "Tab Title",
+        "description": "Short descriptive title for the tab (e.g., 'Tab 1', 'Getting Started')",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "richtext",
+        "name": "content",
+        "value": "",
+        "label": "Tab Content",
+        "description": "Rich content displayed when tab is active (headings, paragraphs, lists, images, links)",
+        "valueType": "string"
       }
     ]
   },
@@ -1430,10 +1915,49 @@
         "valueType": "string"
       },
       {
-        "component": "text",
-        "name": "video_description",
-        "label": "Video Description",
-        "valueType": "string"
+        "component": "select",
+        "name": "video-width",
+        "label": "Video Width",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "100%",
+            "value": "100%"
+          },
+          {
+            "name": "75%",
+            "value": "75%"
+          },
+          {
+            "name": "50%",
+            "value": "50%"
+          }
+        ],
+        "value": "100%"
+      },
+      {
+        "component": "boolean",
+        "name": "video-autoplay",
+        "label": "Autoplay",
+        "description": "Allows the video to play automatically"
+      },
+      {
+        "component": "boolean",
+        "name": "video-loop",
+        "label": "Loop",
+        "description": "Allows video to replay automatically when finished"
+      },
+      {
+        "component": "boolean",
+        "name": "video-muted",
+        "label": "Muted",
+        "description": "Allows video to be muted by default"
+      },
+      {
+        "component": "boolean",
+        "name": "video-controls",
+        "label": "Controls",
+        "description": "Allows users to control the video playback"
       }
     ]
   }

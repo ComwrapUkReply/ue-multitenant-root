@@ -1,0 +1,345 @@
+/**
+ * Info Counter Block Styles
+ * Animated counter with number and description text
+ */
+
+/* =============================================================================
+   CONTAINER & WRAPPER
+   ============================================================================= */
+
+.info-counter-container .info-counter-wrapper {
+  display: flex;
+  max-width: unset;
+}
+
+/* Base wrapper styles - will be overridden by media queries */
+.info-counter-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+/* =============================================================================
+   MAIN BLOCK
+   ============================================================================= */
+
+.info-counter {
+  /* CSS Custom Properties - Layout */
+  --info-counter-gap: var(--space-32);
+  --info-counter-padding-block: var(--space-48);
+  --info-counter-padding-inline: 200px;
+  --info-counter-min-height: 168px;
+
+  /* Number - increased sizes */
+  --info-counter-number-height: 280px;
+  --info-counter-number-min-width: 450px;
+  --info-counter-digit-font-size: clamp(7rem, 12vw, 11rem); /* Larger, responsive font */
+  --info-counter-digit-line-height: 280px;
+
+  /* Text */
+  --info-counter-text-max-width: 460px;
+  --info-counter-text-font-size: var(--font-size-body);
+  --info-counter-text-line-height: var(--line-height-body);
+
+  /* Colors */
+  --info-counter-text-color: var(--color-quaternary);
+  --info-counter-number-color: var(--color-quaternary);
+
+  /* Layout Styles - Desktop: horizontal layout (number left, text right) */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--info-counter-gap);
+  padding-block: var(--info-counter-padding-block);
+  padding-inline: var(--info-counter-padding-inline);
+  min-height: var(--info-counter-min-height);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure desktop layout is horizontal */
+@media (width >= 900px) {
+  .info-counter {
+    flex-direction: row;
+  }
+
+  .info-counter .info-counter-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--info-counter-gap);
+    width: 100%;
+  }
+
+  .info-counter-text {
+    text-align: left;
+  }
+
+  .info-counter-text p {
+    text-align: left;
+  }
+}
+
+/* =============================================================================
+   NUMBER CONTAINER
+   ============================================================================= */
+
+.info-counter-number {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: var(--info-counter-number-height);
+  min-width: var(--info-counter-number-min-width);
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* =============================================================================
+   DIGIT STYLES
+   ============================================================================= */
+
+.info-counter-digit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: var(--info-counter-number-height);
+  line-height: var(--info-counter-digit-line-height);
+  overflow: hidden;
+  position: relative;
+}
+
+.info-counter-digit-value {
+  font-family: var(--font-family-semibold);
+  font-weight: 600;
+  font-size: var(--info-counter-digit-font-size);
+  line-height: var(--info-counter-digit-line-height);
+  color: var(--info-counter-number-color);
+  text-align: right;
+  white-space: nowrap;
+  display: block;
+  transition: transform 0.3s ease-out;
+}
+
+/* =============================================================================
+   TEXT CONTAINER
+   ============================================================================= */
+
+.info-counter-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  max-width: var(--info-counter-text-max-width);
+}
+
+.info-counter-text p {
+  margin: 0;
+  padding: 0;
+  font-size: var(--info-counter-text-font-size);
+  line-height: var(--info-counter-text-line-height);
+  color: var(--info-counter-text-color);
+}
+
+/* =============================================================================
+   VARIANT: PRIMARY (Dark background)
+   ============================================================================= */
+
+.info-counter.primary {
+  --info-counter-text-color: var(--color-white);
+  --info-counter-number-color: var(--color-white);
+
+  background: var(--color-secondary);
+}
+
+/* =============================================================================
+   VARIANT: DARK MODE
+   ============================================================================= */
+
+.info-counter.dark,
+.info-counter.on-dark,
+.info-counter-mode-dark {
+  --info-counter-text-color: var(--color-white);
+  --info-counter-number-color: var(--color-white);
+}
+
+/* =============================================================================
+   PROGRESSIVE FONT SIZING - DESKTOP
+   ============================================================================= */
+
+/* Larger numbers get progressively smaller fonts to prevent overflow */
+.info-counter[data-digit-count="4"] {
+  --info-counter-digit-font-size: clamp(5.5rem, 11vw, 9rem);
+  --info-counter-number-height: 260px;
+  --info-counter-digit-line-height: 260px;
+}
+
+.info-counter[data-digit-count="5"] {
+  --info-counter-digit-font-size: clamp(5rem, 10vw, 8.5rem);
+  --info-counter-number-height: 250px;
+  --info-counter-digit-line-height: 250px;
+}
+
+.info-counter[data-digit-count="6"] {
+  --info-counter-digit-font-size: clamp(4.5rem, 9vw, 8rem);
+  --info-counter-number-height: 240px;
+  --info-counter-digit-line-height: 240px;
+}
+
+.info-counter[data-digit-count="7"] {
+  --info-counter-digit-font-size: clamp(4rem, 8vw, 7.5rem);
+  --info-counter-number-height: 230px;
+  --info-counter-digit-line-height: 230px;
+}
+
+.info-counter[data-digit-count="8"],
+.info-counter[data-digit-count="9"],
+.info-counter[data-digit-count="10"] {
+  --info-counter-digit-font-size: clamp(3.75rem, 7.5vw, 7rem);
+  --info-counter-number-height: 220px;
+  --info-counter-digit-line-height: 220px;
+}
+
+/* =============================================================================
+   RESPONSIVE: TABLET (600px - 899px)
+   ============================================================================= */
+
+@media (width >= 600px) and (width < 900px) {
+  .info-counter {
+    --info-counter-padding-inline: var(--space-40);
+    --info-counter-text-max-width: 500px;
+    --info-counter-text-font-size: 1.375rem; /* 22px */
+    --info-counter-text-line-height: 1.75rem; /* 28px */
+  }
+}
+
+/* =============================================================================
+   RESPONSIVE: MOBILE (< 900px)
+   ============================================================================= */
+
+@media (width < 900px) {
+  .info-counter {
+    /* Layout adjustments */
+    --info-counter-gap: var(--space-16);
+    --info-counter-padding-inline: var(--space-24);
+    --info-counter-number-height: 180px;
+    --info-counter-number-min-width: auto;
+
+    /* Typography adjustments - larger base font size */
+    /* Base size for 1-3 digits, scales DOWN for more digits to prevent overflow */
+    --info-counter-digit-font-size: clamp(7rem, 30vw, 11rem); /* 112px - 176px */
+    --info-counter-digit-line-height: 180px;
+    --info-counter-text-font-size: clamp(1rem, 4vw, 1.25rem); /* 16px - 20px, larger than before */
+    --info-counter-text-line-height: 1.6;
+    --info-counter-text-max-width: 100%;
+
+    /* Ensure vertical stacking with number first, text below */
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Progressive font sizing - larger numbers get smaller fonts to prevent overflow */
+  .info-counter[data-digit-count="4"] {
+    --info-counter-digit-font-size: clamp(6.5rem, 28vw, 10rem); /* 104px - 160px */
+    --info-counter-number-height: 170px;
+    --info-counter-digit-line-height: 170px;
+  }
+
+  .info-counter[data-digit-count="5"] {
+    --info-counter-digit-font-size: clamp(6rem, 26vw, 9.5rem); /* 96px - 152px */
+    --info-counter-number-height: 160px;
+    --info-counter-digit-line-height: 160px;
+  }
+
+  .info-counter[data-digit-count="6"] {
+    --info-counter-digit-font-size: clamp(5.5rem, 24vw, 9rem); /* 88px - 144px */
+    --info-counter-number-height: 150px;
+    --info-counter-digit-line-height: 150px;
+  }
+
+  .info-counter[data-digit-count="7"] {
+    --info-counter-digit-font-size: clamp(4.5rem, 22vw, 8.5rem); /* 72px - 136px */
+    --info-counter-number-height: 140px;
+    --info-counter-digit-line-height: 140px;
+  }
+
+  .info-counter[data-digit-count="8"],
+  .info-counter[data-digit-count="9"],
+  .info-counter[data-digit-count="10"] {
+    --info-counter-digit-font-size: clamp(4.25rem, 18vw, 8rem); /* 68px - 128px */
+    --info-counter-number-height: 135px;
+    --info-counter-digit-line-height: 135px;
+  }
+
+  .info-counter-number {
+    margin-bottom: var(--space-24);
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+    overflow: visible;
+    order: 1; /* Explicitly place number first on mobile */
+  }
+
+  .info-counter-digit {
+    height: var(--info-counter-number-height);
+    line-height: var(--info-counter-digit-line-height);
+    flex-shrink: 0;
+    min-width: 0;
+  }
+
+  .info-counter-digit-value {
+    /* Allow digits to scale but maintain readability */
+    max-width: 100%;
+    word-break: keep-all;
+  }
+
+  .info-counter-text {
+    height: auto;
+    text-align: center;
+    padding-inline: var(--space-24);
+    order: 2; /* Explicitly place text after number on mobile */
+    width: 100%;
+    margin-top: 0; /* Ensure no extra margin */
+  }
+
+  .info-counter-text p {
+    text-align: center; /* Center-justified on mobile */
+  }
+
+  /* Ensure wrapper maintains proper vertical order on mobile */
+  .info-counter-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+/* =============================================================================
+   ACCESSIBILITY
+   ============================================================================= */
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .info-counter-digit-value {
+    transition: none;
+  }
+
+  .info-counter {
+    animation: none;
+  }
+}
+
+/* Focus styles */
+.info-counter:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: var(--space-4);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  .info-counter {
+    border: 2px solid currentcolor;
+  }
+}

@@ -31,8 +31,16 @@
           "label": "Style",
           "options": [
             {
+              "name": "Default",
+              "value": "Default"
+            },
+            {
               "name": "Highlight",
               "value": "highlight"
+            },
+            {
+              "name": "Gradient",
+              "value": "gradient"
             }
           ]
         }
@@ -49,6 +57,7 @@
         "title",
         "hero",
         "cards",
+        "card",
         "columns",
         "fragment",
         "accordion",
@@ -65,11 +74,19 @@
         "quote",
         "video",
         "article-feeds",
+        "language-switcher",
+        "region-switcher",
         "teaser",
         "tags",
         "embed",
         "teaser",
-        "separator"
+        "separator",
+        "modal",
+        "tabs",
+        "info-counter",
+        "dynamiccontent",
+        "dynamiccontentfilter",
+        "download"
       ]
     }
   ]
