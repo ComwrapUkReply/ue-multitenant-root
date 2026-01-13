@@ -1,1 +1,21 @@
-node .husky/pre-commit.mjs
+#!/usr/bin/env sh
+# Source husky helper if it exists (optional)
+if [ -f "$(dirname -- "$0")/_/husky.sh" ]; then
+  . "$(dirname -- "$0")/_/husky.sh"
+fi
+
+# Source nvm if it exists to make node available
+if [ -f "$HOME/.nvm/nvm.sh" ]; then
+  . "$HOME/.nvm/nvm.sh"
+fi
+
+# Use node from PATH (should be available after sourcing nvm)
+# Fallback to direct path if nvm sourcing didn't work
+if command -v node >/dev/null 2>&1; then
+  node .husky/pre-commit.mjs
+elif [ -f "$HOME/.nvm/versions/node/v20.19.4/bin/node" ]; then
+  "$HOME/.nvm/versions/node/v20.19.4/bin/node" .husky/pre-commit.mjs
+else
+  echo "Error: node command not found. Please ensure Node.js is installed and in your PATH."
+  exit 1
+fi
