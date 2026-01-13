@@ -38,16 +38,6 @@ function createWarningMessage(container) {
   warningMsg.setAttribute('role', 'alert');
   warningMsg.setAttribute('aria-live', 'polite');
   warningMsg.textContent = 'Invalid file type';
-  warningMsg.style.cssText = `
-    padding: 1rem;
-    background: #fff3cd;
-    border: 2px solid #ffc107;
-    color: #856404;
-    margin: 1rem 0;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    font-weight: 500;
-  `;
   container.appendChild(warningMsg);
   return warningMsg;
 }
