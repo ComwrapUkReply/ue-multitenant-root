@@ -23,8 +23,8 @@
         {
           "component": "boolean",
           "name": "autosuggest",
-          "label": "Autosuggest",
-          "description": "Enable autosuggest functionality",
+          "label": "Toggle to turn recommended search",
+          "description": "Enable list of recommendations when user is typing in the search input",
           "valueType": "boolean",
           "value": true
         },
