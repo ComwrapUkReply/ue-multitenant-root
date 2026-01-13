@@ -16,7 +16,7 @@
   border: none;
   background: transparent;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   transition: background-color 0.2s;
 }
 
@@ -80,7 +80,7 @@
     min-width: 280px;
     background: var(--background-color, #fff);
     box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     padding: 16px;
   }
 
@@ -97,14 +97,14 @@
     width: 100%;
     margin: 0;
     padding: 0.5em;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     border: none;
   }
   
   /* search results */
   .search ul.search-results {
     display: grid;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     background-color: #fafafa;
     grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
     gap: 24px;

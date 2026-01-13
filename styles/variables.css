@@ -215,10 +215,10 @@
 
     /* ===== Borders ===== */
 
-    --border-radius-sm: 0.25rem;
-    --border-radius-md: 0.5rem;
-    --border-radius-lg: 1rem;
-    --border-radius-xl: 1.5rem;
+    --border-radius-sm: 0.25rem;  /* 4px */
+    --border-radius-md: 0.5rem;   /* 8px */
+    --border-radius-lg: 1rem;     /* 16px */
+    --border-radius-xl: 1.5rem;   /* 24px */
     --border-radius-full: 50%;
 
     --border-width-sm: 1px;

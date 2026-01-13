@@ -27,7 +27,7 @@ body.modal-open {
   max-height: calc(100dvh - 48px);
   padding: 0;
   border: 1px solid var(--color-black);
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
 }
 
 .modal-dialog::backdrop {
@@ -61,7 +61,7 @@ body.modal-open {
 
 .modal-dialog .close-button:hover {
   background: rgb(0 0 0 / 5%);
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
 }
 
 .modal-dialog .close-button:focus {

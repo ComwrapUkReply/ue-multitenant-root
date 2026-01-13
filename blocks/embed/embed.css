@@ -76,11 +76,11 @@
   }
 
   .embed-wrapper {
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
   }
 
   .embed-wrapper iframe {
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
   }
 }
 
