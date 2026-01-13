@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable prefer-destructuring */
 
-
 import {
   createOptimizedPicture,
   decorateIcons,
