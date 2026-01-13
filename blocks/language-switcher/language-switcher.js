@@ -12,19 +12,19 @@ const CONFIG = {
   branch: 'main',
   locales: [
     {
-      code: 'ch-de', path: '/ch/de/', label: 'DE', flag: '🇨🇭', country: 'ch',
+      code: 'ch-de', path: '/ch/de/', label: 'DE', country: 'ch',
     },
     {
-      code: 'ch-fr', path: '/ch/fr/', label: 'FR', flag: '🇨🇭', country: 'ch',
+      code: 'ch-fr', path: '/ch/fr/', label: 'FR', country: 'ch',
     },
     {
-      code: 'ch-en', path: '/ch/en/', label: 'EN', flag: '🇨🇭', country: 'ch',
+      code: 'ch-en', path: '/ch/en/', label: 'EN', country: 'ch',
     },
     {
-      code: 'de-de', path: '/de/de/', label: 'DE', flag: '🇩🇪', country: 'de', default: true,
+      code: 'de-de', path: '/de/de/', label: 'DE', country: 'de', default: true,
     },
     {
-      code: 'de-en', path: '/de/en/', label: 'EN', flag: '🇩🇪', country: 'de',
+      code: 'de-en', path: '/de/en/', label: 'EN', country: 'de',
     },
   ],
 };
@@ -186,81 +186,11 @@ function generateURL(locale, path) {
 }
 
 /**
- * Creates language option element
+ * Creates horizontal list switcher with pipe separators
  */
-function createOption(locale, opts, href, isCurrent = false) {
-  const el = document.createElement(isCurrent ? 'span' : 'a');
-  el.className = isCurrent ? 'language-current' : 'language-option';
-  if (!isCurrent) {
-    el.href = href;
-    el.setAttribute('role', 'menuitem');
-  }
-  const label = opts.customLabels?.[locale.code] || locale.label;
-  el.innerHTML = `
-    ${opts.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
-    <span class="label">${label}</span>
-  `;
-  return el;
-}
-
-/**
- * Creates dropdown switcher
- */
-function createDropdown(container, current, locales, opts) {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'language-dropdown';
-
-  const btn = createOption(current, opts, '', true);
-  btn.setAttribute('aria-haspopup', 'true');
-  btn.setAttribute('aria-expanded', 'false');
-  btn.innerHTML += '<span class="arrow" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="chevron-down"><path d="M4.47 6.97a.75.75 0 0 1 1.06 0L8 9.44l2.47-2.47a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 0-1.06z" fill="currentColor"/></svg></span>';
-
-  const menu = document.createElement('ul');
-  menu.className = 'language-menu';
-  menu.setAttribute('role', 'menu');
-
-  locales.filter((l) => l.code !== current.code).forEach((locale) => {
-    const li = document.createElement('li');
-    const path = mapPath(opts.pagePath, current, locale, opts.customMap, opts.dynamicMap);
-    const link = createOption(locale, opts, generateURL(locale, path));
-    li.appendChild(link);
-    menu.appendChild(li);
-  });
-
-  wrapper.append(btn, menu);
-
-  // Toggle
-  const toggle = (open) => {
-    menu.classList.toggle('open', open);
-    btn.setAttribute('aria-expanded', open);
-  };
-
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    toggle(!menu.classList.contains('open'));
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!wrapper.contains(e.target)) toggle(false);
-  });
-
-  btn.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') toggle(false);
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      toggle(!menu.classList.contains('open'));
-    }
-  });
-
-  container.appendChild(wrapper);
-}
-
-/**
- * Creates horizontal list switcher
- */
-function createList(container, current, locales, opts, flagsOnly = false) {
+function createList(container, current, locales, opts) {
   const list = document.createElement('ul');
-  list.className = `language-list ${flagsOnly ? 'flags' : 'horizontal'}`;
+  list.className = 'language-list horizontal';
   list.setAttribute('role', 'list');
 
   locales.forEach((locale) => {
@@ -269,31 +199,19 @@ function createList(container, current, locales, opts, flagsOnly = false) {
 
     if (locale.code === current.code) {
       const el = document.createElement('span');
-      el.className = `language-current${flagsOnly ? ' flag-only' : ''}`;
-      if (flagsOnly) {
-        el.title = opts.customLabels?.[locale.code] || locale.label;
-        el.innerHTML = `<span class="flag">${locale.flag}</span>`;
-      } else {
-        el.innerHTML = `
-          ${opts.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
-          <span class="label">${opts.customLabels?.[locale.code] || locale.label}</span>
-        `;
-      }
+      el.className = 'language-current';
+      el.innerHTML = `
+        <span class="label">${opts.customLabels?.[locale.code] || locale.label}</span>
+      `;
       li.appendChild(el);
     } else {
       const path = mapPath(opts.pagePath, current, locale, opts.customMap, opts.dynamicMap);
       const link = document.createElement('a');
-      link.className = `language-option${flagsOnly ? ' flag-only' : ''}`;
+      link.className = 'language-option';
       link.href = generateURL(locale, path);
-      if (flagsOnly) {
-        link.title = opts.customLabels?.[locale.code] || locale.label;
-        link.innerHTML = `<span class="flag">${locale.flag}</span>`;
-      } else {
-        link.innerHTML = `
-          ${opts.showFlags ? `<span class="flag">${locale.flag}</span>` : ''}
-          <span class="label">${opts.customLabels?.[locale.code] || locale.label}</span>
-        `;
-      }
+      link.innerHTML = `
+        <span class="label">${opts.customLabels?.[locale.code] || locale.label}</span>
+      `;
       li.appendChild(link);
     }
 
@@ -316,14 +234,12 @@ function parseConfig(block) {
     const key = cells[0].textContent.trim().toLowerCase().replace(/\s+/g, '');
     const value = cells[1].textContent.trim();
 
-    if (key === 'displaystyle') config.displayStyle = value;
     if (key === 'excludelocales') {
       config.excludeLocales = value.split(',').map((s) => s.trim()).filter(Boolean);
     }
     if (key === 'advancedconfig') {
       try {
         const adv = JSON.parse(value.replace(/<[^>]*>/g, ''));
-        config.showFlags = adv.showFlags !== false;
         config.customLabels = adv.customLabels || {};
         config.customMap = adv.pageMapping || null;
       } catch { /* ignore */ }
@@ -384,17 +300,13 @@ export default async function decorate(block) {
     container.className = 'language-switcher-container';
 
     const opts = {
-      showFlags: config.showFlags !== false,
       customLabels: config.customLabels || {},
       customMap: config.customMap,
       dynamicMap,
       pagePath: getPagePath(locale),
     };
 
-    const style = config.displayStyle || 'dropdown';
-    if (style === 'horizontal') createList(container, locale, locales, opts);
-    else if (style === 'flags') createList(container, locale, locales, opts, true);
-    else createDropdown(container, locale, locales, opts);
+    createList(container, locale, locales, opts);
 
     block.appendChild(container);
     addAnalytics(block);
