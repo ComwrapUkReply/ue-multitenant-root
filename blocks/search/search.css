@@ -53,7 +53,7 @@
     border: 2px solid var(--color-primary);
     background-color: var(--color-tertiary);
     padding: 0 var(--space-16);
-    border-radius: var(--button-radius);
+    border-radius: var(--button-border-radius);
 }
 
   .search-wrapper .search.block[aria-expanded="false"] {

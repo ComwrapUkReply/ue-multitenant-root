@@ -30,7 +30,7 @@
 
 .language-current {
   background: var(--color-white);
-  border: 2px solid var(--color-cloud-grey);
+  border: 2px solid var(--color-grey-300);
   border-radius: var(--space-4);
   padding: var(--space-12) var(--space-16);
   cursor: pointer;
@@ -48,12 +48,12 @@
 }
 
 .language-current:hover {
-  background: var(--color-light-grey);
-  border-color: var(--color-primary-blue);
+  background: var(--color-grey-200);
+  border-color: var(--color-primary);
 }
 
 .language-current:focus {
-  outline: 2px solid var(--color-primary-blue);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -73,7 +73,7 @@
   left: 0;
   right: 0;
   background: var(--color-white);
-  border: 2px solid var(--color-cloud-grey);
+  border: 2px solid var(--color-grey-300);
   border-radius: var(--space-4);
   box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   z-index: 1000;
@@ -112,12 +112,12 @@
 }
 
 .language-option:hover {
-  background: var(--color-light-grey);
+  background: var(--color-grey-200);
 }
 
 .language-option:focus {
-  background: var(--color-light-grey);
-  outline: 2px solid var(--color-primary-blue);
+  background: var(--color-grey-200);
+  outline: 2px solid var(--color-primary);
   outline-offset: -2px;
 }
 
@@ -154,18 +154,18 @@
 }
 
 .language-list.horizontal .language-current {
-  background: var(--color-primary-blue);
+  background: var(--color-primary);
   color: var(--color-white);
-  border-color: var(--color-primary-blue);
+  border-color: var(--color-primary);
 }
 
 .language-list.horizontal .language-option:hover {
-  background: var(--color-light-grey);
-  border-color: var(--color-cloud-grey);
+  background: var(--color-grey-200);
+  border-color: var(--color-grey-300);
 }
 
 .language-list.horizontal .language-option:focus {
-  outline: 2px solid var(--color-primary-blue);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -195,18 +195,18 @@
 }
 
 .flag-only:hover {
-  background: var(--color-light-grey);
+  background: var(--color-grey-200);
   transform: scale(1.1);
 }
 
 .flag-only:focus {
-  outline: 2px solid var(--color-primary-blue);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
 .language-list.flags .current .flag-only {
-  border-color: var(--color-primary-blue);
-  background: var(--color-light-grey);
+  border-color: var(--color-primary);
+  background: var(--color-grey-200);
 }
 
 .language-list.flags .flag-only .flag {
@@ -322,7 +322,7 @@
   .language-current:focus-visible,
   .language-option:focus-visible,
   .flag-only:focus-visible {
-    outline: 2px solid var(--color-primary-blue);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
   

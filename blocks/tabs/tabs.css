@@ -23,7 +23,7 @@
   position: absolute;
   left: 0;
   width: 3px;
-  background-color: var(--color-light-grey);
+  background-color: var(--color-grey-200);
   transition: top 0.3s ease, height 0.3s ease;
   pointer-events: none;
 }

@@ -20,17 +20,17 @@ main > .section > div.download-wrapper {
 }
 
 .download-wrapper-inner.color-grey {
-  background: var(--color-light-grey, #f7f6f5);
+  background: var(--color-grey-200, #f7f6f5);
   color: rgb(var(--text-color));
 }
 
 .download-wrapper-inner.color-light-blue {
-  background: var(--color-light-blue, #8fc4f8);
+  background: var(--color-primary-400, #8fc4f8);
   color: #fff;
 }
 
 .download-wrapper-inner.color-dark-blue {
-  background: var(--color-primary-blue, #0073dd);
+  background: var(--color-primary, #0073dd);
   color: var(--color-white, #fff);
 }
 
@@ -111,14 +111,14 @@ main > .section > div.download-wrapper {
 
 .download-wrapper-inner.color-dark-blue .download-button {
   background: var(--color-white, #fff);
-  color: var(--color-primary-blue, #0073dd);
-  border-color: var(--color-primary-blue, #0073dd);
+  color: var(--color-primary, #0073dd);
+  border-color: var(--color-primary, #0073dd);
 }
 
 .download-wrapper-inner.color-light-blue .download-button {
   background: var(--color-white, #fff);
-  color: var(--color-light-blue, #8fc4f8);
-  border-color: var(--color-light-blue, #8fc4f8);
+  color: var(--color-primary-400, #8fc4f8);
+  border-color: var(--color-primary-400, #8fc4f8);
 }
 
 .download-wrapper-inner .download-button:hover,
@@ -137,13 +137,13 @@ main > .section > div.download-wrapper {
 .download-wrapper-inner.color-dark-blue .download-button:hover,
 .download-wrapper-inner.color-dark-blue .download-button:focus {
   background: rgb(255 255 255 / 90%);
-  color: var(--color-primary-blue, #0073dd);
+  color: var(--color-primary, #0073dd);
 }
 
 .download-wrapper-inner.color-light-blue .download-button:hover,
 .download-wrapper-inner.color-light-blue .download-button:focus {
   background: rgb(255 255 255 / 90%);
-  color: var(--color-light-blue, #8fc4f8);
+  color: var(--color-primary-400, #8fc4f8);
 }
 
 

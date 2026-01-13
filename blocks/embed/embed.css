@@ -60,11 +60,11 @@
 /* Error state styling */
 .embed-error {
   padding: 2rem;
-  background-color: var(--color-light-grey, #f7f6f5);
-  border: 2px dashed var(--color-cloud-grey, #c9c5be);
+  background-color: var(--color-grey-200, #f7f6f5);
+  border: 2px dashed var(--color-grey-300, #c9c5be);
   border-radius: 8px;
   text-align: center;
-  color: var(--color-sonic-silver, #777673);
+  color: var(----color-grey, #777673);
   font-size: var(--body-font-size-s, 19px);
   font-family: var(--body-font-family, roboto, sans-serif);
 }

@@ -207,7 +207,7 @@
 
 /* Focus styles */
 .info-counter:focus-visible {
-  outline: 2px solid var(--color-blue);
+  outline: 2px solid var(--color-primary-700);
   outline-offset: var(--space-4);
 }
 

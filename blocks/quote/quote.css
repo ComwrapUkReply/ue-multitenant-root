@@ -10,7 +10,7 @@ blockquote {
 
 blockquote::before {
     content: '"';
-    color: var(--color-blue);
+    color: var(--color-primary-700);
     font-size: var(--space-88);
     line-height: var(--space-80);
     padding-right: var(--space-24);
@@ -36,7 +36,7 @@ blockquote::before {
 }
 
 .block.quote blockquote p {
-    color: var(--color-primary-blue);
+    color: var(--color-primary);
     font-style: italic;
     font-size: var(--font-size-h4);
     line-height: var(--line-height-h4);

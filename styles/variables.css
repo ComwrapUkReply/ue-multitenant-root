@@ -14,8 +14,8 @@
     --color-primary-500: #1c82ec;
     --color-primary: #0073dd;
     --color-primary-700: #0063be;
-    --color-primary-800: #0073dd;
-    --color-primary-900: #0073dd;
+    --color-primary-800: #0063be;
+    --color-primary-900: #0c2863;
 
     --color-secondary-100: #0c2863;
     --color-secondary-200: #0c2863;
@@ -75,11 +75,10 @@
     /* Gradients */
     --gradient-blue: linear-gradient(270deg, var(--color-secondary), var(--color-primary));
     --gradient-white: linear-gradient(270deg, var(--color-grey) 0%, var(--color-white) 100%);
-    --gradient-teaser: linear-gradient(200deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+    --gradient-card: linear-gradient(200deg, var(--color-secondary) 0%, var(--color-primary) 100%);
     --gradient-heading: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
     --gradient-warm-white: linear-gradient(90deg, var(--color-white) 0%, var(--color-grey) 50%);
     --gradient-warm-white-rl: linear-gradient(270deg, var(--color-white) 0%, var(--color-grey) 50%);
-    --gradient-kabi-blue: linear-gradient(85.07deg, var(--color-primary) 0%, var(--color-secondary) 100%);
     
 
     /* ===== Typography ===== */
@@ -194,7 +193,7 @@
     /* ===== Layout ===== */
 
     --gutter-padding: 40px;
-    --max-container-width: 1520px;
+    --max-container-width: 1400px;
     
 
     /* ===== Breakpoints ===== */
@@ -307,7 +306,6 @@
     --modal-padding: var(--space-12) var(--space-16);
     --modal-margin: var(--space-12) 0;
     --modal-shadow: var(--box-shadow-text-link);
-    
 
-    
+
 }

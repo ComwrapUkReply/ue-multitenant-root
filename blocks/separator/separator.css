@@ -14,13 +14,13 @@
 
 /* Blue variant - applies to separator line */
 .block.separator.blue .separator-line {
-  background: var(--color-primary-blue, #0073dd);
+  background: var(--color-primary, #0073dd);
   height: 2px;
 }
 
 /* Grey variant - applies to separator line */
 .block.separator.grey .separator-line {
-  background: var(--color-natural-grey, #8f8d87);
+  background: var(--color-grey-500, #8f8d87);
   height: 2px;
 }
 

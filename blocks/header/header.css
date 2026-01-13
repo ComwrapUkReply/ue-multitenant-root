@@ -220,7 +220,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > p {
 }
 
 header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > p > a {
-  color: var(--color-primary-blue);
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -260,7 +260,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
 
 header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1 > li > a:hover,
 header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1 > li > a:focus {
-  color: var(--color-primary-blue);
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -327,7 +327,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
 
   header nav .nav-sections .default-content-wrapper > ul > li:hover,
   header nav .nav-sections .default-content-wrapper > ul > li:focus {
-    background: var(--color-light-grey);
+    background: var(--color-grey-200);
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
@@ -337,7 +337,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
     width: auto;
     top: 150%;
     padding: var(--space-16);
-    background-color: var(--color-light-grey);
+    background-color: var(--color-grey-200);
     white-space: initial;
   }
 
@@ -350,7 +350,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
     height: 0;
     border-left: var(--space-8) solid transparent;
     border-right: var(--space-8) solid transparent;
-    border-bottom: var(--space-8) solid var(--color-light-grey);
+    border-bottom: var(--space-8) solid var(--color-grey-200);
   }
 
   /* nav-drop dropdown styles using CSS variables */
@@ -365,7 +365,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
   }
 
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > p > a {
-    color: var(--color-primary-blue);
+    color: var(--color-primary);
     text-decoration: none;
     pointer-events: none;
     transition: color var(--transition-base);
@@ -373,7 +373,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
 
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > p > a:hover,
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > p > a:focus {
-    color: var(--color-dark-blue);
+    color: var(--color-primary--900);
     text-decoration: none;
   }
 
@@ -409,7 +409,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
     margin-top: var(--space-8);
     padding: var(--space-16);
     background-color: var(--color-white);
-    border: 1px solid var(--color-cloud-grey);
+    border: 1px solid var(--color-grey-300);
     border-radius: var(--space-4);
     box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
     z-index: 1000;
@@ -449,7 +449,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 8px solid var(--color-cloud-grey);
+    border-bottom: 8px solid var(--color-grey-300);
   }
 
   /* submenu items */
@@ -473,14 +473,14 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
 
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1 > li > a:hover,
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1 > li > a:focus {
-    color: var(--color-primary-blue);
-    background-color: var(--color-light-grey);
+    color: var(--color-primary);
+    background-color: var(--color-grey-200);
     text-decoration: none;
   }
 
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1 > li > a:active {
-    color: var(--color-dark-blue);
-    background-color: var(--color-primary-grey);
+    color: var(--color-primary--900);
+    background-color: var(--color-grey-100);
   }
 }
 
@@ -508,7 +508,7 @@ header nav .nav-tools .language-switcher-header .language-current {
 }
 
 header nav .nav-tools .language-switcher-header .language-current:hover {
-  background: var(--color-light-grey);
+  background: var(--color-grey-200);
 }
 
 header nav .nav-tools .language-switcher-header .language-menu {

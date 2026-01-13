@@ -139,61 +139,61 @@
 /* Primary Button */
 .accordion .button.primary {
   color: var(--color-white);
-  background-color: var(--color-primary-blue);
-  border-color: var(--color-primary-blue);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .accordion .button.primary:hover,
 .accordion .button.primary:focus {
   color: var(--color-white);
-  background-color: var(--color-dark-blue);
-  border-color: var(--color-dark-blue);
+  background-color: var(--color-primary--900);
+  border-color: var(--color-primary--900);
   text-decoration: none;
 }
 
 .accordion .button.primary:active {
-  background-color: var(--color-blue);
-  border-color: var(--color-blue);
+  background-color: var(--color-primary-700);
+  border-color: var(--color-primary-700);
 }
 
 /* Secondary Button */
 .accordion .button.secondary {
-  color: var(--color-primary-blue);
+  color: var(--color-primary);
   background-color: transparent;
-  border-color: var(--color-primary-blue);
+  border-color: var(--color-primary);
 }
 
 .accordion .button.secondary:hover,
 .accordion .button.secondary:focus {
   color: var(--color-white);
-  background-color: var(--color-primary-blue);
+  background-color: var(--color-primary);
   text-decoration: none;
 }
 
 .accordion .button.secondary:active {
-  background-color: var(--color-dark-blue);
-  border-color: var(--color-dark-blue);
+  background-color: var(--color-primary--900);
+  border-color: var(--color-primary--900);
 }
 
 /* Tertiary Button */
 .accordion .button.tertiary {
-  color: var(--color-primary-blue);
+  color: var(--color-primary);
   background-color: transparent;
-  border-color: var(--color-primary-blue);
+  border-color: var(--color-primary);
   border-style: dashed;
 }
 
 .accordion .button.tertiary:hover,
 .accordion .button.tertiary:focus {
   color: var(--color-white);
-  background-color: var(--color-primary-blue);
+  background-color: var(--color-primary);
   border-style: solid;
   text-decoration: none;
 }
 
 .accordion .button.tertiary:active {
-  background-color: var(--color-dark-blue);
-  border-color: var(--color-dark-blue);
+  background-color: var(--color-primary--900);
+  border-color: var(--color-primary--900);
 }
 
 
