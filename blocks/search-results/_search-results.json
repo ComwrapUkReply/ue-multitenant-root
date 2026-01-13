@@ -23,8 +23,13 @@
         {
           "component": "aem-content",
           "name": "folder",
-          "label": "Filter by Folder...",
-          "description": "Filter results to show only pages from this folder path (e.g., /products or /blog). Leave empty to show all results. You can specify multiple folders separated by commas (e.g., /products, /blog)."
+          "label": "Filter by Folder",
+          "description": "Filter results to show only pages from this folder path (e.g., /products or /blog). Leave empty to show all results. You can specify multiple folders separated by commas (e.g., /products, /blog).",
+          "value": "",
+          "valueType": "string",
+          "validation": {
+            "rootPath": "/content/ue-multitenant-root"
+          }
         },
         {
           "component": "select",
@@ -41,10 +46,7 @@
               "value": "cards"
             }
           ],
-          "value": "",
-          "validation": {
-            "rootPath": "/content/ue-multitenant-root"
-          }
+          "value": ""
         },
         {
           "component": "text",
