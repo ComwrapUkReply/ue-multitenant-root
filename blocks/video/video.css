@@ -59,7 +59,7 @@ main>.section.video-container {
     background-color: #fff;
     color: #141411;
     padding: 12px 24px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-md);
     font-size: 1rem;
     font-weight: 300;
     letter-spacing: 3px;
@@ -134,7 +134,7 @@ main>.section.video-container {
     display: flex;
     flex-direction: column;
     background-color: #f7f7f7;
-    border-radius: 8px;
+    border-radius: var(--border-radius-md);
     overflow: hidden;
     position: relative;
   }
@@ -167,7 +167,7 @@ main>.section.video-container {
   }
   
   .video-modal .video-container {
-    border-radius: 8px;
+    border-radius: var(--border-radius-md);
     overflow: hidden;
   }
   

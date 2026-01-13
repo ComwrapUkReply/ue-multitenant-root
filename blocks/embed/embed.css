@@ -43,7 +43,7 @@
   width: 100%;
   height: 100%;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
 }
 
 /* Custom dimensions - no padding-bottom, use explicit height */
@@ -62,7 +62,7 @@
   padding: 2rem;
   background-color: var(--color-grey-200, #f7f6f5);
   border: 2px dashed var(--color-grey-300, #c9c5be);
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   text-align: center;
   color: var(----color-grey, #777673);
   font-size: var(--body-font-size-s, 19px);

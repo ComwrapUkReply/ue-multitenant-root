@@ -226,7 +226,7 @@
   max-width: 800px;
   padding: 2rem;
   background: rgb(255 255 255 / 95%);
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   backdrop-filter: blur(10px);
 }
 

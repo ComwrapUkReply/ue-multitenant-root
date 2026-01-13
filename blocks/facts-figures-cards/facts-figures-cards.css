@@ -11,7 +11,7 @@
 .facts-figures-card {
   background: var(--background-color, #fff);
   border: 1px solid var(--light-color, #e0e0e0);
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
