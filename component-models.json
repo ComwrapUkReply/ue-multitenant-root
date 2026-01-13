@@ -1454,7 +1454,7 @@
         "component": "boolean",
         "name": "autosuggest",
         "label": "Toggle to turn recommended search",
-        "description": "Enable list of recommendations when user is typing in the search input",
+        "description": "Enable list of recommendations when user is typing in the search input. Default: ON (true).",
         "valueType": "boolean",
         "value": true
       },
@@ -1462,7 +1462,7 @@
         "component": "aem-content",
         "name": "resultpage",
         "label": "Result Page...",
-        "description": "Link to the search results page. When set, clicking the search icon or pressing Enter will navigate to this page with search results."
+        "description": "Link to the search results page. When set, clicking the search icon or pressing Enter will navigate to this page with search results. This field is required when 'Toggle to turn recommended search' is disabled (false)."
       },
       {
         "component": "select",
