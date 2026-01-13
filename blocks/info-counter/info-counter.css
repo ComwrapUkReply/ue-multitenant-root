@@ -7,15 +7,15 @@
    CONTAINER & WRAPPER
    ============================================================================= */
 
+   /* Base wrapper styles - will be overridden by media queries */
+   .info-counter-wrapper {
+     display: flex;
+     width: 100%;
+   }
+
 .info-counter-container .info-counter-wrapper {
   display: flex;
   max-width: unset;
-}
-
-/* Base wrapper styles - will be overridden by media queries */
-.info-counter-wrapper {
-  display: flex;
-  width: 100%;
 }
 
 /* =============================================================================
@@ -227,6 +227,7 @@
     --info-counter-number-min-width: auto;
 
     /* Typography adjustments - larger base font size */
+
     /* Base size for 1-3 digits, scales DOWN for more digits to prevent overflow */
     --info-counter-digit-font-size: clamp(7rem, 30vw, 11rem); /* 112px - 176px */
     --info-counter-digit-line-height: 180px;
