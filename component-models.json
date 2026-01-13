@@ -1451,6 +1451,14 @@
     "id": "search",
     "fields": [
       {
+        "component": "boolean",
+        "name": "autosuggest",
+        "label": "Autosuggest",
+        "description": "Enable autosuggest functionality",
+        "valueType": "boolean",
+        "value": true
+      },
+      {
         "component": "aem-content",
         "name": "resultpage",
         "label": "Result Page",
