@@ -11,8 +11,10 @@ const CONFIG = {
   placeholders: {
     searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
+    viewAllButtonText: 'View all {count} results',
   },
   suggestionsLimit: 3, // Number of suggestions to show in inline mode
+  autosuggest: true, // Enable autosuggest by default
 };
 
 /** URL search params for managing query state */
@@ -251,7 +253,9 @@ async function renderResults(block, config, filteredData, searchTerms, showImage
       const input = block.querySelector('.search-input');
       const searchQuery = input ? input.value : '';
       viewAllLink.href = `${config.resultPage}?q=${encodeURIComponent(searchQuery)}`;
-      viewAllLink.textContent = `View all ${filteredData.length} results`;
+      // Use configured button text or default
+      const buttonText = config.placeholders.viewAllButtonText || CONFIG.placeholders.viewAllButtonText;
+      viewAllLink.textContent = buttonText.replace('{count}', filteredData.length.toString());
       viewAllLi.append(viewAllLink);
       searchResults.append(viewAllLi);
     }
@@ -328,6 +332,11 @@ async function handleSearch(e, block, config) {
     const url = new URL(window.location.href);
     url.search = searchParams.toString();
     window.history.replaceState({}, '', url.toString());
+  }
+
+  // If autosuggest is disabled, don't show inline results
+  if (!config.autosuggest) {
+    return;
   }
 
   if (searchValue.length < 3) {
@@ -592,15 +601,19 @@ function searchBox(block, config) {
 /**
  * Parses block configuration from block content
  * @param {HTMLElement} block - The block element
- * @returns {Object} Configuration object with resultPage and placeholders
+ * @returns {Object} Configuration object with autosuggest, resultPage, and placeholders
  */
 function parseBlockConfig(block) {
+  let autosuggest = CONFIG.autosuggest;
   let resultPage = null;
   const placeholders = { ...CONFIG.placeholders };
 
   const rows = [...block.children];
 
-  rows.forEach((row, rowIndex) => {
+  // Collect all text values for single-column parsing
+  const textValues = [];
+
+  rows.forEach((row) => {
     const cells = [...row.children];
 
     if (cells.length >= 2) {
@@ -608,46 +621,55 @@ function parseBlockConfig(block) {
       const label = cells[0].textContent.trim().toLowerCase();
       const valueCell = cells[1];
       const link = valueCell.querySelector('a[href]');
-      const textContent = valueCell.textContent.trim();
+      const textContent = valueCell.textContent.trim().toLowerCase();
 
-      if ((label.includes('result') || label.includes('page')) && link) {
+      if (label.includes('autosuggest') || label.includes('toggle') || label.includes('recommend')) {
+        // Parse boolean value
+        autosuggest = textContent === 'true' || textContent === '1' || textContent === 'yes' || textContent === 'on';
+      } else if ((label.includes('result') || label.includes('page')) && link) {
         resultPage = link.href;
-      } else if (label.includes('placeholder') && textContent) {
-        placeholders.searchPlaceholder = textContent;
-      } else if (label.includes('no results') && textContent) {
-        placeholders.searchNoResults = textContent;
+      } else if (label.includes('placeholder')) {
+        placeholders.searchPlaceholder = valueCell.textContent.trim();
+      } else if (label.includes('no results')) {
+        placeholders.searchNoResults = valueCell.textContent.trim();
+      } else if (label.includes('view all') || label.includes('button')) {
+        placeholders.viewAllButtonText = valueCell.textContent.trim();
       }
     } else if (cells.length === 1) {
-      // Single-column structure: just the link or text
+      // Single-column structure: collect values
       const cell = cells[0];
       const link = cell.querySelector('a[href]');
       const textContent = cell.textContent.trim();
 
-      // Get value from link or text content
-      let value = null;
       if (link) {
-        value = link.href;
+        // Link is likely the result page
+        if (!resultPage) {
+          resultPage = link.href;
+        }
       } else if (textContent && textContent.length > 0) {
-        value = textContent;
-      }
-
-      if (value) {
-        // Fields in order: resultpage, searchPlaceholder, searchNoResults
-        switch (rowIndex) {
-          case 0:
-            resultPage = value;
-            break;
-          case 1:
-            placeholders.searchPlaceholder = value;
-            break;
-          default:
-            break;
+        // Check for boolean values first
+        const lowerText = textContent.toLowerCase();
+        if (lowerText === 'true' || lowerText === 'false') {
+          autosuggest = lowerText === 'true';
+        } else {
+          textValues.push(textContent);
         }
       }
     }
   });
 
-  return { resultPage, placeholders };
+  // Assign remaining text values in order: searchPlaceholder, searchNoResults, viewAllButtonText
+  if (textValues.length >= 1) {
+    placeholders.searchPlaceholder = textValues[0];
+  }
+  if (textValues.length >= 2) {
+    placeholders.searchNoResults = textValues[1];
+  }
+  if (textValues.length >= 3) {
+    placeholders.viewAllButtonText = textValues[2];
+  }
+
+  return { autosuggest, resultPage, placeholders };
 }
 
 /**
@@ -656,11 +678,12 @@ function parseBlockConfig(block) {
  */
 export default async function decorate(block) {
   // Parse configuration from block content
-  const { resultPage, placeholders } = parseBlockConfig(block);
+  const { autosuggest, resultPage, placeholders } = parseBlockConfig(block);
 
   // Build configuration object (always use default query-index.json)
   const config = {
     source: CONFIG.defaultSource,
+    autosuggest,
     resultPage,
     placeholders,
     suggestionsLimit: CONFIG.suggestionsLimit,
@@ -668,10 +691,20 @@ export default async function decorate(block) {
 
   // Clear block content and build search UI
   block.innerHTML = '';
-  block.append(
-    searchBox(block, config),
-    searchResultsContainer(block),
-  );
+
+  // Add class for autosuggest mode
+  if (!autosuggest) {
+    block.classList.add('no-autosuggest');
+  }
+
+  // Build search UI elements
+  const searchBoxElement = searchBox(block, config);
+  block.append(searchBoxElement);
+
+  // Only add results container if autosuggest is enabled
+  if (autosuggest) {
+    block.append(searchResultsContainer(block));
+  }
 
   // Add aria attributes for mobile toggle
   block.setAttribute('id', 'search-panel');

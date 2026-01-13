@@ -444,4 +444,40 @@
   .search ul.search-results > li {
     border-bottom-width: 2px;
   }
+
+  /* No autosuggest mode - high contrast */
+  .search.block.no-autosuggest .search-icon-button {
+    border: 2px solid var(--color-white);
+  }
+}
+
+/* ===== NO AUTOSUGGEST MODE ===== */
+
+/* When autosuggest is disabled, only show search box with button */
+.search-wrapper .search.block.no-autosuggest .search-box {
+  max-width: 500px;
+}
+
+.search.block.no-autosuggest .search-results {
+  display: none;
+}
+
+/* Make the search icon button more prominent in no-autosuggest mode */
+.search.block.no-autosuggest .search-box .search-icon-button {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: var(--space-12);
+}
+
+.search.block.no-autosuggest .search-box .search-icon-button .icon {
+  filter: brightness(0) invert(1);
+}
+
+.search.block.no-autosuggest .search-box .search-icon-button:hover {
+  background-color: var(--color-dark-blue);
+}
+
+.search.block.no-autosuggest .search-box .search-icon-button:focus {
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 2px;
 }
