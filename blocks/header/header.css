@@ -373,7 +373,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
 
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > p > a:hover,
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > p > a:focus {
-    color: var(--color-primary--900);
+    color: var(--color-primary-900);
     text-decoration: none;
   }
 
@@ -479,7 +479,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
   }
 
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1 > li > a:active {
-    color: var(--color-primary--900);
+    color: var(--color-primary-900);
     background-color: var(--color-grey-100);
   }
 }

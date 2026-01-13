@@ -207,7 +207,7 @@ a:not([class]) {
 
 a:hover,
 a:focus {
-    color: var(--color-primary--900);
+    color: var(--color-primary-900);
 }
 
 a:active {
@@ -537,8 +537,8 @@ blockquote::before {
 .button:hover,
 .button:focus {
     color: var(--color-white);
-    background-color: var(--color-primary--900);
-    border-color: var(--color-primary--900);
+    background-color: var(--color-primary-900);
+    border-color: var(--color-primary-900);
     text-decoration: none;
 }
 
@@ -548,8 +548,8 @@ blockquote::before {
 }
 
 .button:active {
-    background-color: var(--color-primary--900);
-    border-color: var(--color-primary--900);
+    background-color: var(--color-primary-900);
+    border-color: var(--color-primary-900);
 }
 
 /* Secondary Button */
@@ -568,8 +568,8 @@ blockquote::before {
 }
 
 .button.secondary:active {
-    background-color: var(--color-primary--900);
-    border-color: var(--color-primary--900);
+    background-color: var(--color-primary-900);
+    border-color: var(--color-primary-900);
 }
 
 /* Forms */
@@ -1015,7 +1015,7 @@ blockquote::before {
 }
 
 .back-to-top:hover {
-  background-color: var(--color-primary--900);
+  background-color: var(--color-primary-900);
   box-shadow: 0 6px 16px rgb(0 0 0 / 20%);
   transform: translateY(-2px);
 }

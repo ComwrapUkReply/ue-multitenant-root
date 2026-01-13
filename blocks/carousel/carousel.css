@@ -117,7 +117,7 @@
 }
 
 .carousel.dark {
-    background-color: var(--color-primary--900);
+    background-color: var(--color-primary-900);
   
     .carousel-slide-content h1,
     .carousel-slide-content h2,

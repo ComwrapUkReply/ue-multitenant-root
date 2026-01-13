@@ -146,8 +146,8 @@
 .accordion .button.primary:hover,
 .accordion .button.primary:focus {
   color: var(--color-white);
-  background-color: var(--color-primary--900);
-  border-color: var(--color-primary--900);
+  background-color: var(--color-primary-900);
+  border-color: var(--color-primary-900);
   text-decoration: none;
 }
 
@@ -171,8 +171,8 @@
 }
 
 .accordion .button.secondary:active {
-  background-color: var(--color-primary--900);
-  border-color: var(--color-primary--900);
+  background-color: var(--color-primary-900);
+  border-color: var(--color-primary-900);
 }
 
 /* Tertiary Button */
@@ -192,8 +192,8 @@
 }
 
 .accordion .button.tertiary:active {
-  background-color: var(--color-primary--900);
-  border-color: var(--color-primary--900);
+  background-color: var(--color-primary-900);
+  border-color: var(--color-primary-900);
 }
 
 

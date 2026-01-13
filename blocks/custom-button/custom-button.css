@@ -42,7 +42,7 @@
 }
 
 .custom-button .button:hover::after {
-  background-color: var(--color-primary--900);
+  background-color: var(--color-primary-900);
 }
 
 /* Button Label */
