@@ -41,7 +41,10 @@
               "value": "cards"
             }
           ],
-          "value": ""
+          "value": "",
+          "validation": {
+            "rootPath": "/content/ue-multitenant-root"
+          }
         },
         {
           "component": "text",
