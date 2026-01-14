@@ -7,7 +7,7 @@
 const CONFIG = {
   projectName: 'ue-multitenant-root',
   githubOrg: 'comwrapukreply',
-  branch: 'fea-edge-60',
+  branch: 'main',
   regions: {
     ch: {
       code: 'ch', name: 'Switzerland', defaultLanguage: 'de',

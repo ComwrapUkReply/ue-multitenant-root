@@ -4,7 +4,7 @@
 
 /* header and nav layout */
 header .nav-wrapper {
-    padding: var(--space-4) 0;
+    padding: var(--space-16) 0;
   background-color: var(--color-white);
   width: 100%;
   z-index: 2;
@@ -307,6 +307,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
 
   header nav .nav-sections ul {
     display: flex;
+    justify-content: flex-end;
     gap: var(--space-24);
     margin: 0;
   }
@@ -328,7 +329,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
 
   header nav .nav-sections .default-content-wrapper > ul > li:hover,
   header nav .nav-sections .default-content-wrapper > ul > li:focus {
-    background: var(--color-light-grey);
+    background: none;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
@@ -488,42 +489,4 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
 /* tools */
 header nav .nav-tools {
   display: flex;
-}
-
-/* Language switcher in header */
-header nav .nav-tools .language-switcher-header {
-  display: flex;
-  align-items: center;
-}
-
-header nav .nav-tools .language-switcher-header .block.language-switcher {
-  margin: 0;
-}
-
-header nav .nav-tools .language-switcher-header .language-current {
-  min-width: auto;
-  padding: var(--space-8) var(--space-12);
-  font-size: var(--font-size-label);
-  border: none;
-  background: var(--color-white);
-}
-
-header nav .nav-tools .language-switcher-header .language-current:hover {
-  background: var(--color-light-grey);
-}
-
-header nav .nav-tools .language-switcher-header .language-menu {
-  position: absolute;
-  right: 0;
-  left: auto;
-}
-
-header nav .nav-tools .language-switcher-header .language-option {
-  padding: var(--space-8) var(--space-12);
-}
-
-/* Region switcher in header - uses styles from region-switcher.css */
-header nav .nav-tools .region-switcher-header {
-  display: flex;
-  align-items: center;
 }

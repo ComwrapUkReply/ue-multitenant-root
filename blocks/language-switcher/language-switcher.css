@@ -1,7 +1,7 @@
 /* Language Switcher Block Styles */
 
 .block.language-switcher {
-  margin: var(--space-16) 0;
+  margin: 0;
  
 }
 
@@ -27,16 +27,20 @@
 }
 
 .language-list.horizontal .language-item {
-  margin: 0;
+  margin: 0 var(--space-4);
   padding: 0;
   position: relative;
+}
+
+.language-list.horizontal .language-item.current {
+    border-bottom: 1px solid var(--color-primary-blue);
 }
 
 .language-list.horizontal .language-current,
 .language-list.horizontal .language-option {
   display: inline-flex;
   align-items: center;
-  padding: var(--space-4) 5px;
+  padding: var(--space-4) 0;
   text-decoration: none;
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
@@ -71,7 +75,7 @@
 
 .language-switcher-header .language-list.horizontal .language-current,
 .language-switcher-header .language-list.horizontal .language-option {
-  padding: var(--space-4) var(--space-8);
+  padding: 0;
   line-height: var(--line-height-mob-label);
 }
 
