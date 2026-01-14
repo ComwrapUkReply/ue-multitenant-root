@@ -702,6 +702,23 @@
         "validation": {
           "rootPath": "/content/ue-multitenant-root"
         }
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Display Options",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default (No Filter)",
+            "value": ""
+          },
+          {
+            "name": "With Tag Filter",
+            "value": "with-filter"
+          }
+        ],
+        "value": ""
       }
     ]
   },
@@ -1431,6 +1448,22 @@
           }
         ],
         "value": ""
+      },
+      {
+        "component": "boolean",
+        "name": "enableTagFilter",
+        "label": "Enable Tag Filter",
+        "description": "Show tag filter buttons based on page tags in search results. Users can filter results by clicking on tag pills.",
+        "valueType": "boolean",
+        "value": false
+      },
+      {
+        "component": "boolean",
+        "name": "multipleTagSelect",
+        "label": "Allow Multiple Tag Selection",
+        "description": "When enabled, users can select multiple tags to filter results. When disabled, only one tag can be selected at a time.",
+        "valueType": "boolean",
+        "value": true
       },
       {
         "component": "text",
