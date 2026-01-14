@@ -464,6 +464,77 @@ Don't mix min-width and max-width in the same stylesheet:
 @media (max-width: 899px) { /* Desktop (wrong approach) */ }
 ```
 
+## Accessibility and WCAG 2.2 Compliance
+
+### CRITICAL: WCAG 2.2 and Accessibility Requirements
+**ALL CSS must comply with WCAG 2.2 guidelines and accessibility best practices. This is mandatory and non-negotiable.**
+
+#### Color and Contrast
+- **Minimum contrast ratios**:
+  - Normal text: 4.5:1 minimum
+  - Large text (18pt+ or 14pt+ bold): 3:1 minimum
+  - Interactive elements: 3:1 minimum (focus states)
+- **Color independence**: Don't rely solely on color to convey information
+- **Test with tools**: Use contrast checkers and color blindness simulators
+
+#### Focus Management
+- **Visible focus indicators**: All interactive elements must have visible focus states
+- **Focus order**: Logical tab order that matches visual layout
+- **Focus trapping**: Modal dialogs must trap focus appropriately
+
+#### Motion and Animation
+- **Respect user preferences**: Honor `prefers-reduced-motion` setting
+- **No vestibular triggers**: Avoid animations that could cause dizziness
+- **Smooth transitions**: Use `transition` instead of abrupt changes
+
+#### Touch Targets
+- **Minimum size**: 44px × 44px for touch targets (WCAG 2.2 requirement)
+- **Spacing**: Adequate spacing between interactive elements
+- **Hover states**: Provide hover states on devices that support hover
+
+#### Text and Typography
+- **Readable fonts**: Use system fonts or well-tested web fonts
+- **Line height**: Minimum 1.5 for body text, 1.2 for headings
+- **Text spacing**: Support user-defined text spacing preferences
+
+#### Media Queries and Responsive Design
+- **Zoom support**: Ensure 200% zoom doesn't break layout (WCAG 2.2 requirement)
+- **Orientation**: Support both portrait and landscape orientations
+- **Reflow**: Content must reflow without horizontal scrolling at 320px width
+
+### Implementation Requirements
+```css
+/* ✅ ACCESSIBLE FOCUS STATES */
+.button:focus-visible,
+.link:focus-visible {
+  outline: 3px solid #0056b3;
+  outline-offset: 2px;
+}
+
+/* ✅ RESPECT USER PREFERENCES */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ✅ TOUCH TARGET SIZES */
+.button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.75rem 1.5rem;
+}
+
+/* ✅ HIGH CONTRAST SUPPORT */
+@media (prefers-contrast: high) {
+  .button {
+    border: 2px solid;
+  }
+}
+```
+
 ## CSS Validation and Linting
 
 ### ESLint CSS Validation
@@ -601,11 +672,12 @@ Use @supports for progressive enhancement:
    - Use block-specific prefixes for private classes
 
 5. **Validate and Optimize**
+   - **CRITICAL**: Test WCAG 2.2 compliance (contrast, focus, touch targets, motion)
    - Run ESLint CSS validation: `npx eslint "**/*.css"`
    - Fix any linting errors before proceeding
    - Check performance impact
    - Test across different screen sizes
-   - Validate accessibility
+   - Validate keyboard navigation and screen reader compatibility
 
 ### Example: Creating CSS for a New "Feature" Block
 
@@ -793,16 +865,17 @@ Use @supports for progressive enhancement:
 
 Follow these guidelines when creating CSS for new EDS blocks:
 
-1. **Validate with ESLint CSS** - Ensure all CSS passes `@eslint/css` validation
-2. **Use block-specific naming** - Prefix all classes with the block name
-3. **Keep selectors simple** - Avoid complex selectors and CSS nesting
-4. **Mobile-first approach** - Write mobile styles first, enhance for larger screens
-5. **Use standard breakpoints** - 600px, 900px, 1200px (all width >=)
-6. **Isolate block styles** - Ensure CSS only affects elements within the block
-7. **Leverage ARIA attributes** - Use semantic attributes for state-based styling
-8. **Avoid @important** - Let the cascade work naturally
-9. **Use modern CSS** - Rely on native CSS features with fallbacks
-10. **Maintain consistency** - Follow existing indentation and property order
-11. **Test thoroughly** - Validate across devices and ensure no conflicts
+1. **⚠️ WCAG 2.2 Compliance** - All CSS must meet WCAG 2.2 accessibility standards (MANDATORY)
+2. **Validate with ESLint CSS** - Ensure all CSS passes `@eslint/css` validation
+3. **Use block-specific naming** - Prefix all classes with the block name
+4. **Keep selectors simple** - Avoid complex selectors and CSS nesting
+5. **Mobile-first approach** - Write mobile styles first, enhance for larger screens
+6. **Use standard breakpoints** - 600px, 900px, 1200px (all width >=)
+7. **Isolate block styles** - Ensure CSS only affects elements within the block
+8. **Leverage ARIA attributes** - Use semantic attributes for state-based styling
+9. **Avoid @important** - Let the cascade work naturally
+10. **Use modern CSS** - Rely on native CSS features with fallbacks
+11. **Maintain consistency** - Follow existing indentation and property order
+12. **Test thoroughly** - Validate across devices and ensure no conflicts
 
 This approach ensures maintainable, performant, and scalable CSS that works well within the EDS ecosystem.
