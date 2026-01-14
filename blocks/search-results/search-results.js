@@ -589,7 +589,36 @@ function extractEnableTagFilter(block) {
 }
 
 /**
+ * Checks if a value is a boolean string
+ * @param {string} value - The value to check
+ * @returns {boolean} True if value is a boolean string
+ */
+function isBooleanString(value) {
+  const lowerValue = value.toLowerCase();
+  return lowerValue === 'true' || lowerValue === 'false';
+}
+
+/**
+ * Parses a boolean value from string
+ * @param {string} value - The value to parse
+ * @returns {boolean} Parsed boolean value
+ */
+function parseBooleanValue(value) {
+  const lowerValue = value.toLowerCase();
+  return lowerValue === 'true' || lowerValue === 'yes' || lowerValue === '1';
+}
+
+/**
  * Parses block configuration from block content
+ * AEM renders block fields in order as rows with single cells containing the value
+ * Field order from _search-results.json:
+ * 1. folder (aem-content - link)
+ * 2. classes (select - text)
+ * 3. enableTagFilter (boolean - true/false)
+ * 4. multipleTagSelect (boolean - true/false)
+ * 5. searchPlaceholder (text)
+ * 6. searchNoResultsFor (text)
+ * 7. searchResultsTitle (text)
  * @param {HTMLElement} block - The block element
  * @returns {Object} Configuration object with folders, placeholders, classes, and enableTagFilter
  */
@@ -602,11 +631,14 @@ function parseBlockConfig(block) {
 
   const rows = [...block.children];
 
+  // Collect values from rows in order
+  const values = [];
+
   rows.forEach((row) => {
     const cells = [...row.children];
 
     if (cells.length >= 2) {
-      // Two-column structure: label | value
+      // Two-column structure: label | value (key-value format)
       const label = cells[0].textContent.trim().toLowerCase();
       const valueCell = cells[1];
       const link = valueCell.querySelector('a[href]');
@@ -627,89 +659,90 @@ function parseBlockConfig(block) {
             .filter((f) => f.length > 0);
         }
       } else if ((label.includes('display style') || label.includes('classes')) && textContent) {
-        // Extract classes value
         classes = textContent.trim();
-      } else if (label.includes('no results') && label.includes('for') && textContent) {
+      } else if ((label.includes('searchnoresultsfor') || (label.includes('no results') && label.includes('for'))) && textContent) {
         placeholders.searchNoResultsFor = textContent;
-      } else if ((label.includes('search results title') || label.includes('searchresultstitle') || label === 'title') && textContent) {
+      } else if ((label.includes('searchresultstitle') || label.includes('search results title')) && textContent) {
         placeholders.searchResultsTitle = textContent;
-      } else if (label.includes('search placeholder') && textContent) {
+      } else if ((label.includes('searchplaceholder') || label.includes('search placeholder')) && textContent) {
         placeholders.searchPlaceholder = textContent;
-      } else if (label.includes('tag filter') || label.includes('enabletagfilter')) {
-        const value = textContent.toLowerCase();
-        enableTagFilter = value === 'true' || value === 'yes' || value === '1';
-      } else if (label.includes('multiple') && label.includes('select')) {
-        const value = textContent.toLowerCase();
-        multipleTagSelect = value !== 'false' && value !== 'no' && value !== '0';
+      } else if (label.includes('enabletagfilter') || label.includes('tag filter')) {
+        enableTagFilter = parseBooleanValue(textContent);
+      } else if (label.includes('multipletagselect') || (label.includes('multiple') && label.includes('select'))) {
+        multipleTagSelect = parseBooleanValue(textContent);
       }
-    }
-  });
-
-  // Single-column structure: collect all values and assign by content type
-  // AEM may compress rows, so we can't rely on row index matching field index
-  const collectedValues = {
-    paths: [],
-    knownClasses: [],
-    textValues: [],
-  };
-
-  rows.forEach((row) => {
-    const cells = [...row.children];
-    if (cells.length === 1) {
+    } else if (cells.length === 1) {
+      // Single-column structure: just the value
       const cell = cells[0];
       const link = cell.querySelector('a[href]');
       const textContent = cell.textContent.trim();
 
-      let value = null;
       if (link && link.href) {
-        value = extractPathname(link.href);
+        // This is a link (folder path)
+        values.push({ type: 'link', value: extractPathname(link.href) });
       } else if (textContent && textContent.length > 0) {
-        value = textContent;
-      }
-
-      if (value) {
-        const isPath = value.startsWith('/') || link;
-        const isKnownClass = ['cards', 'minimal'].includes(value.toLowerCase());
-
-        if (isPath) {
-          collectedValues.paths.push(value);
-        } else if (isKnownClass) {
-          collectedValues.knownClasses.push(value);
+        // Check if it's a boolean, known class, or text
+        if (isBooleanString(textContent)) {
+          values.push({ type: 'boolean', value: parseBooleanValue(textContent) });
+        } else if (['cards', 'minimal'].includes(textContent.toLowerCase())) {
+          values.push({ type: 'class', value: textContent });
         } else {
-          collectedValues.textValues.push(value);
+          values.push({ type: 'text', value: textContent });
         }
       }
     }
   });
 
-  // Assign collected values to appropriate fields
-  // Paths → folder
-  if (collectedValues.paths.length > 0 && folders.length === 0) {
-    folders = collectedValues.paths[0]
+  // Process single-column values in order based on field definition
+  // Field order: folder, classes, enableTagFilter, multipleTagSelect, searchPlaceholder, searchNoResultsFor, searchResultsTitle
+  let linkIndex = 0;
+  let classIndex = 0;
+  let booleanIndex = 0;
+  let textIndex = 0;
+
+  const links = values.filter((v) => v.type === 'link');
+  const knownClasses = values.filter((v) => v.type === 'class');
+  const booleans = values.filter((v) => v.type === 'boolean');
+  const texts = values.filter((v) => v.type === 'text');
+
+  // Assign folder from first link if not already set
+  if (folders.length === 0 && links.length > linkIndex) {
+    const folderValue = links[linkIndex].value;
+    linkIndex += 1;
+    folders = folderValue
       .split(',')
       .map((f) => transformAEMPath(f))
       .filter((f) => f.length > 0);
   }
 
-  // Known classes → classes
-  if (collectedValues.knownClasses.length > 0 && !classes) {
-    classes = collectedValues.knownClasses[0];
+  // Assign classes from first known class if not already set
+  if (!classes && knownClasses.length > classIndex) {
+    classes = knownClasses[classIndex].value;
+    classIndex += 1;
   }
 
-  // Text values assignment based on field order:
-  // searchPlaceholder, searchNoResultsFor, searchResultsTitle
-  if (collectedValues.textValues.length === 1) {
-    // Only one text value - it's the title (last field)
-    placeholders.searchResultsTitle = collectedValues.textValues[0];
-  } else if (collectedValues.textValues.length === 2) {
-    // Two text values - first is no results message, second is title
-    placeholders.searchNoResultsFor = collectedValues.textValues[0];
-    placeholders.searchResultsTitle = collectedValues.textValues[1];
-  } else if (collectedValues.textValues.length >= 3) {
-    // Three text values - placeholder, no results message, title
-    placeholders.searchPlaceholder = collectedValues.textValues[0];
-    placeholders.searchNoResultsFor = collectedValues.textValues[1];
-    placeholders.searchResultsTitle = collectedValues.textValues[2];
+  // Assign booleans in order: enableTagFilter, multipleTagSelect
+  if (booleans.length > booleanIndex) {
+    enableTagFilter = booleans[booleanIndex].value;
+    booleanIndex += 1;
+  }
+  if (booleans.length > booleanIndex) {
+    multipleTagSelect = booleans[booleanIndex].value;
+    booleanIndex += 1;
+  }
+
+  // Assign text values in order: searchPlaceholder, searchNoResultsFor, searchResultsTitle
+  if (texts.length > textIndex && placeholders.searchPlaceholder === CONFIG.placeholders.searchPlaceholder) {
+    placeholders.searchPlaceholder = texts[textIndex].value;
+    textIndex += 1;
+  }
+  if (texts.length > textIndex && placeholders.searchNoResultsFor === CONFIG.placeholders.searchNoResultsFor) {
+    placeholders.searchNoResultsFor = texts[textIndex].value;
+    textIndex += 1;
+  }
+  if (texts.length > textIndex && placeholders.searchResultsTitle === CONFIG.placeholders.searchResultsTitle) {
+    placeholders.searchResultsTitle = texts[textIndex].value;
+    textIndex += 1;
   }
 
   // Fallback: try to extract classes using direct DOM search if not found
