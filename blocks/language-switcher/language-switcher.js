@@ -9,7 +9,7 @@ import { PAGE_MAPPINGS } from './page-mappings.js';
 const CONFIG = {
   projectName: 'ue-multitenant-root',
   githubOrg: 'comwrapukreply',
-  branch: 'main',
+  branch: 'fea-edge-60',
   locales: [
     {
       code: 'ch-de', path: '/ch/de/', label: 'DE', country: 'ch',

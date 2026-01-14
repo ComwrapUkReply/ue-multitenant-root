@@ -2,7 +2,8 @@
 
 .region-dropdown {
   position: relative;
-  display: inline-block;
+  align-items: center;
+  display: flex;
 }
 
 /* Button */
@@ -18,7 +19,7 @@
   font-family: var(--font-family-body);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
-  color: var(--color-black);
+  color: var(--color-primary-blue);
   cursor: pointer;
   transition: background var(--transition-fast), border-color var(--transition-fast);
 }
@@ -35,12 +36,12 @@
 
 .region-current .label {
   flex: 1;
+  color: var(--color-primary-blue);
 }
 
 .region-current .arrow {
-  font-size: 0.7em;
-  opacity: 0.6;
   transition: transform var(--transition-fast);
+  line-height: 1;
 }
 
 .region-current[aria-expanded="true"] .arrow {
@@ -53,11 +54,11 @@
   top: 100%;
   left: 0;
   right: 0;
-  margin: 0;
+  margin: var(--space-4) 0 0;
   padding: 0;
   list-style: none;
   background: var(--color-white);
-  border: 2px solid var(--color-cloud-grey);
+  border: 2px solid var(--color-primary-blue);
   border-radius: var(--space-4);
   box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   z-index: 1000;
@@ -114,6 +115,17 @@
 
 .region-switcher-header .region-current:hover {
   background: var(--color-light-grey);
+}
+
+.region-switcher .region-current::before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    background: url('../../assets/globe.svg') no-repeat left center;
+    background-size: 16px;
+    padding-left: 16px;
+    width: 16px;
+    height: 16px;
 }
 
 .region-switcher-header .region-menu {
