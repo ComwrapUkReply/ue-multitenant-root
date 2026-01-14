@@ -20,8 +20,11 @@
   transition: background-color 0.2s;
 }
 
-.search-wrapper .search-button:hover,
-.search-wrapper .search-button:focus {
+.search-wrapper .search-button:hover  {
+    outline: none;
+}
+
+.search-wrapper .search-button:focus-visible {
   outline: 2px solid var(--color-primary-blue);
 }
 
