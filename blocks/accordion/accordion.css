@@ -1,7 +1,7 @@
 .accordion {
   list-style: none;
   margin: 0;
-  padding-top: 4rem;
+  padding-top: var(--space-64);
 }
 
 .accordion > li {
@@ -89,12 +89,12 @@
 
 .accordion-content {
   display: flex;
-  gap: 2rem;
-  padding: 2rem 0;
+  gap: var(--space-32);
+  padding: var(--space-32) 0;
 }
 
 .accordion-content picture {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-16);
   display: block;
   width: 100%;
 }
@@ -108,7 +108,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 2rem;
+  gap: var(--space-32);
 }
 
 .accordion button:hover, 
@@ -121,16 +121,16 @@
 /* Button Styles within Accordion */
 .accordion .button {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
+  padding: var(--space-12) var(--space-24);
   border-radius: var(--border-radius-sm);
   font-family: var(--body-font-family);
-  font-size: var(--body-font-size-xs);
+  font-size: var(--font-size-base);
   font-weight: 500;
   text-decoration: none;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin: 1rem 0;
+  margin: var(--space-16) 0;
   border: 2px solid;
   max-width: fit-content;
   max-height: fit-content;

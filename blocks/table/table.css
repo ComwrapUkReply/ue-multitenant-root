@@ -7,7 +7,7 @@
   width: 100%;
   max-width: 100%;
   border-collapse: collapse;
-  font-size: var(--body-font-size-xs);
+  font-size: var(--font-size-base);
 }
 
 @media (width >= 600px) {
@@ -37,7 +37,7 @@
 
 .table.block table th,
 .table.block table td {
-  padding: 0.5em;
+  padding: var(--space-8);
   text-align: left;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .table table td p + p {
-  margin-top: 0.25em;
+  margin-top: var(--space-4);
 }
 
 /* no header variant */

@@ -1,10 +1,10 @@
 /* Tabs Block - Vertical Layout with Dark Background */
 .tabs-block {
   display: flex;
-  gap: 40px;
+  gap: var(--space-40);
   align-items: flex-start;
   background-color: var(--color-secondary);
-  padding: 104px 200px;
+  padding: var(--space-104) var(--space-200);
   min-height: 472px;
 }
 
@@ -32,14 +32,14 @@
 .tabs-tab-buttons-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 /* Tab Button */
 .tabs-tab-button {
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 var(--space-24);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -55,16 +55,16 @@
 .tabs-tab-button-content {
   font-family: 'Albert Sans', sans-serif;
   font-weight: 600;
-  font-size: 32px;
-  line-height: 40px;
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-h4);
   color: rgb(255 255 255 / 50%);
   transition: all 0.3s ease;
 }
 
 /* Active Tab Button */
 .tabs-tab-button.active .tabs-tab-button-content {
-  font-size: 44px;
-  line-height: 56px;
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
   color: var(--color-white);
 }
 
@@ -105,24 +105,24 @@
 .tabs-tab-panel h2 {
   font-family: 'Albert Sans', sans-serif;
   font-weight: 600;
-  font-size: 32px;
-  line-height: 40px;
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-h4);
   color: var(--color-white);
   margin-top: 0;
-  padding-bottom: 32px;
+  padding-bottom: var(--space-32);
 }
 
 .tabs-tab-panel p {
   font-family: 'Albert Sans', sans-serif;
   font-weight: 400;
-  font-size: 20px;
-  line-height: 32px;
+  font-size: var(--font-size-h6);
+  line-height: var(--line-height-h6);
   color: var(--color-white);
-  margin-bottom: 24px;
+  margin-bottom: var(--space-24);
 }
 
 .tabs-tab-panel sup {
-  font-size: 12.9px;
+  font-size: 12px;
   vertical-align: super;
 }
 
@@ -135,26 +135,26 @@
 
 /* Footnotes Styling */
 .tabs-tab-panel .footnotes {
-  margin-top: 24px;
+  margin-top: var(--space-24);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .tabs-tab-panel .footnotes p {
-  font-size: 18px;
-  line-height: 24px;
+  font-size: var(--font-size-meta);
+  line-height: var(--line-height-meta);
   margin-bottom: 0;
 }
 
 .tabs-tab-panel .footnotes sup {
-  font-size: 11.61px;
+  font-size: 12px;
 }
 
 /* Responsive Design - Tablet */
 @media (width <= 1200px) {
   .tabs-container {
-    padding: 80px 100px;
+    padding: var(--space-80) var(--space-100);
   }
 
   .tabs-tab-list {
@@ -176,8 +176,8 @@
 @media (width <= 768px) {
   .tabs-block {
     flex-direction: column;
-    padding: 40px 24px;
-    gap: 24px;
+    padding: var(--space-40) var(--space-24);
+    gap: var(--space-24);
   }
 
   .tabs-tab-list {
@@ -198,23 +198,23 @@
 
   .tabs-tab-buttons-wrapper {
     flex-direction: row;
-    gap: 8px;
+    gap: var(--space-8);
   }
 
   .tabs-tab-button {
-    padding: 12px 16px;
+    padding: var(--space-12) var(--space-16);
     white-space: nowrap;
     min-height: 0;
   }
 
   .tabs-tab-button-content {
-    font-size: 20px;
-    line-height: 28px;
+    font-size: var(--font-size-h6);
+    line-height: var(--line-height-h6);
   }
 
   .tabs-tab-button.active .tabs-tab-button-content {
-    font-size: 24px;
-    line-height: 32px;
+    font-size: var(--font-size-h5);
+    line-height: var(--line-height-h5);
   }
 
   .tabs-tab-panels {
@@ -222,14 +222,14 @@
   }
 
   .tabs-tab-panel h2 {
-    font-size: 24px;
-    line-height: 32px;
-    padding-bottom: 24px;
+    font-size: var(--font-size-h5);
+    line-height: var(--line-height-h5);
+    padding-bottom: var(--space-24);
   }
 
   .tabs-tab-panel p {
-    font-size: 16px;
-    line-height: 24px;
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
   }
 }
 
@@ -291,41 +291,41 @@
 }
 
 .tabs.primary .tabs-tab-panel.active {
-      display: block;
-    }
+  display: block;
+}
   
 .tabs.primary .tabs-tab-panel[hidden] {
-      display: none;
-    }
+  display: none;
+}
   
 .tabs.primary .tabs-tab-panel h2 {
-      color: var(--color-secondary);
-    }
+  color: var(--color-secondary);
+}
   
 .tabs.primary .tabs-tab-panel p {
-      color: var(--color-secondary);
-    }
+  color: var(--color-secondary);
+}
   
 .tabs.primary .tabs-tab-panel sup {
-      color: var(--color-secondary);
-    }
+  color: var(--color-secondary);
+}
   
 .tabs.primary .tabs-tab-panel a {
-      color: var(--color-secondary);
-    }
+  color: var(--color-secondary);
+}
   
 .tabs.primary .tabs-tab-panel .footnotes {
-      color: var(--color-secondary);
-    }
+  color: var(--color-secondary);
+}
   
 .tabs.primary .tabs-tab-panel .footnotes p {
-      color: var(--color-secondary);
-    }
+  color: var(--color-secondary);
+}
   
 .tabs.primary .tabs-tab-panel .footnotes sup {
-      color: var(--color-secondary);
-    }
+  color: var(--color-secondary);
+}
 
 .tabs.primary .tabs-indicator {
-      background-color: var(--color-secondary);
-    }
+  background-color: var(--color-secondary);
+}

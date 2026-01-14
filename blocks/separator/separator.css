@@ -1,7 +1,7 @@
 /* Base separator block container */
 .block.separator {
   width: 100%;
-  margin: 4rem 0;
+  margin: var(--space-64) 0;
 }
 
 /* Separator line element (child of block) */
@@ -26,5 +26,5 @@
 
 /* Editor mode - add padding to block container */
 .block.separator.editor-mode {
-  padding: 2rem 0;
+  padding: var(--space-32) 0;
 }

@@ -929,7 +929,7 @@ blockquote::before {
   main > .section > div {
     max-width: 1400px;
     margin: auto;
-    padding: 0 24px;
+    padding: 0 var(--space-24);
   }
   
   main > .section:first-of-type {
@@ -938,7 +938,7 @@ blockquote::before {
   
   @media (width >= 900px) {
     main > .section > div {
-      padding: 0 32px;
+      padding: 0 var(--space-32);
     }
   }
   

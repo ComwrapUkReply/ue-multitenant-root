@@ -10,10 +10,10 @@ main > .section > div.download-wrapper {
   width: 100%;
   height: 100%;
   background: rgb(var(--background-color));
-  border-radius: 0.5rem;
+  border-radius: var(--border-radius-md);
   box-shadow: 0 2px rgb(var(--color-pure-black));
   border: 1px solid transparent;
-  padding: 2rem;
+  padding: var(--space-24);
   position: relative;
   overflow: hidden;
   transition: transform 0.5s ease, box-shadow 0.2s ease, background-color 0.2s ease;
@@ -98,8 +98,8 @@ main > .section > div.download-wrapper {
 .download-wrapper-inner .download-button {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-24);
   background: rgb(var(--button-primary));
   color: rgb(var(--color-pure-white));
   text-decoration: none;
@@ -110,15 +110,15 @@ main > .section > div.download-wrapper {
 }
 
 .download-wrapper-inner.color-dark-blue .download-button {
-  background: var(--color-white, #fff);
-  color: var(--color-primary, #0073dd);
-  border-color: var(--color-primary, #0073dd);
+  background: var(--color-white);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .download-wrapper-inner.color-light-blue .download-button {
-  background: var(--color-white, #fff);
-  color: var(--color-primary-400, #8fc4f8);
-  border-color: var(--color-primary-400, #8fc4f8);
+  background: var(--color-white);
+  color: var(--color-primary-300);
+  border-color: var(--color-primary-300);
 }
 
 .download-wrapper-inner .download-button:hover,

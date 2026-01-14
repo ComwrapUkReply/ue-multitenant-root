@@ -1,5 +1,5 @@
 .breadcrumbs nav {
-  padding: 1rem 0;
+  padding: var(--space-16) 0;
 }
 
 .breadcrumbs ol {
@@ -19,7 +19,7 @@
 .breadcrumbs li:not(:last-child)::after {
   content: "|";
   margin: 0 0.5rem;
-  color: var(--text-color, #666);
+  color: var(--text-color);
 }
 
 .breadcrumbs a {

@@ -59,20 +59,20 @@
 
 /* Error state styling */
 .embed-error {
-  padding: 2rem;
-  background-color: var(--color-grey-200, #f7f6f5);
-  border: 2px dashed var(--color-grey-300, #c9c5be);
+  padding: var(--space-32);
+  background-color: var(--color-grey-200);
+  border: 2px dashed var(--color-grey-300);
   border-radius: var(--border-radius-md);
   text-align: center;
-  color: var(----color-grey, #777673);
-  font-size: var(--body-font-size-s, 19px);
+  color: var(--color-grey);
+  font-size: var(--font-size-body);
   font-family: var(--body-font-family, roboto, sans-serif);
 }
 
 /* Responsive design */
 @media (width <= 768px) {
   .block.embed {
-    margin: 1rem 0;
+    margin: var(--space-16) 0;
   }
 
   .embed-wrapper {
@@ -86,20 +86,20 @@
 
 /* Focus styles for accessibility */
 .embed-wrapper iframe:focus {
-  outline: 2px solid var(--color-primary, #0073dd);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: more) {
   .embed-wrapper {
-    border: 2px solid var(--color-black, #000);
+    border: 2px solid var(--color-black);
   }
   
   .embed-error {
-    border: 2px solid var(--color-black, #000);
-    background-color: var(--color-white, #fff);
-    color: var(--color-black, #000);
+    border: 2px solid var(--color-black);
+    background-color: var(--color-white);
+    color: var(--color-black);
   }
 }
 

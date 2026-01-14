@@ -22,7 +22,7 @@
 
 /* Primary Button */
 .custom-button button.primary {
-  background-color: var(--color-primary);
+  background-color: var(--button-background-color);
 }
 
 /* Secondary Button */
@@ -38,11 +38,11 @@
 
 .custom-button button.text:hover,
 .custom-button a.text:hover {
-  color: rgb(var(--color-primary-hover));
+  color: rgb(var(--button-hover-background-color));
 }
 
 .custom-button .button:hover::after {
-  background-color: var(--color-primary-900);
+  background-color: var(--button-hover-background-color);
 }
 
 /* Button Label */
@@ -64,7 +64,7 @@
   display: inline-block;
   width: 1em;
   height: 1em;
-  background-color: var(--color-primary);
+  background-color: var(--button-background-color);
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'%3E%3C/path%3E%3Cpolyline points='7 10 12 15 17 10'%3E%3C/polyline%3E%3Cline x1='12' y1='15' x2='12' y2='3'%3E%3C/line%3E%3C/svg%3E");
   mask-size: contain;
   mask-repeat: no-repeat;
@@ -94,7 +94,7 @@
   display: inline-block;
   width: 1em;
   height: 1em;
-  background-color: var(--color-primary);
+  background-color: var(--button-background-color);
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3Cpolyline points='12 5 19 12 12 19'%3E%3C/polyline%3E%3C/svg%3E");
   mask-size: contain;
   mask-repeat: no-repeat;

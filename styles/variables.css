@@ -9,7 +9,7 @@
 
     --color-primary-100: #0073dd;
     --color-primary-200: #0073dd;
-    --color-primary-300: #0073dd;
+    --color-primary-300: #8fc4f8;
     --color-primary-400: #3d95f4;
     --color-primary-500: #1c82ec;
     --color-primary: #0073dd;
@@ -44,7 +44,7 @@
     --color-grey-500: #8f8d87;
     --color-grey: #777673;
     --color-grey-700: #302915;
-    --color-grey-800: #777673;
+    --color-grey-800: #666666;
     --color-grey-900: #777673;
 
     --color-success: #42b85c;
@@ -54,19 +54,19 @@
     
     /* ===== Colour states ===== */
     
-    --color-primary-hover: var(--color-primary-600);
-    --color-secondary-hover: var(--color-secondary-600);
-    --color-tertiary-hover: var(--color-tertiary-600);
-    --color-grey-hover: var(--color-grey-600);
+    --color-primary-hover: var(--color-primary-900);
+    --color-secondary-hover: var(--color-secondary-900);
+    --color-tertiary-hover: var(--color-tertiary-900);
+    --color-grey-hover: var(--color-grey-900);
     --color-success-hover: var(--color-success);
     --color-error-hover: var(--color-error);
     --color-warning-hover: var(--color-warning);
     --color-info-hover: var(--color-info);
 
-    --color-primary-focus: var(--color-primary-600);
-    --color-secondary-focus: var(--color-secondary-600);
-    --color-tertiary-focus: var(--color-tertiary-600);
-    --color-grey-focus: var(--color-grey-600);
+    --color-primary-focus: var(--color-primary-900);
+    --color-secondary-focus: var(--color-secondary-900);
+    --color-tertiary-focus: var(--color-tertiary-900);
+    --color-grey-focus: var(--color-grey-900);
     --color-success-focus: var(--color-success);
     --color-error-focus: var(--color-error);
     --color-warning-focus: var(--color-warning);
@@ -253,6 +253,17 @@
     --button-border-color: var(--color-white);
     --button-hover-background-color: var(--color-primary-hover);
     --button-focus-background-color: var(--color-primary-focus);
+
+    --button-secondary-background-color: var(--color-primary);
+    --button-secondary-color: var(--color-white);
+    --button-secondary-border-radius: var(--border-radius-lg);
+    --button-secondary-font-size: var(--font-size-body);
+    --button-secondary-line-height: var(--line-height-body);
+    --button-secondary-border-style: var(--border-style-solid);
+    --button-secondary-border-width: var(--border-width-md);
+    --button-secondary-border-color: var(--color-white);
+    --button-secondary-hover-background-color: var(--color-primary-hover);
+    --button-secondary-focus-background-color: var(--color-primary-focus);
     
     /* ===== Inputs ===== */
 

@@ -21,18 +21,18 @@ blockquote::before {
     background: rgb(201 232 251 / 30%);
     display: flex;
     flex-direction: column;
-    padding: 2rem;
-    margin-bottom: 2rem;
+    padding: var(--space-32);
+    margin-bottom: var(--space-32);
     border-radius: var(--border-radius-md);
     transition: all 0.3s ease;
 }
 
 .block.quote blockquote {
-    margin: 16px;
+    margin: var(--space-16);
     padding: 0;
     text-indent: 0;
-    font-size: 1.2rem;
-    line-height: 1.6;
+    font-size: var(--font-size-h6);
+    line-height: var(--line-height-h6);
 }
 
 .block.quote blockquote p {
@@ -49,7 +49,7 @@ blockquote::before {
     gap: var(--space-8);
     font-size: small;
     font-style: italic;
-    margin: 16px;
+    margin: var(--space-16);
     position: relative;
     text-align: right;
 }

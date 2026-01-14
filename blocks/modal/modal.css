@@ -38,7 +38,7 @@ body.modal-open {
 .modal-dialog .modal-content {
   overflow-y: auto;
   max-height: calc(100dvh - 96px);
-  padding: 48px 24px 24px;
+  padding: var(--space-48) var(--space-24) var(--space-24);
 }
 
 .modal-dialog .modal-content .section {
@@ -79,7 +79,7 @@ body.modal-open {
   width: 24px;
   height: 24px;
   position: relative;
-  margin: 4px;
+  margin: var(--space-4);
 }
 
 .modal-dialog .close-button .icon.icon-close::before,
@@ -109,7 +109,7 @@ body.modal-open {
   }
 
   .modal-dialog .modal-content {
-    padding: 48px 32px 32px;
+    padding: var(--space-48) var(--space-32) var(--space-32);
   }
 }
 
