@@ -22,7 +22,7 @@
 
 .search-wrapper .search-button:hover,
 .search-wrapper .search-button:focus {
-  outline: none;
+  outline: 2px solid var(--color-primary-blue);
 }
 
 .search-wrapper .search-button .icon {
