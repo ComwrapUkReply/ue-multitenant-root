@@ -8,6 +8,12 @@ import {
   updateUrlWithQuery,
   getQueryFromUrl,
 } from '../../scripts/search-utils.js';
+import {
+  extractUniqueTagsFromData,
+  createTagFilterUI,
+  filterDataByTags,
+  createClearAllButton,
+} from '../../scripts/content-filter-utils.js';
 
 /**
  * Default configuration for search results block
@@ -227,6 +233,12 @@ function renderResults(block, config, filteredData, searchTerms, headingTag, sho
         message += ` in ${folderList}`;
       }
 
+      // Add tag filter info if active
+      if (config.selectedTags && config.selectedTags.length > 0) {
+        const tagList = config.selectedTags.join(', ');
+        message += ` (filtered by: ${tagList})`;
+      }
+
       // Add pagination info
       if (totalPages > 1) {
         message += ` (showing ${startIndex + 1}-${endIndex} of ${totalResults})`;
@@ -269,23 +281,36 @@ function renderResults(block, config, filteredData, searchTerms, headingTag, sho
         message += ` in ${folderList}`;
       }
 
+      // Add tag filter info if active
+      if (config.selectedTags && config.selectedTags.length > 0) {
+        const tagList = config.selectedTags.join(', ');
+        message += ` (filtered by: ${tagList})`;
+      }
+
       resultsCount.textContent = message;
     }
   }
 }
 
 /**
- * Handles search execution
+ * Handles search execution with tag filtering support
  * @param {HTMLElement} block - The search results block element
  * @param {Object} config - Search configuration object
  * @param {string} searchValue - The search query
+ * @param {Object} state - Shared state object for tag filtering
  */
-async function executeSearch(block, config, searchValue) {
+async function executeSearch(block, config, searchValue, state = {}) {
   const searchTerms = parseSearchTerms(searchValue);
 
   // Show loading state
   const resultsContainer = block.querySelector('.search-results-list');
   resultsContainer.innerHTML = '<li class="loading">Loading results...</li>';
+
+  // Hide tag filter during loading
+  const tagFilterWrapper = block.querySelector('.search-results-tag-filter');
+  if (tagFilterWrapper) {
+    tagFilterWrapper.style.display = 'none';
+  }
 
   const data = await fetchData(config.source);
   if (!data) {
@@ -305,7 +330,83 @@ async function executeSearch(block, config, searchValue) {
   }
 
   // Then apply search term filtering
-  const filteredData = filterData(searchTerms, dataToSearch);
+  let filteredData = filterData(searchTerms, dataToSearch);
+
+  // Store filtered data in state for tag filtering
+  if (state) {
+    state.searchFilteredData = filteredData;
+    state.searchTerms = searchTerms;
+  }
+
+  // Extract unique tags from search results and create/update tag filter
+  if (config.enableTagFilter && filteredData.length > 0) {
+    const uniqueTags = extractUniqueTagsFromData(filteredData);
+
+    if (uniqueTags.length > 0) {
+      // Show tag filter wrapper
+      if (tagFilterWrapper) {
+        tagFilterWrapper.style.display = '';
+
+        // Update or create tag filter UI
+        const existingTagFilter = tagFilterWrapper.querySelector('.tag-filter-container');
+        if (existingTagFilter) {
+          existingTagFilter.remove();
+        }
+
+        // Clear any existing clear button
+        const existingClearBtn = tagFilterWrapper.querySelector('.tag-filter-clear');
+        if (existingClearBtn) {
+          existingClearBtn.remove();
+        }
+
+        // Reset selected tags
+        state.selectedTags = [];
+
+        const tagFilterUI = createTagFilterUI(uniqueTags, {
+          multipleSelect: config.multipleTagSelect !== false,
+          onFilter: (selectedTags) => {
+            state.selectedTags = selectedTags;
+            config.selectedTags = selectedTags;
+
+            // Apply tag filtering to search results
+            let tagFilteredData = state.searchFilteredData;
+            if (selectedTags.length > 0) {
+              tagFilteredData = filterDataByTags(state.searchFilteredData, selectedTags);
+            }
+
+            const headingTag = findNextHeading(block);
+            const showImages = block.classList.contains('cards') || block.classList.contains('minimal');
+            renderResults(block, config, tagFilteredData, state.searchTerms, headingTag, showImages);
+
+            // Update clear button visibility
+            const clearBtn = tagFilterWrapper.querySelector('.tag-filter-clear');
+            if (clearBtn) {
+              clearBtn.style.display = selectedTags.length > 0 ? '' : 'none';
+            }
+          },
+        });
+
+        // Create clear all button
+        const clearAllBtn = createClearAllButton(() => {
+          tagFilterUI.clearSelection();
+        });
+        clearAllBtn.style.display = 'none'; // Hidden initially
+
+        tagFilterWrapper.appendChild(tagFilterUI.element);
+        tagFilterWrapper.appendChild(clearAllBtn);
+      }
+    } else if (tagFilterWrapper) {
+      // No tags found, hide filter
+      tagFilterWrapper.style.display = 'none';
+    }
+  }
+
+  // Apply tag filtering if tags are already selected
+  if (state.selectedTags && state.selectedTags.length > 0) {
+    filteredData = filterDataByTags(filteredData, state.selectedTags);
+    config.selectedTags = state.selectedTags;
+  }
+
   const headingTag = findNextHeading(block);
   const showImages = block.classList.contains('cards') || block.classList.contains('minimal');
   renderResults(block, config, filteredData, searchTerms, headingTag, showImages);
@@ -315,9 +416,10 @@ async function executeSearch(block, config, searchValue) {
  * Creates the search input element for results page
  * @param {HTMLElement} block - The search results block element
  * @param {Object} config - Search configuration object
+ * @param {Object} state - Shared state object
  * @returns {HTMLInputElement} Search input element
  */
-function createSearchInput(block, config) {
+function createSearchInput(block, config, state) {
   const input = document.createElement('input');
   input.setAttribute('type', 'search');
   input.className = 'search-results-input';
@@ -338,7 +440,7 @@ function createSearchInput(block, config) {
     clearTimeout(searchTimeout);
     if (searchValue.length >= 3) {
       searchTimeout = setTimeout(() => {
-        executeSearch(block, config, searchValue);
+        executeSearch(block, config, searchValue, state);
       }, 300);
     } else if (searchValue.length === 0) {
       // Clear results if search is empty
@@ -347,6 +449,11 @@ function createSearchInput(block, config) {
       const resultsCount = block.querySelector('.search-results-count');
       if (resultsCount) {
         resultsCount.textContent = '';
+      }
+      // Hide tag filter
+      const tagFilterWrapper = block.querySelector('.search-results-tag-filter');
+      if (tagFilterWrapper) {
+        tagFilterWrapper.style.display = 'none';
       }
     }
   });
@@ -452,13 +559,45 @@ function extractTitleFallback(block) {
 }
 
 /**
+ * Extracts enableTagFilter value from block content
+ * @param {HTMLElement} block - The block element
+ * @returns {boolean} Whether tag filtering is enabled
+ */
+function extractEnableTagFilter(block) {
+  const allDivs = [...block.querySelectorAll('div')];
+  const tagFilterDiv = allDivs.find((div) => {
+    const text = div.textContent.trim().toLowerCase();
+    return text === 'enabletagfilter' || text === 'enable tag filter' || text === 'tag filter';
+  });
+
+  if (tagFilterDiv && tagFilterDiv.nextElementSibling) {
+    const value = tagFilterDiv.nextElementSibling.textContent.trim().toLowerCase();
+    return value === 'true' || value === 'yes' || value === '1';
+  }
+
+  // Check for boolean value in block content
+  const booleanDiv = allDivs.find((div) => {
+    const text = div.textContent.trim().toLowerCase();
+    return text === 'true' || text === 'false';
+  });
+
+  if (booleanDiv) {
+    return booleanDiv.textContent.trim().toLowerCase() === 'true';
+  }
+
+  return false;
+}
+
+/**
  * Parses block configuration from block content
  * @param {HTMLElement} block - The block element
- * @returns {Object} Configuration object with folders, placeholders, and classes
+ * @returns {Object} Configuration object with folders, placeholders, classes, and enableTagFilter
  */
 function parseBlockConfig(block) {
   let folders = [];
   let classes = '';
+  let enableTagFilter = false;
+  let multipleTagSelect = true;
   const placeholders = { ...CONFIG.placeholders };
 
   const rows = [...block.children];
@@ -496,6 +635,12 @@ function parseBlockConfig(block) {
         placeholders.searchResultsTitle = textContent;
       } else if (label.includes('search placeholder') && textContent) {
         placeholders.searchPlaceholder = textContent;
+      } else if (label.includes('tag filter') || label.includes('enabletagfilter')) {
+        const value = textContent.toLowerCase();
+        enableTagFilter = value === 'true' || value === 'yes' || value === '1';
+      } else if (label.includes('multiple') && label.includes('select')) {
+        const value = textContent.toLowerCase();
+        multipleTagSelect = value !== 'false' && value !== 'no' && value !== '0';
       }
     }
   });
@@ -580,7 +725,23 @@ function parseBlockConfig(block) {
     }
   }
 
-  return { folders, placeholders, classes };
+  // Fallback: try to extract enableTagFilter using direct DOM search
+  if (!enableTagFilter) {
+    enableTagFilter = extractEnableTagFilter(block);
+  }
+
+  // Also check for block class to enable tag filter
+  if (block.classList.contains('with-filter') || block.classList.contains('tag-filter')) {
+    enableTagFilter = true;
+  }
+
+  return {
+    folders,
+    placeholders,
+    classes,
+    enableTagFilter,
+    multipleTagSelect,
+  };
 }
 
 /**
@@ -589,7 +750,13 @@ function parseBlockConfig(block) {
  */
 export default async function decorate(block) {
   // Parse configuration from block content
-  const { folders, placeholders, classes } = parseBlockConfig(block);
+  const {
+    folders,
+    placeholders,
+    classes,
+    enableTagFilter,
+    multipleTagSelect,
+  } = parseBlockConfig(block);
 
   // Apply classes to block before clearing content
   if (classes && classes.trim()) {
@@ -604,6 +771,16 @@ export default async function decorate(block) {
     source: CONFIG.defaultSource,
     folders,
     placeholders,
+    enableTagFilter,
+    multipleTagSelect,
+    selectedTags: [],
+  };
+
+  // Shared state for search and tag filtering
+  const state = {
+    searchFilteredData: [],
+    searchTerms: [],
+    selectedTags: [],
   };
 
   // Clear block content and build search results UI
@@ -619,8 +796,14 @@ export default async function decorate(block) {
   searchBox.className = 'search-results-box';
   searchBox.append(
     createSearchIcon(),
-    createSearchInput(block, config),
+    createSearchInput(block, config, state),
   );
+
+  // Create tag filter wrapper (hidden by default, shown when search has results)
+  const tagFilterWrapper = document.createElement('div');
+  tagFilterWrapper.className = 'search-results-tag-filter';
+  tagFilterWrapper.style.display = 'none';
+  tagFilterWrapper.setAttribute('aria-label', 'Filter results by tags');
 
   // Create results count
   const resultsCount = document.createElement('div');
@@ -630,7 +813,15 @@ export default async function decorate(block) {
   const resultsList = document.createElement('ul');
   resultsList.className = 'search-results-list';
 
-  block.append(title, searchBox, resultsCount, resultsList);
+  // Append elements in order
+  block.append(title, searchBox);
+
+  // Add tag filter wrapper if enabled
+  if (enableTagFilter) {
+    block.append(tagFilterWrapper);
+  }
+
+  block.append(resultsCount, resultsList);
 
   decorateIcons(block);
 
@@ -640,7 +831,7 @@ export default async function decorate(block) {
     const input = block.querySelector('.search-results-input');
     if (input) {
       input.value = queryParam;
-      await executeSearch(block, config, queryParam);
+      await executeSearch(block, config, queryParam, state);
     }
   }
 }
