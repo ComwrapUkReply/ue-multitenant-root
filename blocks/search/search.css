@@ -79,7 +79,7 @@
     z-index: 100;
     min-width: 280px;
     background: var(--background-color, #fff);
-    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+    box-shadow: var(--box-shadow);
     border-radius: var(--border-radius-sm);
     padding: var(--space-16);
   }

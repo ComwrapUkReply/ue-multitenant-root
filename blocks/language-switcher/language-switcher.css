@@ -13,7 +13,7 @@
 
 /* Common styles for flags */
 .flag {
-  font-size: 1.2em;
+  font-size: var(--font-size-h6);
   margin-right: var(--space-8);
   display: inline-block;
 }
@@ -58,7 +58,7 @@
 }
 
 .language-current .arrow {
-    opacity: 0.6;
+  opacity: 0.6;
   font-size: 0.8em;
   transition: transform var(--transition-base);
 }
@@ -75,7 +75,7 @@
   background: var(--color-white);
   border: 2px solid var(--color-grey-300);
   border-radius: var(--space-4);
-  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  box-shadow: var(--box-shadow);
   z-index: 1000;
   list-style: none;
   margin: 0;
@@ -189,7 +189,7 @@
   padding: var(--space-8);
   border-radius: 50%;
   text-decoration: none;
-  font-size: 1.5em;
+  font-size: var(--font-size-h5);
   transition: all var(--transition-base);
   border: 2px solid transparent;
 }
@@ -270,7 +270,7 @@
   
   .flag-only {
     padding: var(--space-4);
-    font-size: 1.2em;
+    font-size: var(--font-size-h6);
   }
 }
 

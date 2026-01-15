@@ -208,6 +208,7 @@
 
     /* ===== Shadows & Effects ===== */
 
+    --box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
     --box-shadow-text-link: inset 0px -2px 0px;
     --box-shadow-text-link-hover: inset 0px -3px 0px;
     --box-shadow-text-link-press: inset 0px -3px 0px;
@@ -264,6 +265,13 @@
     --button-secondary-border-color: var(--color-white);
     --button-secondary-hover-background-color: var(--color-primary-hover);
     --button-secondary-focus-background-color: var(--color-primary-focus);
+    
+    /* ===== Links ===== */
+
+    --link-color: var(--color-primary);
+    --link-hover-color: var(--color-primary-hover);
+    --link-focus-color: var(--color-primary-focus);
+    --link-disabled-color: var(--color-grey-100);
     
     /* ===== Inputs ===== */
 

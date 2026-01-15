@@ -86,7 +86,7 @@ select {
 
 /* Base Typography */
 html {
-    font-size: 16px;
+    font-size: var(--font-size-base);
     text-size-adjust: 100%;
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-text-size-adjust: 100%;
@@ -1005,7 +1005,7 @@ blockquote::before {
   transform: translateY(20px);
   transition: all var(--transition-base);
   z-index: 1000;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  box-shadow: var(--box-shadow);
 }
 
 .back-to-top.visible {

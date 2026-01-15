@@ -110,7 +110,7 @@
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-8);
   min-width: clamp(180px, 20vw, 220px);
   height: clamp(40px, 5vw, 48px);
   justify-content: center;
@@ -154,7 +154,7 @@
   justify-content: center;
   transition: all 0.2s ease;
   color: var(--color-secondary);
-  font-size: 16px;
+  font-size: var(--font-size-base);
   position: absolute;
 }
 
@@ -190,7 +190,7 @@
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   z-index: 10;
 }
 
@@ -215,7 +215,7 @@
 
 .carousel-play-icon,
 .carousel-pause-icon {
-  font-size: 16px;
+  font-size: var(--font-size-base);
   color: var(--color-secondary);
   display: flex;
   align-items: center;
@@ -226,7 +226,7 @@
 .carousel-dots {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   padding: var(--space-12) var(--space-16);
   background-color: var(--color-grey-100);
   border-radius: var(--border-radius-xl);

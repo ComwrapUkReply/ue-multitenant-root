@@ -32,7 +32,7 @@
 /* Card title styling */
 .facts-figures-card-title {
   font-family: var(--heading-font-family, 'Arial', sans-serif);
-  font-size: var(--heading-font-size-m, 1.5rem);
+  font-size: var(--font-size-h5);
   font-weight: 600;
   color: var(--heading-text-color, #333);
   margin: 0 0 var(--space-16);
@@ -249,7 +249,7 @@
 
 .facts-figures-card.bold {
   font-weight: 700;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  box-shadow: var(--box-shadow);
 }
 
 .facts-figures-card.bold .facts-figures-card-title {

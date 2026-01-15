@@ -6,7 +6,7 @@
 
 .accordion > li {
   cursor: pointer;
-  border-bottom: 1px solid rgb(var(--color-pure-black));
+  border-bottom: 1px solid rgb(var(--color-black));
 }
 
 .accordion li:last-child {
@@ -24,7 +24,7 @@
   flex-flow: row nowrap;
   gap: 0;
   position: relative;
-  color: var(--color-pure-black);
+  color: var(--color-black);
 }
 
 .accordion-trigger:hover {
@@ -33,10 +33,10 @@
 }
 
 .accordion-title {
-  font-size: 1.25rem;
+  font-size: var(--font-size-h6);
   font-weight: 500;
-  line-height: 1.75rem;
-  margin-right: 2rem;
+  line-height: var(--line-height-h6);
+  margin-right: var(--space-32);
 }
 
 .accordion-icon {

@@ -64,13 +64,13 @@ main>.section.hero-container {
 .hero .hero-title {
   color: var(--background-color);
   margin-bottom: var(--space-16);
-  font-size: 5rem;
+  font-size: var(--font-size-hero);
 }
 
 /* Hero description */
 .hero .hero-description {
   color: var(--background-color);
-  line-height: 1.6;
+  line-height: var(--line-height-body);
   margin-bottom: var(--space-24);
 }
 
@@ -87,13 +87,13 @@ main>.section.hero-container {
 .hero.white h1,
 .hero.white .hero-title,
 .hero.white .hero-description {
-  color: white;
+  color: var(--color-white);
 }
 
 .hero.black h1,
 .hero.black .hero-title,
 .hero.black .hero-description {
-  color: black;
+  color: var(--color-black);
 }
 
 @media (width >= 900px) {

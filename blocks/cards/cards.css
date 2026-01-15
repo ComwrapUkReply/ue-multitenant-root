@@ -24,7 +24,7 @@
 }
 
 .cards .cards-card-body {
-  margin: 16px 0;
+  margin: var(--space-16) 0;
 }
 
 .cards .cards-card-image {

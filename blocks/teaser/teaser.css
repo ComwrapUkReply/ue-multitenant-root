@@ -279,7 +279,7 @@
   }
 
   .teaser-heading {
-    font-size: var(--heading-font-size-m);
+    font-size: var(--font-size-h5);
     line-height: 1.3;
   }
 

@@ -2,7 +2,7 @@
 
 /* Block container */
 .block.embed {
-  margin: 2rem 0;
+  margin: var(--space-32) 0;
   width: 100%;
   max-width: 1200px;
 
@@ -54,7 +54,7 @@
 
 .embed-wrapper.aspect-custom iframe {
   position: relative;
-  height: var(--embed-custom-height, 450px);
+  height: 450px;
 }
 
 /* Error state styling */

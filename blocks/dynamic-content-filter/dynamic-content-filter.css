@@ -2,7 +2,7 @@
 .block.dynamic-content-filter .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: var(--space-12);
   align-items: center;
 }
 
@@ -10,7 +10,7 @@
   display: inline-block;
   padding: var(--space-8) var(--space-18);
   background-color: transparent;
-  border: 2px solid orange;
+  border: 2px solid var(--color-grey);
   border-radius: var(--border-radius-xl);
   font-size: var(--font-size-base);
   font-weight: 500;
@@ -22,7 +22,7 @@
 }
 
 .block.dynamic-content-filter .tag-pill .tag-pill-text {
-  color: orange;
+  color: var(--color-grey);
 }
 
 .block.dynamic-content-filter .tag-pill:hover {
@@ -30,16 +30,16 @@
 }
 
 .block.dynamic-content-filter .tag-pill.active {
-  background-color: orange;
-  border-color: orange;
+  background-color: var(--color-grey);
+  border-color: var(--color-grey);
 }
 
 .block.dynamic-content-filter .tag-pill.active .tag-pill-text {
-  color: white;
+  color: var(--color-white);
 }
 
 .block.dynamic-content-filter .tag-pill:focus {
-  outline: 2px solid orange;
+  outline: 2px solid var(--color-grey);
   outline-offset: 2px;
 }
 
