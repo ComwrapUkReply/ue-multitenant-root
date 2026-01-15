@@ -158,6 +158,12 @@
   position: absolute;
 }
 
+/* Mobile arrows - positioned within controls container */
+.carousel-arrow-mobile {
+  position: static;
+  display: flex;
+}
+
 .carousel-arrow:hover {
   background-color: rgb(206 212 224 / 80%);
 }
@@ -336,10 +342,16 @@
 }
 
 /* Desktop Styles */
-@media (width >= 900px) {  
-    .carousel-arrow {
-        display: flex;
-    }
+@media (width >= 900px) {
+  /* Show desktop arrows on desktop */
+  .carousel-arrow:not(.carousel-arrow-mobile) {
+    display: flex;
+  }
+
+  /* Hide mobile arrows on desktop */
+  .carousel-arrow-mobile {
+    display: none;
+  }
 
   .carousel-track {
     max-height: 80vh;
