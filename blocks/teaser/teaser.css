@@ -368,6 +368,7 @@
   /* Image Background */
   .teaser.image-background .teaser-wrapper {
     min-height: 600px;
+    align-items: center;
     padding: 3rem;
   }
 }
