@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable max-len */
-
 /**
  * Get the current country and language codes label by matching the current
  * location pathname to a regex.
