@@ -51,7 +51,7 @@
 /* Figure styling */
 .facts-figures-card-figure {
   font-family: var(--font-family-regular);
-  font-size: var(--heading-font-size-xxl, 3rem);
+  font-size: var(--font-size-h2);
   font-weight: 700;
   color: var(--link-color);
   margin: 0 0 var(--space-8);
@@ -169,8 +169,8 @@
 }
 
 .facts-figures-card.minimal .facts-figures-card-title {
-  font-size: var(--heading-font-size-s, 1.25rem);
-  margin-bottom: 0.5rem;
+  font-size: var(--font-size-h6);
+  margin-bottom: var(--space-8);
 }
 
 .facts-figures-card.minimal .facts-figures-card-figure {
@@ -183,8 +183,8 @@
 }
 
 .facts-figures-card.compact .facts-figures-card-title {
-  font-size: var(--heading-font-size-s, 1.25rem);
-  margin-bottom: 0.5rem;
+  font-size: var(--font-size-h6);
+  margin-bottom: var(--space-8);
 }
 
 .facts-figures-card.compact .facts-figures-card-figure {
@@ -196,12 +196,12 @@
 }
 
 .facts-figures-card.spacious .facts-figures-card-title {
-  font-size: var(--heading-font-size-xl, 2rem);
+  font-size: var(--font-size-h2);
   margin-bottom: var(--space-24);
 }
 
 .facts-figures-card.spacious .facts-figures-card-figure {
-  font-size: var(--heading-font-size-xxl, 3.5rem);
+  font-size: var(--font-size-h2);
 }
 
 .facts-figures-card.centered {

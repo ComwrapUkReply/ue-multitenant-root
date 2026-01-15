@@ -158,7 +158,7 @@
   /* no results */
   .search ul.search-results.no-results {
     display: block;
-    margin-left: 34px;
+    margin-left: var(--space-40);
   }
   
   .search ul.search-results.no-results > li {
@@ -168,7 +168,7 @@
   /* minimal variant */
   .search.minimal ul.search-results {
     display: block;
-    padding-left: 34px;
+    padding-left: var(--space-40);
   }
   
   .search.minimal ul.search-results > li {
@@ -199,11 +199,11 @@
   .search.minimal ul.search-results > li .search-result-image {
     position: absolute;
     top: 2px;
-    left: -34px;
+    left: -var(--space-40);
   }
   
   .search.minimal ul.search-results .search-result-title + p {
-    margin-top: 0.25em;
+    margin-top: var(--space-4);
   }
   
   .search.minimal ul.search-results > li picture img {
