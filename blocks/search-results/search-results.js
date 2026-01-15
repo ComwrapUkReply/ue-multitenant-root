@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable max-len */
+
 import { decorateIcons } from '../../scripts/aem.js';
 import {
   findNextHeading,
