@@ -12,13 +12,13 @@
 
 @media (width >= 600px) {
   .table.block table {
-    font-size: var(--body-font-size-s);
+    font-size: var(--font-size-base);
   }
 }
 
 @media (width >= 900px) {
   .table.block table {
-    font-size: var(--body-size-m);
+    font-size: var(--font-size-base);
   }
 }
 
@@ -57,7 +57,7 @@
 
 /* striped variant */
 .table.block.striped tbody tr:nth-child(odd) {
-  background-color: var(--overlay-background-color);
+  background-color: var(--color-grey-200);
 }
 
 /* bordered variant */

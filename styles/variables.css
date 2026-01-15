@@ -4,8 +4,8 @@
 
     /* ===== Colours ===== */
     
-    --color-white: #fff;
-    --color-black: #000;
+    --color-white: #ffffff;
+    --color-black: #000000;
 
     --color-primary-100: #0073dd;
     --color-primary-200: #0073dd;
@@ -79,7 +79,7 @@
     --gradient-heading: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
     --gradient-warm-white: linear-gradient(90deg, var(--color-white) 0%, var(--color-grey) 50%);
     --gradient-warm-white-rl: linear-gradient(270deg, var(--color-white) 0%, var(--color-grey) 50%);
-    
+    --gradient-teaser: linear-gradient(200deg, var(--color-secondary) 0%, var(--color-primary) 100%);
 
     /* ===== Typography ===== */
     

@@ -9,7 +9,7 @@ main > .section > div.download-wrapper {
 .download-wrapper-inner {
   width: 100%;
   height: 100%;
-  background: rgb(var(--background-color));
+  background: rgb(var(--color-white));
   border-radius: var(--border-radius-md);
   box-shadow: 0 2px rgb(var(--color-black));
   border: 1px solid transparent;
@@ -21,7 +21,7 @@ main > .section > div.download-wrapper {
 
 .download-wrapper-inner.color-grey {
   background: var(--color-grey-200);
-  color: rgb(var(--text-color));
+  color: var(--color-black);
 }
 
 .download-wrapper-inner.color-light-blue {
@@ -36,7 +36,7 @@ main > .section > div.download-wrapper {
 
 .download-wrapper-inner.color-white {
   background: var(--color-white);
-  color: rgb(var(--text-color));
+  color: var(--color-black);
   border: 3px solid var(--color-black);
 }
 
@@ -66,7 +66,7 @@ main > .section > div.download-wrapper {
   font-size: var(--font-size-h5);
   font-weight: 600;
   margin: 0 0 var(--space-16);
-  color: rgb(var(--text-color));
+  color: var(--color-black);
 }
 
 .download-wrapper-inner .download-content {

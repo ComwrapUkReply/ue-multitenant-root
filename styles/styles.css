@@ -90,7 +90,7 @@ html {
     text-size-adjust: 100%;
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-text-size-adjust: 100%;
-    font-family: Roboto-regular, arial, sans-serif;
+    font-family: var(--font-family-regular);
 }
 
 body {
@@ -165,7 +165,7 @@ h6,
 .h6 {
     font-family: var(--font-family-base);
     font-size: var(--font-size-h6);
-    line-height: var(--line-height-12);
+    line-height: var(--line-height-h6);
     font-weight: 600;
 }
 
@@ -525,7 +525,7 @@ blockquote::before {
     line-height: var(--button-line-height);
     font-weight: 600;
     text-decoration: none;
-    border: var(--button-border-weight) var(--button-border-style) var(--color-primary);
+    border: var(--button-border-width) var(--button-border-style) var(--color-primary);
     border-radius: var(--button-border-radius);
     cursor: pointer;
     transition: var(--transition-base);
@@ -837,7 +837,7 @@ blockquote::before {
 
     pre,
     blockquote {
-        border: 1px solid #999;
+        border: 1px solid var(--color-grey-300);
         page-break-inside: avoid;
     }
 
@@ -864,7 +864,7 @@ blockquote::before {
 
     .btn,
     .card {
-        border: 1px solid #000;
+        border: 1px solid var(--color-black);
     }
 }
 

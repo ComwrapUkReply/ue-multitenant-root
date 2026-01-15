@@ -58,7 +58,7 @@
 }
 
 .teaser-heading {
-  font-family: var(--heading-font-family);
+  font-family: var(--font-family-regular);
   font-size: var(--font-size-h3);
   font-weight: 600;
   line-height: var(--line-height-h3);
@@ -67,7 +67,7 @@
 }
 
 .teaser-description {
-  font-family: var(--body-font-family);
+  font-family: var(--font-family-body);
   font-size: var(--font-size-h6);
   font-weight: 400;
   line-height: var(--line-height-h5);
@@ -290,7 +290,7 @@
   }
 
   .teaser-description {
-    font-size: var(--body-font-size-s);
+    font-size: var(--font-size-base);
     line-height: 1.6;
   }
 

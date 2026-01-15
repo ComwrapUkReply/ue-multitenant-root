@@ -45,7 +45,7 @@
 .search .search-box {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: var(--space-1);
+    gap: var(--space-16);
     align-items: center;
   }
 
@@ -78,7 +78,7 @@
     right: 0;
     z-index: 100;
     min-width: 280px;
-    background: var(--background-color, #fff);
+    background: var(--color-white);
     box-shadow: var(--box-shadow);
     border-radius: var(--border-radius-sm);
     padding: var(--space-16);
@@ -105,7 +105,7 @@
   .search ul.search-results {
     display: grid;
     border-radius: var(--border-radius-sm);
-    background-color: #fafafa;
+    background-color: var(--color-grey-200);
     grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
     gap: var(--space-24);
     padding-left: 0;
@@ -122,7 +122,7 @@
     background-color: transparent;
     color: currentcolor;
     cursor: pointer;
-    scroll-margin-top: calc(var(--header-height, 64px) + 16px);
+    scroll-margin-top: calc(64px + 16px);
   }
   
   .search ul.search-results > li > a:hover,
@@ -136,13 +136,13 @@
   }
   
   .search ul.search-results > li .search-result-title {
-    font-size: var(--body-font-size-m);
+    font-size: var(--font-size-body);
     font-weight: normal;
     color: currentcolor;
   }
   
   .search ul.search-results > li p {
-    font-size: var(--body-font-size-s);
+    font-size: var(--font-size-base);
   }
   
   .search ul.search-results > li .search-result-image {
@@ -187,7 +187,7 @@
   
   .search.minimal ul.search-results > li > a {
     background-color: unset;
-    scroll-margin-top: calc(var(--header-height, 64px) + 16px);
+    scroll-margin-top: calc(64px + 16px);
   }
   
   .search.minimal ul.search-results > li > a:hover .search-result-title,

@@ -123,7 +123,7 @@
   display: inline-block;
   padding: var(--space-12) var(--space-24);
   border-radius: var(--border-radius-sm);
-  font-family: var(--body-font-family);
+  font-family: var(--font-family-body);
   font-size: var(--font-size-base);
   font-weight: 500;
   text-decoration: none;

@@ -16,7 +16,7 @@
   font-weight: 500;
   line-height: var(--line-height-base);
   white-space: nowrap;
-  font-family: var(--body-font-family, roboto, roboto-fallback, sans-serif);
+  font-family: var(--font-family-body);
   cursor: pointer;
   transition: all 0.3s ease;
 }

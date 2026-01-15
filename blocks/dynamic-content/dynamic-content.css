@@ -1,5 +1,5 @@
 .content {
-  border: 1px solid rgb(var(--color-darker-gray));
+  border: 1px solid rgb(var(--color-black));
   background: rgb(var(--color-black));
   color: rgb(var(--color-white));
   margin-bottom: var(--space-18);
@@ -51,12 +51,12 @@
   text-decoration: unset;
   margin-top: 0;
   margin-bottom: var(--space-10);
-  font-size: var(--body-size-m);
+  font-size: var(--font-size-base);
   color: var(--color-white);
 }
 
 .contentfeed {
-  background: var(--color-light-gray);
+  background: var(--color-grey-200);
   padding: var(--space-36) 0;
 }
 
@@ -89,10 +89,10 @@
 .content-body .tag-pill {
   display: inline-block;
   padding: var(--space-4) var(--space-12);
-  background-color: var(--link-color, #3b63fb);
-  color: var(--background-color, white);
+  background-color: var(--link-color);
+  color: var(--color-white);
   border-radius: var(--border-radius-lg);
-  font-size: var(--font-size-base, 17px);
+  font-size: var(--font-size-base);
   font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;

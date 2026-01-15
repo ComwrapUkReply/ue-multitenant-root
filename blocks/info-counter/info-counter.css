@@ -41,8 +41,8 @@
   --info-counter-text-line-height: var(--line-height-body);
 
   /* Colors */
-  --info-counter-text-color: var(--color-quaternary);
-  --info-counter-number-color: var(--color-quaternary);
+  --info-counter-text-color: var(--color-black);
+  --info-counter-number-color: var(--color-black);
 
   /* Layout Styles - Desktop: horizontal layout (number left, text right) */
   display: flex;

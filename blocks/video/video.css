@@ -133,7 +133,7 @@ main>.section.video-container {
   .video-card {
     display: flex;
     flex-direction: column;
-    background-color: #f7f7f7;
+    background-color: var(--color-grey-200);
     border-radius: var(--border-radius-md);
     overflow: hidden;
     position: relative;
@@ -175,7 +175,7 @@ main>.section.video-container {
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
-    padding: var(--space-24) var(--space-34);
+    padding: var(--space-24) var(--space-32);
     overflow: hidden;
   }
   
@@ -227,7 +227,7 @@ main>.section.video-container {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fff;
+    background-color: var(--color-white);
     height: 60px;
     width: 60px;
     border-radius: 50%;
@@ -239,7 +239,7 @@ main>.section.video-container {
   
   .video-component .video-play-button:hover,
   .video-component .video-play-button:focus {
-    background-color: #fff;
+    background-color: var(--color-white);
   }
   
   .video-component .video-play-button .icon {
@@ -257,7 +257,7 @@ main>.section.video-container {
   }
   
   .video-modal-dialog::backdrop {
-    background-color: #fff;
+    background-color: var(--color-white);
   }
   
   .video-modal {
