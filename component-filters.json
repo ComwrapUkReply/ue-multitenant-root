@@ -38,6 +38,8 @@
       "embed",
       "teaser",
       "separator",
+      "search",
+      "search-results",
       "modal",
       "tabs",
       "info-counter",
