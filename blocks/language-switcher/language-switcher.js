@@ -185,32 +185,41 @@ function generateURL(locale, path) {
   return path ? `${base}/${path}` : base;
 }
 
+// Selectors - Block-specific naming convention
+const SELECTORS = {
+  list: 'language-switcher-list',
+  item: 'language-switcher-item',
+  current: 'language-switcher-current',
+  option: 'language-switcher-option',
+  label: 'language-switcher-label',
+};
+
 /**
  * Creates horizontal list switcher with pipe separators
  */
 function createList(container, current, locales, opts) {
   const list = document.createElement('ul');
-  list.className = 'language-list horizontal';
+  list.className = SELECTORS.list;
   list.setAttribute('role', 'list');
 
   locales.forEach((locale) => {
     const li = document.createElement('li');
-    li.className = `language-item${locale.code === current.code ? ' current' : ''}`;
+    li.className = `${SELECTORS.item}${locale.code === current.code ? ' current' : ''}`;
 
     if (locale.code === current.code) {
       const el = document.createElement('span');
-      el.className = 'language-current';
+      el.className = SELECTORS.current;
       el.innerHTML = `
-        <span class="label">${opts.customLabels?.[locale.code] || locale.label}</span>
+        <span class="${SELECTORS.label}">${opts.customLabels?.[locale.code] || locale.label}</span>
       `;
       li.appendChild(el);
     } else {
       const path = mapPath(opts.pagePath, current, locale, opts.customMap, opts.dynamicMap);
       const link = document.createElement('a');
-      link.className = 'language-option';
+      link.className = SELECTORS.option;
       link.href = generateURL(locale, path);
       link.innerHTML = `
-        <span class="label">${opts.customLabels?.[locale.code] || locale.label}</span>
+        <span class="${SELECTORS.label}">${opts.customLabels?.[locale.code] || locale.label}</span>
       `;
       li.appendChild(link);
     }
@@ -253,7 +262,7 @@ function parseConfig(block) {
  * Adds analytics tracking
  */
 function addAnalytics(block) {
-  block.querySelectorAll('.language-option').forEach((link) => {
+  block.querySelectorAll(`.${SELECTORS.option}`).forEach((link) => {
     link.addEventListener('click', () => {
       const match = link.href?.match(/ue-multitenant-root-([^-]+)-([^-]+)--/);
       if (match && window.dataLayer) {
