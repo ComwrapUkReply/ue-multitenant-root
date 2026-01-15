@@ -438,7 +438,7 @@ function parseBlockConfig(block) {
     [placeholders.searchNoResults] = textValues;
   }
   if (textValues.length >= 3) {
-    placeholders.viewAllButtonText = textValues[2];
+    [placeholders.viewAllButtonText] = textValues;
   }
 
   return { autosuggest, resultPage, placeholders };

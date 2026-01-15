@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable max-len */
 
-
 /**
  * Region Switcher Block
  * Allows users to switch between different country/regions
