@@ -120,6 +120,51 @@ export function createTagButton(tag, options = {}) {
 }
 
 /**
+ * Handles tag button click
+ * @param {string} tag - Clicked tag name
+ * @param {HTMLButtonElement} button - Clicked button element
+ * @param {string[]} selectedTags - Array of currently selected tags
+ * @param {HTMLElement} container - Tag filter container
+ * @param {ContentFilterConfig} config - Filter configuration
+ */
+function handleTagClick(tag, button, selectedTags, container, config) {
+  const tagIndex = selectedTags.indexOf(tag);
+
+  if (config.multipleSelect) {
+    // Multiple select mode: toggle selection
+    if (tagIndex > -1) {
+      selectedTags.splice(tagIndex, 1);
+      button.classList.remove('active');
+      button.setAttribute('aria-pressed', 'false');
+    } else {
+      selectedTags.push(tag);
+      button.classList.add('active');
+      button.setAttribute('aria-pressed', 'true');
+    }
+  } else if (tagIndex > -1) {
+    // Single select mode: deselect if clicking the active pill
+    selectedTags.splice(tagIndex, 1);
+    button.classList.remove('active');
+    button.setAttribute('aria-pressed', 'false');
+  } else {
+    // Single select mode: deselect all others and select this one
+    selectedTags.length = 0;
+    selectedTags.push(tag);
+    container.querySelectorAll('.tag-filter-pill').forEach((pill) => {
+      pill.classList.remove('active');
+      pill.setAttribute('aria-pressed', 'false');
+    });
+    button.classList.add('active');
+    button.setAttribute('aria-pressed', 'true');
+  }
+
+  // Trigger callback
+  if (config.onFilter) {
+    config.onFilter([...selectedTags]);
+  }
+}
+
+/**
  * Creates a complete tag filter UI component
  * @param {string[]} tags - Array of tag names
  * @param {ContentFilterConfig} config - Filter configuration
@@ -175,51 +220,6 @@ export function createTagFilterUI(tags, config = DEFAULT_CONFIG) {
       }
     },
   };
-}
-
-/**
- * Handles tag button click
- * @param {string} tag - Clicked tag name
- * @param {HTMLButtonElement} button - Clicked button element
- * @param {string[]} selectedTags - Array of currently selected tags
- * @param {HTMLElement} container - Tag filter container
- * @param {ContentFilterConfig} config - Filter configuration
- */
-function handleTagClick(tag, button, selectedTags, container, config) {
-  const tagIndex = selectedTags.indexOf(tag);
-
-  if (config.multipleSelect) {
-    // Multiple select mode: toggle selection
-    if (tagIndex > -1) {
-      selectedTags.splice(tagIndex, 1);
-      button.classList.remove('active');
-      button.setAttribute('aria-pressed', 'false');
-    } else {
-      selectedTags.push(tag);
-      button.classList.add('active');
-      button.setAttribute('aria-pressed', 'true');
-    }
-  } else if (tagIndex > -1) {
-    // Single select mode: deselect if clicking the active pill
-    selectedTags.splice(tagIndex, 1);
-    button.classList.remove('active');
-    button.setAttribute('aria-pressed', 'false');
-  } else {
-    // Single select mode: deselect all others and select this one
-    selectedTags.length = 0;
-    selectedTags.push(tag);
-    container.querySelectorAll('.tag-filter-pill').forEach((pill) => {
-      pill.classList.remove('active');
-      pill.setAttribute('aria-pressed', 'false');
-    });
-    button.classList.add('active');
-    button.setAttribute('aria-pressed', 'true');
-  }
-
-  // Trigger callback
-  if (config.onFilter) {
-    config.onFilter([...selectedTags]);
-  }
 }
 
 /**

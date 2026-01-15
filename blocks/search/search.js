@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable max-len */
+
 import { decorateIcons } from '../../scripts/aem.js';
 import {
   findNextHeading,
@@ -429,10 +432,10 @@ function parseBlockConfig(block) {
 
   // Assign remaining text values in order: searchPlaceholder, searchNoResults, viewAllButtonText
   if (textValues.length >= 1) {
-    placeholders.searchPlaceholder = textValues[0];
+    [placeholders.searchPlaceholder] = textValues;
   }
   if (textValues.length >= 2) {
-    placeholders.searchNoResults = textValues[1];
+    [placeholders.searchNoResults] = textValues;
   }
   if (textValues.length >= 3) {
     placeholders.viewAllButtonText = textValues[2];
