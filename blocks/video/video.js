@@ -56,18 +56,24 @@ function decorateTeaser(video, teaserPicture, target) {
     videoTag.setAttribute('preload', 'metadata');
   } else {
     videoTag.toggleAttribute('autoplay', true);
+    // Ensure muted for autoplay (browsers require muted videos for autoplay)
+    // The muted state will be properly set in decorateVideoOptions, but set it here too
+    videoTag.toggleAttribute('muted', true);
+    videoTag.muted = true;
   }
 
   mql.onchange = (e) => {
     if (!e.matches && !videoTag.hasAttribute('autoplay')) {
       videoTag.toggleAttribute('autoplay', true);
+      // Ensure muted when enabling autoplay
+      videoTag.toggleAttribute('muted', true);
+      videoTag.muted = true;
       videoTag.play();
     }
   };
 
   videoTag.innerHTML = `<source src="${video.href}" type="video/mp4">`;
   target.prepend(videoTag);
-  videoTag.muted = true;
   video.remove();
 }
 
@@ -157,28 +163,36 @@ function decorateVideoOptions(block) {
   const widthField = block.children[1];
   if (widthField) {
     const widthValue = widthField.querySelector('p')?.textContent.trim();
-    if (widthValue) {
-      const videoContainer = video.closest('.teaser-video-container') || video.parentElement;
-      if (videoContainer) {
-        videoContainer.style.width = widthValue;
-      }
+    const videoContainer = video.closest('.teaser-video-container') || video.parentElement;
+    if (videoContainer) {
+      videoContainer.style.width = widthValue ?? '100%';
     }
   }
 
   // Handle boolean options (autoplay, loop, muted, controls)
   // Indices shift after removing width field, so autoplay is now at index 2
   const autoplay = block.children[2];
-  const autoplayValue = autoplay.querySelector('p').textContent.trim();
+  const autoplayValue = autoplay?.querySelector('p')?.textContent.trim() || 'false';
   const loop = block.children[3];
-  const loopValue = loop.querySelector('p').textContent.trim();
+  const loopValue = loop?.querySelector('p')?.textContent.trim() || 'false';
   const muted = block.children[4];
-  const mutedValue = muted.querySelector('p').textContent.trim();
+  const mutedValue = muted?.querySelector('p')?.textContent.trim() || 'false';
   const controls = block.children[5];
-  const controlsValue = controls.querySelector('p').textContent.trim();
-  video.toggleAttribute('autoplay', autoplayValue === 'true');
-  video.toggleAttribute('loop', loopValue === 'true');
-  video.toggleAttribute('muted', mutedValue === 'true');
-  video.toggleAttribute('controls', controlsValue === 'true');
+  const controlsValue = controls?.querySelector('p')?.textContent.trim() || 'false';
+  const autoplayEnabled = autoplayValue === 'true';
+  const loopEnabled = loopValue === 'true';
+  const mutedEnabled = mutedValue === 'true';
+  const controlsEnabled = controlsValue === 'true';
+
+  video.toggleAttribute('autoplay', autoplayEnabled);
+  video.toggleAttribute('loop', loopEnabled);
+  video.toggleAttribute('muted', mutedEnabled);
+  video.toggleAttribute('controls', controlsEnabled);
+  // Set JavaScript properties (not just attributes) for proper video behavior
+  video.muted = mutedEnabled;
+  video.loop = loopEnabled;
+  video.autoplay = autoplayEnabled;
+  video.controls = controlsEnabled;
   autoplay.remove();
   loop.remove();
   muted.remove();
@@ -206,7 +220,10 @@ export default function decorate(block) {
   decorateVideoOptions(block);
 
   const overlay = videoBanner.children[1];
-  overlay.classList = 'overlay';
+
+  if (overlay) {
+    overlay.classList = 'overlay';
+  }
 
   const fullScreenVideoLink = overlay.querySelector('a:last-of-type');
   if (!fullScreenVideoLink) {

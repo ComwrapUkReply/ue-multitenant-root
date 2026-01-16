@@ -21,6 +21,11 @@
         "id": "download",
         "fields": [
           {
+            "component": "tab",
+            "label": "Content",
+            "name": "content"
+          },
+          {
             "component": "text",
             "name": "downloadtitle",
             "value": "",
@@ -42,10 +47,41 @@
             "name": "downloadfile",
             "label": "Asset",
             "value": "",
+            "valueType": "string"
+          },
+          {
+            "component": "tab",
+            "label": "Styles",
+            "name": "downloadstyles"
+          },
+          {
+            "component": "select",
+            "name": "downloadcolor",
+            "label": "Card Color",
             "valueType": "string",
-            "validation": {
-                  "rootPath": "/content/dam/aem-xwalk"
-              }
+            "options": [
+              { "name": "Grey", "value": "grey" },
+              { "name": "Light Blue", "value": "light blue" },
+              { "name": "Dark Blue", "value": "dark blue" },
+              { "name": "White", "value": "white" }
+            ],
+            "value": "white"
+          },
+          {
+            "component": "select",
+            "name": "downloadwidth",
+            "label": "Width",
+            "valueType": "string",
+            "options": [
+              { "name": "Full Width", "value": "full-width" },
+              { "name": "Half Width", "value": "half-width" }
+            ]
+          },
+          {
+            "component": "boolean",
+            "name": "downloadbutton",
+            "label": "Show Download Button",
+            "valueType": "boolean"
           }
         ]
       }
