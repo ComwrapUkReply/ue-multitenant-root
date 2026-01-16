@@ -49,6 +49,12 @@
         "label": "Keywords"
       },
       {
+        "component": "aem-content",
+        "name": "experience-fragment",
+        "label": "Experience Fragment (Navigation)",
+        "description": "Select an experience fragment to replace the header navigation. Fragment name must start with 'nav' (e.g., nav-secondary, nav-product). Leave empty to use default navigation."
+      },
+      {
         "component": "container",
         "name": "meta",
         "label": "Meta",
@@ -776,6 +782,39 @@
             "custom"
           ]
         }
+      }
+    ]
+  },
+  {
+    "id": "experience-fragment",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "reference",
+        "label": "Fragment Reference",
+        "description": "Select an experience fragment from the experience-fragment folder. Fragments starting with 'nav' will replace the header navigation when configured in page metadata."
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Style",
+        "valueType": "string",
+        "value": "",
+        "description": "The style of the experience fragment",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Dark",
+            "value": "dark"
+          },
+          {
+            "name": "Light",
+            "value": "light"
+          }
+        ]
       }
     ]
   },
