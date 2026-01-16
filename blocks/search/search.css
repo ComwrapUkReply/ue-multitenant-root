@@ -199,7 +199,7 @@
   .search.minimal ul.search-results > li .search-result-image {
     position: absolute;
     top: 2px;
-    left: -var(--space-40);
+    left: var(--space-40);
   }
   
   .search.minimal ul.search-results .search-result-title + p {
