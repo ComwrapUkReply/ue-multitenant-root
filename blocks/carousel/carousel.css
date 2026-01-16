@@ -101,7 +101,7 @@
   background-color: var(--color-white);
   border-color: var(--color-primary);
   color: var(--color-primary);
-  border-radius: 24px;
+  border-radius: var(--border-radius-xl);
   padding: clamp(0.5rem, 1vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
   font-weight: 600;
   font-size: clamp(0.875rem, 2vw, 1.25rem);
@@ -110,14 +110,14 @@
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-8);
   min-width: clamp(180px, 20vw, 220px);
   height: clamp(40px, 5vw, 48px);
   justify-content: center;
 }
 
 .carousel.dark {
-    background-color: var(--color-dark-blue);
+    background-color: var(--color-primary-900);
   
     .carousel-slide-content h1,
     .carousel-slide-content h2,
@@ -145,16 +145,16 @@
 .carousel-arrow {
   width: 48px;
   height: 48px;
-  background-color: var(--color-primary-grey);
+  background-color: var(--color-grey-100);
   border: none;
-  border-radius: 24px;
+  border-radius: var(--border-radius-xl);
   cursor: pointer;
   display: none;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   color: var(--color-secondary);
-  font-size: 16px;
+  font-size: var(--font-size-base);
   position: absolute;
 }
 
@@ -174,7 +174,7 @@
 
 .carousel-prev::before {
   content: "<";
-  font-size: 24px;
+  font-size: var(--font-size-h5);
   color: var(--color-secondary);
 }
 
@@ -184,7 +184,7 @@
 
 .carousel-next::before {
   content: ">";
-  font-size: 24px;
+  font-size: var(--font-size-h5);
   color: var(--color-secondary);
 }
 
@@ -196,7 +196,7 @@
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   z-index: 10;
 }
 
@@ -204,9 +204,9 @@
 .carousel-play-pause {
   width: 48px;
   height: 48px;
-  background-color: var(--color-primary-grey);
+  background-color: var(--color-grey-100);
   border: none;
-  border-radius: 24px;
+  border-radius: var(--border-radius-xl);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -221,7 +221,7 @@
 
 .carousel-play-icon,
 .carousel-pause-icon {
-  font-size: 16px;
+  font-size: var(--font-size-base);
   color: var(--color-secondary);
   display: flex;
   align-items: center;
@@ -232,10 +232,10 @@
 .carousel-dots {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background-color: var(--color-primary-grey);
-  border-radius: 24px;
+  gap: var(--space-12);
+  padding: var(--space-12) var(--space-16);
+  background-color: var(--color-grey-100);
+  border-radius: var(--border-radius-xl);
   height: 48px;
   min-height: 48px;
   box-sizing: border-box;
@@ -245,7 +245,7 @@
   width: 40px;
   height: 8px;
   background-color: var(--color-secondary);
-  border-radius: 25px;
+  border-radius: var(--border-radius-xl);
   position: relative;
   overflow: hidden;
 }
@@ -256,7 +256,7 @@
   top: 0;
   height: 100%;
   background-color: var(--color-secondary);
-  border-radius: 25px;
+  border-radius: var(--border-radius-xl);
   transition: width 0.3s ease;
   width: 0%;
 }
@@ -310,7 +310,7 @@
   right: 0;
   background: linear-gradient(transparent, rgb(0 0 0 / 70%));
   color: var(--color-white);
-  padding: 24px 16px;
+  padding: var(--space-24) var(--space-16);
 }
 
 .carousel.overlay .carousel-slide-content h1,
@@ -333,12 +333,12 @@
 }
 
 .carousel.compact .carousel-slide-content {
-  padding: 12px;
+  padding: var(--space-12);
 }
 
 .carousel.compact .carousel-dots {
-  padding: 8px 12px;
-  gap: 8px;
+  padding: var(--space-8) var(--space-12);
+  gap: var(--space-8);
 }
 
 /* Desktop Styles */
@@ -410,7 +410,7 @@
 
 /* Loading state */
 .carousel[data-carousel-loading="true"] .carousel-slide {
-  background: linear-gradient(90deg, var(--color-light-grey) 25%, var(--color-cloud-grey) 50%, var(--color-light-grey) 75%);
+  background: linear-gradient(90deg, var(--color-grey-200) 25%, var(--color-grey-300) 50%, var(--color-grey-200) 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
 }

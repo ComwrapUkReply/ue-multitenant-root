@@ -143,8 +143,8 @@ The quote block uses theme variables for consistent styling:
   --primary-color: #ffc107;
   --secondary-color: #6c757d;
   --info-color: #0dcaf0;
-  --color-blue: #3b63fb;
-  --color-primary-blue: #200a80;
+  --color-primary-700: #3b63fb;
+  --color-primary: #200a80;
 }
 ```
 
@@ -421,8 +421,8 @@ Theme variables used:
 --primary-color: Primary accent color
 --secondary-color: Secondary color
 --info-color: Info accent color
---color-blue: Blue accent color
---color-primary-blue: Primary blue color
+--color-primary-700: Blue accent color
+--color-primary: Primary blue color
 ```
 
 ### DOM Structure

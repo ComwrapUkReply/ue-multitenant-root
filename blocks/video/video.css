@@ -29,9 +29,9 @@ main>.section.video-container {
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 16px;
-    padding: 24px;
-    color: #fff;
+    gap: var(--space-16);
+    padding: var(--space-24);
+    color: var(--color-white);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -41,14 +41,14 @@ main>.section.video-container {
   }
   
   .video .video-title {
-    font-size: 4rem;
+    font-size: var(--font-size-h2);
     line-height: 1;
     text-transform: uppercase;
     margin: 0;
   }
   
   .video .video-description {
-    font-size: 1.25rem;
+    font-size: var(--font-size-h6);
     font-weight: 400;
     line-height: 1.5;
     margin: 0;
@@ -56,11 +56,11 @@ main>.section.video-container {
   
   .video .video-button:any-link {
     display: block;
-    background-color: #fff;
-    color: #141411;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 1rem;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    padding: var(--space-12) var(--space-24);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-mob-h6);
     font-weight: 300;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -125,16 +125,16 @@ main>.section.video-container {
   .video-card-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
-    padding: 16px;
+    gap: var(--space-16);
+    padding: var(--space-16);
     list-style: none;
   }
   
   .video-card {
     display: flex;
     flex-direction: column;
-    background-color: #f7f7f7;
-    border-radius: 8px;
+    background-color: var(--color-grey-200);
+    border-radius: var(--border-radius-md);
     overflow: hidden;
     position: relative;
   }
@@ -167,29 +167,29 @@ main>.section.video-container {
   }
   
   .video-modal .video-container {
-    border-radius: 8px;
+    border-radius: var(--border-radius-md);
     overflow: hidden;
   }
   
   .video-card .video-card-content {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 24px 34px;
+    gap: var(--space-8);
+    padding: var(--space-24) var(--space-32);
     overflow: hidden;
   }
   
   .video-card .video-card-title {
-    font-size: 1.25rem;
+    font-size: var(--font-size-h6);
     font-weight: 700;
     line-height: 1.2;
     margin: 0;
   }
   
   .video-card .video-card-description {
-    font-size: 1rem;
+    font-size: var(--font-size-label);
     font-weight: 400;
-    line-height: 1.5;
+    line-height: var(--line-height-meta);
     margin: 0;
   }
   
@@ -227,11 +227,11 @@ main>.section.video-container {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fff;
+    background-color: var(--color-white);
     height: 60px;
     width: 60px;
     border-radius: 50%;
-    font-size: 16px;
+    font-size: var(--font-size-label);
     cursor: pointer;
     padding: 0;
     margin: 0;
@@ -239,7 +239,7 @@ main>.section.video-container {
   
   .video-component .video-play-button:hover,
   .video-component .video-play-button:focus {
-    background-color: #fff;
+    background-color: var(--color-white);
   }
   
   .video-component .video-play-button .icon {
@@ -257,7 +257,7 @@ main>.section.video-container {
   }
   
   .video-modal-dialog::backdrop {
-    background-color: #fff;
+    background-color: var(--color-white);
   }
   
   .video-modal {
@@ -265,13 +265,13 @@ main>.section.video-container {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: var(--space-8);
   }
   
   .video-modal .video-modal-header,
   .video-modal .video-modal-content {
     position: relative;
-    padding: 10px;
+    padding: var(--space-10);
     width: 100%;
   }
   
@@ -290,7 +290,7 @@ main>.section.video-container {
     justify-content: center;
     align-items: center;
     border: 0;
-    padding: 10px;
+    padding: var(--space-10);
     margin: 0;
     height: 40px;
     width: 40px;

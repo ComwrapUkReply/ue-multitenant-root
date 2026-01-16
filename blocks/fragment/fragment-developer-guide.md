@@ -112,9 +112,9 @@ This block does not require a runtime configuration object. Styling is driven by
 /* Used by the dark variant */
 .fragment.dark {
   padding: var(--space-24) 0;
-  box-shadow: 0 0 0 100vmax var(--color-dark-blue);
+  box-shadow: 0 0 0 100vmax var(--color-primary-900);
   clip-path: inset(0 -100vmax);
-  background-color: var(--color-dark-blue);
+  background-color: var(--color-primary-900);
   color: var(--color-white);
 }
 ```
