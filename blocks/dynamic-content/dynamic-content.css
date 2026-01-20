@@ -1,7 +1,7 @@
 .content {
   border: 1px solid rgb(var(--color-black));
   background: rgb(var(--color-black));
-  color: rgb(var(--color-white));
+  color: var(--color-black);
   margin-bottom: var(--space-18);
   text-decoration: unset;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -32,7 +32,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-wrap: auto;
-  color: var(--color-white);
+  color: var(--color-black);
   margin: 0;
 }
 
@@ -52,7 +52,7 @@
   margin-top: 0;
   margin-bottom: var(--space-10);
   font-size: var(--font-size-base);
-  color: var(--color-white);
+  color: var(--color-black);
 }
 
 .contentfeed {
