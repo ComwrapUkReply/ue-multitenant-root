@@ -1,12 +1,12 @@
 .accordion {
   list-style: none;
   margin: 0;
-  padding-top: 4rem;
+  padding-top: var(--space-64);
 }
 
 .accordion > li {
   cursor: pointer;
-  border-bottom: 1px solid rgb(var(--color-pure-black));
+  border-bottom: 1px solid rgb(var(--color-black));
 }
 
 .accordion li:last-child {
@@ -24,7 +24,7 @@
   flex-flow: row nowrap;
   gap: 0;
   position: relative;
-  color: var(--color-pure-black);
+  color: var(--color-black);
 }
 
 .accordion-trigger:hover {
@@ -33,10 +33,10 @@
 }
 
 .accordion-title {
-  font-size: 1.25rem;
+  font-size: var(--font-size-h6);
   font-weight: 500;
-  line-height: 1.75rem;
-  margin-right: 2rem;
+  line-height: var(--line-height-h6);
+  margin-right: var(--space-32);
 }
 
 .accordion-icon {
@@ -89,12 +89,12 @@
 
 .accordion-content {
   display: flex;
-  gap: 2rem;
-  padding: 2rem 0;
+  gap: var(--space-32);
+  padding: var(--space-32) 0;
 }
 
 .accordion-content picture {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-16);
   display: block;
   width: 100%;
 }
@@ -108,7 +108,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 2rem;
+  gap: var(--space-32);
 }
 
 .accordion button:hover, 
@@ -121,16 +121,16 @@
 /* Button Styles within Accordion */
 .accordion .button {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  font-family: var(--body-font-family);
-  font-size: var(--body-font-size-xs);
+  padding: var(--space-12) var(--space-24);
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
   font-weight: 500;
   text-decoration: none;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin: 1rem 0;
+  margin: var(--space-16) 0;
   border: 2px solid;
   max-width: fit-content;
   max-height: fit-content;
@@ -139,61 +139,61 @@
 /* Primary Button */
 .accordion .button.primary {
   color: var(--color-white);
-  background-color: var(--color-primary-blue);
-  border-color: var(--color-primary-blue);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .accordion .button.primary:hover,
 .accordion .button.primary:focus {
   color: var(--color-white);
-  background-color: var(--color-dark-blue);
-  border-color: var(--color-dark-blue);
+  background-color: var(--color-primary-900);
+  border-color: var(--color-primary-900);
   text-decoration: none;
 }
 
 .accordion .button.primary:active {
-  background-color: var(--color-blue);
-  border-color: var(--color-blue);
+  background-color: var(--color-primary-700);
+  border-color: var(--color-primary-700);
 }
 
 /* Secondary Button */
 .accordion .button.secondary {
-  color: var(--color-primary-blue);
+  color: var(--color-primary);
   background-color: transparent;
-  border-color: var(--color-primary-blue);
+  border-color: var(--color-primary);
 }
 
 .accordion .button.secondary:hover,
 .accordion .button.secondary:focus {
   color: var(--color-white);
-  background-color: var(--color-primary-blue);
+  background-color: var(--color-primary);
   text-decoration: none;
 }
 
 .accordion .button.secondary:active {
-  background-color: var(--color-dark-blue);
-  border-color: var(--color-dark-blue);
+  background-color: var(--color-primary-900);
+  border-color: var(--color-primary-900);
 }
 
 /* Tertiary Button */
 .accordion .button.tertiary {
-  color: var(--color-primary-blue);
+  color: var(--color-primary);
   background-color: transparent;
-  border-color: var(--color-primary-blue);
+  border-color: var(--color-primary);
   border-style: dashed;
 }
 
 .accordion .button.tertiary:hover,
 .accordion .button.tertiary:focus {
   color: var(--color-white);
-  background-color: var(--color-primary-blue);
+  background-color: var(--color-primary);
   border-style: solid;
   text-decoration: none;
 }
 
 .accordion .button.tertiary:active {
-  background-color: var(--color-dark-blue);
-  border-color: var(--color-dark-blue);
+  background-color: var(--color-primary-900);
+  border-color: var(--color-primary-900);
 }
 
 

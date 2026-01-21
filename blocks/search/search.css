@@ -85,7 +85,6 @@
 
 /* Enhanced search box styling */
 .search-wrapper .search.block .search-box {
-  border: 2px solid var(--color-primary);
   background-color: var(--color-white);
   padding: var(--space-12) var(--space-16);
   border-radius: var(--space-8);
@@ -178,7 +177,7 @@
 .search ul.search-results > li {
   border: none;
   background-color: transparent;
-  border-bottom: 1px solid var(--color-cloud-grey);
+  border-bottom: 1px solid var(--color-grey-500);
   transition: background-color var(--transition-fast);
   margin: 0;
 }

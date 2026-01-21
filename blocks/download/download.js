@@ -1,3 +1,47 @@
+/**
+ * Validates if a file extension is in the allowed list
+ * @param {string} fileUrl - The file URL or path
+ * @returns {boolean} - True if file type is allowed
+ */
+function isValidFileType(fileUrl) {
+  if (!fileUrl) return false;
+
+  // Allowed file extensions based on requirements
+  const allowedExtensions = [
+    // Documents
+    'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'xml',
+    // Images
+    'jpg', 'jpeg', 'heic', 'png', 'webp', 'bmp',
+    // Videos
+    'avs', 'acv', 'avc', 'ev', 'mp4',
+    // Archives
+    'zip',
+    // Media
+    'mp3', 'mov',
+  ];
+
+  // Extract file extension from URL
+  const urlPath = fileUrl.split('?')[0]; // Remove query parameters
+  const extension = urlPath.split('.').pop()?.toLowerCase();
+
+  return extension && allowedExtensions.includes(extension);
+}
+
+/**
+ * Creates and displays a simple warning message for invalid file types
+ * @param {HTMLElement} container - Container element to append warning to
+ * @returns {HTMLElement} - The warning message element
+ */
+function createWarningMessage(container) {
+  const warningMsg = document.createElement('div');
+  warningMsg.className = 'download-warning';
+  warningMsg.setAttribute('role', 'alert');
+  warningMsg.setAttribute('aria-live', 'polite');
+  warningMsg.textContent = 'Invalid file type';
+  container.appendChild(warningMsg);
+  return warningMsg;
+}
+
 export default function decorate(block) {
   const rows = block.children || [];
   let downloadLink;
@@ -7,6 +51,13 @@ export default function decorate(block) {
     const anchor = rows[3].querySelector('a');
     downloadLink = img?.src || anchor?.href;
   }
+
+  // Validate file type when block loads
+  const isValidFile = downloadLink ? isValidFileType(downloadLink) : true;
+  const fileExtension = downloadLink
+    ? downloadLink.split('?')[0].split('.').pop()?.toLowerCase()
+    : null;
+
   const downloadData = {
     title: rows[0]?.textContent,
     description: rows[1]?.innerHTML,
@@ -15,6 +66,8 @@ export default function decorate(block) {
     color: rows[4]?.textContent?.trim(),
     width: rows[5]?.textContent?.trim(),
     hasButton: rows[6]?.textContent?.trim() === 'true',
+    isValidFile,
+    fileExtension,
   };
   // return;
   // Clear existing content
@@ -36,13 +89,22 @@ export default function decorate(block) {
     block.classList.add('has-button');
   } else {
     block.classList.add('no-button');
-    // Make the whole card clickable if there's no button
-    if (downloadData.downloadLink) {
+    // Make the whole card clickable if there's no button (only if file type is valid)
+    if (downloadData.downloadLink && downloadData.isValidFile) {
       block.style.cursor = 'pointer';
       block.addEventListener('click', () => {
         window.location.href = downloadData.downloadLink;
       });
+    } else if (downloadData.downloadLink && !downloadData.isValidFile) {
+      // Disable click for invalid file types
+      block.style.cursor = 'not-allowed';
+      block.style.opacity = '0.6';
     }
+  }
+
+  // Add invalid file class for styling
+  if (!downloadData.isValidFile) {
+    block.classList.add('invalid-file-type');
   }
 
   block.style.width = downloadData.width === 'full-width' ? '100%' : '50%';
@@ -67,6 +129,11 @@ export default function decorate(block) {
     contentWrapper.appendChild(description);
   }
 
+  // Show warning message for invalid file types
+  if (downloadData.downloadLink && !downloadData.isValidFile) {
+    createWarningMessage(contentWrapper);
+  }
+
   // Append content wrapper to block
   block.appendChild(contentWrapper);
 
@@ -76,14 +143,20 @@ export default function decorate(block) {
     fileInfo.className = 'download-file-info';
   }
 
-  // Create download button
-  if (downloadData.downloadLink && downloadData.buttonLabel && downloadData.hasButton) {
+  // Create download button (only if file type is valid)
+  if (
+    downloadData.downloadLink
+    && downloadData.isValidFile
+    && downloadData.buttonLabel
+    && downloadData.hasButton
+  ) {
     const button = document.createElement('a');
     button.className = 'download-button';
     button.href = downloadData.downloadLink;
     button.setAttribute('download', '');
     button.setAttribute('role', 'button');
     button.setAttribute('aria-label', `Download ${downloadData.buttonLabel}`);
+    button.setAttribute('title', `Download ${downloadData.buttonLabel}`);
     const buttonText = document.createElement('span');
     buttonText.textContent = downloadData.buttonLabel;
     button.appendChild(buttonText);
@@ -119,4 +192,6 @@ export default function decorate(block) {
 
     contentWrapper.appendChild(button);
   }
+  // Note: For invalid file types, no download button is created at all
+  // This ensures the file cannot be accessed without modifying JavaScript
 }
