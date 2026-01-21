@@ -112,14 +112,7 @@ async function loadEager(doc) {
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 
-  try {
-    /* if desktop (proxy for fast connection) or variables already loaded, load variables.css */
-    if (window.innerWidth >= 900 || sessionStorage.getItem('variables-loaded')) {
-      loadVariables();
-    }
-  } catch (e) {
-    // do nothing
-  }
+  loadVariables();
 
   try {
     /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
@@ -148,7 +141,6 @@ async function loadLazy(doc) {
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
-  loadVariables();
 }
 
 /**
