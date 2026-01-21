@@ -107,7 +107,10 @@ export default function decorate(block) {
     block.classList.add('invalid-file-type');
   }
 
-  block.style.width = downloadData.width === 'full-width' ? '100%' : '50%';
+  // Add width class (half-width only applies on desktop via CSS)
+  if (downloadData.width === 'half-width') {
+    block.classList.add('width-half');
+  }
 
   // Create content wrapper for visible content
   const contentWrapper = document.createElement('div');
