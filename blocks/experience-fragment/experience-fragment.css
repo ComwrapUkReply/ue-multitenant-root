@@ -56,13 +56,12 @@
 .nav.experience-fragment-nav {
   display: block;
   width: 100%;
-  background-color: var(--background-color, #fff);
 }
 
 /* Experience fragment nav container */
-.experience-fragment-nav-wrapper .experience-fragment-nav {
+.experience-fragment-nav-wrapper .experience-fragment-nav-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   width: 100%;
 }
 
@@ -79,8 +78,89 @@
   padding: 0 1rem;
 }
 
+/* ============================================
+   Logo, Navigation, Tools Layout
+   ============================================ */
+
+/* Overall header background and divider */
+.experience-fragment-nav {
+  background-color: var(--color-white);
+}
+
+/* Logo section (experience-fragment-nav-section-1) */
+.experience-fragment-nav-section-1 .default-content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.experience-fragment-nav-section-1 picture {
+  display: block;
+}
+
+.experience-fragment-nav-section-1 img {
+  max-height: 40px;
+  width: auto;
+}
+
+/* Navigation section (experience-fragment-nav-section-2) */
+.experience-fragment-nav-section-2 .default-content-wrapper > ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.experience-fragment-nav-section-2 .default-content-wrapper > ul > li {
+  position: relative;
+  margin: 0;
+}
+
+/* Top-level nav label */
+.experience-fragment-nav-section-2 .default-content-wrapper > ul > li > p {
+  margin: 0;
+  padding: var(--space-12) var(--space-16);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  color: var(--color-black);
+}
+
+/* Submenu list */
+.experience-fragment-nav-section-2 .default-content-wrapper > ul > li > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--space-16) var(--space-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.experience-fragment-nav-section-2 .default-content-wrapper > ul > li > ul > li {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  color: var(--color-black);
+}
+
+/* Tools section (experience-fragment-nav-section-3) */
+.experience-fragment-nav-section-3 .default-content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-8);
+  min-height: 44px;
+}
+
+/* Ensure any buttons/links in tools area align nicely */
+.experience-fragment-nav-section-3 .default-content-wrapper > * {
+  display: inline-flex;
+  align-items: center;
+}
+
 /* Responsive: Desktop layout */
-@media (min-width: 900px) {
+@media screen and (width >= 900px) {
   .experience-fragment-nav-wrapper .experience-fragment-nav {
     flex-direction: row;
     align-items: center;
@@ -95,6 +175,33 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+  }
+
+  /* Desktop navigation: single row with dropdown-style submenus */
+  .experience-fragment-nav-section-2 .default-content-wrapper > ul {
+    flex-wrap: nowrap;
+    gap: var(--space-24);
+  }
+
+  .experience-fragment-nav-section-2 .default-content-wrapper > ul > li > ul {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    margin-top: var(--space-8);
+    padding: var(--space-16);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-cloud-grey);
+    border-radius: var(--space-4);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+    min-width: 180px;
+    z-index: 10;
+    display: none;
+  }
+
+  /* Reveal submenu on hover/focus of parent item (CSS-only behavior) */
+  .experience-fragment-nav-section-2 .default-content-wrapper > ul > li:hover > ul,
+  .experience-fragment-nav-section-2 .default-content-wrapper > ul > li:focus-within > ul {
+    display: flex;
   }
 }
 

@@ -103,7 +103,7 @@ export async function loadExperienceFragmentForHeader(path) {
 
   // Create a container for all sections
   const container = document.createElement('div');
-  container.className = 'experience-fragment-nav';
+  container.className = 'experience-fragment-nav-container';
 
   // Get all sections and move their content to container
   const sections = main.querySelectorAll('.section');
