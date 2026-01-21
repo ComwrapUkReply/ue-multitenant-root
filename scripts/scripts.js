@@ -62,7 +62,6 @@ async function loadFonts() {
  * load variables.css and set a session storage flag
  */
 async function loadVariables() {
-  console.log('loading variables.css');
   await loadCSS(`${window.hlx.codeBasePath}/styles/variables.css`);
   try {
     if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('variables-loaded', 'true');
