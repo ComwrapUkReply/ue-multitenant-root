@@ -62,6 +62,7 @@ async function loadFonts() {
  * load variables.css and set a session storage flag
  */
 async function loadVariables() {
+  console.log('loading variables.css');
   await loadCSS(`${window.hlx.codeBasePath}/styles/variables.css`);
   try {
     if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('variables-loaded', 'true');
@@ -111,7 +112,14 @@ async function loadEager(doc) {
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 
-  await loadVariables();
+  try {
+    /* if desktop (proxy for fast connection) or variables already loaded, load variables.css */
+    if (window.innerWidth >= 900 || sessionStorage.getItem('variables-loaded')) {
+      loadVariables();
+    }
+  } catch (e) {
+    // do nothing
+  }
 
   try {
     /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
@@ -140,6 +148,7 @@ async function loadLazy(doc) {
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
+  loadVariables();
 }
 
 /**
