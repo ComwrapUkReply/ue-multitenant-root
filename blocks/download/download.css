@@ -20,7 +20,7 @@ main > .section > div.download-wrapper {
 }
 
 /* Half width only applies on desktop, mobile defaults to full width */
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .download-wrapper-inner.width-half {
     width: 50%;
   }
