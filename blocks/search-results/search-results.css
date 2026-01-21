@@ -256,6 +256,11 @@
   overflow: hidden;
 }
 
+.search-results .search-results-list.no-results > li {
+    border: none;
+    background: none;
+  }
+
 /* Cards (grid) results */
 .search-results:is(.cards, .minimal) .search-results-list {
   display: grid;
@@ -373,11 +378,6 @@
   font-family: var(--font-family-body);
   font-size: var(--font-size-base);
   color: var(--color-sonic-silver);
-}
-
-.search-results .search-results-list.no-results > li {
-  border: none;
-  background: none;
 }
 
 .search-results .search-results-list.no-results .no-results-title {
