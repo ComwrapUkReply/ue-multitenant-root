@@ -10,6 +10,7 @@
             "template": {
               "name": "Teaser List",
               "model": "teaser-list",
+              "teaser-list-type": "parent_page",
               "teasersTitleElement": "h3"
             }
           }
@@ -26,6 +27,7 @@
           "name": "teaser-list-type",
           "label": "Get Pages By",
           "valueType": "string",
+          "value": "parent_page",
           "options": [
             {
               "name": "Parent Page",
