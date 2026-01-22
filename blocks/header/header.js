@@ -290,7 +290,6 @@ export default async function decorate(block) {
     navSections.querySelectorAll(':scope .nav-sections-menu > ul > li.nav-drop').forEach((navSection) => {
       if (navSection.querySelector('.nav-sections-1').children.length > 8) {
         navSection.querySelector('.nav-sections-1').classList.add('nav-drop-overflow');
-        console.log('nav-drop-overflow');
       }
       // Add click handler to toggle submenu only in desktop view
       navSection.addEventListener('click', () => {

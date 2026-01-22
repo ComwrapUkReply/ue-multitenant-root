@@ -3,6 +3,26 @@
 
 
 /* header and nav layout */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+header::before {
+  content: "";
+  background: var(--color-white);
+  height: 100%;
+  left: 0;
+  margin: 0 calc(-50vw + 50%);
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  z-index: 1;
+}
+
 header .nav-wrapper {
   background-color: var(--color-white);
   width: 100%;
@@ -60,6 +80,7 @@ header nav .nav-hamburger {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  z-index: 1;
   order: 3;
 }
 
@@ -155,10 +176,11 @@ header .nav-brand {
   grid-area: brand;
   align-items: center;
   justify-content: flex-start;
+  z-index: 1;
 }
 
 header nav .nav-brand img {
-  width: 100px;
+  width: 150px;
   height: auto;
 }
 
@@ -361,7 +383,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
   }
 
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > p {
-    padding: var(--space-8) var(--space-16);
+    padding: var(--space-24) var(--space-16);
   }
 
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > p > a {
@@ -493,6 +515,7 @@ header nav .nav-tools {
 header nav .nav-tools .language-switcher-header {
   display: flex;
   align-items: center;
+  z-index: 1;
 }
 
 header nav .nav-tools .language-switcher-header .block.language-switcher {
@@ -525,4 +548,5 @@ header nav .nav-tools .language-switcher-header .language-option {
 header nav .nav-tools .region-switcher-header {
   display: flex;
   align-items: center;
+  z-index: 1;
 }
