@@ -4,26 +4,25 @@
 
 /* header and nav layout */
 header {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  z-index: 10;
+  position: relative;
 }
 
 header::before {
-  content: "";
-  background: var(--color-white);
-  height: 100%;
-  left: 0;
-  margin: 0 calc(-50vw + 50%);
-  position: absolute;
-  top: 0;
-  width: 100vw;
-  z-index: 1;
-}
+    content: "";
+    background: var(--color-white);
+    height: 100%;
+    left: 0;
+    margin: 0 calc(-50vw + 50%);
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    z-index: 1;
+  }
+  
 
 header .nav-wrapper {
+    padding: var(--space-16) 0;
   background-color: var(--color-white);
   width: 100%;
   z-index: 2;
@@ -31,10 +30,10 @@ header .nav-wrapper {
 
 header nav {
   box-sizing: border-box;
-  display: flex;
+  display: grid;
   gap: 0;
   grid-template:
-    'brand  hamburger tools' / 1fr auto auto;
+    'brand tools hamburger' / 1fr auto auto;
   align-items: center;
   margin: auto;
   max-width: 1248px;
@@ -52,7 +51,7 @@ header nav[aria-expanded='true'] {
 header nav[aria-expanded='true'] {
     display: grid;
     grid-template:
-    'brand sections tools' / 1fr 1fr auto
+    'brand sections tools' / auto auto auto
 }
 
   header nav {
@@ -102,6 +101,11 @@ header nav .nav-hamburger button {
   justify-content: center;
   min-height: 44px; /* Accessibility: minimum touch target */
 }
+
+header nav .nav-hamburger button:focus {
+    outline: none;
+}
+
 
 header nav .nav-hamburger-icon,
 header nav .nav-hamburger-icon::before,
@@ -180,7 +184,7 @@ header .nav-brand {
 }
 
 header nav .nav-brand img {
-  width: 150px;
+  width: 120px;
   height: auto;
 }
 
@@ -199,7 +203,7 @@ header nav[aria-expanded='true'] .nav-sections {
   align-self: start;
   background: var(--color-white);
   position: fixed;
-  top: 40px;
+  top: 60px;
   left: 0;
   z-index: 1001;
   width: 100%;
@@ -328,6 +332,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
 
   header nav .nav-sections ul {
     display: flex;
+    justify-content: flex-end;
     gap: var(--space-24);
     margin: 0;
   }
@@ -509,6 +514,8 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
 /* tools */
 header nav .nav-tools {
   display: flex;
+  gap: var(--space-8);
+  align-items: center;
 }
 
 /* Language switcher in header */
