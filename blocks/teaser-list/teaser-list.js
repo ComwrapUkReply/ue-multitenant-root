@@ -57,8 +57,24 @@ export default async function decorate(block) {
   let pagesData = [];
   const data = await getQueryIndex();
 
+  // Handle empty/unconfigured state
+  if (!TEASER_LIST_TYPE.text || TEASER_LIST_TYPE.text.trim() === '') {
+    const emptyMessage = document.createElement('div');
+    emptyMessage.className = 'teaser-list-empty';
+    emptyMessage.innerHTML = '<p>Please configure the Teaser List block by selecting "Get Pages By" option in the properties panel.</p>';
+    block.appendChild(emptyMessage);
+    return;
+  }
+
   if (TEASER_LIST_TYPE.text === 'parent_page') {
     const teaserParentPath = TEASER_PARENT_PAGE_LINK.text;
+    if (!teaserParentPath || teaserParentPath.trim() === '') {
+      const emptyMessage = document.createElement('div');
+      emptyMessage.className = 'teaser-list-empty';
+      emptyMessage.innerHTML = '<p>Please configure the "Parent page" field in the properties panel.</p>';
+      block.appendChild(emptyMessage);
+      return;
+    }
     const teaserParentLink = mapPath(teaserParentPath);
     pagesData = data.filter(
       (page) => page.path
@@ -67,30 +83,51 @@ export default async function decorate(block) {
     );
   } else if (TEASER_LIST_TYPE.text === 'individual_pages') {
     const individualPagesLinks = TEASER_INDIVIDUAL_PAGES_LINK.node?.innerText;
-    if (individualPagesLinks) {
-      const individualPaths = individualPagesLinks
-        .split(',')
-        .map((link) => link.trim())
-        .filter((link) => link.length > 0)
-        .map((link) => {
-          const cleanPath = mapPath(link);
-          return cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
-        });
-
-      pagesData = data.filter((page) => page.path && individualPaths.includes(page.path));
-      pagesData.sort((a, b) => {
-        const aIndex = individualPaths.indexOf(a.path);
-        const bIndex = individualPaths.indexOf(b.path);
-        return aIndex - bIndex;
-      });
+    if (!individualPagesLinks || individualPagesLinks.trim() === '') {
+      const emptyMessage = document.createElement('div');
+      emptyMessage.className = 'teaser-list-empty';
+      emptyMessage.innerHTML = '<p>Please configure the "Individual pages link" field in the properties panel.</p>';
+      block.appendChild(emptyMessage);
+      return;
     }
+    const individualPaths = individualPagesLinks
+      .split(',')
+      .map((link) => link.trim())
+      .filter((link) => link.length > 0)
+      .map((link) => {
+        const cleanPath = mapPath(link);
+        return cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+      });
+
+    pagesData = data.filter((page) => page.path && individualPaths.includes(page.path));
+    pagesData.sort((a, b) => {
+      const aIndex = individualPaths.indexOf(a.path);
+      const bIndex = individualPaths.indexOf(b.path);
+      return aIndex - bIndex;
+    });
   } else if (TEASER_LIST_TYPE.text === 'tag') {
     const teaserTag = TEASER_TAG.text;
+    if (!teaserTag || teaserTag.trim() === '') {
+      const emptyMessage = document.createElement('div');
+      emptyMessage.className = 'teaser-list-empty';
+      emptyMessage.innerHTML = '<p>Please configure the "tags" field in the properties panel.</p>';
+      block.appendChild(emptyMessage);
+      return;
+    }
     const teaserTags = teaserTag.split(',');
     pagesData = data.filter(
       (page) => Array.isArray(page.tags) && page.tags.length > 0 && page.tags[0]
       && page.tags[0].split(',').map((tag) => tag.trim()).some((tag) => teaserTags.includes(tag)),
     );
+  }
+
+  // Show message if no pages found
+  if (pagesData.length === 0) {
+    const emptyMessage = document.createElement('div');
+    emptyMessage.className = 'teaser-list-empty';
+    emptyMessage.innerHTML = '<p>No pages found. Please check your configuration and ensure pages are published.</p>';
+    block.appendChild(emptyMessage);
+    return;
   }
 
   const teaserList = document.createElement('div');

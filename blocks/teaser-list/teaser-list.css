@@ -174,3 +174,18 @@
         --teaser-list-height: 220px;
     }
 }
+
+/* Empty state message */
+.teaser-list-empty {
+    padding: var(--spacing-xl, 2rem);
+    text-align: center;
+    color: rgba(var(--text-color), 0.6);
+    font-size: var(--body-font-size-s, 1rem);
+    border: 1px dashed rgba(var(--text-color), 0.2);
+    border-radius: 0.5rem;
+    background: rgba(var(--background-color), 0.5);
+}
+
+.teaser-list-empty p {
+    margin: 0;
+}
