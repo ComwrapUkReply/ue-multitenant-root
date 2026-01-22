@@ -32,12 +32,13 @@
   transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
-.region-switcher-current:focus {
-  outline: none;
+.region-current:hover {
+  background: var(--color-grey-200);
+  border-color: var(--color-primary);
 }
 
-.region-switcher-current:focus-visible {
-  outline: 2px solid var(--color-primary-blue);
+.region-current:focus-visible {
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -84,9 +85,9 @@
   width: fit-content;
   list-style: none;
   background: var(--color-white);
-  border: 2px solid var(--color-primary-blue);
+  border: 2px solid var(--color-grey-300);
   border-radius: var(--space-4);
-  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  box-shadow: var(--box-shadow);
   z-index: 1000;
 }
 
@@ -111,21 +112,21 @@
   gap: var(--space-8);
   padding: var(--space-8) var(--space-12);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-mob-label);
   color: var(--color-black);
   text-decoration: none;
   transition: background var(--transition-fast);
 }
 
-.region-switcher-option:hover {
-  background: var(--color-light-grey);
+.region-option:hover {
+  background: var(--color-grey-200);
   text-decoration: none;
 }
 
-.region-switcher-option:focus-visible {
-  background: var(--color-light-grey);
-  outline: 2px solid var(--color-primary-blue);
+.region-option:focus-visible {
+  background: var(--color-grey-200);
+  outline: 2px solid var(--color-primary);
   outline-offset: -2px;
 }
 
@@ -145,8 +146,8 @@
   background: transparent;
 }
 
-.region-switcher.header .region-switcher-current:hover {
-  background: var(--color-light-grey);
+.region-switcher-header .region-current:hover {
+  background: var(--color-grey-200);
 }
 
 .region-switcher.header .region-switcher-menu {
