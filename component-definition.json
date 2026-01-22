@@ -631,7 +631,6 @@
                 "template": {
                   "name": "Teaser List",
                   "model": "teaser-list",
-                  "teaser-list-type": "parent_page",
                   "teasersTitleElement": "h3"
                 }
               }

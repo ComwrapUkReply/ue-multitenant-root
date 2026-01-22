@@ -1797,7 +1797,6 @@
         "name": "teaser-list-type",
         "label": "Get Pages By",
         "valueType": "string",
-        "value": "parent_page",
         "options": [
           {
             "name": "Parent Page",
