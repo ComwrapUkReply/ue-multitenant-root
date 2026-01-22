@@ -11,6 +11,16 @@
   display: inline-block;
 }
 
+.language-switcher-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
 /* Common styles for flags */
 .flag {
   font-size: var(--font-size-h6);
@@ -87,25 +97,31 @@
   position: relative;
   margin: 0;
   padding: 0;
+  font-size: var(--font-size-base);
 }
 
-.language-switcher-item.current {
-  border-bottom: 1px solid var(--color-primary-blue);
+.language-switcher-item:hover,
+.language-switcher-item:focus {
+  color: var(--color-primary);
 }
 
 /* Language Current (Active Language) */
 .language-switcher-current {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--space-4) 5px;
-  border: none;
-  background: none;
-  font-size: var(--font-size-mob-label);
-  line-height: var(--line-height-mob-label);
-  color: var(--color-primary-blue);
-  font-weight: 600;
-  cursor: default;
-  transition: color var(--transition-base);
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-8);
+}
+
+.language-switcher-current:after {
+    content: '';
+    display: block;
+    width: 100%;
+    border-bottom: 2px solid var(--color-primary);
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }
 
 .language-option:hover {
@@ -128,8 +144,8 @@
   align-items: center;
   padding: var(--space-4) 5px;
   background: none;
-  font-size: var(--font-size-mob-label);
-  line-height: var(--line-height-mob-label);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
   color: var(--color-black);
   transition: all var(--transition-base);
   border: 2px solid transparent;
