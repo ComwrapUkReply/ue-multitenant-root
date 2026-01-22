@@ -630,6 +630,13 @@
         "name": "downloadstyles"
       },
       {
+        "component": "boolean",
+        "name": "downloadshowpreview",
+        "label": "Show Preview Image",
+        "valueType": "boolean",
+        "description": "Display a thumbnail preview of the download file (works for images, PDFs, and documents)"
+      },
+      {
         "component": "select",
         "name": "downloadcolor",
         "label": "Card Color",

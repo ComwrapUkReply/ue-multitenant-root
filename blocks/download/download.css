@@ -172,3 +172,125 @@ main > .section > div.download-wrapper {
   font-size: 0.9rem;
   font-weight: 500;
 }
+
+/* Preview Image Styles */
+.download-wrapper-inner .download-preview-image-wrapper {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border-radius: 0.25rem;
+  position: relative;
+}
+
+.download-wrapper-inner .download-preview-image-wrapper picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.download-wrapper-inner .download-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
+}
+
+/* Hover effect for preview image on clickable cards */
+.download-wrapper-inner.no-button:hover .download-preview-image {
+  transform: scale(1.05);
+}
+
+/* Layout adjustments when preview image is present */
+.download-wrapper-inner.has-preview-image {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Desktop: Side-by-side layout for cards with preview image */
+@media (width >= 768px) {
+  .download-wrapper-inner.has-preview-image {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .download-wrapper-inner.has-preview-image .download-preview-image-wrapper {
+    width: 40%;
+    min-width: 200px;
+    max-width: 300px;
+    height: auto;
+    min-height: 180px;
+    margin-bottom: 0;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .download-wrapper-inner.has-preview-image .download-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* Color variant adjustments for preview image */
+.download-wrapper-inner.color-dark-blue .download-preview-image-wrapper,
+.download-wrapper-inner.color-light-blue .download-preview-image-wrapper {
+  border: 2px solid rgb(255 255 255 / 20%);
+}
+
+.download-wrapper-inner.color-white .download-preview-image-wrapper {
+  border: 1px solid rgb(0 0 0 / 10%);
+}
+
+.download-wrapper-inner.color-grey .download-preview-image-wrapper {
+  border: 1px solid rgb(0 0 0 / 8%);
+}
+
+/* Fallback icon styles for non-previewable files */
+.download-wrapper-inner .download-preview-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / 5%);
+  border-radius: 0.25rem;
+  gap: 0.5rem;
+  min-height: 150px;
+}
+
+.download-wrapper-inner .download-preview-fallback-icon {
+  width: 48px;
+  height: 48px;
+  color: rgb(0 0 0 / 40%);
+}
+
+.download-wrapper-inner .download-preview-fallback-ext {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgb(0 0 0 / 60%);
+  background: rgb(0 0 0 / 10%);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+}
+
+/* Fallback styles for color variants */
+.download-wrapper-inner.color-dark-blue .download-preview-fallback,
+.download-wrapper-inner.color-light-blue .download-preview-fallback {
+  background: rgb(255 255 255 / 15%);
+}
+
+.download-wrapper-inner.color-dark-blue .download-preview-fallback-icon,
+.download-wrapper-inner.color-light-blue .download-preview-fallback-icon {
+  color: rgb(255 255 255 / 60%);
+}
+
+.download-wrapper-inner.color-dark-blue .download-preview-fallback-ext,
+.download-wrapper-inner.color-light-blue .download-preview-fallback-ext {
+  color: rgb(255 255 255 / 90%);
+  background: rgb(255 255 255 / 20%);
+}
