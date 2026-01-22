@@ -217,7 +217,7 @@
 
 .language-switcher.compact .language-switcher-current,
 .language-switcher.compact .language-switcher-option {
-  padding: var(--space-4) 5px;
+  padding: var(--space-4);
   font-size: var(--font-size-mob-label);
   line-height: var(--line-height-mob-label);
 }
@@ -229,7 +229,7 @@
 
 .language-switcher.large .language-switcher-current,
 .language-switcher.large .language-switcher-option {
-  padding: var(--space-8) 5px;
+  padding: var(--space-8);
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
 }
