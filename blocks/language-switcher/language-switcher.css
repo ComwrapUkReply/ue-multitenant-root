@@ -114,7 +114,7 @@
     gap: var(--space-8);
 }
 
-.language-switcher-current:after {
+.language-switcher-current::after {
     content: '';
     display: block;
     width: 100%;
