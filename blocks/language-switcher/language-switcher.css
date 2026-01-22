@@ -142,7 +142,7 @@
   list-style: none;
   margin: 0;
   align-items: center;
-  padding: var(--space-4) 5px;
+  padding: var(--space-4);
   background: none;
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
