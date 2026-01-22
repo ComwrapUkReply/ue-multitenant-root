@@ -60,6 +60,18 @@ async function loadFonts() {
 }
 
 /**
+ * load variables.css and set a session storage flag
+ */
+async function loadVariables() {
+  await loadCSS(`${window.hlx.codeBasePath}/styles/variables.css`);
+  try {
+    if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('variables-loaded', 'true');
+  } catch (e) {
+    // do nothing
+  }
+}
+
+/**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
@@ -103,6 +115,8 @@ async function loadEager(doc) {
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
+
+  loadVariables();
 
   try {
     /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */

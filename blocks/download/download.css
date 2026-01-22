@@ -1,88 +1,174 @@
-.download-wrapper {
-  max-width: 50rem;
-  margin: 2rem auto;
+main > .section > div.download-wrapper {
+  width: 80%;
+  max-width: 1200px;
+  min-width: 300px;
+  margin: var(--space-32) auto;
+  background-color: transparent;
 }
 
 .download-wrapper-inner {
-  background: rgb(var(--background-color));
-  border-radius: 0.5rem;
-  box-shadow: 0 2px rgb(var(--color-pure-black));
-  padding: 2rem;
+  width: 100%;
+  height: 100%;
+  background: rgb(var(--color-white));
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 2px rgb(var(--color-black));
+  border: 1px solid transparent;
+  padding: var(--space-24);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.5s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-.download-wrapper .download-title {
-  font-size: var(--heading-font-size-m, 1.75rem);
+/* Half width only applies on desktop, mobile defaults to full width */
+@media (width >= 768px) {
+  .download-wrapper-inner.width-half {
+    width: 50%;
+  }
+}
+
+.download-wrapper-inner.color-grey {
+  background: var(--color-grey-200);
+  color: var(--color-black);
+}
+
+.download-wrapper-inner.color-light-blue {
+  background: var(--color-primary-300);
+  color: var(--color-white);
+}
+
+.download-wrapper-inner.color-dark-blue {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.download-wrapper-inner.color-white {
+  background: var(--color-white);
+  color: var(--color-black);
+  border: 3px solid var(--color-black);
+}
+
+/* Card hover effects - only when there's no button */
+.download-wrapper-inner.no-button:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 15%);
+}
+
+.download-wrapper-inner.no-button.color-dark-blue:hover {
+  background: var(--color-primary-700);
+}
+
+.download-wrapper-inner.no-button.color-light-blue:hover {
+  background: var(--color-primary-300);
+}
+
+.download-wrapper-inner.no-button.color-grey:hover {
+  background: var(--color-grey-200);
+}
+
+.download-wrapper-inner.no-button.color-white:hover {
+  background: var(--color-grey-200);
+}
+
+.download-wrapper-inner .download-title {
+  font-size: var(--font-size-h5);
   font-weight: 600;
-  margin: 0 0 1rem;
-  color: rgb(var(--text-color));
+  margin: 0 0 var(--space-16);
+  color: var(--color-black);
 }
 
-.download-wrapper .download-description {
-  font-size: var(--body-size-m, 1rem);
+.download-wrapper-inner .download-content {
+  position: relative;
+  z-index: 1;
+}
+
+.download-wrapper-inner .download-description {
+  font-size: var(--font-size-label);
   line-height: 1.5;
-  margin-bottom: 1.5rem;
-  color: rgb(var(--text-color));
+  margin: 0 0 var(--space-24);
+  color: inherit;
 }
 
-.download-wrapper .download-description p {
-  margin: 0 0 1rem;
+.download-wrapper-inner .download-description p {
+  margin: 0 0 var(--space-16);
+  color: inherit;
 }
 
-.download-wrapper .download-description p:last-child {
+.download-wrapper-inner .download-description p:last-child {
   margin-bottom: 0;
 }
 
-.download-wrapper .download-button {
+.download-wrapper-inner .download-file-info {
+  color: inherit;
+  margin-bottom: var(--space-24);
+}
+
+.download-wrapper-inner .download-button {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: rgb(var(--button-primary));
-  color: rgb(var(--color-pure-white));
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-24);
+  background: rgb(var(--button-background-color));
+  color: rgb(var(--color-white));
   text-decoration: none;
-  border-radius: 0.25rem;
   font-weight: 500;
-  transition: background-color 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 999rem;
+  border: 3px solid var(--color-black);
 }
 
-.download-wrapper .download-button:hover, 
-.download-wrapper .download-button:focus {
-  background: rgb(var(--button-primary-hover));
+.download-wrapper-inner.color-dark-blue .download-button {
+  background: var(--color-white);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.download-wrapper-inner.color-light-blue .download-button {
+  background: var(--color-white);
+  color: var(--color-primary-300);
+  border-color: var(--color-primary-300);
+}
+
+.download-wrapper-inner .download-button:hover,
+.download-wrapper-inner .download-button:focus {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+  background: rgb(var(--button-hover-background-color));
   text-decoration: none;
 }
 
-.download-wrapper .download-button:focus {
-  outline: 0.125rem solid var(--link-color, #1473e6);
+.download-wrapper-inner .download-button:focus {
+  outline: 0.125rem solid var(--link-color);
   outline-offset: 0.125rem;
 }
 
-.download-wrapper .download-button .download-icon {
+.download-wrapper-inner.color-dark-blue .download-button:hover,
+.download-wrapper-inner.color-dark-blue .download-button:focus {
+  background: rgb(255 255 255 / 90%);
+  color: var(--color-primary);
+}
+
+.download-wrapper-inner.color-light-blue .download-button:hover,
+.download-wrapper-inner.color-light-blue .download-button:focus {
+  background: rgb(255 255 255 / 90%);
+  color: var(--color-primary-300);
+}
+
+
+.download-wrapper-inner .download-button .download-icon {
   width: 1.25rem;
   height: 1.25rem;
-  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  transform: rotate(180deg);
 }
 
-.download-wrapper .download-button .download-icon::before {
-  content: "";
-  position: absolute;
-  top: 0.125rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0.125rem;
-  height: 0.75rem;
-  background-color: currentcolor;
-}
-
-.download-wrapper .download-button .download-icon::after {
-  content: "";
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  width: 0.625rem;
-  height: 0.625rem;
-  border: 0.125rem solid currentcolor;
-  border-top: 0;
-  border-left: 0;
-  transform-origin: center;
-  transform: translateX(-50%) rotate(45deg);
+.download-wrapper-inner .download-warning {
+  padding: 1rem;
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  color: #856404;
+  margin: 1rem 0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
 }

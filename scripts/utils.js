@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 /**
  * Get node value
  * @param {HTMLElement} block html

@@ -459,6 +459,65 @@ const getDisplayMode = (block) => {
   return isDarkMode ? 'dark' : 'light';
 };
 
+/**
+ * Handle extremely large numbers (10+ digits) that might overflow
+ * Only applies dynamic sizing if CSS clamp isn't sufficient
+ * @param {HTMLElement} block - Block element
+ * @param {number} digitCount - Number of digits
+ * @param {HTMLElement} numberContainer - Number container element
+ */
+const handleExtremeNumbers = (block, digitCount, numberContainer) => {
+  // Only handle extremely large numbers (10+ digits) on mobile
+  // CSS clamp should handle most cases, this is a fallback
+  if (digitCount >= 10) {
+    // Use ResizeObserver to handle viewport changes dynamically
+    const resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        const viewportWidth = entry.contentRect.width;
+        // Only adjust on mobile viewports
+        if (viewportWidth < 900) {
+          const padding = 48; // Total horizontal padding (24px * 2)
+          const availableWidth = viewportWidth - padding;
+
+          // Calculate max font size to prevent overflow
+          const maxFontSize = Math.floor((availableWidth / digitCount) * 0.7);
+
+          // Only apply if calculated size is smaller than CSS clamp minimum
+          const cssMinSize = 68; // From CSS clamp minimum for 10+ digits on mobile
+          if (maxFontSize < cssMinSize && maxFontSize > 0) {
+            const digitValues = numberContainer.querySelectorAll(SELECTORS.digitValue);
+            digitValues.forEach((digit) => {
+              digit.style.fontSize = `${maxFontSize}px`;
+              digit.style.lineHeight = `${maxFontSize * 1.14}px`;
+            });
+
+            const optimalHeight = Math.max(100, maxFontSize * 1.14);
+            numberContainer.style.height = `${optimalHeight}px`;
+          } else {
+            // Remove inline styles to let CSS take over
+            const digitValues = numberContainer.querySelectorAll(SELECTORS.digitValue);
+            digitValues.forEach((digit) => {
+              digit.style.fontSize = '';
+              digit.style.lineHeight = '';
+            });
+            numberContainer.style.height = '';
+          }
+        } else {
+          // Desktop: remove any inline styles
+          const digitValues = numberContainer.querySelectorAll(SELECTORS.digitValue);
+          digitValues.forEach((digit) => {
+            digit.style.fontSize = '';
+            digit.style.lineHeight = '';
+          });
+          numberContainer.style.height = '';
+        }
+      });
+    });
+
+    resizeObserver.observe(block);
+  }
+};
+
 // =============================================================================
 // MAIN DECORATOR
 // =============================================================================
@@ -483,6 +542,10 @@ export default function decorate(block) {
   block.classList.add(`${CLASSES.modePrefix}${mode}`);
   block.dataset.targetNumber = targetNumber.toString();
 
+  // Add digit count data attribute for responsive CSS targeting
+  const digitCount = targetNumber.toString().length;
+  block.dataset.digitCount = digitCount.toString();
+
   // Build counter structure
   const { wrapper, digits } = buildCounterStructure(
     targetNumber,
@@ -492,6 +555,12 @@ export default function decorate(block) {
 
   // Append to block
   block.appendChild(wrapper);
+
+  // Handle extremely large numbers (10+ digits) that might need dynamic sizing
+  const numberContainer = wrapper.querySelector(`.${CLASSES.number}`);
+  if (numberContainer) {
+    handleExtremeNumbers(block, digitCount, numberContainer);
+  }
 
   // Initialize animation
   initializeAnimation(block, digits, targetNumber);

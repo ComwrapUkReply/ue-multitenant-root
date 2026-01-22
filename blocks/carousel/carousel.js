@@ -52,6 +52,8 @@ function initializeCarousel(block, track, slideCount, options) {
   const {
     prevButton = null,
     nextButton = null,
+    mobilePrevButton = null,
+    mobileNextButton = null,
     dotsContainer = null,
     playPauseButton = null,
   } = options;
@@ -121,6 +123,8 @@ function initializeCarousel(block, track, slideCount, options) {
     // Update arrow states - no longer disable at ends for auto-loop
     if (prevButton) prevButton.disabled = false;
     if (nextButton) nextButton.disabled = false;
+    if (mobilePrevButton) mobilePrevButton.disabled = false;
+    if (mobileNextButton) mobileNextButton.disabled = false;
   }
 
   /**
@@ -214,20 +218,29 @@ function initializeCarousel(block, track, slideCount, options) {
     }
   }
 
-  // Event listeners with auto-loop support - optimized
-  if (prevButton) {
-    prevButton.addEventListener('click', () => {
-      handleInteraction();
-      updateCarousel(patterns.prevSlide());
-    });
-  }
+  // Helper function to attach click handlers to arrow buttons
+  const attachArrowHandlers = (prevBtn, nextBtn) => {
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        handleInteraction();
+        updateCarousel(patterns.prevSlide());
+      });
+    }
 
-  if (nextButton) {
-    nextButton.addEventListener('click', () => {
-      handleInteraction();
-      updateCarousel(patterns.nextSlide());
-    });
-  }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        handleInteraction();
+        updateCarousel(patterns.nextSlide());
+      });
+    }
+  };
+
+  // Event listeners with auto-loop support - optimized
+  // Attach handlers to desktop arrows
+  attachArrowHandlers(prevButton, nextButton);
+
+  // Attach handlers to mobile arrows
+  attachArrowHandlers(mobilePrevButton, mobileNextButton);
 
   // Play/Pause button event listener
   if (playPauseButton) {
@@ -477,9 +490,24 @@ export default function decorate(block) {
   let controlsContainer;
   let playPauseButton;
   let dotsContainer;
+  let mobilePrevButton;
+  let mobileNextButton;
   if (showDots && slides.length > 1) {
     controlsContainer = document.createElement('div');
     controlsContainer.className = 'carousel-controls';
+
+    // Create mobile navigation arrows (only if arrows are enabled)
+    if (showArrows) {
+      mobilePrevButton = document.createElement('button');
+      mobilePrevButton.className = 'carousel-arrow carousel-prev carousel-arrow-mobile';
+      mobilePrevButton.setAttribute('aria-label', 'Previous slide');
+      mobilePrevButton.innerHTML = '<span class="carousel-arrow-icon"></span>';
+
+      mobileNextButton = document.createElement('button');
+      mobileNextButton.className = 'carousel-arrow carousel-next carousel-arrow-mobile';
+      mobileNextButton.setAttribute('aria-label', 'Next slide');
+      mobileNextButton.innerHTML = '<span class="carousel-arrow-icon"></span>';
+    }
 
     // Play/Pause button
     playPauseButton = document.createElement('button');
@@ -503,7 +531,12 @@ export default function decorate(block) {
       dotsContainer.append(dot);
     });
 
-    controlsContainer.append(playPauseButton, dotsContainer);
+    // Assemble controls: mobile prev arrow, play/pause, dots, mobile next arrow
+    if (showArrows && mobilePrevButton && mobileNextButton) {
+      controlsContainer.append(mobilePrevButton, playPauseButton, dotsContainer, mobileNextButton);
+    } else {
+      controlsContainer.append(playPauseButton, dotsContainer);
+    }
   }
 
   // Assemble carousel
@@ -518,6 +551,8 @@ export default function decorate(block) {
   initializeCarousel(block, carouselTrack, slides.length, {
     prevButton,
     nextButton,
+    mobilePrevButton,
+    mobileNextButton,
     dotsContainer,
     playPauseButton,
   });
