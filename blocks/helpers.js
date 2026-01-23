@@ -345,12 +345,7 @@ export async function queryEntireIndex(indexFile, pageSize = 500) {
  */
 export async function getQueryIndex() {
   /** @type {import('./types.js').IndexedPageMetadata[]?} */
-  let queryIndex = null;
-  try {
-    queryIndex = (await queryEntireIndex(`${getCurrentLanguage()}/query-index`))?.data ?? [];
-  } catch {
-    queryIndex = (await queryEntireIndex('query-index'))?.data ?? [];
-  }
+  const queryIndex = (await queryEntireIndex('query-index'))?.data ?? [];
   return (queryIndex ?? []);
 }
 
