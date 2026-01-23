@@ -1986,5 +1986,22 @@
         "description": "Allows users to control the video playback"
       }
     ]
+  },
+  {
+    "id": "videos",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "videos",
+        "label": "Videos",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "videos_description",
+        "label": "Videos Description",
+        "valueType": "string"
+      }
+    ]
   }
 ]
