@@ -49,6 +49,9 @@
           "label": "Parent page",
           "value": "",
           "valueType": "string",
+          "validation": {
+            "rootPath": "/content/ue-multitenant-root"
+          },
           "condition": { "==": [{ "var": "teaser-list-type" }, "parent_page"] }
         },
         {
@@ -58,6 +61,9 @@
           "label": "Individual pages link",
           "description": "Enter the paths of individual pages, without starting with a slash ('/').",
           "multi": true,
+          "validation": {
+            "rootPath": "/content/ue-multitenant-root"
+          },
           "condition": { "==": [{ "var": "teaser-list-type" }, "individual_pages"] }
         },
         {
@@ -66,6 +72,9 @@
           "label": "tags",
           "value": "",
           "valueType": "string",
+          "validation": {
+            "rootPath": "/content/ue-multitenant-root"
+          },
           "condition": { "==": [{ "var": "teaser-list-type" }, "tag"] }
         },
         {
