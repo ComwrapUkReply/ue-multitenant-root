@@ -55,7 +55,26 @@ export default async function decorate(block) {
   const button = dictionary?.teaserlist?.button || {};
 
   let pagesData = [];
-  const data = await getQueryIndex();
+  let data = [];
+
+  try {
+    data = await getQueryIndex();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to load query index:', error);
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'teaser-list-empty';
+    errorMessage.innerHTML = '<p>Unable to load page data. Please ensure the query-index.json file is available and published.</p>';
+    block.appendChild(errorMessage);
+    return;
+  }
+
+  // Ensure data is an array
+  if (!Array.isArray(data)) {
+    // eslint-disable-next-line no-console
+    console.warn('Query index data is not an array:', data);
+    data = [];
+  }
 
   // Handle empty/unconfigured state
   if (!TEASER_LIST_TYPE.text || TEASER_LIST_TYPE.text.trim() === '') {

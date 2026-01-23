@@ -208,7 +208,45 @@ export function createTag(tag, attributes = {}) {
 async function fetchIndex(indexFile, pageSize = 500) {
   const handleIndex = async (offset) => {
     const resp = await fetch(`/${indexFile}.json?limit=${pageSize}&offset=${offset}`);
-    const json = await resp.json();
+
+    // Check if response is OK and is JSON
+    if (!resp.ok) {
+      // eslint-disable-next-line no-console
+      console.warn(`Failed to fetch ${indexFile}.json: ${resp.status} ${resp.statusText}`);
+      return {
+        complete: true,
+        offset: 0,
+        promise: null,
+        data: window.index[indexFile]?.data || [],
+      };
+    }
+
+    // Check content type to ensure it's JSON
+    const contentType = resp.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      // eslint-disable-next-line no-console
+      console.warn(`Expected JSON but got ${contentType} for ${indexFile}.json`);
+      return {
+        complete: true,
+        offset: 0,
+        promise: null,
+        data: window.index[indexFile]?.data || [],
+      };
+    }
+
+    let json;
+    try {
+      json = await resp.json();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to parse JSON from ${indexFile}.json:`, error);
+      return {
+        complete: true,
+        offset: 0,
+        promise: null,
+        data: window.index[indexFile]?.data || [],
+      };
+    }
 
     const newIndex = {
       complete: (json.limit + json.offset) === json.total,
