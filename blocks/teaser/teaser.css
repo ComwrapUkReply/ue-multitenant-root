@@ -113,7 +113,7 @@
 
 /* Image Right - stacks on mobile */
 .teaser.image-right .teaser-wrapper {
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
 
 .teaser.image-right .teaser-content {
