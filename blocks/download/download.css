@@ -165,8 +165,8 @@ main > .section > div.download-wrapper {
 .download-wrapper-inner .download-warning {
   padding: 1rem;
   background: #fff3cd;
-  border: 2px solid #ffc107;
-  color: #856404;
+  border: 2px solid var(--color-warning);
+  color: var(--color-warning);
   margin: 1rem 0;
   border-radius: 4px;
   font-size: 0.9rem;
