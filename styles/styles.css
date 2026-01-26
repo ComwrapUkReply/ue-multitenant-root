@@ -512,13 +512,12 @@ blockquote::before {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-12) var(--space-24);
+    padding: var(--space-12) var(--space-16);
     font-family: var(--font-family-base);
     font-size: var(--button-font-size);
     line-height: var(--button-line-height);
     font-weight: 600;
     text-decoration: none;
-    border: var(--button-border-width) var(--button-border-style) var(--color-primary);
     border-radius: var(--button-border-radius);
     cursor: pointer;
     transition: var(--transition-base);
@@ -530,9 +529,9 @@ blockquote::before {
 .button:hover,
 .button:focus {
     color: var(--color-white);
-    background-color: var(--color-primary-900);
-    border-color: var(--color-primary-900);
+    background-color: var(--color-primary-800);
     text-decoration: none;
+    outline: none;
 }
 
 .button:disabled {
@@ -541,29 +540,38 @@ blockquote::before {
 }
 
 .button:active {
-    background-color: var(--color-primary-900);
-    border-color: var(--color-primary-900);
+    background-color: var(--color-primary-800);
 }
 
 /* Secondary Button */
 .button.secondary {
     font-style: normal;
-    color: var(--color-primary);
-    background-color: transparent;
-    border-color: var(--color-primary);
+    color: var(--color-white);
+    background-color: var(--color-secondary);
 }
 
 .button.secondary:hover,
 .button.secondary:focus {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-    text-decoration: none;
+    background-color: var(--color-secondary-900);
 }
 
 .button.secondary:active {
-    background-color: var(--color-primary-900);
-    border-color: var(--color-primary-900);
+    background-color: var(--color-secondary-900);
 }
+
+.button.text {
+    background-color: transparent;
+    border: var(--button-border-width) var(--button-border-style) var(--color-primary);
+    color: var(--color-primary);
+}
+.button.text:hover,
+.button.text:focus,
+.button.text:active {
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    border: var(--button-border-width) var(--button-border-style) transparent;
+}
+
 
 /* Forms */
 .form-group {

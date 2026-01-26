@@ -172,10 +172,11 @@ const extractData = (block) => {
         {
           const button = row.querySelector('a');
           if (button && button.href) {
-            // Element grouping creates: P0=button, P1=label, P2=style classes
+            // Element grouping creates: P0=button, P1=label, P2=target, P3=classes
+            // But if target is empty, classes might be in P2
             const allParagraphs = Array.from(row.querySelectorAll('p'));
 
-            // Get label from second paragraph
+            // Get label from second paragraph (P1)
             if (allParagraphs[1]) {
               const label = allParagraphs[1].textContent?.trim();
               if (label) {
@@ -183,17 +184,57 @@ const extractData = (block) => {
               }
             }
 
-            // Get style classes from third paragraph and apply to button
+            // Identify target and classes by content, not just position
+            // Valid target values
+            const validTargetValues = ['_blank', '_self', '_parent', '_top'];
+            // Valid class values
+            const validClassValues = ['primary', 'secondary', 'text'];
+
+            // Check paragraphs 2 and 3 to find target and classes
+            let targetFound = false;
+            let classesFound = false;
+
+            // Check P2
             if (allParagraphs[2]) {
-              const styleClasses = allParagraphs[2].textContent?.trim();
-              if (styleClasses) {
-                // Add each class (could be comma-separated for multiselect)
-                styleClasses.split(',').forEach((cls) => {
-                  const trimmedClass = cls.trim();
-                  if (trimmedClass) {
-                    button.classList.add(trimmedClass);
-                  }
-                });
+              const p2Content = allParagraphs[2].textContent?.trim();
+              if (p2Content) {
+                if (validTargetValues.includes(p2Content)) {
+                  // P2 is target
+                  button.target = p2Content;
+                  button.rel = 'noopener noreferrer';
+                  targetFound = true;
+                } else if (validClassValues.some(cls => p2Content.includes(cls)) || p2Content.includes(',')) {
+                  // P2 is classes (contains class names or comma-separated)
+                  p2Content.split(',').forEach((cls) => {
+                    const trimmedClass = cls.trim();
+                    if (trimmedClass) {
+                      button.classList.add(trimmedClass);
+                    }
+                  });
+                  classesFound = true;
+                }
+              }
+            }
+
+            // Check P3
+            if (allParagraphs[3]) {
+              const p3Content = allParagraphs[3].textContent?.trim();
+              if (p3Content) {
+                if (!targetFound && validTargetValues.includes(p3Content)) {
+                  // P3 is target (if not already found)
+                  button.target = p3Content;
+                  button.rel = 'noopener noreferrer';
+                  targetFound = true;
+                } else if (!classesFound && (validClassValues.some(cls => p3Content.includes(cls)) || p3Content.includes(','))) {
+                  // P3 is classes (if not already found)
+                  p3Content.split(',').forEach((cls) => {
+                    const trimmedClass = cls.trim();
+                    if (trimmedClass) {
+                      button.classList.add(trimmedClass);
+                    }
+                  });
+                  classesFound = true;
+                }
               }
             }
 
@@ -209,10 +250,11 @@ const extractData = (block) => {
         {
           const button = row.querySelector('a');
           if (button && button.href) {
-            // Element grouping creates: P0=button, P1=label, P2=style classes
+            // Element grouping creates: P0=button, P1=label, P2=target, P3=classes
+            // But if target is empty, classes might be in P2
             const allParagraphs = Array.from(row.querySelectorAll('p'));
 
-            // Get label from second paragraph
+            // Get label from second paragraph (P1)
             if (allParagraphs[1]) {
               const label = allParagraphs[1].textContent?.trim();
               if (label) {
@@ -220,17 +262,57 @@ const extractData = (block) => {
               }
             }
 
-            // Get style classes from third paragraph and apply to button
+            // Identify target and classes by content, not just position
+            // Valid target values
+            const validTargetValues = ['_blank', '_self', '_parent', '_top'];
+            // Valid class values
+            const validClassValues = ['primary', 'secondary', 'text'];
+
+            // Check paragraphs 2 and 3 to find target and classes
+            let targetFound = false;
+            let classesFound = false;
+
+            // Check P2
             if (allParagraphs[2]) {
-              const styleClasses = allParagraphs[2].textContent?.trim();
-              if (styleClasses) {
-                // Add each class (could be comma-separated for multiselect)
-                styleClasses.split(',').forEach((cls) => {
-                  const trimmedClass = cls.trim();
-                  if (trimmedClass) {
-                    button.classList.add(trimmedClass);
-                  }
-                });
+              const p2Content = allParagraphs[2].textContent?.trim();
+              if (p2Content) {
+                if (validTargetValues.includes(p2Content)) {
+                  // P2 is target
+                  button.target = p2Content;
+                  button.rel = 'noopener noreferrer';
+                  targetFound = true;
+                } else if (validClassValues.some(cls => p2Content.includes(cls)) || p2Content.includes(',')) {
+                  // P2 is classes (contains class names or comma-separated)
+                  p2Content.split(',').forEach((cls) => {
+                    const trimmedClass = cls.trim();
+                    if (trimmedClass) {
+                      button.classList.add(trimmedClass);
+                    }
+                  });
+                  classesFound = true;
+                }
+              }
+            }
+
+            // Check P3
+            if (allParagraphs[3]) {
+              const p3Content = allParagraphs[3].textContent?.trim();
+              if (p3Content) {
+                if (!targetFound && validTargetValues.includes(p3Content)) {
+                  // P3 is target (if not already found)
+                  button.target = p3Content;
+                  button.rel = 'noopener noreferrer';
+                  targetFound = true;
+                } else if (!classesFound && (validClassValues.some(cls => p3Content.includes(cls)) || p3Content.includes(','))) {
+                  // P3 is classes (if not already found)
+                  p3Content.split(',').forEach((cls) => {
+                    const trimmedClass = cls.trim();
+                    if (trimmedClass) {
+                      button.classList.add(trimmedClass);
+                    }
+                  });
+                  classesFound = true;
+                }
               }
             }
 
