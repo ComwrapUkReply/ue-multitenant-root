@@ -54,8 +54,7 @@
             "component": "boolean",
             "name": "showpreviewimage",
             "label": "Show Preview Image",
-            "valueType": "boolean",
-            "value": false
+            "valueType": "boolean"
           },
           {
             "component": "reference",
