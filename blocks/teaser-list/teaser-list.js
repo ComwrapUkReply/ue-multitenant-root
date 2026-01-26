@@ -112,7 +112,7 @@ export default async function decorate(block) {
         <div class="teaser-description">
           <p>${description}</p>
         </div>
-        <div class="teaser-button-container showarrow">
+        <div class="teaser-button-container showarrow more">
           <a
             href="${window.location.origin}${window.ROOT_PATH}${page.path || '#'}" 
             class="button" 
