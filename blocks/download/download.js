@@ -69,12 +69,13 @@ export default function decorate(block) {
     isValidFile,
     fileExtension,
   };
-  // return;
+
   // Clear existing content
   block.innerHTML = '';
 
-  // Set block class and optional color variant after clearing
-  block.className = 'download-wrapper-inner';
+  // Preserve block identification classes (block, download) and add wrapper class
+  // Universal Editor needs these classes to identify and update the block
+  block.classList.add('download-wrapper-inner');
   const colorClassMap = {
     grey: 'color-grey',
     'light blue': 'color-light-blue',
