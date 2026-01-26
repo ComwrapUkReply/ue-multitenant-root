@@ -35,6 +35,48 @@ export function isUE() {
 }
 
 /**
+ * Checks if we're in AEM Cloud authoring environment.
+ * @returns {boolean} True if in AEM authoring mode, false otherwise.
+ */
+export function isAEMAuthoring() {
+  const { hostname, pathname, search } = window.location;
+  const searchParams = new URLSearchParams(search);
+
+  // AEM Cloud authoring environment
+  if (hostname.includes('adobeaemcloud.com')
+      && (hostname.includes('author-') || pathname.includes('/editor.html'))) {
+    return true;
+  }
+
+  // Universal Editor
+  if (pathname.includes('/editor.html') || searchParams.has('editor')) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Converts an EDS path to an AEM author path when in authoring mode.
+ * If not in authoring mode, returns the EDS path as-is.
+ * @param {string} edsPath - The EDS path (e.g., '/component-demo/accordion')
+ * @returns {string} The appropriate path based on the current environment
+ */
+export function getContextualPath(edsPath) {
+  if (!edsPath) return '#';
+
+  // If in AEM authoring mode, convert to author path
+  if (isAEMAuthoring()) {
+    // Build the author path: ROOT_PATH + edsPath + .html
+    const authorPath = `${ROOT_PATH}${edsPath}.html`;
+    return authorPath;
+  }
+
+  // Otherwise, return the EDS path as-is
+  return edsPath;
+}
+
+/**
  * Get the current country and language codes label by matching the current
  * location pathname to a regex.
  * @returns {string[]} The current country and language codes array on

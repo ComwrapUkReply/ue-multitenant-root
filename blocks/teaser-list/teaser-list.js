@@ -4,6 +4,7 @@ import {
   getQueryIndex,
   getDictionary,
   mapPath,
+  getContextualPath,
 } from '../helpers.js';
 
 const TEASER_LIST_BUTTON_LABEL = 'Read more';
@@ -103,6 +104,8 @@ export default async function decorate(block) {
     const titleElement = TEASERS_TITLE_ELEMENT.text || 'h3';
 
     const description = page.teaserdescription || page.description;
+    // Get the appropriate link based on environment (EDS or AEM author)
+    const teaserLink = getContextualPath(page.path);
     const teaserListItem = document.createRange().createContextualFragment(`
       <article class="teaser">
         <div class="teaser-image" role="img" aria-label="${title}"></div>
@@ -114,7 +117,7 @@ export default async function decorate(block) {
         </div>
         <div class="teaser-button-container showarrow">
           <a
-            href="${page.path || '#'}"
+            href="${teaserLink}"
             class="button" 
             aria-label="${TEASERS_LINK_LABEL.text || button?.label || TEASER_LIST_BUTTON_LABEL}"
             ${!page.path ? 'aria-disabled="true"' : ''}

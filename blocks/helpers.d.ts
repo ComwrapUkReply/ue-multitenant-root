@@ -2,6 +2,8 @@ export function getCurrentCountryLanguage(): string[];
 export function useBlockConfig(block: HTMLElement, BLOCK_CONFIG: BlockConfig, fieldExtractors?: Record<string, (row: HTMLElement, index: number, rows: HTMLElement[]) => any>): Record<string, { text: string; node: HTMLElement | null; picture: HTMLPictureElement | null; img: HTMLImageElement | null }>;
 export function loadItemBlocks(block: HTMLElement, item: string): Promise<void>;
 export function isUE(): boolean;
+export function isAEMAuthoring(): boolean;
+export function getContextualPath(edsPath: string): string;
 export function mapPath(path: string): string;
 export function loadBlock(block: HTMLElement): Promise<HTMLElement>;
 export async function getDictionary(): Promise<any> | null;
