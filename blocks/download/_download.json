@@ -54,7 +54,8 @@
             "component": "boolean",
             "name": "showpreviewimage",
             "label": "Show Preview Image",
-            "valueType": "boolean"
+            "valueType": "boolean",
+            "value": false
           },
           {
             "component": "reference",
@@ -94,7 +95,8 @@
             "component": "boolean",
             "name": "downloadbutton",
             "label": "Show Download Button",
-            "valueType": "boolean"
+            "valueType": "boolean",
+            "value": false
           }
         ]
       }
