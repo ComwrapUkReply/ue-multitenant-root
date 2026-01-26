@@ -112,9 +112,9 @@ export default async function decorate(block) {
         <div class="teaser-description">
           <p>${description}</p>
         </div>
-        <div class="teaser-button-container showarrow test">
+        <div class="teaser-button-container showarrow">
           <a
-            href="${window.location.origin}/content/ue-multitenant-root${page.path || '#'}"
+            href="${page.path || '#'}"
             class="button" 
             aria-label="${TEASERS_LINK_LABEL.text || button?.label || TEASER_LIST_BUTTON_LABEL}"
             ${!page.path ? 'aria-disabled="true"' : ''}
