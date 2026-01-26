@@ -6,7 +6,6 @@ import {
   mapPath,
 } from '../helpers.js';
 
-const ROOT_PATH = window.location.origin + window.hlx.codeBasePath;
 const TEASER_LIST_BUTTON_LABEL = 'Read more';
 const BLOCK_CONFIG = Object.freeze({
   empty: false,
@@ -113,7 +112,7 @@ export default async function decorate(block) {
         <div class="teaser-description">
           <p>${description}</p>
         </div>
-        <div class="teaser-button-container showarrow">
+        <div class="teaser-button-container showarrow test">
           <a
             href="${window.location.origin}${window.hlx.codeBasePath}${page.path || '#'}" 
             class="button" 
