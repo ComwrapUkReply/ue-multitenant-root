@@ -114,7 +114,7 @@ export default async function decorate(block) {
         </div>
         <div class="teaser-button-container showarrow">
           <a
-            href="${page.path || '#'}" 
+            href="${window.location.origin}${window.ROOT_PATH}${page.path || '#'}" 
             class="button" 
             aria-label="${TEASERS_LINK_LABEL.text || button?.label || TEASER_LIST_BUTTON_LABEL}"
             ${!page.path ? 'aria-disabled="true"' : ''}
