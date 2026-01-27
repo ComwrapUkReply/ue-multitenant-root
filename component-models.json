@@ -613,17 +613,13 @@
         "label": "Description"
       },
       {
-        "component": "text",
-        "name": "downloadbuttonlabel",
-        "label": "Download Button Label"
-      },
-      {
         "component": "reference",
         "name": "downloadfile",
         "label": "Asset",
         "value": "",
         "valueType": "string",
-        "description": "Allowed file types: Documents (pdf, doc, docx, xls, xlsx, ppt, pptx, txt, csv, xml), Images (jpg, jpeg, heic, png, webp, bmp), Videos (avs, acv, avc, ev, mp4), Archives (zip), Media (mp3, mov)"
+        "description": "Allowed file types: Documents (pdf, doc, docx, xls, xlsx, ppt, pptx, txt, csv, xml), Images (jpg, jpeg, heic, png, webp, bmp), Videos (avs, acv, avc, ev, mp4), Archives (zip), Media (mp3, mov)",
+        "required": true
       },
       {
         "component": "boolean",
@@ -673,13 +669,28 @@
             "name": "Half Width",
             "value": "half-width"
           }
-        ]
+        ],
+        "value": "full-width"
       },
       {
         "component": "boolean",
         "name": "downloadbutton",
         "label": "Show Download Button",
         "valueType": "boolean"
+      },
+      {
+        "component": "text",
+        "name": "downloadbuttonlabel",
+        "label": "Download Button Label",
+        "condition": {
+          "===": [
+            {
+              "var": "downloadbutton"
+            },
+            true
+          ]
+        },
+        "required": true
       }
     ]
   },
