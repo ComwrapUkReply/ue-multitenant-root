@@ -69,7 +69,7 @@ export default function decorate(block) {
     : null;
 
   const downloadData = {
-    title: rows[0]?.textContent,
+    title: rows[0]?.textContent ? `${rows[0]?.textContent} (${fileExtension?.toUpperCase()})` : '',
     description: rows[1]?.innerHTML,
     buttonLabel: rows[2]?.textContent,
     downloadLink,
