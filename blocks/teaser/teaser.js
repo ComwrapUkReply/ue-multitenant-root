@@ -180,7 +180,11 @@ const extractData = (block) => {
             if (allParagraphs[1]) {
               const label = allParagraphs[1].textContent?.trim();
               if (label) {
-                button.textContent = label;
+                // Wrap label text in a span element
+                const span = document.createElement('span');
+                span.textContent = label;
+                button.textContent = '';
+                button.appendChild(span);
               }
             }
 
@@ -258,7 +262,11 @@ const extractData = (block) => {
             if (allParagraphs[1]) {
               const label = allParagraphs[1].textContent?.trim();
               if (label) {
-                button.textContent = label;
+                // Wrap label text in a span element
+                const span = document.createElement('span');
+                span.textContent = label;
+                button.textContent = '';
+                button.appendChild(span);
               }
             }
 

@@ -561,16 +561,37 @@ blockquote::before {
 
 .button.text {
     background-color: transparent;
-    border: var(--button-border-width) var(--button-border-style) var(--color-primary);
+    color: var(--color-primary);
+    border-radius: 0;
+    padding: var(--space-16) var(--space-20) var(--space-16) var(--space-12);
+}
+
+.button.text span {
+    position: relative;
+}
+
+.button.text span::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -1.5rem;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: var(--button-background-color);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3Cpolyline points='12 5 19 12 12 19'%3E%3C/polyline%3E%3C/svg%3E");
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.button.text:hover {
     color: var(--color-primary);
 }
 
-.button.text:hover,
-.button.text:focus,
-.button.text:active {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-    border: var(--button-border-width) var(--button-border-style) transparent;
+.button.text:hover span::after,
+.button.text:focus span::after,
+.button.text:active span::after {
+    transform: translate(4px, -50%);
 }
 
 

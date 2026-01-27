@@ -86,8 +86,12 @@ function processButtons(block) {
     if (link && linkText) {
       const button = document.createElement('a');
       button.href = link;
-      button.textContent = linkText;
       button.className = 'button';
+      
+      // Wrap label text in a span element
+      const span = document.createElement('span');
+      span.textContent = linkText;
+      button.appendChild(span);
       if (linkTitle) {
         button.title = linkTitle;
       }
@@ -202,7 +206,14 @@ function processButtonText(block) {
   block.querySelectorAll('.button-container').forEach((buttonContainer) => {
     const textContentElement = buttonContainer.parentElement.nextElementSibling.querySelector('p');
     const textContent = textContentElement.textContent.trim();
-    buttonContainer.querySelector('a').textContent = textContent;
+    const button = buttonContainer.querySelector('a');
+    
+    // Wrap label text in a span element
+    const span = document.createElement('span');
+    span.textContent = textContent;
+    button.textContent = '';
+    button.appendChild(span);
+    
     textContentElement.remove();
   });
 }
