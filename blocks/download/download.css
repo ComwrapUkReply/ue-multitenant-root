@@ -97,10 +97,21 @@ main > .section > div.download-wrapper {
   font-family: var(--font-family-base);
 }
 
+.download-wrapper-inner .download-button:focus {
+  outline: 0.125rem solid var(--link-color);
+  outline-offset: 0.125rem;
+}
+
 /* Solid style button - white background with dark teal text */
 .download-wrapper-inner.style-solid .download-button {
   background: var(--color-white);
   color: var(--color-primary);
+}
+
+/* Outline style button - dark teal background with white text */
+.download-wrapper-inner.style-outline .download-button {
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 
 .download-wrapper-inner.style-solid .download-button:hover,
@@ -112,12 +123,6 @@ main > .section > div.download-wrapper {
   text-decoration: none;
 }
 
-/* Outline style button - dark teal background with white text */
-.download-wrapper-inner.style-outline .download-button {
-  background: var(--color-primary);
-  color: var(--color-white);
-}
-
 .download-wrapper-inner.style-outline .download-button:hover,
 .download-wrapper-inner.style-outline .download-button:focus {
   transform: translateY(-4px);
@@ -125,11 +130,6 @@ main > .section > div.download-wrapper {
   background: var(--color-primary-700);
   color: var(--color-white);
   text-decoration: none;
-}
-
-.download-wrapper-inner .download-button:focus {
-  outline: 0.125rem solid var(--link-color);
-  outline-offset: 0.125rem;
 }
 
 
