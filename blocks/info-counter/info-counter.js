@@ -13,7 +13,9 @@ import { isEditorMode as checkEditorMode } from '../../scripts/utils.js';
 const CONFIG = {
   animation: {
     duration: 1000, // Animation duration in milliseconds
-    threshold: 0.1, // Intersection Observer threshold (30% visible)
+    delay: 1000, // Delay before animation starts (milliseconds)
+    threshold: 0.5, // Intersection Observer threshold (20% visible)
+    rootMargin: '0px 0px -50px 0px', // Trigger slightly before fully in view
   },
   defaults: {
     targetNumber: 0,
@@ -408,11 +410,13 @@ const buildCounterStructure = (targetNumber, descriptionText, descriptionHTML) =
 
 /**
  * Initialize counter animation with viewport detection
+ * Animation only starts when block enters the viewport
  * @param {HTMLElement} block - Block element
  * @param {NodeList|Array} digits - Digit elements
  * @param {number} targetNumber - Target number
  */
 const initializeAnimation = (block, digits, targetNumber) => {
+  // Validate inputs
   if (!digits?.length || targetNumber < 0) return;
 
   // Prevent re-animation
@@ -425,28 +429,55 @@ const initializeAnimation = (block, digits, targetNumber) => {
     return;
   }
 
-  // Initialize display to 0
+  // Initialize display to 0 (before animation starts)
   updateDigits(digits, 0);
 
-  // Observe viewport intersection
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && block.dataset.animated !== 'true') {
-          block.dataset.animated = 'true';
-          animateCounter(digits, targetNumber);
-          observer.unobserve(block);
-        }
-      });
-    },
-    {
-      root: null,
-      rootMargin: '0px',
-      threshold: CONFIG.animation.threshold,
-    },
-  );
+  // Mark block as ready for animation
+  block.dataset.animationReady = 'true';
 
+  /**
+   * Handle intersection callback
+   * Triggers animation when block enters viewport (with configurable delay)
+   * @param {IntersectionObserverEntry[]} entries - Intersection entries
+   * @param {IntersectionObserver} obs - Observer instance
+   */
+  const handleIntersection = (entries, obs) => {
+    entries.forEach((entry) => {
+      // Only animate when entering viewport and not already animated
+      if (entry.isIntersecting && block.dataset.animated !== 'true') {
+        // Mark as animated to prevent re-triggering
+        block.dataset.animated = 'true';
+
+        // Stop observing once animation triggered
+        obs.unobserve(block);
+
+        // Start counting animation after delay
+        const { delay } = CONFIG.animation;
+        if (delay > 0) {
+          setTimeout(() => {
+            animateCounter(digits, targetNumber);
+          }, delay);
+        } else {
+          animateCounter(digits, targetNumber);
+        }
+      }
+    });
+  };
+
+  // Create intersection observer with responsive configuration
+  const observerOptions = {
+    root: null, // Use viewport as root
+    rootMargin: CONFIG.animation.rootMargin, // Trigger slightly before fully visible
+    threshold: CONFIG.animation.threshold, // Percentage of block visible to trigger
+  };
+
+  const observer = new IntersectionObserver(handleIntersection, observerOptions);
+
+  // Start observing the block
   observer.observe(block);
+
+  // Store observer reference for potential cleanup
+  block.infoCounterObserver = observer;
 };
 
 /**
