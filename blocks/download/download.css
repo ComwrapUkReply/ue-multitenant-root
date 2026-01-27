@@ -191,7 +191,7 @@ main > .section > div.download-wrapper {
   order: 2;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .download-wrapper-inner .download-content {
     flex-direction: column;
   }

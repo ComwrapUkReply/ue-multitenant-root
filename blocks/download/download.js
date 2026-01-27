@@ -153,11 +153,11 @@ export default function decorate(block) {
 
   // Create preview image (will be positioned on the right via CSS)
   if (downloadData.showPreviewImage && downloadData.previewImage) {
-    const previewImage = document.createElement('img');
+    const previewImageElement = document.createElement('img');
     previewImage.className = 'download-preview-image';
-    previewImage.src = downloadData.previewImage;
-    previewImage.alt = downloadData.title || 'Download preview';
-    contentWrapper.appendChild(previewImage);
+    previewImageElement.src = downloadData.previewImage;
+    previewImageElement.alt = downloadData.title || 'Download preview';
+    contentWrapper.appendChild(previewImageElement);
   }
 
   // Show warning message for invalid file types
