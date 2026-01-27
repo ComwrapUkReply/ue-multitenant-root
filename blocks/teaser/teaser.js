@@ -203,7 +203,7 @@ const extractData = (block) => {
                   button.target = p2Content;
                   button.rel = 'noopener noreferrer';
                   targetFound = true;
-                } else if (validClassValues.some(cls => p2Content.includes(cls)) || p2Content.includes(',')) {
+                } else if (validClassValues.some((cls) => p2Content.includes(cls)) || p2Content.includes(',')) {
                   // P2 is classes (contains class names or comma-separated)
                   p2Content.split(',').forEach((cls) => {
                     const trimmedClass = cls.trim();
@@ -225,7 +225,7 @@ const extractData = (block) => {
                   button.target = p3Content;
                   button.rel = 'noopener noreferrer';
                   targetFound = true;
-                } else if (!classesFound && (validClassValues.some(cls => p3Content.includes(cls)) || p3Content.includes(','))) {
+                } else if (!classesFound && (validClassValues.some((cls) => p3Content.includes(cls)) || p3Content.includes(','))) {
                   // P3 is classes (if not already found)
                   p3Content.split(',').forEach((cls) => {
                     const trimmedClass = cls.trim();
@@ -281,7 +281,7 @@ const extractData = (block) => {
                   button.target = p2Content;
                   button.rel = 'noopener noreferrer';
                   targetFound = true;
-                } else if (validClassValues.some(cls => p2Content.includes(cls)) || p2Content.includes(',')) {
+                } else if (validClassValues.some((cls) => p2Content.includes(cls)) || p2Content.includes(',')) {
                   // P2 is classes (contains class names or comma-separated)
                   p2Content.split(',').forEach((cls) => {
                     const trimmedClass = cls.trim();
@@ -303,7 +303,7 @@ const extractData = (block) => {
                   button.target = p3Content;
                   button.rel = 'noopener noreferrer';
                   targetFound = true;
-                } else if (!classesFound && (validClassValues.some(cls => p3Content.includes(cls)) || p3Content.includes(','))) {
+                } else if (!classesFound && (validClassValues.some((cls) => p3Content.includes(cls)) || p3Content.includes(','))) {
                   // P3 is classes (if not already found)
                   p3Content.split(',').forEach((cls) => {
                     const trimmedClass = cls.trim();
