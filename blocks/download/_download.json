@@ -29,7 +29,8 @@
             "component": "text",
             "name": "downloadtitle",
             "value": "",
-            "label": "Title"
+            "label": "Title",
+            "required": true
           },
           {
             "component": "richtext",
