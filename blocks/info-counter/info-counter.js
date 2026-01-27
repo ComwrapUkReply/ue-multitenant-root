@@ -13,7 +13,8 @@ import { isEditorMode as checkEditorMode } from '../../scripts/utils.js';
 const CONFIG = {
   animation: {
     duration: 1000, // Animation duration in milliseconds
-    threshold: 0.2, // Intersection Observer threshold (20% visible)
+    delay: 1000, // Delay before animation starts (milliseconds)
+    threshold: 0.5, // Intersection Observer threshold (20% visible)
     rootMargin: '0px 0px -50px 0px', // Trigger slightly before fully in view
   },
   defaults: {
@@ -436,7 +437,7 @@ const initializeAnimation = (block, digits, targetNumber) => {
 
   /**
    * Handle intersection callback
-   * Triggers animation when block enters viewport
+   * Triggers animation when block enters viewport (with configurable delay)
    * @param {IntersectionObserverEntry[]} entries - Intersection entries
    * @param {IntersectionObserver} obs - Observer instance
    */
@@ -447,11 +448,18 @@ const initializeAnimation = (block, digits, targetNumber) => {
         // Mark as animated to prevent re-triggering
         block.dataset.animated = 'true';
 
-        // Start counting animation
-        animateCounter(digits, targetNumber);
-
         // Stop observing once animation triggered
         obs.unobserve(block);
+
+        // Start counting animation after delay
+        const { delay } = CONFIG.animation;
+        if (delay > 0) {
+          setTimeout(() => {
+            animateCounter(digits, targetNumber);
+          }, delay);
+        } else {
+          animateCounter(digits, targetNumber);
+        }
       }
     });
   };
