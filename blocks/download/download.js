@@ -75,7 +75,7 @@ export default function decorate(block) {
     downloadLink,
     showPreviewImage: rows[4]?.textContent?.trim() === 'true',
     previewImage,
-    color: rows[6]?.textContent?.trim(),
+    style: rows[6]?.textContent?.trim(),
     width: rows[7]?.textContent?.trim(),
     hasButton: rows[8]?.textContent?.trim() === 'true',
     isValidFile,
@@ -87,14 +87,12 @@ export default function decorate(block) {
   // Preserve block identification classes (block, download) and add wrapper class
   // Universal Editor needs these classes to identify and update the block
   block.classList.add('download-wrapper-inner');
-  const colorClassMap = {
-    grey: 'color-grey',
-    'light blue': 'color-light-blue',
-    'dark blue': 'color-dark-blue',
-    white: 'color-white',
+  const styleClassMap = {
+    solid: 'style-solid',
+    outline: 'style-outline',
   };
-  const colorClass = colorClassMap[downloadData.color?.toLowerCase?.()] || '';
-  if (colorClass) block.classList.add(colorClass);
+  const styleClass = styleClassMap[downloadData.style?.toLowerCase?.()] || 'style-outline';
+  block.classList.add(styleClass);
 
   // Add class based on whether there's a button
   if (downloadData.hasButton) {

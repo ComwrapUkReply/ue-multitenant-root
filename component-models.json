@@ -644,28 +644,20 @@
       },
       {
         "component": "select",
-        "name": "downloadcolor",
-        "label": "Card Color",
+        "name": "downloadstyle",
+        "label": "Style",
         "valueType": "string",
         "options": [
           {
-            "name": "Grey",
-            "value": "grey"
+            "name": "Solid",
+            "value": "solid"
           },
           {
-            "name": "Light Blue",
-            "value": "light blue"
-          },
-          {
-            "name": "Dark Blue",
-            "value": "dark blue"
-          },
-          {
-            "name": "White",
-            "value": "white"
+            "name": "Outline",
+            "value": "outline"
           }
         ],
-        "value": "white"
+        "value": "outline"
       },
       {
         "component": "select",

@@ -9,14 +9,11 @@ main > .section > div.download-wrapper {
 .download-wrapper-inner {
   width: 100%;
   height: 100%;
-  background: rgb(var(--color-white));
   border-radius: var(--border-radius-md);
-  box-shadow: 0 2px rgb(var(--color-black));
-  border: 1px solid transparent;
   padding: var(--space-24);
   position: relative;
   overflow: hidden;
-  transition: transform 0.5s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 /* Half width only applies on desktop, mobile defaults to full width */
@@ -26,54 +23,25 @@ main > .section > div.download-wrapper {
   }
 }
 
-.download-wrapper-inner.color-grey {
-  background: var(--color-grey-200);
-  color: var(--color-black);
-}
-
-.download-wrapper-inner.color-light-blue {
-  background: var(--color-primary-300);
-  color: var(--color-white);
-}
-
-.download-wrapper-inner.color-dark-blue {
+/* Solid style - dark teal background with white text */
+.download-wrapper-inner.style-solid {
   background: var(--color-primary);
   color: var(--color-white);
+  border: none;
 }
 
-.download-wrapper-inner.color-white {
+/* Outline style - white background with dark teal border */
+.download-wrapper-inner.style-outline {
   background: var(--color-white);
-  color: var(--color-black);
-  border: 3px solid var(--color-black);
-}
-
-/* Card hover effects - only when there's no button */
-.download-wrapper-inner.no-button:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 6px 16px rgb(0 0 0 / 15%);
-}
-
-.download-wrapper-inner.no-button.color-dark-blue:hover {
-  background: var(--color-primary-700);
-}
-
-.download-wrapper-inner.no-button.color-light-blue:hover {
-  background: var(--color-primary-300);
-}
-
-.download-wrapper-inner.no-button.color-grey:hover {
-  background: var(--color-grey-200);
-}
-
-.download-wrapper-inner.no-button.color-white:hover {
-  background: var(--color-grey-200);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
 }
 
 .download-wrapper-inner .download-title {
   font-size: var(--font-size-h5);
   font-weight: 600;
   margin: 0 0 var(--space-16);
-  color: var(--color-black);
+  color: inherit;
 }
 
 .download-wrapper-inner .download-content {
@@ -97,6 +65,11 @@ main > .section > div.download-wrapper {
   color: inherit;
 }
 
+/* Outline style description should be dark grey/black */
+.download-wrapper-inner.style-outline .download-description {
+  color: var(--color-black);
+}
+
 .download-wrapper-inner .download-description p {
   margin: 0 0 var(--space-16);
   color: inherit;
@@ -116,50 +89,47 @@ main > .section > div.download-wrapper {
   align-items: center;
   gap: var(--space-8);
   padding: var(--space-12) var(--space-24);
-  background: rgb(var(--button-background-color));
-  color: rgb(var(--color-white));
   text-decoration: none;
   font-weight: 500;
   transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 999rem;
-  border: 3px solid var(--color-black);
+  border-radius: var(--border-radius-md);
+  border: none;
+  font-family: var(--font-family-base);
 }
 
-.download-wrapper-inner.color-dark-blue .download-button {
+/* Solid style button - white background with dark teal text */
+.download-wrapper-inner.style-solid .download-button {
   background: var(--color-white);
   color: var(--color-primary);
-  border-color: var(--color-primary);
 }
 
-.download-wrapper-inner.color-light-blue .download-button {
-  background: var(--color-white);
-  color: var(--color-primary-300);
-  border-color: var(--color-primary-300);
-}
-
-.download-wrapper-inner .download-button:hover,
-.download-wrapper-inner .download-button:focus {
+.download-wrapper-inner.style-solid .download-button:hover,
+.download-wrapper-inner.style-solid .download-button:focus {
   transform: translateY(-4px);
   box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
-  background: rgb(var(--button-hover-background-color));
+  background: rgb(255 255 255 / 90%);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* Outline style button - dark teal background with white text */
+.download-wrapper-inner.style-outline .download-button {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.download-wrapper-inner.style-outline .download-button:hover,
+.download-wrapper-inner.style-outline .download-button:focus {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+  background: var(--color-primary-700);
+  color: var(--color-white);
   text-decoration: none;
 }
 
 .download-wrapper-inner .download-button:focus {
   outline: 0.125rem solid var(--link-color);
   outline-offset: 0.125rem;
-}
-
-.download-wrapper-inner.color-dark-blue .download-button:hover,
-.download-wrapper-inner.color-dark-blue .download-button:focus {
-  background: rgb(255 255 255 / 90%);
-  color: var(--color-primary);
-}
-
-.download-wrapper-inner.color-light-blue .download-button:hover,
-.download-wrapper-inner.color-light-blue .download-button:focus {
-  background: rgb(255 255 255 / 90%);
-  color: var(--color-primary-300);
 }
 
 
