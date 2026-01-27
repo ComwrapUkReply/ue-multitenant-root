@@ -45,17 +45,21 @@ function createWarningMessage(container) {
 export default function decorate(block) {
   const rows = block.children || [];
   let downloadLink;
+  let downloadImage;
   let previewImage;
 
   if (rows[3]) {
-    const img = rows[3].querySelector('img');
+    downloadImage = rows[3].querySelector('img');
     const anchor = rows[3].querySelector('a');
-    downloadLink = img?.src || anchor?.href;
+    downloadLink = downloadImage?.src || anchor?.href;
   }
 
   if (rows[5]) {
     const img = rows[5].querySelector('img');
     previewImage = img?.src;
+    if (!previewImage && downloadImage) {
+      previewImage = downloadImage?.src;
+    }
   }
 
   // Validate file type when block loads
