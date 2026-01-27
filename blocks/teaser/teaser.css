@@ -64,7 +64,7 @@
   font-size: var(--font-size-h5);
   font-weight: 600;
   line-height: var(--line-height-h5);
-  color: #0073dd;
+  color: var(--color-primary);
   margin: 0;
 }
 
@@ -113,7 +113,7 @@
 
 /* Image Right - stacks on mobile */
 .teaser.image-right .teaser-wrapper {
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
 
 .teaser.image-right .teaser-content {

@@ -1,9 +1,4 @@
-/*!
- * Fresenius Kabi Foundation CSS
- * A comprehensive foundation stylesheet derived from the Fresenius Kabi design system
- * Version: 1.0.0
- * Author: Fresenius Kabi Development Team
- */
+@import url('./variables.css');
 
 /* ========================================
    CSS RESET & NORMALIZE
