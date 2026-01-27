@@ -5,7 +5,7 @@
     --teaser-gap: var(--spacing-m, 1rem);
     --teaser-list-number-of-columns: 1;
     --teaser-list-item-number-of-subgrid-rows: 4;
-
+    
     padding: var(--spacing-xl, 2rem) 0;
 }
 
@@ -23,7 +23,7 @@
     grid-template-rows: subgrid;
     grid-row: span var(--teaser-list-item-number-of-subgrid-rows);
     gap: var(--teaser-gap);
-    background: rgb(var(--background-color), 1);
+    background: var(--background-color);
     border-radius: 1rem;
     overflow: hidden;
   border: 1px solid rgb(var(--text-color), 0.08);
