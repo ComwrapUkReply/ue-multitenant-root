@@ -154,7 +154,7 @@ export default function decorate(block) {
   // Create preview image (will be positioned on the right via CSS)
   if (downloadData.showPreviewImage && downloadData.previewImage) {
     const previewImageElement = document.createElement('img');
-    previewImage.className = 'download-preview-image';
+    previewImageElement.className = 'download-preview-image';
     previewImageElement.src = downloadData.previewImage;
     previewImageElement.alt = downloadData.title || 'Download preview';
     contentWrapper.appendChild(previewImageElement);
