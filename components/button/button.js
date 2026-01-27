@@ -5,7 +5,11 @@ export function renderButton({
   button.className = 'button';
   button.title = label;
   if (target !== '') button.target = target;
-  button.innerText = label;
+
+  // Wrap label text in a span element
+  const span = document.createElement('span');
+  span.textContent = label;
+  button.appendChild(span);
 
   let href = link;
   block.classList.forEach((className) => {
