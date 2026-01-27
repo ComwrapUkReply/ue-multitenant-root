@@ -48,14 +48,14 @@ export default function decorate(block) {
   let downloadImage;
   let previewImage;
 
-  if (rows[3]) {
-    downloadImage = rows[3].querySelector('img');
-    const anchor = rows[3].querySelector('a');
+  if (rows[2]) {
+    downloadImage = rows[2].querySelector('img');
+    const anchor = rows[2].querySelector('a');
     downloadLink = downloadImage?.src || anchor?.href;
   }
 
-  if (rows[5]) {
-    const img = rows[5].querySelector('img');
+  if (rows[4]) {
+    const img = rows[4].querySelector('img');
     previewImage = img?.src;
     if (!previewImage && downloadImage) {
       previewImage = downloadImage?.src;
@@ -71,13 +71,13 @@ export default function decorate(block) {
   const downloadData = {
     title: rows[0]?.textContent ? `${rows[0]?.textContent} (${fileExtension?.toUpperCase()})` : '',
     description: rows[1]?.innerHTML,
-    buttonLabel: rows[2]?.textContent,
     downloadLink,
-    showPreviewImage: rows[4]?.textContent?.trim() === 'true',
+    showPreviewImage: rows[3]?.textContent?.trim() === 'true',
     previewImage,
-    style: rows[6]?.textContent?.trim(),
-    width: rows[7]?.textContent?.trim(),
-    hasButton: rows[8]?.textContent?.trim() === 'true',
+    style: rows[5]?.textContent?.trim(),
+    width: rows[6]?.textContent?.trim(),
+    hasButton: rows[7]?.textContent?.trim() === 'true',
+    buttonLabel: rows[8]?.textContent,
     isValidFile,
     fileExtension,
   };
