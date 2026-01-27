@@ -45,11 +45,17 @@ function createWarningMessage(container) {
 export default function decorate(block) {
   const rows = block.children || [];
   let downloadLink;
+  let previewImage;
 
   if (rows[3]) {
     const img = rows[3].querySelector('img');
     const anchor = rows[3].querySelector('a');
     downloadLink = img?.src || anchor?.href;
+  }
+
+  if (rows[5]) {
+    const img = rows[5].querySelector('img');
+    previewImage = img?.src;
   }
 
   // Validate file type when block loads
@@ -64,7 +70,7 @@ export default function decorate(block) {
     buttonLabel: rows[2]?.textContent,
     downloadLink,
     showPreviewImage: rows[4]?.textContent?.trim() === 'true',
-    previewImage: rows[5]?.textContent?.trim(),
+    previewImage,
     color: rows[6]?.textContent?.trim(),
     width: rows[7]?.textContent?.trim(),
     hasButton: rows[8]?.textContent?.trim() === 'true',
@@ -118,12 +124,16 @@ export default function decorate(block) {
   const contentWrapper = document.createElement('div');
   contentWrapper.className = 'download-content';
 
+  // Create content wrapper for text content
+  const textWrapper = document.createElement('div');
+  textWrapper.className = 'download-content-wrapper';
+
   // Create title
   if (downloadData.title) {
     const title = document.createElement('h2');
     title.className = 'download-title';
     title.textContent = downloadData.title;
-    contentWrapper.appendChild(title);
+    textWrapper.appendChild(title);
   }
 
   // Create description
@@ -131,12 +141,24 @@ export default function decorate(block) {
     const description = document.createElement('div');
     description.className = 'download-description';
     description.innerHTML = downloadData.description;
-    contentWrapper.appendChild(description);
+    textWrapper.appendChild(description);
+  }
+
+  // Append text wrapper to content wrapper
+  contentWrapper.appendChild(textWrapper);
+
+  // Create preview image (will be positioned on the right via CSS)
+  if (downloadData.showPreviewImage && downloadData.previewImage) {
+    const previewImage = document.createElement('img');
+    previewImage.className = 'download-preview-image';
+    previewImage.src = downloadData.previewImage;
+    previewImage.alt = downloadData.title || 'Download preview';
+    contentWrapper.appendChild(previewImage);
   }
 
   // Show warning message for invalid file types
   if (downloadData.downloadLink && !downloadData.isValidFile) {
-    createWarningMessage(contentWrapper);
+    createWarningMessage(textWrapper);
   }
 
   // Append content wrapper to block
@@ -195,7 +217,7 @@ export default function decorate(block) {
 
     button.appendChild(buttonIcon);
 
-    contentWrapper.appendChild(button);
+    textWrapper.appendChild(button);
   }
   // Note: For invalid file types, no download button is created at all
   // This ensures the file cannot be accessed without modifying JavaScript
