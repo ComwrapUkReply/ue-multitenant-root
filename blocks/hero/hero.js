@@ -87,7 +87,7 @@ function processButtons(block) {
       const button = document.createElement('a');
       button.href = link;
       button.className = 'button';
-      
+
       // Wrap label text in a span element
       const span = document.createElement('span');
       span.textContent = linkText;
@@ -207,13 +207,13 @@ function processButtonText(block) {
     const textContentElement = buttonContainer.parentElement.nextElementSibling.querySelector('p');
     const textContent = textContentElement.textContent.trim();
     const button = buttonContainer.querySelector('a');
-    
+
     // Wrap label text in a span element
     const span = document.createElement('span');
     span.textContent = textContent;
     button.textContent = '';
     button.appendChild(span);
-    
+
     textContentElement.remove();
   });
 }
