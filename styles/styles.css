@@ -564,6 +564,7 @@ blockquote::before {
     border: var(--button-border-width) var(--button-border-style) var(--color-primary);
     color: var(--color-primary);
 }
+
 .button.text:hover,
 .button.text:focus,
 .button.text:active {
