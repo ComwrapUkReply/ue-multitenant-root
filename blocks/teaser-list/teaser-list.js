@@ -86,12 +86,28 @@ export default async function decorate(block) {
       });
     }
   } else if (TEASER_LIST_TYPE.text === 'tag') {
-    const teaserTag = TEASER_TAG.text;
-    const teaserTags = teaserTag.split(',');
-    pagesData = data.filter(
-      (page) => Array.isArray(page.tags) && page.tags.length > 0 && page.tags[0]
-      && page.tags[0].split(',').map((tag) => tag.trim()).some((tag) => teaserTags.includes(tag)),
-    );
+    const teaserTags = (TEASER_TAG.text || '')
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+
+    if (teaserTags.length > 0) {
+      pagesData = data.filter((page) => {
+        if (!page || !page.tags) {
+          return false;
+        }
+
+        const rawTags = Array.isArray(page.tags) ? page.tags : [page.tags];
+
+        const pageTags = rawTags
+          .filter((rawTag) => typeof rawTag === 'string' && rawTag.length > 0)
+          .flatMap((rawTag) => rawTag.split(','))
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0);
+
+        return pageTags.some((tag) => teaserTags.includes(tag));
+      });
+    }
   }
 
   const teaserList = document.createElement('div');
