@@ -117,3 +117,14 @@ blockquote::before {
 .block.quote.outline-secondary .quote-author {
     color: var(--color-secondary);
 }
+
+/* Long quote size - Smaller text for longer quotes */
+.block.quote.long blockquote p {
+    font-size: var(--font-size-h6);
+    line-height: var(--line-height-h6);
+}
+
+.block.quote.long blockquote::before {
+    font-size: var(--space-64);
+    line-height: var(--space-56);
+}

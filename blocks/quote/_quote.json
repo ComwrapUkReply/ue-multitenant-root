@@ -56,6 +56,26 @@
               "description": "Transparent background with red/pink outline and text"
             }
           ]
+        },
+        {
+          "component": "select",
+          "name": "classes_size",
+          "value": "",
+          "label": "Quote Size",
+          "description": "The size of the quote text",
+          "valueType": "string",
+          "options": [
+            {
+              "name": "Regular",
+              "value": "",
+              "description": "Regular text size"
+            },
+            {
+              "name": "Long",
+              "value": "long",
+              "description": "Smaller text size for longer quotes"
+            }
+          ]
         }
       ]
     }
