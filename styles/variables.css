@@ -78,8 +78,8 @@
     /* ===== Typography ===== */
     
     /* Font Families */
-    --font-family-semibold: 'AlbertSans-SemiBold', 'Roboto', arial, sans-serif;
-    --font-family-regular: 'AlbertSans-Regular', 'Roboto', arial, sans-serif;
+    --font-family-semibold: 'Alaska-SemiBold', 'Roboto', arial, sans-serif;
+    --font-family-regular: 'Alaska-Light', 'Roboto', arial, sans-serif;
     --font-family-base: var(--font-family-semibold);
     --font-family-body: var(--font-family-regular);
     

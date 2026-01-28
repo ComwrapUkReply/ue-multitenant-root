@@ -45,11 +45,21 @@ function createWarningMessage(container) {
 export default function decorate(block) {
   const rows = block.children || [];
   let downloadLink;
+  let downloadImage;
+  let previewImage;
 
-  if (rows[3]) {
-    const img = rows[3].querySelector('img');
-    const anchor = rows[3].querySelector('a');
-    downloadLink = img?.src || anchor?.href;
+  if (rows[2]) {
+    downloadImage = rows[2].querySelector('img');
+    const anchor = rows[2].querySelector('a');
+    downloadLink = downloadImage?.src || anchor?.href;
+  }
+
+  if (rows[4]) {
+    const img = rows[4].querySelector('img');
+    previewImage = img?.src;
+    if (!previewImage && downloadImage) {
+      previewImage = downloadImage?.src;
+    }
   }
 
   // Validate file type when block loads
@@ -59,30 +69,30 @@ export default function decorate(block) {
     : null;
 
   const downloadData = {
-    title: rows[0]?.textContent,
+    title: rows[0]?.textContent ? `${rows[0]?.textContent} (${fileExtension?.toUpperCase()})` : '',
     description: rows[1]?.innerHTML,
-    buttonLabel: rows[2]?.textContent,
     downloadLink,
-    color: rows[4]?.textContent?.trim(),
-    width: rows[5]?.textContent?.trim(),
-    hasButton: rows[6]?.textContent?.trim() === 'true',
+    showPreviewImage: rows[3]?.textContent?.trim() === 'true',
+    previewImage,
+    style: rows[5]?.textContent?.trim(),
+    width: rows[6]?.textContent?.trim(),
+    hasButton: rows[7]?.textContent?.trim() === 'true',
+    buttonLabel: rows[8]?.textContent,
     isValidFile,
     fileExtension,
   };
-  // return;
   // Clear existing content
   block.innerHTML = '';
 
-  // Set block class and optional color variant after clearing
-  block.className = 'download-wrapper-inner';
-  const colorClassMap = {
-    grey: 'color-grey',
-    'light blue': 'color-light-blue',
-    'dark blue': 'color-dark-blue',
-    white: 'color-white',
+  // Preserve block identification classes (block, download) and add wrapper class
+  // Universal Editor needs these classes to identify and update the block
+  block.classList.add('download-wrapper-inner');
+  const styleClassMap = {
+    solid: 'style-solid',
+    outline: 'style-outline',
   };
-  const colorClass = colorClassMap[downloadData.color?.toLowerCase?.()] || '';
-  if (colorClass) block.classList.add(colorClass);
+  const styleClass = styleClassMap[downloadData.style?.toLowerCase?.()] || 'style-outline';
+  block.classList.add(styleClass);
 
   // Add class based on whether there's a button
   if (downloadData.hasButton) {
@@ -116,12 +126,16 @@ export default function decorate(block) {
   const contentWrapper = document.createElement('div');
   contentWrapper.className = 'download-content';
 
+  // Create content wrapper for text content
+  const textWrapper = document.createElement('div');
+  textWrapper.className = 'download-content-wrapper';
+
   // Create title
   if (downloadData.title) {
     const title = document.createElement('h2');
     title.className = 'download-title';
     title.textContent = downloadData.title;
-    contentWrapper.appendChild(title);
+    textWrapper.appendChild(title);
   }
 
   // Create description
@@ -129,12 +143,24 @@ export default function decorate(block) {
     const description = document.createElement('div');
     description.className = 'download-description';
     description.innerHTML = downloadData.description;
-    contentWrapper.appendChild(description);
+    textWrapper.appendChild(description);
+  }
+
+  // Append text wrapper to content wrapper
+  contentWrapper.appendChild(textWrapper);
+
+  // Create preview image (will be positioned on the right via CSS)
+  if (downloadData.showPreviewImage && downloadData.previewImage) {
+    const previewImageElement = document.createElement('img');
+    previewImageElement.className = 'download-preview-image';
+    previewImageElement.src = downloadData.previewImage;
+    previewImageElement.alt = downloadData.title || 'Download preview';
+    contentWrapper.appendChild(previewImageElement);
   }
 
   // Show warning message for invalid file types
   if (downloadData.downloadLink && !downloadData.isValidFile) {
-    createWarningMessage(contentWrapper);
+    createWarningMessage(textWrapper);
   }
 
   // Append content wrapper to block
@@ -193,7 +219,7 @@ export default function decorate(block) {
 
     button.appendChild(buttonIcon);
 
-    contentWrapper.appendChild(button);
+    textWrapper.appendChild(button);
   }
   // Note: For invalid file types, no download button is created at all
   // This ensures the file cannot be accessed without modifying JavaScript

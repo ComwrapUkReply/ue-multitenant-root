@@ -29,7 +29,8 @@
             "component": "text",
             "name": "downloadtitle",
             "value": "",
-            "label": "Title"
+            "label": "Title",
+            "required": true
           },
           {
             "component": "richtext",
@@ -38,17 +39,23 @@
             "label": "Description"
           },
           {
-            "component": "text",
-            "name": "downloadbuttonlabel",
-            "label": "Download Button Label"
-          },
-          {
-            "component": "aem-content",
+            "component": "reference",
             "name": "downloadfile",
             "label": "Asset",
-            "value": "",
             "valueType": "string",
             "description": "Allowed file types: Documents (pdf, doc, docx, xls, xlsx, ppt, pptx, txt, csv, xml), Images (jpg, jpeg, heic, png, webp, bmp), Videos (avs, acv, avc, ev, mp4), Archives (zip), Media (mp3, mov)"
+          },
+          {
+            "component": "boolean",
+            "name": "showpreviewimage",
+            "label": "Show Preview Image",
+            "valueType": "boolean"
+          },
+          {
+            "component": "reference",
+            "name": "downloadimage",
+            "label": "Preview Image",
+            "valueType": "string"
           },
           {
             "component": "tab",
@@ -57,16 +64,14 @@
           },
           {
             "component": "select",
-            "name": "downloadcolor",
-            "label": "Card Color",
+            "name": "downloadstyle",
+            "label": "Style",
             "valueType": "string",
             "options": [
-              { "name": "Grey", "value": "grey" },
-              { "name": "Light Blue", "value": "light blue" },
-              { "name": "Dark Blue", "value": "dark blue" },
-              { "name": "White", "value": "white" }
+              { "name": "Solid", "value": "solid" },
+              { "name": "Outline", "value": "outline" }
             ],
-            "value": "white"
+            "value": "outline"
           },
           {
             "component": "select",
@@ -76,13 +81,21 @@
             "options": [
               { "name": "Full Width", "value": "full-width" },
               { "name": "Half Width", "value": "half-width" }
-            ]
+            ],
+            "value": "full-width"
           },
           {
             "component": "boolean",
             "name": "downloadbutton",
             "label": "Show Download Button",
             "valueType": "boolean"
+          },
+          {
+            "component": "text",
+            "name": "downloadbuttonlabel",
+            "label": "Download Button Label",
+            "condition": { "===": [{"var" : "downloadbutton"}, true] },
+            "required": true
           }
         ]
       }
