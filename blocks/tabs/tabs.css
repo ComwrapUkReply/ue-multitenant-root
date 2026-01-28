@@ -1,11 +1,10 @@
-/* Tabs Block - Vertical Layout with Dark Background */
+/* Tabs Block - Vertical Layout with White Background */
 .tabs-block {
   display: flex;
-  gap: var(--space-40);
+  gap: var(--space-80);
   align-items: flex-start;
-  background-color: var(--color-secondary);
+  background-color: var(--color-white);
   padding: var(--space-104) var(--space-200);
-  min-height: 472px;
 }
 
 /* Tab List - Vertical Tabs on the Left */
@@ -14,16 +13,16 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  width: 480px;
   padding-left: 3px;
+  border-left: 3px solid var(--color-secondary-100);
 }
 
 /* Indicator Line */
 .tabs-indicator {
   position: absolute;
-  left: 0;
+  left: -3px;
   width: 3px;
-  background-color: var(--color-grey-200);
+  background-color: var(--color-secondary);
   transition: top 0.3s ease, height 0.3s ease;
   pointer-events: none;
 }
@@ -53,11 +52,10 @@
 }
 
 .tabs-tab-button-content {
-  font-family: 'Albert Sans', sans-serif;
   font-weight: 600;
   font-size: var(--font-size-h4);
   line-height: var(--line-height-h4);
-  color: rgb(255 255 255 / 50%);
+  color: var(--color-primary);
   transition: all 0.3s ease;
 }
 
@@ -65,19 +63,18 @@
 .tabs-tab-button.active .tabs-tab-button-content {
   font-size: var(--font-size-h3);
   line-height: var(--line-height-h3);
-  color: var(--color-white);
 }
 
 /* Tab Button Focus State */
 .tabs-tab-button:focus-visible,
 .tabs-tab-button:focus {
   outline: none;
-  color: var(--color-white) !important;
+  color: var(--color-secondary) !important;
   background: transparent;
 }
 
 .tabs-tab-button:focus-visible {
-    outline: 2px solid var(--color-white);
+    outline: 2px solid var(--color-secondary);
 }
 
 /* Tab Panels Container - Content Area on the Right */
@@ -90,7 +87,7 @@
 /* Individual Tab Panel */
 .tabs-tab-panel {
   display: none;
-  color: var(--color-white);
+  color: var(--color-secondary);
 }
 
 .tabs-tab-panel.active {
@@ -103,21 +100,19 @@
 
 /* Tab Panel Content Styling */
 .tabs-tab-panel h2 {
-  font-family: 'Albert Sans', sans-serif;
   font-weight: 600;
   font-size: var(--font-size-h4);
   line-height: var(--line-height-h4);
-  color: var(--color-white);
+  color: var(--color-secondary);
   margin-top: 0;
   padding-bottom: var(--space-32);
 }
 
 .tabs-tab-panel p {
-  font-family: 'Albert Sans', sans-serif;
   font-weight: 400;
   font-size: var(--font-size-h6);
   line-height: var(--line-height-h6);
-  color: var(--color-white);
+  color: var(--color-primary);
   margin-bottom: var(--space-24);
 }
 
@@ -127,7 +122,7 @@
 }
 
 .tabs-tab-panel a {
-  color: var(--color-white);
+  color: var(--color-secondary);
   text-decoration: underline;
   text-decoration-skip-ink: none;
   text-underline-position: from-font;
@@ -158,6 +153,7 @@
   }
 
   .tabs-tab-list {
+    border: none;
     width: 360px;
   }
 
@@ -185,20 +181,20 @@
     flex-direction: row;
     overflow-x: auto;
     padding-left: 0;
+    border: none;
   }
 
   .tabs-indicator {
     left: 0;
     bottom: 0;
     top: auto;
-    width: auto;
     height: 3px;
     transition: left 0.3s ease, width 0.3s ease;
   }
 
   .tabs-tab-buttons-wrapper {
-    flex-direction: row;
     gap: var(--space-8);
+    border-left: 3px solid var(--color-secondary-100);
   }
 
   .tabs-tab-button {
@@ -233,99 +229,84 @@
   }
 }
 
-/* Print Styles */
-@media print {
-  .tabs-container {
-    display: block;
-    background-color: transparent;
-    padding: 0;
-  }
-
-  .tabs-tab-list {
-    display: none;
-  }
-
-  .tabs-tab-panels {
-    max-width: 100%;
-  }
-
-  .tabs-tab-panel {
-    display: block !important;
-    page-break-inside: avoid;
-  }
-
-  .tabs-tab-panel:not(:first-child) {
-    page-break-before: always;
-  }
+.tabs.background .tabs-block {
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-md);
 }
 
-.tabs.primary {
-    background-color: var(--color-white);
+.tabs.background .tabs-tab-list {
+  border-left: 3px solid rgb(255 255 255 / 50%);;
 }
 
-.tabs.primary .tabs-block {
-    background-color: var(--color-white);
+.tabs.background .tabs-tab-button-content {
+  color: rgb(255 255 255 / 50%);
 }
 
-.tabs.primary .tabs-tab-button-content {
-  color: var(--color-secondary);
-}
-
-.tabs.primary .tabs-tab-button.active .tabs-tab-button-content {
-  color: var(--color-secondary);
+.tabs.background .tabs-tab-button.active .tabs-tab-button-content {
+  color: var(--color-white);
 }
   
-.tabs.primary .tabs-tab-button:focus-visible,
-.tabs.primary .tabs-tab-button:focus {
+.tabs.background .tabs-tab-button:focus-visible,
+.tabs.background .tabs-tab-button:focus {
   outline: none;
-  color: var(--color-secondary) !important;
+  color: var(--color-white) !important;
   background: transparent;
 }
 
-.tabs.primary .tabs-tab-button:focus-visible {
-  outline: 2px solid var(--color-secondary);
+.tabs.background .tabs-tab-button:focus-visible {
+  outline: 2px solid var(--color-white);
 }
   
-.tabs.primary .tabs-tab-panel {
-  color: var(--color-secondary);
+.tabs.background .tabs-tab-panel {
+  color: var(--color-white);
 }
 
-.tabs.primary .tabs-tab-panel.active {
+.tabs.background .tabs-tab-panel.active {
   display: block;
 }
   
-.tabs.primary .tabs-tab-panel[hidden] {
+.tabs.background .tabs-tab-panel[hidden] {
   display: none;
 }
   
-.tabs.primary .tabs-tab-panel h2 {
-  color: var(--color-secondary);
-}
-  
-.tabs.primary .tabs-tab-panel p {
-  color: var(--color-secondary);
-}
-  
-.tabs.primary .tabs-tab-panel sup {
-  color: var(--color-secondary);
-}
-  
-.tabs.primary .tabs-tab-panel a {
-  color: var(--color-secondary);
-}
-  
-.tabs.primary .tabs-tab-panel .footnotes {
-  color: var(--color-secondary);
-}
-  
-.tabs.primary .tabs-tab-panel .footnotes p {
-  color: var(--color-secondary);
-}
-  
-.tabs.primary .tabs-tab-panel .footnotes sup {
-  color: var(--color-secondary);
+.tabs.background .tabs-tab-panel h2 {
+  color: var(--color-white);
 }
 
-.tabs.primary .tabs-indicator {
-  background-color: var(--color-secondary);
+.tabs.background .tabs-tab-panel p {
+  color: var(--color-white);
+}
+
+.tabs.background .tabs-tab-panel sup {
+  color: var(--color-white);
+}
+
+.tabs.background .tabs-tab-panel a {
+  color: var(--color-white);
+}
+
+.tabs.background .tabs-tab-panel .footnotes {
+  color: var(--color-white);
+}
+
+.tabs.background .tabs-tab-panel .footnotes p {
+  color: var(--color-white);
+}
+
+.tabs.background .tabs-tab-panel .footnotes sup {
+  color: var(--color-white);
+}
+
+.tabs.background .tabs-indicator {
+  background-color: var(--color-white);
+}
+
+@media (width <= 768px) {
+  .tabs.background .tabs-tab-buttons-wrapper {
+    border-left: 3px solid rgb(255 255 255 / 50%);
+  }
+
+  .tabs.background .tabs-tab-list {
+    border-left: none;
+  }
 }
