@@ -282,6 +282,14 @@
           {
             "name": "secondary",
             "value": "secondary"
+          },
+          {
+            "name": "primary-outline",
+            "value": "primary Outline"
+          },
+          {
+            "name": "secondary-outline",
+            "value": "secondary Outline"
           }
         ]
       }
@@ -567,6 +575,14 @@
               {
                 "name": "Text",
                 "value": "text"
+              },
+              {
+                "name": "Primary Outline",
+                "value": "primary-outline"
+              },
+              {
+                "name": "Secondary Outline",
+                "value": "secondary-outline"
               }
             ]
           },
