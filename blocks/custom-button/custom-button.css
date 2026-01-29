@@ -48,11 +48,24 @@
   display: inline-block;
 }
 
+/* Button Outlines */
+.custom-button .primary-outline {
+  background: transparent;
+  border: var(--button-border-width) var(--button-border-style) var(--color-primary);
+  color: var(--color-primary);
+}
+
+.custom-button .secondary-outline {
+  background: transparent;
+  border: var(--button-border-width) var(--button-border-style) var(--color-secondary);
+  color: var(--color-secondary);
+}
+
+/* DButton Download */
 .custom-button a.download {
   padding: var(--space-16) var(--space-36) var(--space-16) var(--space-12);
 }
 
-/* Download Icon */
 .custom-button a.download span::after,
 .custom-button button.download span::after {
   content: '';
