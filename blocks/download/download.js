@@ -74,7 +74,7 @@ export default function decorate(block) {
   if (rows[2]) {
     downloadImage = rows[2].querySelector('img');
     const anchor = rows[2].querySelector('a');
-    downloadLink = downloadImage?.src || anchor?.href;
+    downloadLink = anchor?.href || downloadImage?.src;
   }
 
   if (rows[4]) {
