@@ -640,7 +640,10 @@
         "component": "reference",
         "name": "downloadimage",
         "label": "Preview Image",
-        "valueType": "string"
+        "valueType": "string",
+        "validation": {
+          "rootPath": "/content/ue-multitenant-root"
+        }
       },
       {
         "component": "tab",
