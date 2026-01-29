@@ -22,7 +22,7 @@ function isValidFileType(fileUrl) {
 
   // Extract file extension from URL
   const urlPath = fileUrl.split('?')[0]; // Remove query parameters
-  const extension = urlPath.split('.').pop()
+  const extension = urlPath.split('.').pop()?.toLowerCase();
 
   return extension && allowedExtensions.includes(extension);
 }
@@ -88,7 +88,7 @@ export default function decorate(block) {
   // Validate file type when block loads
   const isValidFile = downloadLink ? isValidFileType(downloadLink) : true;
   const fileExtension = downloadLink
-    ? downloadLink.split('?')[0].split('.').pop()
+    ? downloadLink.split('?')[0].split('.').pop()?.toLowerCase()
     : null;
 
   const downloadData = {
