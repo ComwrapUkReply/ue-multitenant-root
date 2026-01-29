@@ -22,7 +22,7 @@ function isValidFileType(fileUrl) {
 
   // Extract file extension from URL
   const urlPath = fileUrl.split('?')[0]; // Remove query parameters
-  const extension = urlPath.split('.').pop()?.toLowerCase();
+  const extension = urlPath.split('.').pop();
 
   return extension && allowedExtensions.includes(extension);
 }
