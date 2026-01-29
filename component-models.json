@@ -575,14 +575,6 @@
               {
                 "name": "Text",
                 "value": "text"
-              },
-              {
-                "name": "Primary Outline",
-                "value": "primary-outline"
-              },
-              {
-                "name": "Secondary Outline",
-                "value": "secondary-outline"
               }
             ]
           },
