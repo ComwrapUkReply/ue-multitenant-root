@@ -85,7 +85,7 @@ blockquote::before {
 /* Outline Primary style - Transparent background with medium teal outline and text */
 .block.quote.outline-primary {
     background: transparent;
-    border-left: 3px solid var(--color-primary-500);
+    border-left: 4px solid var(--color-primary-500);
 }
 
 .block.quote.outline-primary blockquote::before {
@@ -103,7 +103,7 @@ blockquote::before {
 /* Outline Secondary style - Transparent background with red/pink outline and text */
 .block.quote.outline-secondary {
     background: transparent;
-    border-left: 3px solid var(--color-secondary);
+    border-left: 4px solid var(--color-secondary);
 }
 
 .block.quote.outline-secondary blockquote::before {
@@ -122,9 +122,4 @@ blockquote::before {
 .block.quote.long blockquote p {
     font-size: var(--font-size-h6);
     line-height: var(--line-height-h6);
-}
-
-.block.quote.long blockquote::before {
-    font-size: var(--space-64);
-    line-height: var(--space-56);
 }
