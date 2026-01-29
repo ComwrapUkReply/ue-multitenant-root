@@ -1725,16 +1725,16 @@
         "name": "classes",
         "value": "",
         "label": "Style",
-        "description": "Style for the tabs (e.g., 'default', 'primary')",
+        "description": "Style for the tabs (e.g., 'No Background', 'Background')",
         "valueType": "string",
         "options": [
           {
-            "name": "Default",
+            "name": "No Background",
             "value": ""
           },
           {
-            "name": "Primary",
-            "value": "primary"
+            "name": "Background",
+            "value": "background"
           }
         ]
       }
