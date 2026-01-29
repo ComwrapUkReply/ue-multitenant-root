@@ -1288,29 +1288,44 @@
         "component": "select",
         "name": "classes",
         "value": "",
-        "label": "Background Styles",
-        "description": "The background styles of the quote",
+        "label": "Style",
+        "description": "The visual style of the quote",
         "valueType": "string",
         "options": [
           {
-            "name": "Default",
+            "name": "Solid",
+            "value": "solid",
+            "description": "Solid dark teal background with white text"
+          },
+          {
+            "name": "Outline Primary",
+            "value": "outline-primary",
+            "description": "Transparent background with medium teal outline and text"
+          },
+          {
+            "name": "Outline Secondary",
+            "value": "outline-secondary",
+            "description": "Transparent background with red/pink outline and text"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "classes_size",
+        "value": "",
+        "label": "Quote Size",
+        "description": "The size of the quote text",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Regular",
             "value": "",
-            "description": "The default background style"
+            "description": "Regular text size"
           },
           {
-            "name": "Highlight",
-            "value": "highlight",
-            "description": "The highlight background style"
-          },
-          {
-            "name": "Dark",
-            "value": "dark",
-            "description": "The dark background style"
-          },
-          {
-            "name": "Light",
-            "value": "light",
-            "description": "The light background style"
+            "name": "Long",
+            "value": "long",
+            "description": "Smaller text size for longer quotes"
           }
         ]
       }
