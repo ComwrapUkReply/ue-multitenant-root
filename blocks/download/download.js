@@ -62,19 +62,6 @@ function removeDuplicateBlockInWrapper(block) {
   siblings.forEach((duplicate) => duplicate.remove());
 }
 
-function toEdsAssetPath(damPathOrUrl) {
-  if (!damPathOrUrl) return '';
-
-  const path = damPathOrUrl.startsWith('http')
-    ? new URL(damPathOrUrl).pathname
-    : damPathOrUrl;
-
-  return path.replace(
-    /^\/content\/dam\/ue-multitenant-root\//,
-    '/assets/',
-  );
-}
-
 export default function decorate(block) {
   // Remove any duplicate (old) block left in the same wrapper before decorating
   removeDuplicateBlockInWrapper(block);
@@ -87,7 +74,7 @@ export default function decorate(block) {
   if (rows[2]) {
     downloadImage = rows[2].querySelector('img');
     const anchor = rows[2].querySelector('a');
-    downloadLink = toEdsAssetPath(anchor?.href || downloadImage?.src);
+    downloadLink = anchor?.href || downloadImage?.src;
   }
 
   if (rows[4]) {
