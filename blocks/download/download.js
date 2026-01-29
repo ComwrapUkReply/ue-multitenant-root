@@ -11,7 +11,7 @@ function isValidFileType(fileUrl) {
     // Documents
     'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'xml',
     // Images
-    'jpg', 'jpeg', 'heic', 'png', 'webp', 'bmp',
+    'jpg', 'jpeg', 'heic', 'png', 'webp', 'bmp', 'svg', 'gif',
     // Videos
     'avs', 'acv', 'avc', 'ev', 'mp4',
     // Archives
