@@ -55,10 +55,20 @@
   color: var(--color-primary);
 }
 
+.custom-button .primary-outline:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
 .custom-button .secondary-outline {
   background: transparent;
   border: var(--button-border-width) var(--button-border-style) var(--color-secondary);
   color: var(--color-secondary);
+}
+
+.custom-button .secondary-outline:hover {
+  background: var(--color-secondary);
+  color: var(--color-white);
 }
 
 /* DButton Download */
