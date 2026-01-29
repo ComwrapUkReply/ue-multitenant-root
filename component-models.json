@@ -625,7 +625,10 @@
         "name": "downloadfile",
         "label": "Asset",
         "valueType": "string",
-        "description": "Allowed file types: Documents (pdf, doc, docx, xls, xlsx, ppt, pptx, txt, csv, xml), Images (jpg, jpeg, heic, png, webp, bmp), Videos (avs, acv, avc, ev, mp4), Archives (zip), Media (mp3, mov)"
+        "description": "Allowed file types: Documents (pdf, doc, docx, xls, xlsx, ppt, pptx, txt, csv, xml), Images (jpg, jpeg, heic, png, webp, bmp), Videos (avs, acv, avc, ev, mp4), Archives (zip), Media (mp3, mov)",
+        "validation": {
+          "rootPath": "/content/ue-multitenant-root"
+        }
       },
       {
         "component": "boolean",
