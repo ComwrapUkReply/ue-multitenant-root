@@ -42,7 +42,30 @@ function createWarningMessage(container) {
   return warningMsg;
 }
 
+/**
+ * When Universal Editor updates this block, it inserts a new block then removes the old one.
+ * If the old block is not removed (e.g. due to an exception), we end up with two blocks
+ * in the same download-wrapper. Remove any sibling that has the same data-aue-resource
+ * so only this (the new) block remains.
+ * @param {HTMLElement} block - This block element
+ */
+function removeDuplicateBlockInWrapper(block) {
+  const resource = block.getAttribute('data-aue-resource');
+  if (!resource) return;
+
+  const parent = block.parentElement;
+  if (!parent || !parent.classList.contains('download-wrapper')) return;
+
+  const siblings = [...parent.children].filter(
+    (el) => el !== block && el.classList.contains('block') && el.getAttribute('data-aue-resource') === resource,
+  );
+  siblings.forEach((duplicate) => duplicate.remove());
+}
+
 export default function decorate(block) {
+  // Remove any duplicate (old) block left in the same wrapper before decorating
+  removeDuplicateBlockInWrapper(block);
+
   const rows = block.children || [];
   let downloadLink;
   let downloadImage;
