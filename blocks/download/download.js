@@ -3,6 +3,21 @@
  * @param {string} fileUrl - The file URL or path
  * @returns {boolean} - True if file type is allowed
  */
+
+function toEdsAssetHref(href) {
+  if (!href) return '';
+
+  const url = new URL(href, window.location.href);
+  const p = url.pathname;
+
+  // DAM → EDS, bez zmiany case
+  if (p.startsWith('/content/dam/ue-multitenant-root/')) {
+    return `/assets/${p.slice('/content/dam/ue-multitenant-root/'.length)}`;
+  }
+
+  return href;
+}
+
 function isValidFileType(fileUrl) {
   if (!fileUrl) return false;
 
@@ -74,7 +89,7 @@ export default function decorate(block) {
   if (rows[2]) {
     downloadImage = rows[2].querySelector('img');
     const anchor = rows[2].querySelector('a');
-    downloadLink = anchor?.href || downloadImage?.src;
+    downloadLink = toEdsAssetHref(anchor?.href);
   }
 
   if (rows[4]) {
