@@ -83,14 +83,6 @@
           "label": "Teasers"
         },
         {
-          "component": "select",
-          "name": "teasersTitleElement",
-          "label": "Teasers Title Type",
-          "options": [
-            { "...": "../../models/partials/_headings.json" }
-          ]
-        },
-        {
           "component": "text",
           "name": "teasersLinkLabel",
           "label": "Teasers Link Label"

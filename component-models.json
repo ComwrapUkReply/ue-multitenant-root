@@ -307,47 +307,6 @@
     ]
   },
   {
-    "id": "marginal",
-    "fields": [
-      {
-        "component": "text",
-        "name": "id",
-        "label": "Id"
-      },
-      {
-        "component": "multiselect",
-        "name": "style",
-        "label": "Style",
-        "options": [
-          {
-            "name": "Highlight",
-            "value": "highlight"
-          },
-          {
-            "name": "Dark",
-            "value": "dark"
-          },
-          {
-            "name": "Light",
-            "value": "light"
-          },
-          {
-            "name": "Two columns",
-            "value": "grid-layout-two-columns"
-          },
-          {
-            "name": "Three columns",
-            "value": "grid-layout-three-columns"
-          },
-          {
-            "name": "Four columns",
-            "value": "grid-layout-four-columns"
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": "accordion",
     "fields": []
   },
@@ -1838,33 +1797,6 @@
         "component": "tab",
         "name": "teasers",
         "label": "Teasers"
-      },
-      {
-        "component": "select",
-        "name": "teasersTitleElement",
-        "label": "Teasers Title Type",
-        "options": [
-          {
-            "name": "h2",
-            "value": "h2"
-          },
-          {
-            "name": "h3",
-            "value": "h3"
-          },
-          {
-            "name": "h4",
-            "value": "h4"
-          },
-          {
-            "name": "h5",
-            "value": "h5"
-          },
-          {
-            "name": "h6",
-            "value": "h6"
-          }
-        ]
       },
       {
         "component": "text",
