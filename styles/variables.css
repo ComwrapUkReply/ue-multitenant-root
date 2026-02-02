@@ -78,8 +78,8 @@
     /* ===== Typography ===== */
     
     /* Font Families */
-    --font-family-semibold: 'AlbertSans-SemiBold', 'Roboto', arial, sans-serif;
-    --font-family-regular: 'AlbertSans-Regular', 'Roboto', arial, sans-serif;
+    --font-family-semibold: 'Alaska-SemiBold', 'Roboto', arial, sans-serif;
+    --font-family-regular: 'Alaska-Light', 'Roboto', arial, sans-serif;
     --font-family-base: var(--font-family-semibold);
     --font-family-body: var(--font-family-regular);
     
@@ -238,8 +238,8 @@
 
     --button-background-color: var(--color-primary);
     --button-color: var(--color-white);
-    --button-border-radius: var(--border-radius-lg);
-    --button-font-size: var(--font-size-body);
+    --button-border-radius: var(--border-radius-sm);
+    --button-font-size: var(--font-size-base);
     --button-line-height: var(--line-height-body);
     --button-border-style: var(--border-style-solid);
     --button-border-width: var(--border-width-md);

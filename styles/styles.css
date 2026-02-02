@@ -512,13 +512,12 @@ blockquote::before {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-12) var(--space-24);
+    padding: var(--space-12) var(--space-16);
     font-family: var(--font-family-base);
     font-size: var(--button-font-size);
     line-height: var(--button-line-height);
     font-weight: 600;
     text-decoration: none;
-    border: var(--button-border-width) var(--button-border-style) var(--color-primary);
     border-radius: var(--button-border-radius);
     cursor: pointer;
     transition: var(--transition-base);
@@ -530,9 +529,9 @@ blockquote::before {
 .button:hover,
 .button:focus {
     color: var(--color-white);
-    background-color: var(--color-primary-900);
-    border-color: var(--color-primary-900);
+    background-color: var(--color-primary-800);
     text-decoration: none;
+    outline: none;
 }
 
 .button:disabled {
@@ -541,29 +540,60 @@ blockquote::before {
 }
 
 .button:active {
-    background-color: var(--color-primary-900);
-    border-color: var(--color-primary-900);
+    background-color: var(--color-primary-800);
 }
 
 /* Secondary Button */
 .button.secondary {
     font-style: normal;
-    color: var(--color-primary);
-    background-color: transparent;
-    border-color: var(--color-primary);
+    color: var(--color-white);
+    background-color: var(--color-secondary);
 }
 
 .button.secondary:hover,
 .button.secondary:focus {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-    text-decoration: none;
+    background-color: var(--color-secondary-900);
 }
 
 .button.secondary:active {
-    background-color: var(--color-primary-900);
-    border-color: var(--color-primary-900);
+    background-color: var(--color-secondary-900);
 }
+
+.button.text {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-radius: 0;
+    padding: var(--space-16) var(--space-20) var(--space-16) var(--space-12);
+}
+
+.button.text span {
+    position: relative;
+}
+
+.button.text span::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -1.5rem;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: var(--button-background-color);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3Cpolyline points='12 5 19 12 12 19'%3E%3C/polyline%3E%3C/svg%3E");
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.button.text:hover {
+    color: var(--color-primary);
+}
+
+.button.text:hover span::after,
+.button.text:focus span::after,
+.button.text:active span::after {
+    transform: translate(4px, -50%);
+}
+
 
 /* Forms */
 .form-group {

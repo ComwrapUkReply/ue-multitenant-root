@@ -52,23 +52,12 @@
               "value": "secondary"
             },
             {
-              "name": "tertiary",
-              "value": "tertiary"
-            }
-          ]
-        },
-        {
-          "component": "select",
-          "name": "linkTarget",
-          "label": "Link Target",
-          "options": [
-            {
-              "name": "self",
-              "value": ""
+              "name": "primary-outline",
+              "value": "primary Outline"
             },
             {
-              "name": "blank",
-              "value": "_blank"
+              "name": "secondary-outline",
+              "value": "secondary Outline"
             }
           ]
         }
