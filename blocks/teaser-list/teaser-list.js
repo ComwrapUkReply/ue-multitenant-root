@@ -1,10 +1,10 @@
-import useBlockConfig from '../../scripts/global/useBlockConfig.js';
 import {
   createImageWithModal,
   getQueryIndex,
   getDictionary,
   mapPath,
   getContextualPath,
+  useBlockConfig,
 } from '../helpers.js';
 
 const TEASER_LIST_BUTTON_LABEL = 'Read more';
