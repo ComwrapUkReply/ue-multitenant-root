@@ -1,30 +1,26 @@
-import { fetchSVG } from '../../blocks/helpers.js';
-
-export async function renderButton({
-  linkButton, linkText, linkTitle, linkTarget, linkType, linkStyle, iconImage,
+export function renderButton({
+  link, label, target, block,
 }) {
-  if (linkTarget !== '') linkButton.target = linkTarget;
-  if (linkText !== '') linkButton.textContent = linkText;
-  if (linkTitle !== '') linkButton.title = linkTitle;
+  const button = document.createElement('a');
+  button.className = 'button';
+  button.title = label;
+  if (target !== '') button.target = target;
 
-  let { href } = linkButton;
-  // also add classes based on type telephone, email, download
-  if (linkType === 'telephone') href = `tel:${href}`;
-  if (linkType === 'email') href = `mailto:${href}`;
-  if (linkType === 'download') linkButton.download = '';
+  // Wrap label text in a span element
+  const span = document.createElement('span');
+  span.textContent = label;
+  button.appendChild(span);
 
-  if (linkStyle !== '') linkButton.classList.add(linkStyle);
+  let href = link;
+  block.classList.forEach((className) => {
+    if (className === 'telephone') href = `tel:${link}`;
+    if (className === 'email') href = `mailto:${link}`;
+    if (className === 'download') button.download = '';
+  });
 
-  linkButton.href = href;
+  button.href = href;
 
-  if (linkType === 'telephone' || linkType === 'email' || linkType === 'external-link' || linkType === 'download' || iconImage) {
-    const iconElement = document.createElement('span');
-    iconElement.classList.add('icon');
-    iconElement.innerHTML = iconImage ? await fetchSVG(iconImage.src) : await fetchSVG(`${window.hlx.codeBasePath}/icons/def-btn-icon-${linkType}.svg`);
-    linkButton.append(iconElement);
-  }
-
-  return linkButton;
+  return button;
 }
 
 export default renderButton;
