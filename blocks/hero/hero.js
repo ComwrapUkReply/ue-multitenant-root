@@ -44,110 +44,108 @@ function processImageReference(block) {
 }
 
 /**
- * Process button components added to the hero
+ * Map CTA style value from model to CSS class name
+ * @param {string} style - Value from cta1_style / cta2_style (e.g. "primary", "primary Outline")
+ * @returns {string} CSS class name (e.g. "primary", "primary-outline")
+ */
+function ctaStyleToClass(style) {
+  if (!style || !style.trim()) return '';
+  const normalized = style.trim().toLowerCase().replace(/\s+/g, '-');
+  return normalized;
+}
+
+/**
+ * Build a single CTA button element from link, text, target and style
+ * @param {string} href - Link URL
+ * @param {string} text - Button label
+ * @param {string} target - "" or "_blank"
+ * @param {string} styleValue - Style select value
+ * @returns {HTMLAnchorElement|null} Button element or null if href/text missing
+ */
+function buildCTAButton(href, text, target, styleValue) {
+  if (!href || !text || !href.trim() || !text.trim()) return null;
+  const button = document.createElement('a');
+  button.href = href.trim();
+  button.className = 'button';
+  const span = document.createElement('span');
+  span.textContent = text.trim();
+  button.appendChild(span);
+  if (target === '_blank') {
+    button.target = '_blank';
+    button.rel = 'noopener noreferrer';
+  }
+  const styleClass = ctaStyleToClass(styleValue);
+  if (styleClass) {
+    button.classList.add(styleClass);
+  }
+  return button;
+}
+
+/**
+ * Extract CTA data from a row (link from <a>, text from textContent)
+ * @param {Element} linkRow - Row containing ctaN_link (may have <a>)
+ * @param {Element} textRow - Row containing ctaN_text
+ * @param {Element} targetRow - Row containing ctaN_target
+ * @param {Element} styleRow - Row containing ctaN_style
+ * @returns {{ href: string, text: string, target: string, style: string }}
+ */
+function extractCTAData(linkRow, textRow, targetRow, styleRow) {
+  const linkEl = linkRow?.querySelector('a');
+  const href = linkEl ? (linkEl.href || linkEl.textContent?.trim() || '') : '';
+  const text = textRow?.textContent?.trim() || '';
+  const target = targetRow?.textContent?.trim() || '';
+  const style = styleRow?.textContent?.trim() || '';
+  return {
+    href,
+    text,
+    target,
+    style,
+  };
+}
+
+/**
+ * Process CTAs from hero model fields (rows 4–11: cta1 and cta2)
+ * Builds two CTA buttons, appends to hero content, removes CTA rows from DOM
  * @param {HTMLElement} block - The hero block DOM element
  */
-function processButtons(block) {
-  // Find all button block items (buttons added as children to hero)
-  // These are direct children of the hero block with data-block-name="button"
-  const buttonBlockItems = [...block.children].filter(
-    (child) => child.getAttribute('data-block-name') === 'button',
-  );
+function processCTAsFromModel(block) {
+  const rows = [...block.children];
+  // Row order: 0=image, 1=imageAlt, 2=heroText, 3=classes, 4–7=cta1, 8–11=cta2
+  if (rows.length < 12) return;
 
-  buttonBlockItems.forEach((buttonBlock) => {
-    // Extract button fields from the block structure
-    // Each field is a div child of the button block
-    const rows = [...buttonBlock.querySelectorAll(':scope > div')];
-    let link = '';
-    let linkText = '';
-    let linkTitle = '';
-    let linkType = '';
+  const cta1 = extractCTAData(rows[4], rows[5], rows[6], rows[7]);
+  const cta2 = extractCTAData(rows[8], rows[9], rows[10], rows[11]);
 
-    rows.forEach((row, index) => {
-      const text = row.textContent?.trim() || '';
-      const linkElement = row.querySelector('a');
+  const buttons = [];
+  const btn1 = buildCTAButton(cta1.href, cta1.text, cta1.target, cta1.style);
+  if (btn1) buttons.push(btn1);
+  const btn2 = buildCTAButton(cta2.href, cta2.text, cta2.target, cta2.style);
+  if (btn2) buttons.push(btn2);
 
-      if (index === 0 && linkElement) {
-        // First row: link (aem-content)
-        link = linkElement.href || linkElement.textContent?.trim() || '';
-      } else if (index === 1) {
-        // Second row: linkText
-        linkText = text;
-      } else if (index === 2) {
-        // Third row: linkTitle
-        linkTitle = text;
-      } else if (index === 3) {
-        // Fourth row: linkType
-        linkType = text;
-      }
-    });
+  if (buttons.length === 0) return;
 
-    // Create button element if we have link and text
-    if (link && linkText) {
-      const button = document.createElement('a');
-      button.href = link;
-      button.className = 'button';
-
-      // Wrap label text in a span element
-      const span = document.createElement('span');
-      span.textContent = linkText;
-      button.appendChild(span);
-      if (linkTitle) {
-        button.title = linkTitle;
-      }
-      if (linkType === 'primary') {
-        button.classList.add('primary');
-      } else if (linkType === 'secondary') {
-        button.classList.add('secondary');
-      }
-
-      // Wrap button in container (required for styling)
-      const buttonContainer = document.createElement('p');
-      buttonContainer.classList.add('button-container');
-      buttonContainer.appendChild(button);
-
-      // Preserve Universal Editor attributes by removing only child divs, not the block itself
-      // Remove all child divs but keep the buttonBlock's data attributes
-      const childDivs = [...buttonBlock.querySelectorAll(':scope > div')];
-      childDivs.forEach((div) => div.remove());
-
-      // Create a single div wrapper to maintain structure (Universal Editor expects this)
-      // This structure helps Universal Editor identify and highlight the button correctly
-      const wrapperDiv = document.createElement('div');
-      wrapperDiv.appendChild(buttonContainer);
-
-      // Add the collapsed button container within the wrapper
-      buttonBlock.appendChild(wrapperDiv);
-
-      // Remove any remaining text elements that are siblings (they should be processed/removed)
-      // This ensures Universal Editor highlights the button, not a text element below it
-      const remainingTextDivs = [...buttonBlock.querySelectorAll(':scope > div')].filter((div) => {
-        const p = div.querySelector('p');
-        return p && p.textContent.trim() === 'text' && !p.querySelector('a.button');
-      });
-      remainingTextDivs.forEach((div) => div.remove());
-
-      // Ensure the button block itself is set up for proper Universal Editor selection
-      // The button block should contain only the button wrapper, making selection clear
-      buttonBlock.setAttribute('data-block-status', 'loaded');
-    }
+  const container = document.createElement('div');
+  container.classList.add('hero-buttons');
+  buttons.forEach((btn) => {
+    const p = document.createElement('p');
+    p.classList.add('button-container');
+    p.appendChild(btn);
+    container.appendChild(p);
   });
 
-  // Don't move button blocks - keep them in place so Universal Editor can track them
-  // Instead, just add a wrapper class to group them visually via CSS
-  const buttonBlocks = [...block.children].filter(
-    (child) => child.getAttribute('data-block-name') === 'button',
-  );
-
-  if (buttonBlocks.length > 0) {
-    // Add a class to the button blocks for styling, but don't move them
-    buttonBlocks.forEach((buttonBlock) => {
-      buttonBlock.classList.add('hero-button-block');
-    });
+  const contentArea = block.querySelector('.hero-content');
+  if (contentArea) {
+    contentArea.appendChild(container);
+  } else {
+    block.appendChild(container);
   }
 
-  // Clean up any empty paragraphs left behind
-  block.querySelectorAll('p:empty').forEach((p) => p.remove());
+  // Remove CTA rows (indices 4–11) in reverse order to preserve indices
+  for (let i = 11; i >= 4; i -= 1) {
+    if (rows[i] && rows[i].parentElement === block) {
+      rows[i].remove();
+    }
+  }
 }
 
 /**
@@ -202,22 +200,6 @@ function addSemanticClasses(block) {
   });
 }
 
-function processButtonText(block) {
-  block.querySelectorAll('.button-container').forEach((buttonContainer) => {
-    const textContentElement = buttonContainer.parentElement.nextElementSibling.querySelector('p');
-    const textContent = textContentElement.textContent.trim();
-    const button = buttonContainer.querySelector('a');
-
-    // Wrap label text in a span element
-    const span = document.createElement('span');
-    span.textContent = textContent;
-    button.textContent = '';
-    button.appendChild(span);
-
-    textContentElement.remove();
-  });
-}
-
 /**
  * Entry point to hero block's JavaScript
  * Must be exported as default and accept a block's DOM element
@@ -233,9 +215,6 @@ export default function decorate(block) {
   // Add semantic CSS classes
   addSemanticClasses(block);
 
-  // Process button components (this creates the button structure)
-  processButtons(block);
-
-  // Sync button text fields with text content of button elements (after buttons are created)
-  processButtonText(block);
+  // Build CTAs from model fields (cta1/cta2: link, text, target, style)
+  processCTAsFromModel(block);
 }

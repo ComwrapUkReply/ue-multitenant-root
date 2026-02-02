@@ -96,9 +96,7 @@
   },
   {
     "id": "hero",
-    "components": [
-      "button"
-    ]
+    "components": []
   },
   {
     "id": "table",

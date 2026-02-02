@@ -1042,6 +1042,11 @@
     "id": "hero",
     "fields": [
       {
+        "component": "tab",
+        "label": "Content",
+        "name": "hero-content"
+      },
+      {
         "component": "reference",
         "valueType": "string",
         "name": "image",
@@ -1077,6 +1082,123 @@
           }
         ],
         "value": "white"
+      },
+      {
+        "component": "tab",
+        "label": "CTAs",
+        "name": "hero-ctas"
+      },
+      {
+        "component": "aem-content",
+        "name": "cta1_link",
+        "label": "CTA 1 Link"
+      },
+      {
+        "component": "text",
+        "name": "cta1_text",
+        "label": "CTA 1 Text",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "cta1_target",
+        "label": "CTA 1 Target",
+        "options": [
+          {
+            "name": "Same Window",
+            "value": ""
+          },
+          {
+            "name": "New Tab",
+            "value": "_blank"
+          }
+        ],
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "cta1_style",
+        "label": "CTA 1 Style",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Secondary",
+            "value": "secondary"
+          },
+          {
+            "name": "Primary Outline",
+            "value": "primary Outline"
+          },
+          {
+            "name": "Secondary Outline",
+            "value": "secondary Outline"
+          }
+        ],
+        "value": ""
+      },
+      {
+        "component": "aem-content",
+        "name": "cta2_link",
+        "label": "CTA 2 Link"
+      },
+      {
+        "component": "text",
+        "name": "cta2_text",
+        "label": "CTA 2 Text",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "cta2_target",
+        "label": "CTA 2 Target",
+        "options": [
+          {
+            "name": "Same Window",
+            "value": ""
+          },
+          {
+            "name": "New Tab",
+            "value": "_blank"
+          }
+        ],
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "cta2_style",
+        "label": "CTA 2 Style",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Secondary",
+            "value": "secondary"
+          },
+          {
+            "name": "Primary Outline",
+            "value": "primary Outline"
+          },
+          {
+            "name": "Secondary Outline",
+            "value": "secondary Outline"
+          }
+        ],
+        "value": ""
       }
     ]
   },
