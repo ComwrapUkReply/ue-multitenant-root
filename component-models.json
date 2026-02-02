@@ -1089,16 +1089,76 @@
         "name": "hero-ctas"
       },
       {
+        "component": "select",
+        "name": "ctaCount",
+        "label": "Number of buttons",
+        "options": [
+          {
+            "name": "0 buttons",
+            "value": "0"
+          },
+          {
+            "name": "1 button",
+            "value": "1"
+          },
+          {
+            "name": "2 buttons",
+            "value": "2"
+          }
+        ],
+        "value": "0"
+      },
+      {
         "component": "aem-content",
         "name": "cta1_link",
-        "label": "CTA 1 Link"
+        "label": "CTA 1 Link",
+        "condition": {
+          "or": [
+            {
+              "===": [
+                {
+                  "var": "ctaCount"
+                },
+                "1"
+              ]
+            },
+            {
+              "===": [
+                {
+                  "var": "ctaCount"
+                },
+                "2"
+              ]
+            }
+          ]
+        }
       },
       {
         "component": "text",
         "name": "cta1_text",
         "label": "CTA 1 Text",
         "valueType": "string",
-        "value": ""
+        "value": "",
+        "condition": {
+          "or": [
+            {
+              "===": [
+                {
+                  "var": "ctaCount"
+                },
+                "1"
+              ]
+            },
+            {
+              "===": [
+                {
+                  "var": "ctaCount"
+                },
+                "2"
+              ]
+            }
+          ]
+        }
       },
       {
         "component": "select",
@@ -1114,7 +1174,27 @@
             "value": "_blank"
           }
         ],
-        "value": ""
+        "value": "",
+        "condition": {
+          "or": [
+            {
+              "===": [
+                {
+                  "var": "ctaCount"
+                },
+                "1"
+              ]
+            },
+            {
+              "===": [
+                {
+                  "var": "ctaCount"
+                },
+                "2"
+              ]
+            }
+          ]
+        }
       },
       {
         "component": "select",
@@ -1142,19 +1222,55 @@
             "value": "secondary Outline"
           }
         ],
-        "value": ""
+        "value": "",
+        "condition": {
+          "or": [
+            {
+              "===": [
+                {
+                  "var": "ctaCount"
+                },
+                "1"
+              ]
+            },
+            {
+              "===": [
+                {
+                  "var": "ctaCount"
+                },
+                "2"
+              ]
+            }
+          ]
+        }
       },
       {
         "component": "aem-content",
         "name": "cta2_link",
-        "label": "CTA 2 Link"
+        "label": "CTA 2 Link",
+        "condition": {
+          "===": [
+            {
+              "var": "ctaCount"
+            },
+            "2"
+          ]
+        }
       },
       {
         "component": "text",
         "name": "cta2_text",
         "label": "CTA 2 Text",
         "valueType": "string",
-        "value": ""
+        "value": "",
+        "condition": {
+          "===": [
+            {
+              "var": "ctaCount"
+            },
+            "2"
+          ]
+        }
       },
       {
         "component": "select",
@@ -1170,7 +1286,15 @@
             "value": "_blank"
           }
         ],
-        "value": ""
+        "value": "",
+        "condition": {
+          "===": [
+            {
+              "var": "ctaCount"
+            },
+            "2"
+          ]
+        }
       },
       {
         "component": "select",
@@ -1198,7 +1322,15 @@
             "value": "secondary Outline"
           }
         ],
-        "value": ""
+        "value": "",
+        "condition": {
+          "===": [
+            {
+              "var": "ctaCount"
+            },
+            "2"
+          ]
+        }
       }
     ]
   },

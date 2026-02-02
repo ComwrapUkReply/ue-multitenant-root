@@ -82,6 +82,18 @@ function buildCTAButton(href, text, target, styleValue) {
 }
 
 /**
+ * Return true if the link is an image reference (used to skip image row when finding CTA links)
+ * @param {HTMLAnchorElement} link - Anchor element
+ * @returns {boolean}
+ */
+function isImageLink(link) {
+  const href = link.href || '';
+  return href.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)
+    || href.includes('/adobe/assets/')
+    || href.includes('adobeaemcloud.com');
+}
+
+/**
  * Extract CTA data from a row (link from <a>, text from textContent)
  * @param {Element} linkRow - Row containing ctaN_link (may have <a>)
  * @param {Element} textRow - Row containing ctaN_text
@@ -104,25 +116,60 @@ function extractCTAData(linkRow, textRow, targetRow, styleRow) {
 }
 
 /**
- * Process CTAs from hero model fields (rows 4–11: cta1 and cta2)
- * Builds two CTA buttons, appends to hero content, removes CTA rows from DOM
+ * Process CTAs from hero model fields. Finds CTA rows by scanning for non-image link rows,
+ * respects ctaCount (0/1/2), builds buttons and removes CTA rows from DOM.
  * @param {HTMLElement} block - The hero block DOM element
  */
 function processCTAsFromModel(block) {
   const rows = [...block.children];
-  // Row order: 0=image, 1=imageAlt, 2=heroText, 3=classes, 4–7=cta1, 8–11=cta2
-  if (rows.length < 12) return;
+  // Find rows that contain a non-image link (these are cta1_link, cta2_link)
+  const linkRowIndices = rows
+    .map((row, i) => i)
+    .filter((i) => {
+      const a = rows[i].querySelector('a');
+      return a && !isImageLink(a);
+    });
 
-  const cta1 = extractCTAData(rows[4], rows[5], rows[6], rows[7]);
-  const cta2 = extractCTAData(rows[8], rows[9], rows[10], rows[11]);
+  // When ctaCount is "0", CTA fields may be hidden so no link rows exist; still remove ctaCount row
+  if (linkRowIndices.length === 0) {
+    const ctaCountOnlyRow = rows.find((row, i) => i >= 4 && /^[012]$/.test(row.textContent?.trim()));
+    if (ctaCountOnlyRow?.parentElement === block) {
+      ctaCountOnlyRow.remove();
+    }
+    return;
+  }
+
+  // ctaCount row is immediately before the first CTA link row
+  const ctaCountRowIndex = linkRowIndices[0] - 1;
+  const ctaCount = ctaCountRowIndex >= 0
+    ? String(rows[ctaCountRowIndex].textContent?.trim() || '0')
+    : '0';
+  let wanted = 0;
+  if (ctaCount === '1') wanted = 1;
+  else if (ctaCount === '2') wanted = 2;
 
   const buttons = [];
-  const btn1 = buildCTAButton(cta1.href, cta1.text, cta1.target, cta1.style);
-  if (btn1) buttons.push(btn1);
-  const btn2 = buildCTAButton(cta2.href, cta2.text, cta2.target, cta2.style);
-  if (btn2) buttons.push(btn2);
+  let lastCtaRowIndex = ctaCountRowIndex;
 
-  if (buttons.length === 0) return;
+  for (let n = 0; n < wanted && n < linkRowIndices.length; n += 1) {
+    const linkIdx = linkRowIndices[n];
+    const textIdx = linkIdx + 1;
+    const targetIdx = linkIdx + 2;
+    const styleIdx = linkIdx + 3;
+    if (styleIdx >= rows.length) break;
+    const cta = extractCTAData(rows[linkIdx], rows[textIdx], rows[targetIdx], rows[styleIdx]);
+    const btn = buildCTAButton(cta.href, cta.text, cta.target, cta.style);
+    if (btn) buttons.push(btn);
+    lastCtaRowIndex = styleIdx;
+  }
+
+  if (buttons.length === 0) {
+    // Remove ctaCount row so "0"/"1"/"2" doesn't show as raw text
+    if (ctaCountRowIndex >= 0 && rows[ctaCountRowIndex]?.parentElement === block) {
+      rows[ctaCountRowIndex].remove();
+    }
+    return;
+  }
 
   const container = document.createElement('div');
   container.classList.add('hero-buttons');
@@ -140,8 +187,8 @@ function processCTAsFromModel(block) {
     block.appendChild(container);
   }
 
-  // Remove CTA rows (indices 4–11) in reverse order to preserve indices
-  for (let i = 11; i >= 4; i -= 1) {
+  // Remove CTA section rows: from ctaCount row through last CTA row used
+  for (let i = lastCtaRowIndex; i >= ctaCountRowIndex; i -= 1) {
     if (rows[i] && rows[i].parentElement === block) {
       rows[i].remove();
     }
