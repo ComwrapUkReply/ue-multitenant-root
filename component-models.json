@@ -553,22 +553,17 @@
     "fields": [
       {
         "component": "aem-content",
-        "name": "custombutton-link",
-        "label": "Link"
+        "name": "custom-button-link",
+        "label": "Button Link"
       },
       {
         "component": "text",
-        "name": "custombutton-link-text",
-        "label": "Text"
-      },
-      {
-        "component": "text",
-        "name": "custombutton-link-title",
-        "label": "Title"
+        "name": "custom-button-label",
+        "label": "Button Label"
       },
       {
         "component": "select",
-        "name": "custombutton-link-target",
+        "name": "custom-button-target",
         "label": "Link Target",
         "options": [
           {
@@ -582,9 +577,11 @@
         ]
       },
       {
-        "component": "select",
-        "name": "custombutton-type",
-        "label": "Button Type",
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Style",
+        "valueType": "string",
+        "maxSize": 2,
         "options": [
           {
             "name": "Link",
@@ -603,37 +600,6 @@
             "value": "telephone"
           }
         ]
-      },
-      {
-        "component": "select",
-        "name": "custombutton-style",
-        "label": "Button Style",
-        "options": [
-          {
-            "name": "Primary",
-            "value": "primary"
-          },
-          {
-            "name": "Secondary",
-            "value": "secondary"
-          },
-          {
-            "name": "Tertiary",
-            "value": "tertiary"
-          },
-          {
-            "name": "Text",
-            "value": "text"
-          }
-        ]
-      },
-      {
-        "component": "reference",
-        "name": "custombutton-icon",
-        "label": "Icon Picker",
-        "validation": {
-          "rootPath": "/content/ue-multitenant-root"
-        }
       }
     ]
   },
