@@ -1,19 +1,19 @@
 /* Carousel Base Styles - Mobile First */
 .carousel {
   position: relative;
-  width: 100vw; /* Full bleed width */
-  margin-left: calc(-50vw + 50%); /* Center and extend full width */
+  width: 100%; 
+  margin: 0 auto;
   overflow: hidden;
   clip-path: inset(0 -100vmax);
+  border-radius: var(--border-radius-md);
+  padding-bottom: var(--space-100);
 }
 
 .carousel-container {
   position: relative;
   width: 100%;
-
-  /* height: 100%; */
-  max-width: 1920px; /* Max container width from Figma */
-  margin: 0 auto; /* Center the container */
+  max-width: 1920px; 
+  margin: 0 auto; 
 }
 
 .carousel-track {
@@ -72,6 +72,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: var(--border-radius-md);
 }
 
 .carousel-slide-content h1,
@@ -116,23 +117,6 @@
   justify-content: center;
 }
 
-.carousel.dark {
-    background-color: var(--color-primary-900);
-  
-    .carousel-slide-content h1,
-    .carousel-slide-content h2,
-    .carousel-slide-content h3,
-    .carousel-slide-content h4,
-    .carousel-slide-content h5,
-    .carousel-slide-content h6 {
-      color: var(--color-white);
-    }
-  
-    .carousel-slide-content p {
-        color: var(--color-white);
-      }
-  }
-
 /* Navigation Arrows - Hidden by default, will be shown via variations */
 .carousel-arrows {
   position: absolute;
@@ -145,47 +129,49 @@
 .carousel-arrow {
   width: 48px;
   height: 48px;
-  background-color: var(--color-grey-100);
+  background: transparent;
   border: none;
-  border-radius: var(--border-radius-xl);
   cursor: pointer;
   display: none;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   font-size: var(--font-size-base);
   position: absolute;
+  outline: none;
 }
 
 /* Mobile arrows - positioned within controls container */
 .carousel-arrow-mobile {
-  position: static;
   display: flex;
 }
 
-.carousel-arrow:hover {
-  background-color: rgb(206 212 224 / 80%);
-}
-
 .carousel-prev {
-  left: 10px;
+  left: -50px;
 }
 
-.carousel-prev::before {
-  content: "<";
-  font-size: var(--font-size-h5);
-  color: var(--color-secondary);
+.carousel-prev::before, .carousel-next::before {
+  display: block;
+  content: '';
+  border: 1px var(--color-primary) solid;
+  border-bottom: 0;
+  border-left: 0;
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 3px);
+  transform: translate(-50%, -50%) rotate(-135deg);
+  width: 20px;
+  height: 20px;
+  border-width: 1px;
 }
 
 .carousel-next {
-  right: 10px;
+  right: -50px;
 }
 
 .carousel-next::before {
-  content: ">";
-  font-size: var(--font-size-h5);
-  color: var(--color-secondary);
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 /* Carousel Controls Container */
@@ -204,7 +190,7 @@
 .carousel-play-pause {
   width: 48px;
   height: 48px;
-  background-color: var(--color-grey-100);
+  background-color: var(--color-primary);
   border: none;
   border-radius: var(--border-radius-xl);
   cursor: pointer;
@@ -215,17 +201,25 @@
   flex-shrink: 0;
 }
 
-.carousel-play-pause:hover {
-  background-color: rgb(206 212 224 / 80%);
-}
-
 .carousel-play-icon,
 .carousel-pause-icon {
-  font-size: var(--font-size-base);
-  color: var(--color-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-white);
+}
+
+.carousel-play-icon {
+  width: 20px;
+}
+
+.carousel-play-icon svg,
+.carousel-pause-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 /* Dots Navigation */
@@ -234,7 +228,7 @@
   align-items: center;
   gap: var(--space-12);
   padding: var(--space-12) var(--space-16);
-  background-color: var(--color-grey-100);
+  background-color: var(--color-primary);
   border-radius: var(--border-radius-xl);
   height: 48px;
   min-height: 48px;
@@ -244,7 +238,7 @@
 .carousel-progress-bar {
   width: 40px;
   height: 8px;
-  background-color: var(--color-secondary);
+  background-color: var(--color-primary);
   border-radius: var(--border-radius-xl);
   position: relative;
   overflow: hidden;
@@ -268,7 +262,7 @@
   padding: 0;
   border-radius: 50%;
   opacity: 0.5;
-  background-color: var(--color-secondary);
+  background-color: var(--color-white);
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
@@ -281,7 +275,7 @@
 
 .carousel-dot.active {
   opacity: 1;
-  background-color: var(--color-secondary);
+  background-color: var(--color-white);
   transform: scale(1.1);
 }
 
@@ -341,6 +335,41 @@
   gap: var(--space-8);
 }
 
+.carousel.dark {
+  background-color: var(--color-primary);
+  
+  .carousel-slide-content h1,
+  .carousel-slide-content h2,
+  .carousel-slide-content h3,
+  .carousel-slide-content h4,
+  .carousel-slide-content h5,
+  .carousel-slide-content h6 {
+    color: var(--color-white);
+  }
+  
+  .carousel-slide-content p {
+    color: var(--color-white);
+  }
+}
+
+.carousel.dark .carousel-arrow::before {
+  border-color: var(--color-white);
+}
+
+.carousel.dark .carousel-controls {
+  bottom: -64px;
+}
+
+.carousel.dark .carousel-play-pause {
+  background-color: var(--color-white);
+  color: var(--color-primary);
+}
+
+.carousel.dark .carousel-play-icon,
+.carousel.dark .carousel-pause-icon {
+  color: var(--color-primary);
+}
+
 /* Desktop Styles */
 @media (width >= 900px) {
   /* Show desktop arrows on desktop */
@@ -366,6 +395,19 @@
     justify-content: center;
   }
 
+  .carousel-prev {
+    left: 10px;
+  }
+
+  .carousel-next {
+    right: 10px;
+  }
+
+  .carousel-prev::before, .carousel-next::before {
+    width: 25px;
+    height: 25px;
+  }
+  
   .carousel-slide-content {
     flex: 1;
     order: 1;
@@ -387,6 +429,20 @@
     max-height: 65vh;
     height: auto;
   }
+
+    /* Focus styles for accessibility */
+  .carousel-arrow:focus,
+  .carousel-dot:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .carousel.dark 
+  .carousel-arrow:focus,
+  .carousel-dot:focus {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
 }
 
 /* Accessibility and Motion */
@@ -399,13 +455,6 @@
   .carousel-dot {
     transition: none;
   }
-}
-
-/* Focus styles for accessibility */
-.carousel-arrow:focus,
-.carousel-dot:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
 }
 
 /* Loading state */
