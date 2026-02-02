@@ -136,7 +136,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  color: var(--color-white);
+  color: var(--color-primary);
   font-size: var(--font-size-base);
   position: absolute;
   outline: none;
@@ -144,12 +144,11 @@
 
 /* Mobile arrows - positioned within controls container */
 .carousel-arrow-mobile {
-  position: static;
   display: flex;
 }
 
 .carousel-prev {
-  left: 10px;
+  left: -50px;
 }
 
 .carousel-prev::before, .carousel-next::before {
@@ -162,13 +161,13 @@
   top: 50%;
   left: calc(50% + 3px);
   transform: translate(-50%, -50%) rotate(-135deg);
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   border-width: 1px;
 }
 
 .carousel-next {
-  right: 10px;
+  right: -50px;
 }
 
 .carousel-next::before {
@@ -204,11 +203,23 @@
 
 .carousel-play-icon,
 .carousel-pause-icon {
-  font-size: var(--font-size-base);
-  color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-white);
+}
+
+.carousel-play-icon {
+  width: 20px;
+}
+
+.carousel-play-icon svg,
+.carousel-pause-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 /* Dots Navigation */
@@ -354,6 +365,7 @@
   color: var(--color-primary);
 }
 
+.carousel.dark .carousel-play-icon,
 .carousel.dark .carousel-pause-icon {
   color: var(--color-primary);
 }
@@ -383,6 +395,19 @@
     justify-content: center;
   }
 
+  .carousel-prev {
+    left: 10px;
+  }
+
+  .carousel-next {
+    right: 10px;
+  }
+
+  .carousel-prev::before, .carousel-next::before {
+    width: 25px;
+    height: 25px;
+  }
+  
   .carousel-slide-content {
     flex: 1;
     order: 1;
@@ -404,6 +429,20 @@
     max-height: 65vh;
     height: auto;
   }
+
+    /* Focus styles for accessibility */
+  .carousel-arrow:focus,
+  .carousel-dot:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .carousel.dark 
+  .carousel-arrow:focus,
+  .carousel-dot:focus {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
 }
 
 /* Accessibility and Motion */
@@ -416,20 +455,6 @@
   .carousel-dot {
     transition: none;
   }
-}
-
-/* Focus styles for accessibility */
-.carousel-arrow:focus,
-.carousel-dot:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-.carousel.dark 
-.carousel-arrow:focus,
-.carousel-dot:focus {
-  outline: 2px solid var(--color-white);
-  outline-offset: 2px;
 }
 
 /* Loading state */
