@@ -12,51 +12,19 @@ const getCell = (row) => (row?.querySelector?.(':scope > div') ?? row);
  * @param {Element} block The video hero block element
  */
 export default function decorate(block) {
-  /** Parse boolean from row cell (e.g. "true" / "false" from authoring) */
-  const parseBoolFromRow = (row, defaultValue = false) => {
-    if (!row) return defaultValue;
-    const cell = getCell(row);
-    const text = cell?.textContent?.trim()?.toLowerCase();
-    if (text === 'true') return true;
-    if (text === 'false') return false;
-    return defaultValue;
-  };
-
-  /** True if row cell content looks like a boolean (for backward compatibility) */
-  const rowLooksLikeBoolean = (row) => {
-    const text = getCell(row)?.textContent?.trim()?.toLowerCase();
-    return text === 'true' || text === 'false';
-  };
-
-  const rows = [...block.children];
-  const hasVideoOptionRows = rows.length >= 10 && rowLooksLikeBoolean(rows[1]);
-
-  // Row indices: with option rows 0=video, 1–4=options, 5=heading, 6=subheading, 7=primary, 8=secondary, 9=badge
-  // Without (legacy): 0=video, 1=heading, 2=subheading, 3=primary, 4=secondary, 5=badge
-  const idx = {
-    video: 0,
-    heading: hasVideoOptionRows ? 5 : 1,
-    subheading: hasVideoOptionRows ? 6 : 2,
-    primary: hasVideoOptionRows ? 7 : 3,
-    secondary: hasVideoOptionRows ? 8 : 4,
-    badge: hasVideoOptionRows ? 9 : 5,
-  };
-
   let videoSrc = null;
-  let videoAutoplay = true;
-  let videoLoop = true;
-  let videoMuted = true;
-  let videoControls = false;
   let headingHtml = null;
   let subheadingText = null;
   let primaryBtn = null;
   let secondaryBtn = null;
   let badgeImg = null;
 
+  const rows = [...block.children];
+
   // Row 0: Video (reference renders as link or picture)
-  if (rows[idx.video]) {
-    const videoLink = rows[idx.video].querySelector('a');
-    const videoSource = rows[idx.video].querySelector('video source, source[type*="video"]');
+  if (rows[0]) {
+    const videoLink = rows[0].querySelector('a');
+    const videoSource = rows[0].querySelector('video source, source[type*="video"]');
     if (videoLink) {
       videoSrc = videoLink.href;
     } else if (videoSource?.src) {
@@ -64,17 +32,9 @@ export default function decorate(block) {
     }
   }
 
-  // Video options (rows 1–4 when present)
-  if (hasVideoOptionRows) {
-    videoAutoplay = parseBoolFromRow(rows[1], true);
-    videoLoop = parseBoolFromRow(rows[2], true);
-    videoMuted = parseBoolFromRow(rows[3], true);
-    videoControls = parseBoolFromRow(rows[4], false);
-  }
-
-  // Heading (richtext)
-  if (rows[idx.heading]) {
-    const row = rows[idx.heading];
+  // Row 1: Heading (richtext)
+  if (rows[1]) {
+    const row = rows[1];
     const cell = getCell(row);
     const headingEl = row.querySelector('[data-richtext-prop="heading"]')
       || cell?.querySelector('h1, h2, h3, h4, h5, h6');
@@ -85,39 +45,39 @@ export default function decorate(block) {
     }
   }
 
-  // Subheading
-  if (rows[idx.subheading]) {
-    const row = rows[idx.subheading];
+  // Row 2: Subheading
+  if (rows[2]) {
+    const row = rows[2];
     const cell = getCell(row);
     const subheadingEl = row.querySelector('[data-aue-prop="subheading"]') || cell;
     subheadingText = subheadingEl?.textContent?.trim() || '';
   }
 
-  // Primary Button
-  if (rows[idx.primary]) {
-    const primaryLink = rows[idx.primary].querySelector('[data-aue-prop="primaryButtonText"]')
-      || rows[idx.primary].querySelector('.button-container a, a.button')
-      || rows[idx.primary].querySelector('a');
+  // Row 3: Primary Button
+  if (rows[3]) {
+    const primaryLink = rows[3].querySelector('[data-aue-prop="primaryButtonText"]')
+      || rows[3].querySelector('.button-container a, a.button')
+      || rows[3].querySelector('a');
     if (primaryLink) {
       primaryBtn = primaryLink.cloneNode(true);
     }
   }
 
-  // Secondary Button
-  if (rows[idx.secondary]) {
-    const secondaryLink = rows[idx.secondary].querySelector('[data-aue-prop="secondaryButtonText"]')
-      || rows[idx.secondary].querySelector('.button-container a, a.button')
-      || rows[idx.secondary].querySelector('a');
+  // Row 4: Secondary Button
+  if (rows[4]) {
+    const secondaryLink = rows[4].querySelector('[data-aue-prop="secondaryButtonText"]')
+      || rows[4].querySelector('.button-container a, a.button')
+      || rows[4].querySelector('a');
     if (secondaryLink) {
       secondaryBtn = secondaryLink.cloneNode(true);
     }
   }
 
-  // Badge
-  if (rows[idx.badge]) {
-    const badgeEl = rows[idx.badge].querySelector('[data-aue-prop="badge"]')
-      || rows[idx.badge].querySelector('img')
-      || rows[idx.badge].querySelector('picture img');
+  // Row 5: Badge
+  if (rows[5]) {
+    const badgeEl = rows[5].querySelector('[data-aue-prop="badge"]')
+      || rows[5].querySelector('img')
+      || rows[5].querySelector('picture img');
     if (badgeEl) {
       badgeImg = badgeEl;
     }
@@ -130,20 +90,15 @@ export default function decorate(block) {
   const videoContainer = document.createElement('div');
   videoContainer.className = 'video-hero-background';
 
-  // Create video element – apply author-configurable options
+  // Create video element (autoplay, muted, loop; no native controls)
   const video = document.createElement('video');
   video.className = 'video-hero-video';
+  video.setAttribute('autoplay', '');
+  video.setAttribute('muted', '');
+  video.setAttribute('loop', '');
   video.setAttribute('playsinline', '');
   video.setAttribute('aria-hidden', 'true');
   video.setAttribute('tabindex', '-1');
-  video.toggleAttribute('autoplay', videoAutoplay);
-  video.toggleAttribute('loop', videoLoop);
-  video.toggleAttribute('muted', videoMuted);
-  video.toggleAttribute('controls', videoControls);
-  video.autoplay = videoAutoplay;
-  video.loop = videoLoop;
-  video.muted = videoMuted;
-  video.controls = videoControls;
 
   // Add source
   if (videoSrc) {
@@ -261,16 +216,14 @@ export default function decorate(block) {
     block.appendChild(badge);
   }
 
-  // Start playback when autoplay is on (user can use play button if blocked)
+  // Attempt autoplay (user can use play button if blocked)
   if (videoSrc) {
-    if (videoAutoplay) {
-      video.play().catch(() => {});
-    }
+    video.play().catch(() => {});
 
-    // Pause when off-screen; resume when visible only if autoplay is on
+    // Pause when off-screen; resume when visible
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && videoAutoplay) {
+        if (entry.isIntersecting) {
           video.play().catch(() => {});
         } else {
           video.pause();
@@ -286,7 +239,7 @@ export default function decorate(block) {
       if (e.matches) {
         video.pause();
         video.currentTime = 0;
-      } else if (videoAutoplay) {
+      } else {
         video.play().catch(() => {});
       }
     };
