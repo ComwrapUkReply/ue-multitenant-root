@@ -196,7 +196,7 @@
 
 .video-hero-badge img {
   max-width: var(--space-160);
-  height: auto;
+  height: 120px;
 }
 
 /* Tablet – project breakpoint-md (768px) */
