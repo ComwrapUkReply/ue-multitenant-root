@@ -7,11 +7,31 @@
 /** Get the first cell (inner div) of a row for content extraction */
 const getCell = (row) => (row?.querySelector?.(':scope > div') ?? row);
 
+/** Parse boolean from row (same pattern as video.js: p or cell text "true"/"false") */
+function parseBooleanFromRow(row, defaultValue = false) {
+  if (!row) return defaultValue;
+  const text = (row.querySelector('p')?.textContent?.trim() || getCell(row)?.textContent?.trim() || '').toLowerCase();
+  if (text === 'true') return true;
+  if (text === 'false') return false;
+  return defaultValue;
+}
+
 /**
  * Loads and decorates the video hero block
  * @param {Element} block The video hero block element
  */
 export default function decorate(block) {
+  const rows = [...block.children];
+
+  // New model: 0=video, 1=heading, 2=subheading, 3=badge, 4=badgeAlt, 5=tab, 6–9=CTAs, 10=tab, 11–14=booleans
+  // Legacy (fewer rows): 0=video, 1=heading, 2=subheading, 3=primary, 4=secondary, 5=badge
+  const hasNewStructure = rows.length >= 15;
+  const idx = {
+    badge: hasNewStructure ? 3 : 5,
+    primary: hasNewStructure ? 6 : 3,
+    secondary: hasNewStructure ? 8 : 4,
+  };
+
   let videoSrc = null;
   let headingHtml = null;
   let subheadingText = null;
@@ -19,7 +39,10 @@ export default function decorate(block) {
   let secondaryBtn = null;
   let badgeImg = null;
 
-  const rows = [...block.children];
+  const videoAutoplay = parseBooleanFromRow(rows[11], true);
+  const videoLoop = parseBooleanFromRow(rows[12], true);
+  const videoMuted = parseBooleanFromRow(rows[13], true);
+  const videoControls = parseBooleanFromRow(rows[14], false);
 
   // Row 0: Video (reference renders as link or picture)
   if (rows[0]) {
@@ -53,33 +76,33 @@ export default function decorate(block) {
     subheadingText = subheadingEl?.textContent?.trim() || '';
   }
 
-  // Row 3: Primary Button
-  if (rows[3]) {
-    const primaryLink = rows[3].querySelector('[data-aue-prop="primaryButtonText"]')
-      || rows[3].querySelector('.button-container a, a.button')
-      || rows[3].querySelector('a');
+  // Badge (row 3 in new structure, row 5 in legacy)
+  if (rows[idx.badge]) {
+    const badgeEl = rows[idx.badge].querySelector('[data-aue-prop="badge"]')
+      || rows[idx.badge].querySelector('img')
+      || rows[idx.badge].querySelector('picture img');
+    if (badgeEl) {
+      badgeImg = badgeEl;
+    }
+  }
+
+  // Primary Button
+  if (rows[idx.primary]) {
+    const primaryLink = rows[idx.primary].querySelector('[data-aue-prop="primaryButtonText"]')
+      || rows[idx.primary].querySelector('.button-container a, a.button')
+      || rows[idx.primary].querySelector('a');
     if (primaryLink) {
       primaryBtn = primaryLink.cloneNode(true);
     }
   }
 
-  // Row 4: Secondary Button
-  if (rows[4]) {
-    const secondaryLink = rows[4].querySelector('[data-aue-prop="secondaryButtonText"]')
-      || rows[4].querySelector('.button-container a, a.button')
-      || rows[4].querySelector('a');
+  // Secondary Button
+  if (rows[idx.secondary]) {
+    const secondaryLink = rows[idx.secondary].querySelector('[data-aue-prop="secondaryButtonText"]')
+      || rows[idx.secondary].querySelector('.button-container a, a.button')
+      || rows[idx.secondary].querySelector('a');
     if (secondaryLink) {
       secondaryBtn = secondaryLink.cloneNode(true);
-    }
-  }
-
-  // Row 5: Badge
-  if (rows[5]) {
-    const badgeEl = rows[5].querySelector('[data-aue-prop="badge"]')
-      || rows[5].querySelector('img')
-      || rows[5].querySelector('picture img');
-    if (badgeEl) {
-      badgeImg = badgeEl;
     }
   }
 
@@ -90,15 +113,20 @@ export default function decorate(block) {
   const videoContainer = document.createElement('div');
   videoContainer.className = 'video-hero-background';
 
-  // Create video element (autoplay, muted, loop; no native controls)
+  // Create video element – apply author options (same pattern as video.js)
   const video = document.createElement('video');
   video.className = 'video-hero-video';
-  video.setAttribute('autoplay', '');
-  video.setAttribute('muted', '');
-  video.setAttribute('loop', '');
   video.setAttribute('playsinline', '');
   video.setAttribute('aria-hidden', 'true');
   video.setAttribute('tabindex', '-1');
+  video.toggleAttribute('autoplay', videoAutoplay);
+  video.toggleAttribute('loop', videoLoop);
+  video.toggleAttribute('muted', videoMuted);
+  video.toggleAttribute('controls', videoControls);
+  video.autoplay = videoAutoplay;
+  video.loop = videoLoop;
+  video.muted = videoMuted;
+  video.controls = videoControls;
 
   // Add source
   if (videoSrc) {
@@ -216,14 +244,16 @@ export default function decorate(block) {
     block.appendChild(badge);
   }
 
-  // Attempt autoplay (user can use play button if blocked)
+  // Start playback when autoplay is on (user can use play button if blocked)
   if (videoSrc) {
-    video.play().catch(() => {});
+    if (videoAutoplay) {
+      video.play().catch(() => {});
+    }
 
-    // Pause when off-screen; resume when visible
+    // Pause when off-screen; resume when visible only if autoplay is on
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && videoAutoplay) {
           video.play().catch(() => {});
         } else {
           video.pause();
@@ -239,7 +269,7 @@ export default function decorate(block) {
       if (e.matches) {
         video.pause();
         video.currentTime = 0;
-      } else {
+      } else if (videoAutoplay) {
         video.play().catch(() => {});
       }
     };

@@ -45,9 +45,24 @@
           "value": ""
         },
         {
+          "component": "reference",
+          "valueType": "string",
+          "name": "badge",
+          "label": "Badge/Logo",
+          "description": "Optional badge or partner logo",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "badgeAlt",
+          "label": "Badge Alt Text",
+          "value": ""
+        },
+        {
           "component": "tab",
-          "label": "Content",
-          "name": "tab-content"
+          "label": "CTAs",
+          "name": "video-hero-buttons"
         },
         {
           "component": "aem-content",
@@ -74,19 +89,33 @@
           "value": ""
         },
         {
-          "component": "reference",
-          "valueType": "string",
-          "name": "badge",
-          "label": "Badge/Logo",
-          "description": "Optional badge or partner logo",
-          "multi": false
+          "component": "tab",
+          "label": "Content",
+          "name": "video-hero-controls"
         },
         {
-          "component": "text",
-          "valueType": "string",
-          "name": "badgeAlt",
-          "label": "Badge Alt Text",
-          "value": ""
+          "component": "boolean",
+          "name": "video-autoplay",
+          "label": "Autoplay",
+          "description": "Play video automatically when the page loads"
+        },
+        {
+          "component": "boolean",
+          "name": "video-loop",
+          "label": "Loop",
+          "description": "Replay video automatically when finished"
+        },
+        {
+          "component": "boolean",
+          "name": "video-muted",
+          "label": "Muted",
+          "description": "Mute video by default (required for autoplay in most browsers)"
+        },
+        {
+          "component": "boolean",
+          "name": "video-controls",
+          "label": "Controls",
+          "description": "Show native video playback controls"
         }
       ]
     }
