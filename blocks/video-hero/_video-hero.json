@@ -25,8 +25,13 @@
           "valueType": "string",
           "name": "video",
           "label": "Video",
-          "description": "Background video (MP4 format recommended)",
+          "description": "Background video (MP4 format recommended) maximum time 2 minutes, 300 KB/s maximum size",
           "multi": false
+        },
+        {
+          "component": "tab",
+          "label": "Content",
+          "name": "tab-content"
         },
         {
           "component": "boolean",
