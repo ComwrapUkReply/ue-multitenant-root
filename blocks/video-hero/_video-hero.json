@@ -29,6 +29,30 @@
           "multi": false
         },
         {
+          "component": "boolean",
+          "name": "video-autoplay",
+          "label": "Autoplay",
+          "description": "Play video automatically when the page loads"
+        },
+        {
+          "component": "boolean",
+          "name": "video-loop",
+          "label": "Loop",
+          "description": "Replay video automatically when finished"
+        },
+        {
+          "component": "boolean",
+          "name": "video-muted",
+          "label": "Muted",
+          "description": "Mute video by default (required for autoplay in most browsers)"
+        },
+        {
+          "component": "boolean",
+          "name": "video-controls",
+          "label": "Controls",
+          "description": "Show native video playback controls"
+        },
+        {
           "component": "richtext",
           "name": "heading",
           "value": "",
