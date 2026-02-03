@@ -95,7 +95,6 @@ export default function decorate(block) {
   video.setAttribute('autoplay', '');
   video.setAttribute('muted', '');
   video.setAttribute('loop', '');
-  video.setAttribute('controls', '');
   video.setAttribute('playsinline', '');
   video.setAttribute('aria-hidden', 'true'); // Decorative video
   video.setAttribute('tabindex', '-1');
