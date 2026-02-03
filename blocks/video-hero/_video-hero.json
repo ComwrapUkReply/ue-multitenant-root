@@ -95,7 +95,7 @@
         },
         {
           "component": "tab",
-          "label": "Content",
+          "label": "Controls",
           "name": "video-hero-controls"
         },
         {
