@@ -4,12 +4,15 @@
  * Compatible with AEM Universal Editor
  */
 
+/** Get the first cell (inner div) of a row for content extraction */
+const getCell = (row) => (row?.querySelector?.(':scope > div') ?? row);
+
 /**
  * Loads and decorates the video hero block
  * @param {Element} block The video hero block element
  */
 export default function decorate(block) {
-  // Extract fields from Universal Editor structure
+  // Extract fields from block rows (position-based; data-aue-* are UE-only)
   let videoSrc = null;
   let headingHtml = null;
   let subheadingText = null;
@@ -17,36 +20,43 @@ export default function decorate(block) {
   let secondaryBtn = null;
   let badgeImg = null;
 
-  // Get the rows
   const rows = [...block.children];
 
-  // Row 0: Video (link in button-container)
+  // Row 0: Video (reference renders as link or picture)
   if (rows[0]) {
     const videoLink = rows[0].querySelector('a');
+    const videoSource = rows[0].querySelector('video source, source[type*="video"]');
     if (videoLink) {
       videoSrc = videoLink.href;
+    } else if (videoSource?.src) {
+      videoSrc = videoSource.src;
     }
   }
 
-  // Row 1: Heading (richtext field)
+  // Row 1: Heading (richtext) – UE uses data-richtext-prop; fallback to cell content
   if (rows[1]) {
-    const heading = rows[1].querySelector('[data-richtext-prop="heading"]');
-    if (heading) {
-      headingHtml = heading.textContent.trim();
+    const cell = getCell(rows[1]);
+    const headingEl = rows[1].querySelector('[data-richtext-prop="heading"]')
+      || cell.querySelector('h1, h2, h3, h4, h5, h6');
+    if (headingEl) {
+      headingHtml = headingEl.innerHTML?.trim() || headingEl.textContent?.trim() || '';
+    } else if (cell?.innerHTML?.trim()) {
+      headingHtml = cell.innerHTML.trim();
     }
   }
 
   // Row 2: Subheading
   if (rows[2]) {
-    const subheading = rows[2].querySelector('[data-aue-prop="subheading"]');
-    if (subheading) {
-      subheadingText = subheading.textContent.trim();
-    }
+    const cell = getCell(rows[2]);
+    const subheadingEl = rows[2].querySelector('[data-aue-prop="subheading"]') || cell;
+    subheadingText = subheadingEl?.textContent?.trim() || '';
   }
 
-  // Row 3: Primary Button
+  // Row 3: Primary Button – link may be in button-container
   if (rows[3]) {
-    const primaryLink = rows[3].querySelector('[data-aue-prop="primaryButtonText"]');
+    const primaryLink = rows[3].querySelector('[data-aue-prop="primaryButtonText"]')
+      || rows[3].querySelector('.button-container a, a.button')
+      || rows[3].querySelector('a');
     if (primaryLink) {
       primaryBtn = primaryLink.cloneNode(true);
     }
@@ -54,17 +64,21 @@ export default function decorate(block) {
 
   // Row 4: Secondary Button
   if (rows[4]) {
-    const secondaryLink = rows[4].querySelector('[data-aue-prop="secondaryButtonText"]');
+    const secondaryLink = rows[4].querySelector('[data-aue-prop="secondaryButtonText"]')
+      || rows[4].querySelector('.button-container a, a.button')
+      || rows[4].querySelector('a');
     if (secondaryLink) {
       secondaryBtn = secondaryLink.cloneNode(true);
     }
   }
 
-  // Row 5: Badge
+  // Row 5: Badge (reference renders as image)
   if (rows[5]) {
-    const badge = rows[5].querySelector('[data-aue-prop="badge"]');
-    if (badge) {
-      badgeImg = badge;
+    const badgeEl = rows[5].querySelector('[data-aue-prop="badge"]')
+      || rows[5].querySelector('img')
+      || rows[5].querySelector('picture img');
+    if (badgeEl) {
+      badgeImg = badgeEl;
     }
   }
 
