@@ -8,11 +8,12 @@
 
 .video-hero {
   position: relative;
-  height: 60vh;
+  height: 50vh;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 
 /* Video background */
@@ -41,6 +42,49 @@
     rgb(0 0 0 / 30%) 100%
   );
   z-index: 1;
+}
+
+/* Play/pause toggle – bottom right, white icon */
+.video-hero-play-toggle {
+  position: absolute;
+  bottom: var(--space-24);
+  right: var(--space-24);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  color: var(--color-white);
+  background: rgb(0 0 0 / 40%);
+  border: var(--border-width-md) solid var(--color-white);
+  border-radius: var(--border-radius-full);
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.video-hero-play-toggle:hover {
+  background: rgb(0 0 0 / 55%);
+  color: var(--color-white);
+}
+
+.video-hero-play-toggle .video-hero-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+}
+
+.video-hero-play-toggle .video-hero-icon-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.video-hero-play-toggle .video-hero-icon svg {
+  width: 32px;
+  height: 32px;
 }
 
 /* Content – aligned with project container and spacing */
@@ -158,13 +202,18 @@
 /* Tablet – project breakpoint-md (768px) */
 @media (width >= 768px) {
   .video-hero {
-    min-height: var(--space-250);
-    height: 70vh;
+    height: 50vh;
+    flex-direction: row;
   }
 
   .video-hero-content {
     padding: var(--space-60) var(--space-32);
     gap: var(--space-32);
+  }
+
+  .video-hero-play-toggle {
+    bottom: var(--space-32);
+    right: var(--space-32);
   }
 
   .video-hero-badge {
@@ -179,18 +228,18 @@
 
 /* Desktop – project breakpoint-xl (1200px) */
 @media (width >= 1200px) {
-  .video-hero {
-    height: 80vh;
-    max-height: var(--space-400);
-  }
-
   .video-hero-content {
     padding: var(--space-80) var(--gutter-padding);
     gap: var(--space-40);
   }
 
-  .video-hero-badge {
+  .video-hero-play-toggle {
     right: var(--gutter-padding);
+    bottom: var(--space-40);
+  }
+
+  .video-hero-badge {
+    right: var(--space-60);
   }
 }
 
@@ -241,8 +290,20 @@
   }
 }
 
-/* Mobile – stack badge and full-width buttons */
+/* Mobile – stack badge and full-width buttons; keep play toggle in corner */
 @media (width < 768px) {
+  .video-hero-play-toggle {
+    bottom: var(--space-16);
+    right: var(--space-16);
+    width: 44px;
+    height: 44px;
+  }
+
+  .video-hero-play-toggle .video-hero-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
   .video-hero-badge {
     position: static;
     margin-top: var(--space-20);

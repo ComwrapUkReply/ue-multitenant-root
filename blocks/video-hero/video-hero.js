@@ -115,6 +115,47 @@ export default function decorate(block) {
   videoContainer.appendChild(video);
   videoContainer.appendChild(overlay);
 
+  // Play/pause toggle (bottom right) – for when autoplay is blocked or user wants to pause
+  if (videoSrc) {
+    const playToggle = document.createElement('button');
+    playToggle.type = 'button';
+    playToggle.className = 'video-hero-play-toggle';
+    playToggle.setAttribute('aria-label', 'Play video');
+    playToggle.innerHTML = `
+      <span class="video-hero-icon video-hero-icon-play" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" focusable="false">
+          <path d="M8 5v14l11-7L8 5z"/>
+        </svg>
+      </span>
+      <span class="video-hero-icon video-hero-icon-pause video-hero-icon-hidden" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" focusable="false">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </span>
+    `;
+    videoContainer.appendChild(playToggle);
+
+    const updatePlayToggleState = () => {
+      const isPlaying = !video.paused;
+      playToggle.classList.toggle('is-playing', isPlaying);
+      playToggle.querySelector('.video-hero-icon-play')?.classList.toggle('video-hero-icon-hidden', isPlaying);
+      playToggle.querySelector('.video-hero-icon-pause')?.classList.toggle('video-hero-icon-hidden', !isPlaying);
+      playToggle.setAttribute('aria-label', isPlaying ? 'Pause video' : 'Play video');
+    };
+
+    playToggle.addEventListener('click', () => {
+      if (video.paused) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+
+    video.addEventListener('play', updatePlayToggleState);
+    video.addEventListener('pause', updatePlayToggleState);
+    updatePlayToggleState();
+  }
+
   // Create content container
   const content = document.createElement('div');
   content.className = 'video-hero-content';
@@ -174,11 +215,9 @@ export default function decorate(block) {
     block.appendChild(badge);
   }
 
-  // Ensure video plays (some browsers may block autoplay)
+  // Attempt autoplay (user can use play button if blocked)
   if (videoSrc) {
-    video.play().catch((error) => {
-      console.warn('Video autoplay was prevented:', error);
-    });
+    video.play().catch(() => {});
 
     // Pause video when not in viewport for performance
     const observer = new IntersectionObserver((entries) => {
