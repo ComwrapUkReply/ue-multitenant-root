@@ -1,7 +1,16 @@
+/* eslint-disable no-console */
+/* eslint-disable max-len */
+
+import { decorateIcons } from '../../scripts/aem.js';
 import {
-  createOptimizedPicture,
-  decorateIcons,
-} from '../../scripts/aem.js';
+  findNextHeading,
+  filterData,
+  fetchData,
+  renderResult,
+  parseSearchTerms,
+  updateUrlWithQuery,
+  getQueryFromUrl,
+} from '../../scripts/search-utils.js';
 
 /**
  * Default configuration for search block
@@ -11,138 +20,12 @@ const CONFIG = {
   placeholders: {
     searchPlaceholder: 'Search...',
     searchNoResults: 'No results found.',
+    viewAllButtonText: 'View all {count} results',
   },
+  suggestionsLimit: 3,
+  autosuggest: true,
+  imageWidth: 320,
 };
-
-/** URL search params for managing query state */
-const searchParams = new URLSearchParams(window.location.search);
-
-/**
- * Finds the appropriate heading level for search results based on context
- * @param {HTMLElement} el - Element to find heading context from
- * @returns {string} Heading tag name (e.g., 'H2', 'H3')
- */
-function findNextHeading(el) {
-  let preceedingEl = el.parentElement.previousElement || el.parentElement.parentElement;
-  let h = 'H2';
-  while (preceedingEl) {
-    const lastHeading = [...preceedingEl.querySelectorAll('h1, h2, h3, h4, h5, h6')].pop();
-    if (lastHeading) {
-      const level = parseInt(lastHeading.nodeName[1], 10);
-      h = level < 6 ? `H${level + 1}` : 'H6';
-      preceedingEl = false;
-    } else {
-      preceedingEl = preceedingEl.previousElement || preceedingEl.parentElement;
-    }
-  }
-  return h;
-}
-
-/**
- * Highlights search terms within text elements
- * @param {string[]} terms - Array of search terms to highlight
- * @param {HTMLElement[]} elements - Array of elements containing text to highlight
- */
-function highlightTextElements(terms, elements) {
-  elements.forEach((element) => {
-    if (!element || !element.textContent) return;
-
-    const matches = [];
-    const { textContent } = element;
-    terms.forEach((term) => {
-      let start = 0;
-      let offset = textContent.toLowerCase().indexOf(term.toLowerCase(), start);
-      while (offset >= 0) {
-        matches.push({ offset, term: textContent.substring(offset, offset + term.length) });
-        start = offset + term.length;
-        offset = textContent.toLowerCase().indexOf(term.toLowerCase(), start);
-      }
-    });
-
-    if (!matches.length) {
-      return;
-    }
-
-    matches.sort((a, b) => a.offset - b.offset);
-    let currentIndex = 0;
-    const fragment = matches.reduce((acc, { offset, term }) => {
-      if (offset < currentIndex) return acc;
-      const textBefore = textContent.substring(currentIndex, offset);
-      if (textBefore) {
-        acc.appendChild(document.createTextNode(textBefore));
-      }
-      const markedTerm = document.createElement('mark');
-      markedTerm.textContent = term;
-      acc.appendChild(markedTerm);
-      currentIndex = offset + term.length;
-      return acc;
-    }, document.createDocumentFragment());
-    const textAfter = textContent.substring(currentIndex);
-    if (textAfter) {
-      fragment.appendChild(document.createTextNode(textAfter));
-    }
-    element.innerHTML = '';
-    element.appendChild(fragment);
-  });
-}
-
-/**
- * Fetches search data from the specified source
- * @param {string} source - URL of the JSON data source
- * @returns {Promise<Array|null>} Array of data items or null on error
- */
-export async function fetchData(source) {
-  const response = await fetch(source);
-  if (!response.ok) {
-    // eslint-disable-next-line no-console
-    console.error('error loading API response', response);
-    return null;
-  }
-
-  const json = await response.json();
-  if (!json) {
-    // eslint-disable-next-line no-console
-    console.error('empty API response', source);
-    return null;
-  }
-
-  return json.data;
-}
-
-/**
- * Renders a single search result item
- * @param {Object} result - Search result data
- * @param {string[]} searchTerms - Array of search terms for highlighting
- * @param {string} titleTag - HTML tag to use for result title
- * @returns {HTMLLIElement} List item element for the result
- */
-function renderResult(result, searchTerms, titleTag) {
-  const li = document.createElement('li');
-  const a = document.createElement('a');
-  a.href = result.path;
-  if (result.image) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'search-result-image';
-    const pic = createOptimizedPicture(result.image, '', false, [{ width: '375' }]);
-    wrapper.append(pic);
-    a.append(wrapper);
-  }
-  if (result.title) {
-    const title = document.createElement(titleTag);
-    title.className = 'search-result-title';
-    title.textContent = result.title;
-    highlightTextElements(searchTerms, [title]);
-    a.append(title);
-  }
-  if (result.description) {
-    const description = document.createElement('p');
-    description.textContent = result.description;
-    highlightTextElements(searchTerms, [description]);
-    a.append(description);
-  }
-  li.append(a);
-  return li;
-}
 
 /**
  * Clears the search results container
@@ -159,12 +42,7 @@ function clearSearchResults(block) {
  */
 function clearSearch(block) {
   clearSearchResults(block);
-  if (window.history.replaceState) {
-    const url = new URL(window.location.href);
-    url.search = '';
-    searchParams.delete('q');
-    window.history.replaceState({}, '', url.toString());
-  }
+  updateUrlWithQuery('');
 }
 
 /**
@@ -173,76 +51,47 @@ function clearSearch(block) {
  * @param {Object} config - Search configuration object
  * @param {Array} filteredData - Filtered search results
  * @param {string[]} searchTerms - Array of search terms for highlighting
+ * @param {boolean} showImages - Whether to include images in results
  */
-async function renderResults(block, config, filteredData, searchTerms) {
+async function renderResults(block, config, filteredData, searchTerms, showImages) {
   clearSearchResults(block);
   const searchResults = block.querySelector('.search-results');
   const headingTag = searchResults.dataset.h;
 
-  if (filteredData.length) {
+  // Show limited suggestions (max 5)
+  const limit = config.suggestionsLimit || 5;
+  const dataToRender = filteredData.slice(0, limit);
+
+  if (dataToRender.length) {
     searchResults.classList.remove('no-results');
-    filteredData.forEach((result) => {
-      const li = renderResult(result, searchTerms, headingTag);
+    dataToRender.forEach((result) => {
+      const li = renderResult(result, searchTerms, headingTag, {
+        showImages,
+        imageWidth: CONFIG.imageWidth,
+      });
       searchResults.append(li);
     });
+
+    // Add "View all results" link if there are more results and result page is configured
+    if (config.resultPage && filteredData.length > dataToRender.length) {
+      const viewAllLi = document.createElement('li');
+      viewAllLi.className = 'search-view-all';
+      const viewAllLink = document.createElement('a');
+      const input = block.querySelector('.search-input');
+      const searchQuery = input ? input.value : '';
+      viewAllLink.href = `${config.resultPage}?q=${encodeURIComponent(searchQuery)}`;
+      // Use configured button text or default
+      const buttonText = config.placeholders.viewAllButtonText || CONFIG.placeholders.viewAllButtonText;
+      viewAllLink.textContent = buttonText.replace('{count}', filteredData.length.toString());
+      viewAllLi.append(viewAllLink);
+      searchResults.append(viewAllLi);
+    }
   } else {
     const noResultsMessage = document.createElement('li');
     searchResults.classList.add('no-results');
     noResultsMessage.textContent = config.placeholders.searchNoResults || 'No results found.';
     searchResults.append(noResultsMessage);
   }
-}
-
-/**
- * Compares two search hits by their minimum index
- * @param {Object} hit1 - First search hit
- * @param {Object} hit2 - Second search hit
- * @returns {number} Comparison result for sorting
- */
-function compareFound(hit1, hit2) {
-  return hit1.minIdx - hit2.minIdx;
-}
-
-/**
- * Filters data based on search terms
- * @param {string[]} searchTerms - Array of search terms
- * @param {Array} data - Array of data items to filter
- * @returns {Array} Filtered and sorted array of results
- */
-function filterData(searchTerms, data) {
-  const foundInHeader = [];
-  const foundInMeta = [];
-
-  data.forEach((result) => {
-    let minIdx = -1;
-
-    searchTerms.forEach((term) => {
-      const idx = (result.header || result.title).toLowerCase().indexOf(term);
-      if (idx < 0) return;
-      if (minIdx < idx) minIdx = idx;
-    });
-
-    if (minIdx >= 0) {
-      foundInHeader.push({ minIdx, result });
-      return;
-    }
-
-    const metaContents = `${result.title} ${result.description} ${result.path.split('/').pop()}`.toLowerCase();
-    searchTerms.forEach((term) => {
-      const idx = metaContents.indexOf(term);
-      if (idx < 0) return;
-      if (minIdx < idx) minIdx = idx;
-    });
-
-    if (minIdx >= 0) {
-      foundInMeta.push({ minIdx, result });
-    }
-  });
-
-  return [
-    ...foundInHeader.sort(compareFound),
-    ...foundInMeta.sort(compareFound),
-  ].map((item) => item.result);
 }
 
 /**
@@ -253,22 +102,35 @@ function filterData(searchTerms, data) {
  */
 async function handleSearch(e, block, config) {
   const searchValue = e.target.value;
-  searchParams.set('q', searchValue);
-  if (window.history.replaceState) {
-    const url = new URL(window.location.href);
-    url.search = searchParams.toString();
-    window.history.replaceState({}, '', url.toString());
+  updateUrlWithQuery(searchValue);
+
+  // If autosuggest is disabled, don't show inline results
+  if (!config.autosuggest) {
+    return;
   }
 
   if (searchValue.length < 3) {
     clearSearch(block);
     return;
   }
-  const searchTerms = searchValue.toLowerCase().split(/\s+/).filter((term) => !!term);
 
-  const data = await fetchData(config.source);
+  const searchTerms = parseSearchTerms(searchValue);
+  const data = await fetchData(config.source, { verbose: true });
+
+  if (!data) {
+    // Show error message if data couldn't be loaded
+    const searchResults = block.querySelector('.search-results');
+    searchResults.innerHTML = '';
+    searchResults.classList.add('no-results');
+    const errorMessage = document.createElement('li');
+    errorMessage.textContent = 'Unable to load search data. Please try again later.';
+    searchResults.append(errorMessage);
+    return;
+  }
+
   const filteredData = filterData(searchTerms, data);
-  await renderResults(block, config, filteredData, searchTerms);
+  const showImages = block.classList.contains('cards') || block.classList.contains('minimal');
+  await renderResults(block, config, filteredData, searchTerms, showImages);
 }
 
 /**
@@ -290,6 +152,18 @@ function searchResultsContainer(block) {
 }
 
 /**
+ * Navigates to the result page with the search query
+ * @param {string} resultPageUrl - URL of the result page
+ * @param {string} searchQuery - The search query
+ */
+function navigateToResultPage(resultPageUrl, searchQuery) {
+  if (!resultPageUrl || !searchQuery) return;
+  const url = new URL(resultPageUrl, window.location.origin);
+  url.searchParams.set('q', searchQuery);
+  window.location.href = url.toString();
+}
+
+/**
  * Creates the search input element
  * @param {HTMLElement} block - The search block element
  * @param {Object} config - Search configuration object
@@ -308,16 +182,60 @@ function searchInput(block, config) {
     handleSearch(e, block, config);
   });
 
-  input.addEventListener('keyup', (e) => { if (e.code === 'Escape') { clearSearch(block); } });
+  input.addEventListener('keyup', (e) => {
+    if (e.code === 'Escape') {
+      clearSearch(block);
+    }
+  });
+
+  // Add Enter key handler to navigate to result page if configured
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && config.resultPage) {
+      e.preventDefault();
+      const searchQuery = input.value.trim();
+      if (searchQuery.length >= 1) {
+        navigateToResultPage(config.resultPage, searchQuery);
+      }
+    }
+  });
 
   return input;
 }
 
 /**
  * Creates the search icon element
- * @returns {HTMLSpanElement} Search icon span element
+ * @param {HTMLElement} block - The search block element
+ * @param {Object} config - Search configuration object
+ * @returns {HTMLSpanElement|HTMLButtonElement} Search icon element
  */
-function searchIcon() {
+function searchIcon(block, config) {
+  // Always make icon clickable if result page is configured
+  if (config.resultPage) {
+    const button = document.createElement('button');
+    button.classList.add('search-icon-button');
+    button.setAttribute('type', 'button');
+    button.setAttribute('aria-label', 'Search');
+
+    const icon = document.createElement('span');
+    icon.classList.add('icon', 'icon-search');
+    button.append(icon);
+
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const input = block.querySelector('.search-input');
+      if (input) {
+        const searchQuery = input.value.trim();
+        if (searchQuery.length >= 1) {
+          navigateToResultPage(config.resultPage, searchQuery);
+        }
+      }
+    });
+
+    return button;
+  }
+
+  // Default non-clickable icon
   const icon = document.createElement('span');
   icon.classList.add('icon', 'icon-search');
   return icon;
@@ -329,6 +247,38 @@ function searchIcon() {
  */
 function findSearchBlock() {
   return document.querySelector('.search.block');
+}
+
+/**
+ * Calculates the height of the header element
+ * @returns {number} The height of the header in pixels
+ */
+function calculateHeaderHeight() {
+  const header = document.querySelector('header.block, header');
+  if (!header) return 0;
+
+  const navWrapper = header.querySelector('.nav-wrapper');
+  if (navWrapper) {
+    return navWrapper.offsetHeight;
+  }
+
+  return header.offsetHeight;
+}
+
+/**
+ * Applies margin-top to search block based on header height when expanded
+ * @param {HTMLElement} block - The search block element
+ * @param {boolean} isExpanded - Whether the search block is expanded
+ */
+function applySearchBlockMargin(block, isExpanded) {
+  if (!block) return;
+
+  if (isExpanded) {
+    const headerHeight = calculateHeaderHeight();
+    block.style.marginTop = `${headerHeight}px`;
+  } else {
+    block.style.marginTop = '';
+  }
 }
 
 /**
@@ -353,6 +303,9 @@ function toggleSearchBlock(block, button = null) {
   allSearchButtons.forEach((btn) => {
     btn.setAttribute('aria-expanded', newState.toString());
   });
+
+  // Apply margin-top based on header height when expanded
+  applySearchBlockMargin(block, newState);
 
   // Focus input when opening
   if (newState) {
@@ -410,7 +363,7 @@ function searchBox(block, config) {
   const box = document.createElement('div');
   box.classList.add('search-box');
   box.append(
-    searchIcon(),
+    searchIcon(block, config),
     searchInput(block, config),
   );
 
@@ -418,20 +371,112 @@ function searchBox(block, config) {
 }
 
 /**
+ * Parses block configuration from block content
+ * @param {HTMLElement} block - The block element
+ * @returns {Object} Configuration object with autosuggest, resultPage, and placeholders
+ */
+function parseBlockConfig(block) {
+  let { autosuggest } = CONFIG;
+  let resultPage = null;
+  const placeholders = { ...CONFIG.placeholders };
+
+  const rows = [...block.children];
+
+  // Collect all text values for single-column parsing
+  const textValues = [];
+
+  rows.forEach((row) => {
+    const cells = [...row.children];
+
+    if (cells.length >= 2) {
+      // Two-column structure: label | value
+      const label = cells[0].textContent.trim().toLowerCase();
+      const valueCell = cells[1];
+      const link = valueCell.querySelector('a[href]');
+      const textContent = valueCell.textContent.trim().toLowerCase();
+
+      if (label.includes('autosuggest') || label.includes('toggle') || label.includes('recommend')) {
+        // Parse boolean value
+        autosuggest = textContent === 'true' || textContent === '1' || textContent === 'yes' || textContent === 'on';
+      } else if ((label.includes('result') || label.includes('page')) && link) {
+        resultPage = link.href;
+      } else if (label.includes('placeholder')) {
+        placeholders.searchPlaceholder = valueCell.textContent.trim();
+      } else if (label.includes('no results')) {
+        placeholders.searchNoResults = valueCell.textContent.trim();
+      } else if (label.includes('view all') || label.includes('button')) {
+        placeholders.viewAllButtonText = valueCell.textContent.trim();
+      }
+    } else if (cells.length === 1) {
+      // Single-column structure: collect values
+      const cell = cells[0];
+      const link = cell.querySelector('a[href]');
+      const textContent = cell.textContent.trim();
+
+      if (link) {
+        // Link is likely the result page
+        if (!resultPage) {
+          resultPage = link.href;
+        }
+      } else if (textContent && textContent.length > 0) {
+        // Check for boolean values first
+        const lowerText = textContent.toLowerCase();
+        if (lowerText === 'true' || lowerText === 'false') {
+          autosuggest = lowerText === 'true';
+        } else {
+          textValues.push(textContent);
+        }
+      }
+    }
+  });
+
+  // Assign remaining text values in order: searchPlaceholder, searchNoResults, viewAllButtonText
+  if (textValues.length >= 1) {
+    [placeholders.searchPlaceholder] = textValues;
+  }
+  if (textValues.length >= 2) {
+    [placeholders.searchNoResults] = textValues;
+  }
+  if (textValues.length >= 3) {
+    [placeholders.viewAllButtonText] = textValues;
+  }
+
+  return { autosuggest, resultPage, placeholders };
+}
+
+/**
  * Decorates the search block
  * @param {HTMLElement} block - The search block element
  */
 export default async function decorate(block) {
-  // Extract data source from block content or use default
-  const sourceLink = block.querySelector('a[href]');
-  const source = sourceLink ? sourceLink.href : CONFIG.defaultSource;
+  // Parse configuration from block content
+  const { autosuggest, resultPage, placeholders } = parseBlockConfig(block);
+
+  // Build configuration object (always use default query-index.json)
+  const config = {
+    source: CONFIG.defaultSource,
+    autosuggest,
+    resultPage,
+    placeholders,
+    suggestionsLimit: CONFIG.suggestionsLimit,
+  };
 
   // Clear block content and build search UI
   block.innerHTML = '';
-  block.append(
-    searchBox(block, { source, placeholders: CONFIG.placeholders }),
-    searchResultsContainer(block),
-  );
+
+  // Add class for autosuggest mode
+  if (!autosuggest) {
+    block.classList.add('no-autosuggest');
+  }
+
+  // Build search UI elements
+  const searchBoxElement = searchBox(block, config);
+  block.append(searchBoxElement);
+
+  // Only add results container if autosuggest is enabled
+  if (autosuggest) {
+    block.append(searchResultsContainer(block));
+  }
 
   // Add aria attributes for mobile toggle
   block.setAttribute('id', 'search-panel');
@@ -446,7 +491,7 @@ export default async function decorate(block) {
   }
 
   // Restore search query from URL if present
-  const queryParam = searchParams.get('q');
+  const queryParam = getQueryFromUrl();
   if (queryParam) {
     const input = block.querySelector('input');
     if (input) {
@@ -488,6 +533,20 @@ export default async function decorate(block) {
       decorateIcons(newButton);
     }
   });
+
+  // Handle window resize to recalculate header height
+  let resizeTimeout;
+  const handleResize = () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      const isExpanded = block.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        applySearchBlockMargin(block, true);
+      }
+    }, 100);
+  };
+
+  window.addEventListener('resize', handleResize);
 
   decorateIcons(block);
 }
