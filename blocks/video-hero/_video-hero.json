@@ -21,6 +21,11 @@
       "id": "video-hero",
       "fields": [
         {
+          "component": "tab",
+          "label": "Content",
+          "name": "video-hero-content"
+        },
+        {
           "component": "reference",
           "valueType": "string",
           "name": "video",
