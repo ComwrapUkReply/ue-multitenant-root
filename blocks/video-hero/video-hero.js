@@ -23,12 +23,39 @@ function parseBooleanFromRow(row, defaultValue = false) {
 export default function decorate(block) {
   const rows = [...block.children];
 
-  const hasNewStructure = rows.length >= 15;
-  const idx = {
-    badge: hasNewStructure ? 3 : 5,
-    primary: hasNewStructure ? 6 : 3,
-    secondary: hasNewStructure ? 8 : 4,
-  };
+  // New model (current _video-hero.json):
+  // 0=tab(Content), 1=video, 2=heading, 3=subheading, 4=badge, 5=badgeAlt,
+  // 6=tab(CTAs), 7=primaryButton, 8=primaryButtonText, 9=secondaryButton, 10=secondaryButtonText,
+  // 11=tab(Controls), 12=video-autoplay, 13=video-loop, 14=video-muted, 15=video-controls
+  //
+  // Legacy (fewer rows, before tabs/booleans existed):
+  // 0=video, 1=heading, 2=subheading, 3=primary, 4=secondary, 5=badge
+  const hasContentTab = rows.length >= 16;
+  const idx = hasContentTab
+    ? {
+      video: 1,
+      heading: 2,
+      subheading: 3,
+      badge: 4,
+      primary: 7,
+      secondary: 9,
+      autoplay: 12,
+      loop: 13,
+      muted: 14,
+      controls: 15,
+    }
+    : {
+      video: 0,
+      heading: 1,
+      subheading: 2,
+      badge: 5,
+      primary: 3,
+      secondary: 4,
+      autoplay: null,
+      loop: null,
+      muted: null,
+      controls: null,
+    };
 
   let videoSrc = null;
   let headingHtml = null;
@@ -37,15 +64,16 @@ export default function decorate(block) {
   let secondaryBtn = null;
   let badgeImg = null;
 
-  const videoAutoplay = parseBooleanFromRow(rows[11], true);
-  const videoLoop = parseBooleanFromRow(rows[12], true);
-  const videoMuted = parseBooleanFromRow(rows[13], true);
-  const videoControls = parseBooleanFromRow(rows[14], false);
+  const videoAutoplay = idx.autoplay != null ? parseBooleanFromRow(rows[idx.autoplay], true) : true;
+  const videoLoop = idx.loop != null ? parseBooleanFromRow(rows[idx.loop], true) : true;
+  const videoMuted = idx.muted != null ? parseBooleanFromRow(rows[idx.muted], true) : true;
+  const videoControls = idx.controls != null ? parseBooleanFromRow(rows[idx.controls], false)
+    : false;
 
   // Row 0: Video (reference renders as link or picture)
-  if (rows[0]) {
-    const videoLink = rows[0].querySelector('a');
-    const videoSource = rows[0].querySelector('video source, source[type*="video"]');
+  if (rows[idx.video]) {
+    const videoLink = rows[idx.video].querySelector('a');
+    const videoSource = rows[idx.video].querySelector('video source, source[type*="video"]');
     if (videoLink) {
       videoSrc = videoLink.href;
     } else if (videoSource?.src) {
@@ -54,8 +82,8 @@ export default function decorate(block) {
   }
 
   // Row 1: Heading (richtext)
-  if (rows[1]) {
-    const row = rows[1];
+  if (rows[idx.heading]) {
+    const row = rows[idx.heading];
     const cell = getCell(row);
     const headingEl = row.querySelector('[data-richtext-prop="heading"]')
       || cell?.querySelector('h1, h2, h3, h4, h5, h6');
@@ -67,8 +95,8 @@ export default function decorate(block) {
   }
 
   // Row 2: Subheading
-  if (rows[2]) {
-    const row = rows[2];
+  if (rows[idx.subheading]) {
+    const row = rows[idx.subheading];
     const cell = getCell(row);
     const subheadingEl = row.querySelector('[data-aue-prop="subheading"]') || cell;
     subheadingText = subheadingEl?.textContent?.trim() || '';
