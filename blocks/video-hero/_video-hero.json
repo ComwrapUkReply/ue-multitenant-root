@@ -1,0 +1,129 @@
+{
+  "definitions": [
+    {
+      "title": "Video Hero",
+      "id": "video-hero",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Video Hero",
+              "model": "video-hero"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "video-hero",
+      "fields": [
+        {
+          "component": "tab",
+          "label": "Content",
+          "name": "video-hero-content"
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "video",
+          "label": "Video",
+          "description": "Background video (MP4 format recommended) maximum time 2 minutes, 300 KB/s maximum size",
+          "multi": false
+        },
+        {
+          "component": "richtext",
+          "name": "heading",
+          "value": "",
+          "label": "Heading",
+          "description": "Main heading text (use bold for accent color)",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "subheading",
+          "label": "Subheading",
+          "description": "Optional subheading text",
+          "value": ""
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "badge",
+          "label": "Badge/Logo",
+          "description": "Optional badge or partner logo",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "badgeAlt",
+          "label": "Badge Alt Text",
+          "value": ""
+        },
+        {
+          "component": "tab",
+          "label": "CTAs",
+          "name": "video-hero-buttons"
+        },
+        {
+          "component": "aem-content",
+          "name": "primaryButton",
+          "label": "Primary Button Link"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "primaryButtonText",
+          "label": "Primary Button Text",
+          "value": ""
+        },
+        {
+          "component": "aem-content",
+          "name": "secondaryButton",
+          "label": "Secondary Button Link"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "secondaryButtonText",
+          "label": "Secondary Button Text",
+          "value": ""
+        },
+        {
+          "component": "tab",
+          "label": "Controls",
+          "name": "video-hero-controls"
+        },
+        {
+          "component": "boolean",
+          "name": "video-autoplay",
+          "label": "Autoplay",
+          "description": "Play video automatically when the page loads"
+        },
+        {
+          "component": "boolean",
+          "name": "video-loop",
+          "label": "Loop",
+          "description": "Replay video automatically when finished"
+        },
+        {
+          "component": "boolean",
+          "name": "video-muted",
+          "label": "Muted",
+          "description": "Mute video by default (required for autoplay in most browsers)"
+        },
+        {
+          "component": "boolean",
+          "name": "video-controls",
+          "label": "Controls",
+          "description": "Show native video playback controls"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
