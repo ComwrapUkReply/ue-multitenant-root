@@ -41,34 +41,40 @@ export default function decorate(block) {
   console.groupEnd();
   // ========== DEBUG END ==========
 
-  // Current model (tabs do NOT create rows in the table):
-  // 0=video, 1=heading, 2=subheading, 3=badge, 4=badgeAlt,
-  // 5=primaryButton, 6=primaryButtonText, 7=secondaryButton, 8=secondaryButtonText,
-  // 9=video-autoplay, 10=video-loop, 11=video-muted, 12=video-controls
+  // Actual AEM row structure (verified via console debug):
+  // - tabs do NOT create rows
+  // - aem-content + text pairs MERGE into single row (link with text)
+  // - badgeAlt doesn't create a row (it's the alt attribute on badge img)
   //
-  // Legacy (older content, fewer fields):
-  // 0=video, 1=heading, 2=subheading, 3=primary, 4=secondary, 5=badge
-  const isNewStructure = rows.length >= 13;
+  // Current model (10 rows):
+  // 0=video, 1=heading, 2=subheading, 3=badge,
+  // 4=primaryButton (merged with primaryButtonText),
+  // 5=secondaryButton (merged with secondaryButtonText),
+  // 6=video-autoplay, 7=video-loop, 8=video-muted, 9=video-controls
+  //
+  // Legacy (6 rows, no booleans):
+  // 0=video, 1=heading, 2=subheading, 3=badge, 4=primary, 5=secondary
+  const isNewStructure = rows.length >= 10;
   const idx = isNewStructure
     ? {
       video: 0,
       heading: 1,
       subheading: 2,
       badge: 3,
-      primary: 5,
-      secondary: 7,
-      autoplay: 9,
-      loop: 10,
-      muted: 11,
-      controls: 12,
+      primary: 4,
+      secondary: 5,
+      autoplay: 6,
+      loop: 7,
+      muted: 8,
+      controls: 9,
     }
     : {
       video: 0,
       heading: 1,
       subheading: 2,
-      primary: 3,
-      secondary: 4,
-      badge: 5,
+      badge: 3,
+      primary: 4,
+      secondary: 5,
       autoplay: null,
       loop: null,
       muted: null,
