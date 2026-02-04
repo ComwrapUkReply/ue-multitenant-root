@@ -1,90 +1,125 @@
-/* Region Switcher Block */
-.region-dropdown {
+/* Region Switcher Block Styles */
+
+/* ===== MOBILE STYLES (DEFAULT) ===== */
+.region-switcher {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
 }
 
-/* Button */
-.region-current {
+/* Region Dropdown Container */
+.region-switcher-dropdown {
+  position: relative;
+  align-items: center;
+  display: flex;
+}
+
+/* Region Current Button */
+.region-switcher-current {
   display: flex;
   align-items: center;
   gap: var(--space-8);
-  padding: var(--space-8) var(--space-12);
-  min-width: 140px;
+  min-width: auto;
+  padding: var(--space-4) 0;
   background: var(--color-white);
-  border: 2px solid var(--color-cloud-grey);
   border-radius: var(--space-4);
+  border: none;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-label);
-  line-height: var(--line-height-mob-label);
-  color: var(--color-black);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-primary-blue);
   cursor: pointer;
   transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .region-current:hover {
-  background: var(--color-light-grey);
-  border-color: var(--color-primary-blue);
+  background: var(--color-grey-200);
+  border-color: var(--color-primary);
 }
 
 .region-current:focus-visible {
-  outline: 2px solid var(--color-primary-blue);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-.region-current .label {
-  flex: 1;
+.region-switcher-current:hover,
+.region-switcher-current:focus {
+  outline: none;
+  border-color: var(--color-primary-blue);
 }
 
-.region-current .flag {
-  font-size: 1.1em;
+.region-switcher-current:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Region Current Label */
+.region-switcher-current .region-switcher-label {
+  color: var(--color-primary-blue);
+  display: none;
+}
+
+/* Region Current Arrow */
+.region-switcher-arrow {
   line-height: 1;
-}
-
-.region-current .arrow {
-  font-size: 0.7em;
-  opacity: 0.6;
   transition: transform var(--transition-fast);
 }
 
-.region-current[aria-expanded="true"] .arrow {
+.region-switcher-current[aria-expanded="true"] .region-switcher-arrow {
   transform: rotate(180deg);
 }
 
-/* Menu */
-.region-menu {
+/* Region Current Icon */
+.region-switcher-current::before {
+  content: '';
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: middle;
+  background: url('../../assets/globe.svg') no-repeat left center;
+  background-size: 1rem;
+}
+
+/* Region Menu */
+.region-switcher-menu {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  margin: var(--space-4) 0 0;
+  display: none;
+  margin: var(--space-8) 0 0;
   padding: 0;
+  width: fit-content;
   list-style: none;
   background: var(--color-white);
-  border: 2px solid var(--color-cloud-grey);
+  border: 2px solid var(--color-grey-300);
   border-radius: var(--space-4);
-  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  box-shadow: var(--box-shadow);
   z-index: 1000;
-  display: none;
 }
 
-.region-menu.open {
+.region-switcher-menu.open {
   display: block;
 }
 
-.region-menu li {
+.region-switcher-menu .region-switcher-label {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.region-switcher-menu li {
   margin: 0;
   padding: 0;
 }
 
-/* Options */
-.region-option {
+/* Region Option */
+.region-switcher-option {
   display: flex;
   align-items: center;
   gap: var(--space-8);
   padding: var(--space-8) var(--space-12);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-mob-label);
+  font-size: var(--font-size-label);
   line-height: var(--line-height-mob-label);
   color: var(--color-black);
   text-decoration: none;
@@ -92,61 +127,70 @@
 }
 
 .region-option:hover {
-  background: var(--color-light-grey);
+  background: var(--color-grey-200);
   text-decoration: none;
 }
 
 .region-option:focus-visible {
-  background: var(--color-light-grey);
-  outline: 2px solid var(--color-primary-blue);
+  background: var(--color-grey-200);
+  outline: 2px solid var(--color-primary);
   outline-offset: -2px;
 }
 
-.region-option.current {
+.region-switcher-option.current {
   background: var(--color-info);
   font-weight: 600;
   cursor: default;
 }
 
-.region-option .flag {
-  font-size: 1.1em;
-  line-height: 1;
-}
+/* ===== BLOCK OPTIONS ===== */
 
-/* Header Integration */
-.region-switcher-header .region-current {
+/* Header Integration Variant */
+.region-switcher.header .region-switcher-current {
   min-width: auto;
-  padding: var(--space-4) var(--space-8);
+  padding: 0 var(--space-8);
   border-color: transparent;
   background: transparent;
 }
 
 .region-switcher-header .region-current:hover {
-  background: var(--color-light-grey);
+  background: var(--color-grey-200);
 }
 
-.region-switcher-header .region-menu {
+.region-switcher.header .region-switcher-menu {
   right: 0;
   left: auto;
 }
 
-/* Responsive */
-@media screen and (width <= 768px) {
-  .region-current {
-    min-width: 120px;
-    padding: var(--space-4) var(--space-8);
-  }
-
-  .region-switcher-header .region-current {
-    min-width: auto;
+/* ===== TABLET STYLES ===== */
+@media (width >= 600px) {
+    .region-switcher-current .region-switcher-label {
+    display: block;
   }
 }
 
+/* ===== ACCESSIBILITY ===== */
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  .region-current,
-  .region-option,
-  .region-current .arrow {
+  .region-switcher-current,
+  .region-switcher-option,
+  .region-switcher-arrow {
     transition: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: more) {
+  .region-switcher-current {
+    border-width: 3px;
+  }
+
+  .region-switcher-menu {
+    border-width: 3px;
+  }
+
+  .region-switcher-option:focus-visible {
+    outline-width: 3px;
   }
 }

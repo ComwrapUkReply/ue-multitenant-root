@@ -78,8 +78,12 @@ export default function decorate(block) {
       if (link && text) {
         const buttonElement = document.createElement('a');
         buttonElement.href = link;
-        buttonElement.textContent = text;
         buttonElement.className = `button ${style} accordion-button`;
+
+        // Wrap label text in a span element
+        const span = document.createElement('span');
+        span.textContent = text;
+        buttonElement.appendChild(span);
 
         textButtonWrapper.appendChild(buttonElement);
       }

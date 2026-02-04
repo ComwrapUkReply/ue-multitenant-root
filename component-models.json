@@ -288,6 +288,14 @@
           {
             "name": "secondary",
             "value": "secondary"
+          },
+          {
+            "name": "primary-outline",
+            "value": "primary Outline"
+          },
+          {
+            "name": "secondary-outline",
+            "value": "secondary Outline"
           }
         ]
       }
@@ -609,7 +617,8 @@
         "component": "text",
         "name": "downloadtitle",
         "value": "",
-        "label": "Title"
+        "label": "Title",
+        "required": true
       },
       {
         "component": "richtext",
@@ -618,15 +627,22 @@
         "label": "Description"
       },
       {
-        "component": "text",
-        "name": "downloadbuttonlabel",
-        "label": "Download Button Label"
-      },
-      {
-        "component": "aem-content",
+        "component": "reference",
         "name": "downloadfile",
         "label": "Asset",
-        "value": "",
+        "valueType": "string",
+        "description": "Allowed file types: Documents (pdf, doc, docx, xls, xlsx, ppt, pptx, txt, csv, xml), Images (jpg, jpeg, heic, png, webp, bmp), Videos (avs, acv, avc, ev, mp4), Archives (zip), Media (mp3, mov)"
+      },
+      {
+        "component": "boolean",
+        "name": "showpreviewimage",
+        "label": "Show Preview Image",
+        "valueType": "boolean"
+      },
+      {
+        "component": "reference",
+        "name": "downloadimage",
+        "label": "Preview Image",
         "valueType": "string"
       },
       {
@@ -636,28 +652,20 @@
       },
       {
         "component": "select",
-        "name": "downloadcolor",
-        "label": "Card Color",
+        "name": "downloadstyle",
+        "label": "Style",
         "valueType": "string",
         "options": [
           {
-            "name": "Grey",
-            "value": "grey"
+            "name": "Solid",
+            "value": "solid"
           },
           {
-            "name": "Light Blue",
-            "value": "light blue"
-          },
-          {
-            "name": "Dark Blue",
-            "value": "dark blue"
-          },
-          {
-            "name": "White",
-            "value": "white"
+            "name": "Outline",
+            "value": "outline"
           }
         ],
-        "value": "white"
+        "value": "outline"
       },
       {
         "component": "select",
@@ -673,13 +681,28 @@
             "name": "Half Width",
             "value": "half-width"
           }
-        ]
+        ],
+        "value": "full-width"
       },
       {
         "component": "boolean",
         "name": "downloadbutton",
         "label": "Show Download Button",
         "valueType": "boolean"
+      },
+      {
+        "component": "text",
+        "name": "downloadbuttonlabel",
+        "label": "Download Button Label",
+        "condition": {
+          "===": [
+            {
+              "var": "downloadbutton"
+            },
+            true
+          ]
+        },
+        "required": true
       }
     ]
   },
@@ -1318,29 +1341,44 @@
         "component": "select",
         "name": "classes",
         "value": "",
-        "label": "Background Styles",
-        "description": "The background styles of the quote",
+        "label": "Style",
+        "description": "The visual style of the quote",
         "valueType": "string",
         "options": [
           {
-            "name": "Default",
+            "name": "Solid",
+            "value": "solid",
+            "description": "Solid dark teal background with white text"
+          },
+          {
+            "name": "Outline Primary",
+            "value": "outline-primary",
+            "description": "Transparent background with medium teal outline and text"
+          },
+          {
+            "name": "Outline Secondary",
+            "value": "outline-secondary",
+            "description": "Transparent background with red/pink outline and text"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "classes_size",
+        "value": "",
+        "label": "Quote Size",
+        "description": "The size of the quote text",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Regular",
             "value": "",
-            "description": "The default background style"
+            "description": "Regular text size"
           },
           {
-            "name": "Highlight",
-            "value": "highlight",
-            "description": "The highlight background style"
-          },
-          {
-            "name": "Dark",
-            "value": "dark",
-            "description": "The dark background style"
-          },
-          {
-            "name": "Light",
-            "value": "light",
-            "description": "The light background style"
+            "name": "Long",
+            "value": "long",
+            "description": "Smaller text size for longer quotes"
           }
         ]
       }
@@ -1441,13 +1479,18 @@
     ]
   },
   {
-    "id": "search",
+    "id": "search-results",
     "fields": [
       {
         "component": "aem-content",
-        "name": "source",
-        "label": "Data Source",
-        "description": "Link to the query index JSON file. Leave empty to use the default /query-index.json"
+        "name": "folder",
+        "label": "Filter by Folder",
+        "description": "Filter results to show only pages from this folder path (e.g., /products or /blog). Leave empty to show all results. You can specify multiple folders separated by commas (e.g., /products, /blog).",
+        "value": "",
+        "valueType": "string",
+        "validation": {
+          "rootPath": "/content/ue-multitenant-root"
+        }
       },
       {
         "component": "select",
@@ -1456,15 +1499,103 @@
         "valueType": "string",
         "options": [
           {
-            "name": "Default (Grid Results)",
+            "name": "Default (List Results)",
             "value": ""
           },
           {
-            "name": "Minimal (List Results)",
-            "value": "minimal"
+            "name": "Cards (Grid Results)",
+            "value": "cards"
           }
         ],
         "value": ""
+      },
+      {
+        "component": "boolean",
+        "name": "enableTagFilter",
+        "label": "Enable Tag Filter",
+        "description": "Show tag filter buttons based on page tags in search results. Users can filter results by clicking on tag pills.",
+        "valueType": "boolean",
+        "value": false
+      },
+      {
+        "component": "boolean",
+        "name": "multipleTagSelect",
+        "label": "Allow Multiple Tag Selection",
+        "description": "When enabled, users can select multiple tags to filter results. When disabled, only one tag can be selected at a time.",
+        "valueType": "boolean",
+        "value": true
+      },
+      {
+        "component": "text",
+        "name": "searchPlaceholder",
+        "label": "Search Placeholder",
+        "description": "Placeholder text shown in the search input field. Default: 'Search...'"
+      },
+      {
+        "component": "text",
+        "name": "searchNoResultsFor",
+        "label": "No Results For Query",
+        "description": "Message shown in the count area when no results are found, followed by the search query. Default: 'No results found for'"
+      },
+      {
+        "component": "text",
+        "name": "searchResultsTitle",
+        "label": "Search Results Title",
+        "description": "Title shown above the search results. Default: 'Search Results'"
+      }
+    ]
+  },
+  {
+    "id": "search",
+    "fields": [
+      {
+        "component": "boolean",
+        "name": "autosuggest",
+        "label": "Toggle to turn recommended search",
+        "description": "Enable list of recommendations when user is typing in the search input. Default: ON (true).",
+        "valueType": "boolean",
+        "value": true
+      },
+      {
+        "component": "aem-content",
+        "name": "resultpage",
+        "label": "Result Page...",
+        "description": "Link to the search results page. When set, clicking the search icon or pressing Enter will navigate to this page with search results. This field is required when 'Toggle to turn recommended search' is disabled (false)."
+      },
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Display Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Default (List Results)",
+            "value": ""
+          },
+          {
+            "name": "Cards (Grid Results)",
+            "value": "cards"
+          }
+        ],
+        "value": ""
+      },
+      {
+        "component": "text",
+        "name": "searchPlaceholder",
+        "label": "Search Placeholder",
+        "description": "Placeholder text shown in the search input field. Default: 'Search...'"
+      },
+      {
+        "component": "text",
+        "name": "searchNoResults",
+        "label": "No Results Message",
+        "description": "Message shown when no results are found. Default: 'No results found.'"
+      },
+      {
+        "component": "text",
+        "name": "viewAllButtonText",
+        "label": "View All Results Button Text",
+        "description": "Text for the 'View all results' button shown when there are more than 6 results. Default: 'View all {count} results' (where {count} is replaced with the actual number of results)."
       }
     ]
   },
@@ -1647,16 +1778,16 @@
         "name": "classes",
         "value": "",
         "label": "Style",
-        "description": "Style for the tabs (e.g., 'default', 'primary')",
+        "description": "Style for the tabs (e.g., 'No Background', 'Background')",
         "valueType": "string",
         "options": [
           {
-            "name": "Default",
+            "name": "No Background",
             "value": ""
           },
           {
-            "name": "Primary",
-            "value": "primary"
+            "name": "Background",
+            "value": "background"
           }
         ]
       }

@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable max-len */
+
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { loadExperienceFragmentForHeader, isNavFragment } from '../experience-fragment/experience-fragment.js';
@@ -175,7 +178,7 @@ async function addLanguageSwitcher(navTools) {
  */
 async function addRegionSwitcher(navTools) {
   const container = document.createElement('div');
-  container.className = 'region-switcher-header';
+  container.className = 'block  region-switcher-header';
 
   const mockBlock = document.createElement('div');
   mockBlock.className = 'block region-switcher';
@@ -345,7 +348,6 @@ async function decorateDefaultHeader(block, fragment) {
     navSections.querySelectorAll(':scope .nav-sections-menu > ul > li.nav-drop').forEach((navSection) => {
       if (navSection.querySelector('.nav-sections-1').children.length > 8) {
         navSection.querySelector('.nav-sections-1').classList.add('nav-drop-overflow');
-        console.log('nav-drop-overflow');
       }
       // Add click handler to toggle submenu only in desktop view
       navSection.addEventListener('click', () => {
@@ -372,12 +374,27 @@ async function decorateDefaultHeader(block, fragment) {
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
 
-  // Add region switcher first, then language switcher to nav-tools
+  // Add region switcher and language switcher to nav-tools
   // Region = Country selection, Language = Languages within that country
+  // Final order: region-switcher, language-switcher, search-wrapper
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
+    // Create both switchers in the desired order
     await addRegionSwitcher(navTools);
     await addLanguageSwitcher(navTools);
+
+    // Ensure search-wrapper comes after both switchers
+    const searchWrapper = navTools.querySelector('.search-wrapper');
+    const regionHeader = navTools.querySelector('.region-switcher-header');
+    const languageHeader = navTools.querySelector('.language-switcher-header');
+
+    if (searchWrapper && regionHeader && languageHeader) {
+      // Move search-wrapper to the end if it's not already there
+      const lastChild = navTools.lastElementChild;
+      if (lastChild !== searchWrapper) {
+        navTools.appendChild(searchWrapper);
+      }
+    }
   }
 
   const navWrapper = document.createElement('div');

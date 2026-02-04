@@ -21,10 +21,18 @@
       "id": "search",
       "fields": [
         {
+          "component": "boolean",
+          "name": "autosuggest",
+          "label": "Toggle to turn recommended search",
+          "description": "Enable list of recommendations when user is typing in the search input. Default: ON (true).",
+          "valueType": "boolean",
+          "value": true
+        },
+        {
           "component": "aem-content",
-          "name": "source",
-          "label": "Data Source",
-          "description": "Link to the query index JSON file. Leave empty to use the default /query-index.json"
+          "name": "resultpage",
+          "label": "Result Page...",
+          "description": "Link to the search results page. When set, clicking the search icon or pressing Enter will navigate to this page with search results. This field is required when 'Toggle to turn recommended search' is disabled (false)."
         },
         {
           "component": "select",
@@ -33,19 +41,36 @@
           "valueType": "string",
           "options": [
             {
-              "name": "Default (Grid Results)",
+              "name": "Default (List Results)",
               "value": ""
             },
             {
-              "name": "Minimal (List Results)",
-              "value": "minimal"
+              "name": "Cards (Grid Results)",
+              "value": "cards"
             }
           ],
           "value": ""
+        },
+        {
+          "component": "text",
+          "name": "searchPlaceholder",
+          "label": "Search Placeholder",
+          "description": "Placeholder text shown in the search input field. Default: 'Search...'"
+        },
+        {
+          "component": "text",
+          "name": "searchNoResults",
+          "label": "No Results Message",
+          "description": "Message shown when no results are found. Default: 'No results found.'"
+        },
+        {
+          "component": "text",
+          "name": "viewAllButtonText",
+          "label": "View All Results Button Text",
+          "description": "Text for the 'View all results' button shown when there are more than 6 results. Default: 'View all {count} results' (where {count} is replaced with the actual number of results)."
         }
       ]
     }
   ],
   "filters": []
 }
-

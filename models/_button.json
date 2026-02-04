@@ -46,6 +46,14 @@
             {
               "name": "secondary",
               "value": "secondary"
+            },
+            {
+              "name": "primary-outline",
+              "value": "primary Outline"
+            },
+            {
+              "name": "secondary-outline",
+              "value": "secondary Outline"
             }
           ]
         }
