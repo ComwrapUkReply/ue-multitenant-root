@@ -73,7 +73,8 @@ export default function decorate(block) {
   const videoAutoplay = idx.autoplay != null ? parseBooleanFromRow(rows[idx.autoplay], true) : true;
   const videoLoop = idx.loop != null ? parseBooleanFromRow(rows[idx.loop], true) : true;
   const videoMuted = idx.muted != null ? parseBooleanFromRow(rows[idx.muted], true) : true;
-  const videoControls = idx.controls != null ? parseBooleanFromRow(rows[idx.controls], false) : false;
+  const videoControls = idx.controls != null ? parseBooleanFromRow(rows[idx.controls], false)
+    : true;
 
   // Row 0: Video (reference renders as link or picture)
   if (rows[idx.video]) {
