@@ -126,7 +126,9 @@ async function decorateFullScreenVideo(fullScreenVideoLink, teaserPicture, targe
   video.classList.add('video-cover');
   video.innerHTML = `<source src="${fullScreenVideoLink}" type="video/mp4">`;
   video.setAttribute('preload', 'metadata');
-  video.setAttribute('poster', teaserPicture.currentSrc);
+  if (teaserPicture?.currentSrc) {
+    video.setAttribute('poster', teaserPicture.currentSrc);
+  }
 
   video.addEventListener('click', () => { toggleVideoPlay(video); });
 
@@ -159,26 +161,28 @@ function decorateVideoOptions(block) {
     return;
   }
 
-  // Handle video width (third field: video-width, after video and video_description)
+  // Handle video width (second row: video-width)
   const widthField = block.children[1];
   if (widthField) {
-    const widthValue = widthField.querySelector('p')?.textContent.trim();
+    const widthValue = widthField.querySelector('p')?.textContent?.trim();
     const videoContainer = video.closest('.teaser-video-container') || video.parentElement;
-    if (videoContainer) {
-      videoContainer.style.width = widthValue ?? '100%';
+    if (videoContainer && widthValue) {
+      videoContainer.style.width = widthValue;
     }
+    widthField.remove();
   }
 
-  // Handle boolean options (autoplay, loop, muted, controls)
-  // Indices shift after removing width field, so autoplay is now at index 2
-  const autoplay = block.children[2];
-  const autoplayValue = autoplay?.querySelector('p')?.textContent.trim() || 'false';
-  const loop = block.children[3];
-  const loopValue = loop?.querySelector('p')?.textContent.trim() || 'false';
-  const muted = block.children[4];
-  const mutedValue = muted?.querySelector('p')?.textContent.trim() || 'false';
-  const controls = block.children[5];
-  const controlsValue = controls?.querySelector('p')?.textContent.trim() || 'false';
+  // Handle boolean options (autoplay, loop, muted, controls) - rows 2–5 after width removal
+  const autoplay = block.children[1];
+  const loop = block.children[2];
+  const muted = block.children[3];
+  const controls = block.children[4];
+
+  const autoplayValue = autoplay?.querySelector('p')?.textContent?.trim() || 'false';
+  const loopValue = loop?.querySelector('p')?.textContent?.trim() || 'false';
+  const mutedValue = muted?.querySelector('p')?.textContent?.trim() || 'false';
+  const controlsValue = controls?.querySelector('p')?.textContent?.trim() || 'false';
+
   const autoplayEnabled = autoplayValue === 'true';
   const loopEnabled = loopValue === 'true';
   const mutedEnabled = mutedValue === 'true';
@@ -188,22 +192,27 @@ function decorateVideoOptions(block) {
   video.toggleAttribute('loop', loopEnabled);
   video.toggleAttribute('muted', mutedEnabled);
   video.toggleAttribute('controls', controlsEnabled);
-  // Set JavaScript properties (not just attributes) for proper video behavior
   video.muted = mutedEnabled;
   video.loop = loopEnabled;
   video.autoplay = autoplayEnabled;
   video.controls = controlsEnabled;
-  autoplay.remove();
-  loop.remove();
-  muted.remove();
-  controls.remove();
-  widthField.remove();
+
+  [autoplay, loop, muted, controls].filter(Boolean).forEach((el) => el.remove());
 }
 
 export default function decorate(block) {
+  // Defensive: block must have at least one row
   const videoBanner = block.children[0];
+  if (!videoBanner) {
+    return;
+  }
+
   videoBanner.classList.add('hero-video-banner');
+
   const heroContent = videoBanner.children[0];
+  if (!heroContent) {
+    return;
+  }
   heroContent.classList.add('teaser-video-container');
 
   const teaserVideoLink = heroContent.querySelector('a');
@@ -215,20 +224,21 @@ export default function decorate(block) {
     block.appendChild(placeholderImage);
   }
 
-  // preloadLCPImage(teaserPicture.src);
   decorateTeaser(teaserVideoLink, teaserPicture, heroContent, placeholderImage);
   decorateVideoOptions(block);
 
+  // Overlay (e.g. fullscreen link) is optional - only present when first row has two cells
   const overlay = videoBanner.children[1];
-
-  if (overlay) {
-    overlay.classList = 'overlay';
+  if (!overlay) {
+    return;
   }
 
+  overlay.classList = 'overlay';
   const fullScreenVideoLink = overlay.querySelector('a:last-of-type');
   if (!fullScreenVideoLink) {
     return;
   }
+
   const fullScreenVideoLinkHref = fullScreenVideoLink.href;
   decorateOverlayButton(fullScreenVideoLink, block, overlay);
   decorateFullScreenVideo(fullScreenVideoLinkHref, teaserPicture, videoBanner);
