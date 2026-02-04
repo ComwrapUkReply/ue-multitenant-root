@@ -18,6 +18,12 @@
   width: 100%;
 }
 
+/* Links styling in experience fragment nav */
+.experience-fragment-nav a {
+    color: var(--text-color, #131313);
+    text-decoration: none;
+  }
+
 /* Dark variant */
 .experience-fragment.dark {
   background-color: var(--dark-color, #1a1a1a);
@@ -102,6 +108,20 @@
   max-height: 40px;
   width: auto;
 }
+
+/* Lists in experience fragment nav (navigation menus) */
+.experience-fragment-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .experience-fragment-nav li {
+    margin: 0;
+  }
 
 /* Navigation section (experience-fragment-nav-section-2) */
 .experience-fragment-nav-section-2 .default-content-wrapper > ul {
@@ -205,12 +225,6 @@
   }
 }
 
-/* Links styling in experience fragment nav */
-.experience-fragment-nav a {
-  color: var(--text-color, #131313);
-  text-decoration: none;
-}
-
 .experience-fragment-nav a:hover {
   color: var(--link-hover-color, #1d3ecf);
 }
@@ -229,20 +243,6 @@
 .experience-fragment-nav img {
   max-height: 40px;
   width: auto;
-}
-
-/* Lists in experience fragment nav (navigation menus) */
-.experience-fragment-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.experience-fragment-nav li {
-  margin: 0;
 }
 
 /* Headings in experience fragment nav */
