@@ -23,34 +23,34 @@ function parseBooleanFromRow(row, defaultValue = false) {
 export default function decorate(block) {
   const rows = [...block.children];
 
-  // New model (current _video-hero.json):
-  // 0=tab(Content), 1=video, 2=heading, 3=subheading, 4=badge, 5=badgeAlt,
-  // 6=tab(CTAs), 7=primaryButton, 8=primaryButtonText, 9=secondaryButton, 10=secondaryButtonText,
-  // 11=tab(Controls), 12=video-autoplay, 13=video-loop, 14=video-muted, 15=video-controls
+  // Current model (tabs do NOT create rows in the table):
+  // 0=video, 1=heading, 2=subheading, 3=badge, 4=badgeAlt,
+  // 5=primaryButton, 6=primaryButtonText, 7=secondaryButton, 8=secondaryButtonText,
+  // 9=video-autoplay, 10=video-loop, 11=video-muted, 12=video-controls
   //
-  // Legacy (fewer rows, before tabs/booleans existed):
+  // Legacy (older content, fewer fields):
   // 0=video, 1=heading, 2=subheading, 3=primary, 4=secondary, 5=badge
-  const hasContentTab = rows.length >= 16;
-  const idx = hasContentTab
+  const isNewStructure = rows.length >= 13;
+  const idx = isNewStructure
     ? {
-      video: 1,
-      heading: 2,
-      subheading: 3,
-      badge: 4,
-      primary: 7,
-      secondary: 9,
-      autoplay: 12,
-      loop: 13,
-      muted: 14,
-      controls: 15,
+      video: 0,
+      heading: 1,
+      subheading: 2,
+      badge: 3,
+      primary: 5,
+      secondary: 7,
+      autoplay: 9,
+      loop: 10,
+      muted: 11,
+      controls: 12,
     }
     : {
       video: 0,
       heading: 1,
       subheading: 2,
-      badge: 5,
       primary: 3,
       secondary: 4,
+      badge: 5,
       autoplay: null,
       loop: null,
       muted: null,
@@ -67,8 +67,7 @@ export default function decorate(block) {
   const videoAutoplay = idx.autoplay != null ? parseBooleanFromRow(rows[idx.autoplay], true) : true;
   const videoLoop = idx.loop != null ? parseBooleanFromRow(rows[idx.loop], true) : true;
   const videoMuted = idx.muted != null ? parseBooleanFromRow(rows[idx.muted], true) : true;
-  const videoControls = idx.controls != null ? parseBooleanFromRow(rows[idx.controls], false)
-    : false;
+  const videoControls = idx.controls != null ? parseBooleanFromRow(rows[idx.controls], false) : false;
 
   // Row 0: Video (reference renders as link or picture)
   if (rows[idx.video]) {
