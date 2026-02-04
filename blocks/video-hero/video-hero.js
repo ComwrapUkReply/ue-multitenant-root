@@ -23,8 +23,6 @@ function parseBooleanFromRow(row, defaultValue = false) {
 export default function decorate(block) {
   const rows = [...block.children];
 
-  // New model: 0=video, 1=heading, 2=subheading, 3=badge, 4=badgeAlt, 5=tab, 6–9=CTAs, 10=tab, 11–14=booleans
-  // Legacy (fewer rows): 0=video, 1=heading, 2=subheading, 3=primary, 4=secondary, 5=badge
   const hasNewStructure = rows.length >= 15;
   const idx = {
     badge: hasNewStructure ? 3 : 5,
