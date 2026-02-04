@@ -23,24 +23,6 @@ function parseBooleanFromRow(row, defaultValue = false) {
 export default function decorate(block) {
   const rows = [...block.children];
 
-  // ========== DEBUG START ==========
-  // eslint-disable-next-line no-console
-  console.group('🎬 Video Hero Debug');
-  // eslint-disable-next-line no-console
-  console.log('Total rows:', rows.length);
-  rows.forEach((row, i) => {
-    const cell = row.querySelector(':scope > div') || row;
-    const hasLink = !!row.querySelector('a');
-    const hasImg = !!row.querySelector('img, picture');
-    const text = cell?.textContent?.trim().substring(0, 50) || '(empty)';
-    const html = cell?.innerHTML?.substring(0, 100) || '(empty)';
-    // eslint-disable-next-line no-console
-    console.log(`Row[${i}]:`, { hasLink, hasImg, text, html });
-  });
-  // eslint-disable-next-line no-console
-  console.groupEnd();
-  // ========== DEBUG END ==========
-
   // Actual AEM row structure (verified via console debug):
   // - tabs do NOT create rows
   // - aem-content + text pairs MERGE into single row (link with text)
@@ -81,9 +63,6 @@ export default function decorate(block) {
       controls: null,
     };
 
-  // eslint-disable-next-line no-console
-  console.log('🎬 isNewStructure:', isNewStructure, '| idx:', idx);
-
   let videoSrc = null;
   let headingHtml = null;
   let subheadingText = null;
@@ -95,9 +74,6 @@ export default function decorate(block) {
   const videoLoop = idx.loop != null ? parseBooleanFromRow(rows[idx.loop], true) : true;
   const videoMuted = idx.muted != null ? parseBooleanFromRow(rows[idx.muted], true) : true;
   const videoControls = idx.controls != null ? parseBooleanFromRow(rows[idx.controls], false) : false;
-
-  // eslint-disable-next-line no-console
-  console.log('🎬 Video options:', { videoAutoplay, videoLoop, videoMuted, videoControls });
 
   // Row 0: Video (reference renders as link or picture)
   if (rows[idx.video]) {
@@ -132,59 +108,32 @@ export default function decorate(block) {
   }
 
   // Badge (row 3 in new structure, row 5 in legacy)
-  // eslint-disable-next-line no-console
-  console.log('🎬 Badge row index:', idx.badge, '| row exists:', !!rows[idx.badge]);
   if (rows[idx.badge]) {
-    // eslint-disable-next-line no-console
-    console.log('🎬 Badge row HTML:', rows[idx.badge]?.innerHTML?.substring(0, 200));
     const badgeEl = rows[idx.badge].querySelector('[data-aue-prop="badge"]')
       || rows[idx.badge].querySelector('img')
       || rows[idx.badge].querySelector('picture img');
     if (badgeEl) {
       badgeImg = badgeEl;
-      // eslint-disable-next-line no-console
-      console.log('🎬 Badge found:', badgeEl.tagName, badgeEl.src || badgeEl.outerHTML?.substring(0, 100));
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('🎬 Badge NOT found in row');
     }
   }
 
   // Primary Button
-  // eslint-disable-next-line no-console
-  console.log('🎬 Primary row index:', idx.primary, '| row exists:', !!rows[idx.primary]);
   if (rows[idx.primary]) {
-    // eslint-disable-next-line no-console
-    console.log('🎬 Primary row HTML:', rows[idx.primary]?.innerHTML?.substring(0, 200));
     const primaryLink = rows[idx.primary].querySelector('[data-aue-prop="primaryButtonText"]')
       || rows[idx.primary].querySelector('.button-container a, a.button')
       || rows[idx.primary].querySelector('a');
     if (primaryLink) {
       primaryBtn = primaryLink.cloneNode(true);
-      // eslint-disable-next-line no-console
-      console.log('🎬 Primary button found:', primaryLink.href, primaryLink.textContent);
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('🎬 Primary button NOT found in row');
     }
   }
 
   // Secondary Button
-  // eslint-disable-next-line no-console
-  console.log('🎬 Secondary row index:', idx.secondary, '| row exists:', !!rows[idx.secondary]);
   if (rows[idx.secondary]) {
-    // eslint-disable-next-line no-console
-    console.log('🎬 Secondary row HTML:', rows[idx.secondary]?.innerHTML?.substring(0, 200));
     const secondaryLink = rows[idx.secondary].querySelector('[data-aue-prop="secondaryButtonText"]')
       || rows[idx.secondary].querySelector('.button-container a, a.button')
       || rows[idx.secondary].querySelector('a');
     if (secondaryLink) {
       secondaryBtn = secondaryLink.cloneNode(true);
-      // eslint-disable-next-line no-console
-      console.log('🎬 Secondary button found:', secondaryLink.href, secondaryLink.textContent);
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('🎬 Secondary button NOT found in row');
     }
   }
 
