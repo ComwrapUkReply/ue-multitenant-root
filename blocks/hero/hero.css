@@ -23,7 +23,7 @@ main>.section.hero-container {
     height: 100%;
     background-color: var(--color-black);
     opacity: 0.6;
-    z-index: 1;
+    z-index: 0;
 }
 
 .hero h1 {
