@@ -231,9 +231,9 @@ export default function decorate(block) {
 
   // Create subheading
   if (subheadingText) {
-    const subheading = document.createElement('p');
+    const subheading = document.createElement('div');
     subheading.className = 'video-hero-subheading';
-    subheading.textContent = subheadingText;
+    subheading.innerHTML = subheadingText;
     content.appendChild(subheading);
   }
 
