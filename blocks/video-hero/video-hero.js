@@ -91,8 +91,7 @@ export default function decorate(block) {
   if (rows[idx.heading]) {
     const row = rows[idx.heading];
     const cell = getCell(row);
-    const headingEl = row.querySelector('[data-richtext-prop="heading"]')
-      || cell?.querySelector('h1');
+    const headingEl = row.querySelector('[data-richtext-prop="heading"]');
     if (headingEl) {
       headingHtml = headingEl.innerHTML?.trim() || headingEl.textContent?.trim() || '';
     } else if (cell?.innerHTML?.trim()) {
