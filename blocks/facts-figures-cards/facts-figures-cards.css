@@ -40,11 +40,10 @@
   }
   
   /* Figure styling */
-  .facts-figures-card-figure {
+  .facts-figures-card-description {
     font-family: var(--font-family-semibold);
     font-size: var(--font-size-h2);
     line-height: var(--line-height-h2);
-    font-weight: 700;
     color: var(--color-primary);
     margin: 0 0 var(--space-8);
     display: flex;
@@ -52,7 +51,7 @@
     gap: var(--space-4);
   }
   
-  .facts-figures-card-figure-unit {
+  .facts-figures-card-description-unit {
     font-size: var(--font-size-h4);
     line-height: var(--line-height-h4);
     font-weight: 500;
@@ -87,16 +86,16 @@
     color: var(--color-white);
   }
   
-  .facts-figures-card.gradient .facts-figures-card-figure {
+  .facts-figures-card.gradient .facts-figures-card-description {
     color: var(--color-white);
   }
   
-  .facts-figures-card.gradient .facts-figures-card-figure-unit {
+  .facts-figures-card.gradient .facts-figures-card-description-unit {
     color: var(--color-white);
     opacity: 0.9;
   }
   
-  .facts-figures-card.blgradientue .facts-figures-card-description {
+  .facts-figures-card.gradient .facts-figures-card-description {
     color: var(--color-white);
     opacity: 0.9;
   }
@@ -111,11 +110,11 @@
     color: var(--color-black);
   }
   
-  .facts-figures-card.grey .facts-figures-card-figure {
+  .facts-figures-card.grey .facts-figures-card-description {
     color: var(--color-primary);
   }
   
-  .facts-figures-card.grey .facts-figures-card-figure-unit {
+  .facts-figures-card.grey .facts-figures-card-description-unit {
     color: var(--color-primary);
     opacity: 0.8;
   }
@@ -136,12 +135,12 @@
     color: var(--color-primary);
   }
   
-  .facts-figures-card.bordered .facts-figures-card-figure {
+  .facts-figures-card.bordered .facts-figures-card-description {
     color: var(--color-primary);
   }
   
   .facts-figures-card.highlighted {
-    background: linear-gradient(135deg, var(--color-grey-100) 0%, var(--color-white) 100%);
+    border: none;
     border-left: var(--border-width-xl) var(--border-style-solid) var(--color-primary);
     box-shadow: var(--box-shadow);
   }
@@ -150,7 +149,7 @@
     color: var(--color-primary);
   }
   
-  .facts-figures-card.highlighted .facts-figures-card-figure {
+  .facts-figures-card.highlighted .facts-figures-card-description {
     color: var(--color-primary);
   }
   
@@ -158,7 +157,7 @@
     background: transparent;
     border: var(--border-width-sm) var(--border-style-solid) var(--color-grey-100);
     box-shadow: none;
-    padding: var(--space-16);
+    padding: var(--space-12);
   }
   
   .facts-figures-card.minimal .facts-figures-card-title {
@@ -167,9 +166,47 @@
     margin-bottom: var(--space-8);
   }
   
-  .facts-figures-card.minimal .facts-figures-card-figure {
-    font-size: var(--font-size-mob-h2);
-    line-height: var(--line-height-mob-h2);
+  .facts-figures-card.minimal .facts-figures-card-description * {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+  }
+
+  .facts-figures-card.dark {
+    background: var(--color-primary);
+    box-shadow: none;
+    border: none;
+  }
+  
+  .facts-figures-card.dark .facts-figures-card-title {
+    font-size: var(--font-size-h6);
+    line-height: var(--line-height-h6);
+    margin-bottom: var(--space-8);
+    color: var(--color-white);
+  }
+  
+  .facts-figures-card.dark .facts-figures-card-description * {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--color-white);
+  }
+
+  .facts-figures-card.success {
+    background: var(--color-secondary);
+    box-shadow: none;
+    border: none;
+  }
+  
+  .facts-figures-card.success .facts-figures-card-title {
+    font-size: var(--font-size-h6);
+    line-height: var(--line-height-h6);
+    margin-bottom: var(--space-8);
+    color: var(--color-white);
+  }
+  
+  .facts-figures-card.success .facts-figures-card-description * {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--color-white);
   }
   
   /* Element grouping classes - Layout variants */
@@ -183,7 +220,7 @@
     margin-bottom: var(--space-8);
   }
   
-  .facts-figures-card.compact .facts-figures-card-figure {
+  .facts-figures-card.compact .facts-figures-card-description {
     font-size: var(--font-size-mob-h2);
     line-height: var(--line-height-mob-h2);
   }
@@ -198,7 +235,7 @@
     margin-bottom: var(--space-24);
   }
   
-  .facts-figures-card.spacious .facts-figures-card-figure {
+  .facts-figures-card.spacious .facts-figures-card-description {
     font-size: var(--font-size-h2);
     line-height: var(--line-height-h2);
   }
@@ -207,7 +244,7 @@
     text-align: center;
   }
   
-  .facts-figures-card.centered .facts-figures-card-figure {
+  .facts-figures-card.centered .facts-figures-card-description {
     justify-content: center;
   }
   
@@ -223,7 +260,7 @@
     margin-bottom: var(--space-8);
   }
   
-  .facts-figures-card.small .facts-figures-card-figure {
+  .facts-figures-card.small .facts-figures-card-description {
     font-size: var(--font-size-h5);
     line-height: var(--line-height-h5);
   }
@@ -239,7 +276,7 @@
     margin-bottom: var(--space-24);
   }
   
-  .facts-figures-card.large .facts-figures-card-figure {
+  .facts-figures-card.large .facts-figures-card-description {
     font-size: var(--font-size-h2);
     line-height: var(--line-height-h2);
   }
@@ -259,7 +296,7 @@
     font-weight: 800;
   }
   
-  .facts-figures-card.bold .facts-figures-card-figure {
+  .facts-figures-card.bold .facts-figures-card-description {
     font-weight: 900;
   }
   
@@ -272,7 +309,7 @@
     color: var(--color-primary);
   }
   
-  .facts-figures-card.accent .facts-figures-card-figure {
+  .facts-figures-card.accent .facts-figures-card-description {
     color: var(--color-primary);
   }
   
@@ -306,12 +343,12 @@
       line-height: var(--line-height-mob-h5);
     }
   
-    .facts-figures-card-figure {
+    .facts-figures-card-description {
       font-size: var(--font-size-mob-h2);
       line-height: var(--line-height-mob-h2);
     }
   
-    .facts-figures-card-figure-unit {
+    .facts-figures-card-description-unit {
       font-size: var(--font-size-mob-h4);
       line-height: var(--line-height-mob-h4);
     }
