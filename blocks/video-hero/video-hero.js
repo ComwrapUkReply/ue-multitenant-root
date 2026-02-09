@@ -225,7 +225,7 @@ export default function decorate(block) {
   if (headingHtml) {
     const heading = document.createElement('h1');
     heading.className = 'video-hero-heading';
-    heading.innerHTML = headingHtml;
+    heading.textContent = headingHtml;
     content.appendChild(heading);
   }
 
