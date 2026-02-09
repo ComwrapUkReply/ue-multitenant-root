@@ -91,8 +91,7 @@ export default function decorate(block) {
   if (rows[idx.heading]) {
     const row = rows[idx.heading];
     const cell = getCell(row);
-    const headingEl = row.querySelector('h1')
-      || row.querySelector('[data-aue-prop="heading"]');
+    const headingEl = row.querySelector('[data-richtext-prop="heading"]');
     if (headingEl) {
       headingHtml = headingEl.innerHTML?.trim() || headingEl.textContent?.trim() || '';
     } else if (cell?.innerHTML?.trim()) {
@@ -105,7 +104,7 @@ export default function decorate(block) {
     const row = rows[idx.subheading];
     const cell = getCell(row);
     const subheadingEl = row.querySelector('[data-aue-prop="subheading"]') || cell;
-    subheadingText = subheadingEl?.innerHTML?.trim() || '';
+    subheadingText = subheadingEl?.textContent?.trim() || '';
   }
 
   // Badge (row 3 in new structure, row 5 in legacy)
