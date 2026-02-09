@@ -20,7 +20,7 @@ const CLASSES = {
   figure: 'facts-figures-card-figure',
   figureUnit: 'facts-figures-card-figure-unit',
   description: 'facts-figures-card-description',
-  animateIn: 'animate-in',
+  // animateIn: 'animate-in',
 };
 
 // Selector constants
@@ -340,11 +340,6 @@ function processCard(card, index) {
 function setupScrollAnimation(block) {
   // Check for reduced motion preference
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // If reduced motion is preferred, show all cards immediately
-    const cards = block.querySelectorAll(SELECTORS.card);
-    cards.forEach((card) => {
-      card.classList.add(CLASSES.animateIn);
-    });
     return;
   }
 
@@ -352,15 +347,6 @@ function setupScrollAnimation(block) {
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const cards = entry.target.querySelectorAll(SELECTORS.card);
-
-          // Animate cards with staggered delay
-          cards.forEach((card, index) => {
-            setTimeout(() => {
-              card.classList.add(CLASSES.animateIn);
-            }, index * CONFIG.animationDelay);
-          });
-
           // Stop observing after animation is triggered
           observer.unobserve(entry.target);
         }
