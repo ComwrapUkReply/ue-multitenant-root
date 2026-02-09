@@ -104,7 +104,7 @@ export default function decorate(block) {
     const row = rows[idx.subheading];
     const cell = getCell(row);
     const subheadingEl = row.querySelector('[data-aue-prop="subheading"]') || cell;
-    subheadingText = subheadingEl?.textContent?.trim() || '';
+    subheadingText = subheadingEl?.innerHTML?.trim() || '';
   }
 
   // Badge (row 3 in new structure, row 5 in legacy)
