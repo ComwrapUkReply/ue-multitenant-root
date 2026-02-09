@@ -1985,15 +1985,16 @@
         "multi": false
       },
       {
-        "component": "richtext",
+        "component": "text",
         "name": "heading",
         "value": "",
         "label": "Heading",
         "description": "Main heading text (use bold for accent color)",
-        "valueType": "string"
+        "valueType": "string",
+        "aem:type": "h1"
       },
       {
-        "component": "text",
+        "component": "richtext",
         "valueType": "string",
         "name": "subheading",
         "label": "Subheading",

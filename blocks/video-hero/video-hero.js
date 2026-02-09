@@ -91,8 +91,8 @@ export default function decorate(block) {
   if (rows[idx.heading]) {
     const row = rows[idx.heading];
     const cell = getCell(row);
-    const headingEl = row.querySelector('[data-richtext-prop="heading"]')
-      || cell?.querySelector('h1, h2, h3, h4, h5, h6');
+    const headingEl = row.querySelector('h1')
+      || row.querySelector('[data-aue-prop="heading"]');
     if (headingEl) {
       headingHtml = headingEl.innerHTML?.trim() || headingEl.textContent?.trim() || '';
     } else if (cell?.innerHTML?.trim()) {
@@ -105,7 +105,7 @@ export default function decorate(block) {
     const row = rows[idx.subheading];
     const cell = getCell(row);
     const subheadingEl = row.querySelector('[data-aue-prop="subheading"]') || cell;
-    subheadingText = subheadingEl?.textContent?.trim() || '';
+    subheadingText = subheadingEl?.innerHTML?.trim() || '';
   }
 
   // Badge (row 3 in new structure, row 5 in legacy)
@@ -226,14 +226,17 @@ export default function decorate(block) {
     const heading = document.createElement('h1');
     heading.className = 'video-hero-heading';
     heading.innerHTML = headingHtml;
+    heading.querySelectorAll('p').forEach((p) => {
+      p.replaceWith(...p.childNodes);
+    });
     content.appendChild(heading);
   }
 
   // Create subheading
   if (subheadingText) {
-    const subheading = document.createElement('p');
+    const subheading = document.createElement('div');
     subheading.className = 'video-hero-subheading';
-    subheading.textContent = subheadingText;
+    subheading.innerHTML = subheadingText;
     content.appendChild(subheading);
   }
 
