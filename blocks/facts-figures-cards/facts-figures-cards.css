@@ -77,26 +77,26 @@
   }
   
   /* Style variants */
-  .facts-figures-card.background-gradient {
+  .facts-figures-card.gradient {
     background: var(--gradient-card);
     color: var(--color-white);
     border: none;
   }
   
-  .facts-figures-card.background-gradient .facts-figures-card-title {
+  .facts-figures-card.gradient .facts-figures-card-title {
     color: var(--color-white);
   }
   
-  .facts-figures-card.background-gradient .facts-figures-card-figure {
+  .facts-figures-card.gradient .facts-figures-card-figure {
     color: var(--color-white);
   }
   
-  .facts-figures-card.background-gradient .facts-figures-card-figure-unit {
+  .facts-figures-card.gradient .facts-figures-card-figure-unit {
     color: var(--color-white);
     opacity: 0.9;
   }
   
-  .facts-figures-card.blbackground-gradientue .facts-figures-card-description {
+  .facts-figures-card.blgradientue .facts-figures-card-description {
     color: var(--color-white);
     opacity: 0.9;
   }
