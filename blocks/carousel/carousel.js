@@ -14,6 +14,11 @@ const CAROUSEL_CONFIG = {
   },
 };
 
+// SVG icon content for play/pause buttons
+const PLAY_ICON_SVG = '<svg width="24" height="24" viewBox="0 0 11.188 11.188" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M1.537,10.851c0-0.001,0-0.002,0-0.003V0.338c0-0.135,0.107-0.257,0.271-0.31c0.164-0.054,0.354-0.027,0.483,0.066L9.52,5.349c0.175,0.127,0.175,0.36,0,0.487l-7.193,5.229c-0.081,0.074-0.205,0.123-0.344,0.123C1.737,11.188,1.537,11.037,1.537,10.851z"/></svg>';
+
+const PAUSE_ICON_SVG = '<svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 12V36" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 12V36" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
 /**
  * Debounce function to limit function execution rate
  * @param {Function} func - Function to debounce
@@ -147,8 +152,8 @@ function initializeCarousel(block, track, slideCount, options) {
     if (playPauseButton) {
       playPauseButton.setAttribute('aria-label', isPlaying ? 'Pause carousel' : 'Play carousel');
       playPauseButton.innerHTML = isPlaying
-        ? '<span class="carousel-pause-icon">⏸</span>'
-        : '<span class="carousel-play-icon">▶</span>';
+        ? `<span class="carousel-pause-icon">${PAUSE_ICON_SVG}</span>`
+        : `<span class="carousel-play-icon">${PLAY_ICON_SVG}</span>`;
     }
   }
 
@@ -513,7 +518,7 @@ export default function decorate(block) {
     playPauseButton = document.createElement('button');
     playPauseButton.className = 'carousel-play-pause';
     playPauseButton.setAttribute('aria-label', 'Pause carousel'); // Default state is playing
-    playPauseButton.innerHTML = '<span class="carousel-play-pause-icon"></span>';
+    playPauseButton.innerHTML = `<span class="carousel-pause-icon">${PAUSE_ICON_SVG}</span>`;
 
     // Dots container
     dotsContainer = document.createElement('div');
