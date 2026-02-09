@@ -46,7 +46,7 @@
           "valueType": "string",
           "options": [
             {"name": "Default", "value": ""},
-            {"name": "Blue", "value": "blue"},
+            {"name": "Background Gradient", "value": "background-gradient"},
             {"name": "Grey", "value": "grey"},
             {"name": "Bordered", "value": "bordered"},
             {"name": "Highlighted", "value": "highlighted"},
