@@ -225,8 +225,8 @@ export default function decorate(block) {
   if (headingHtml) {
     const heading = document.createElement('h1');
     heading.className = 'video-hero-heading';
-    heading.textContent = headingHtml;
-    heading.quwerySelectorAll('p').forEach((p) => {
+    heading.innerHTML = headingHtml;
+    heading.querySelectorAll('p').forEach((p) => {
       p.replaceWith(...p.childNodes);
     });
     content.appendChild(heading);
