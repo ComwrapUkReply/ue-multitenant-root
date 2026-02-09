@@ -1990,7 +1990,8 @@
         "value": "",
         "label": "Heading",
         "description": "Main heading text (use bold for accent color)",
-        "valueType": "string"
+        "valueType": "string",
+        "aem:type": "h1"
       },
       {
         "component": "richtext",
