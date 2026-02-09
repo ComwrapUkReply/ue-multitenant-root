@@ -1985,7 +1985,7 @@
         "multi": false
       },
       {
-        "component": "richtext",
+        "component": "text",
         "name": "heading",
         "value": "",
         "label": "Heading",
@@ -1993,7 +1993,7 @@
         "valueType": "string"
       },
       {
-        "component": "text",
+        "component": "richtext",
         "valueType": "string",
         "name": "subheading",
         "label": "Subheading",
