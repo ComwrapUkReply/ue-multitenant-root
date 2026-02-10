@@ -46,8 +46,12 @@
               "value": ""
             },
             {
-              "name": "Primary",
+              "name": "Primary Background",
               "value": "primary"
+            },
+            {
+              "name": "Secondary Background",
+              "value": "secondary"
             }
           ]
         }
