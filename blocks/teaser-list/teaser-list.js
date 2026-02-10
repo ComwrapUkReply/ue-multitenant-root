@@ -117,7 +117,7 @@ export default async function decorate(block) {
     const title = page.teasertitle || page.title;
     const image = createImageWithModal(teaserImage, title, '16-9');
 
-    const titleElement = 'h4';
+    const titleElement = TEASERS_TITLE_ELEMENT.text || 'h4';
 
     const description = page.teaserdescription || page.description;
     // Get the appropriate link based on environment (EDS or AEM author)
