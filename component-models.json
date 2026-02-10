@@ -1646,6 +1646,26 @@
           {
             "name": "5 Columns",
             "value": "table-5-columns"
+          },
+          {
+            "name": "6 Columns",
+            "value": "table-6-columns"
+          },
+          {
+            "name": "7 Columns",
+            "value": "table-7-columns"
+          },
+          {
+            "name": "8 Columns",
+            "value": "table-8-columns"
+          },
+          {
+            "name": "9 Columns",
+            "value": "table-9-columns"
+          },
+          {
+            "name": "10 Columns",
+            "value": "table-10-columns"
           }
         ]
       }
