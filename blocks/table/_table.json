@@ -11,7 +11,13 @@
               "template": {
                 "name": "Table",
                 "model": "table",
-                "filter": "table"
+                "filter": "table",
+                "rows": 1,
+                "table-row-1": {
+                  "name": "Row",
+                  "model": "table-row",
+                  "column1text": ""
+                }
               }
             }
           }
@@ -302,7 +308,7 @@
                 "value": "table-9-columns"
               },
               {
-                "name": "10 Columnsss",
+                "name": "10 Columns",
                 "value": "table-10-columns"
               }
             ]

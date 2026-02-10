@@ -478,7 +478,13 @@
                 "template": {
                   "name": "Table",
                   "model": "table",
-                  "filter": "table"
+                  "filter": "table",
+                  "rows": 1,
+                  "table-row-1": {
+                    "name": "Row",
+                    "model": "table-row",
+                    "column1text": ""
+                  }
                 }
               }
             }
