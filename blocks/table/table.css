@@ -1,9 +1,9 @@
-.table.block {
+.table {
   width: 100%;
   overflow-x: auto;
 }
 
-.table.block table {
+.table table {
   width: 100%;
   max-width: 100%;
   border-collapse: collapse;
@@ -11,32 +11,32 @@
 }
 
 @media (width >= 600px) {
-  .table.block table {
+  .table table {
     font-size: var(--font-size-base);
   }
 }
 
 @media (width >= 900px) {
-  .table.block table {
+  .table table {
     font-size: var(--font-size-base);
   }
 }
 
-.table.block table thead tr {
+.table table thead tr {
   border-top: 2px solid;
   border-bottom: 2px solid;
 }
 
-.table.block table tbody tr {
+.table table tbody tr {
   border-bottom: 1px solid;
 }
 
-.table.block table th {
+.table table th {
   font-weight: 700;
 }
 
-.table.block table th,
-.table.block table td {
+.table table th,
+.table table td {
   padding: var(--space-8);
   border: 1px solid;
   text-align: left;
@@ -52,35 +52,54 @@
 }
 
 /* no header variant */
-.table.block.no-header table tbody tr {
+.table.no-header table tbody tr {
   border-top: 1px solid;
 }
 
 /* striped variant */
-.table.block.striped tbody tr:nth-child(odd) {
+.table.striped tbody tr:nth-child(odd) {
   background-color: var(--color-grey-200);
 }
 
 /* bordered variant */
-.table.block.bordered table th,
-.table.block.bordered table td {
+.table.bordered table th,
+.table.bordered table td {
   border: 1px solid;
 }
 
-
-main .section.background-dark {
-    background-color: var(--color-grey-900);
+.table.background-dark {
+    background-color: var(--color-primary);
+    color: var(--color-white);
     
-    .table.block table thead tr,
-    .table.block table tbody tr,
-    .table.block table th,
-    .table.block table td {
+    a {
+        color: var(--color-white);
+    }
+}
+
+.table.background-dark table thead tr,
+.table.background-dark table tbody tr,
+.table.background-dark table th,
+.table.background-dark table td {
+  border-color: var(--color-white);
+}
+
+.table.background-dark table tbody tr,
+.table.background-dark table th,
+.table.background-dark table td {
+  border-color: var(--color-white);
+}
+
+main .section.gradient {
+    .table table thead tr,
+    .table table tbody tr,
+    .table table th,
+    .table table td {
       border-color: var(--color-white);
     }
 
-    .table.block table tbody tr,
-    .table.block table th,
-    .table.block table td {
+    .table table tbody tr,
+    .table table th,
+    .table table td {
         border-color: var(--color-white);
     }
 }
