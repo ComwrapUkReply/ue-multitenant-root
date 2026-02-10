@@ -198,7 +198,7 @@
         }
       },
       {
-        "title": "Row 10",
+        "title": "Row",
         "id": "table-col-10",
         "plugins": {
           "xwalk": {
@@ -253,6 +253,20 @@
                   {
                     "name": "No Header",
                     "value": "no-header"
+                  }
+                ]
+              },
+              {
+                "name": "Background",
+                "value": "background",
+                "children": [
+                  {
+                    "name": "Default",
+                    "value": ""
+                  },
+                  {
+                    "name": "Dark",
+                    "value": "dark"
                   }
                 ]
               }

@@ -2092,6 +2092,20 @@
                 "value": "no-header"
               }
             ]
+          },
+          {
+            "name": "Background",
+            "value": "background",
+            "children": [
+              {
+                "name": "Default",
+                "value": ""
+              },
+              {
+                "name": "Dark",
+                "value": "dark"
+              }
+            ]
           }
         ]
       },

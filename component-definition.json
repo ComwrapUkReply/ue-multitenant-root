@@ -892,7 +892,7 @@
           }
         },
         {
-          "title": "Row 10",
+          "title": "Row",
           "id": "table-col-10",
           "plugins": {
             "xwalk": {
