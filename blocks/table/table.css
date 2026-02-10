@@ -103,6 +103,10 @@
   border-color: var(--color-white);
 }
 
+.table.background-dark.striped tbody tr:first-child {
+    background-color: var(--color-primary-500);
+}
+
 main .section.gradient {
     .table table thead tr,
     .table table tbody tr,
