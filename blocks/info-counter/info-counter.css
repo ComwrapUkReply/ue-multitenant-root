@@ -148,7 +148,7 @@
    ============================================================================= */
 
 .info-counter.primary {
-  background: var(--color-secondary);
+  background: var(--color-primary);
 }
 
 .info-counter.primary .info-counter-text p {
@@ -158,6 +158,22 @@
 .info-counter.primary .info-counter-digit-value {
   color: var(--color-white);
 }
+
+/* =============================================================================
+   VARIANT: Secondary (Dark background)
+   ============================================================================= */
+
+   .info-counter.secondary {
+    background: var(--color-secondary);
+  }
+  
+  .info-counter.secondary .info-counter-text p {
+    color: var(--color-white);
+  }
+  
+  .info-counter.secondary .info-counter-digit-value {
+    color: var(--color-white);
+  }
 
 /* =============================================================================
    PROGRESSIVE FONT SIZING - DESKTOP
