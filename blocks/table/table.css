@@ -61,6 +61,20 @@
   background-color: var(--color-grey-200);
 }
 
+.table.striped thead tr:first-child,
+.table.striped tbody tr:first-child,
+.table.striped thead tr:first-child th {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+/* stylelint-disable */
+.table.striped tbody tr,
+.table.striped tbody tr td{
+  border: none;
+}
+
 /* bordered variant */
 .table.bordered table th,
 .table.bordered table td {
@@ -70,7 +84,7 @@
 .table.background-dark {
     background-color: var(--color-primary);
     color: var(--color-white);
-    
+
     a {
         color: var(--color-white);
     }
