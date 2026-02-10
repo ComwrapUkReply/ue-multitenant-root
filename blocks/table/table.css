@@ -38,6 +38,7 @@
 .table.block table th,
 .table.block table td {
   padding: var(--space-8);
+  border: 1px solid;
   text-align: left;
 }
 
