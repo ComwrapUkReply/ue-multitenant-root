@@ -68,7 +68,9 @@
 }
 
 
-main .section.gradient {
+main .section.background-dark {
+    background-color: var(--color-grey-900);
+    
     .table.block table thead tr,
     .table.block table tbody tr,
     .table.block table th,

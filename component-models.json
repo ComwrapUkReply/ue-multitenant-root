@@ -2103,7 +2103,7 @@
               },
               {
                 "name": "Dark",
-                "value": "dark"
+                "value": "background-dark"
               }
             ]
           }
