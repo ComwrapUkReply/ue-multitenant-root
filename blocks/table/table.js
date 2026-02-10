@@ -7,12 +7,11 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /**
- * Check if a row element contains only a number (rows configuration)
+ * Check if a row element contains only a number (configuration value)
  * @param {Element} row
  * @returns {number|null} The number if found, null otherwise
  */
-function extractRowsConfig(row) {
-  // Check if row has single cell with just a number
+function extractNumberConfig(row) {
   if (row.children.length === 1) {
     const text = row.children[0].textContent.trim();
     const num = parseInt(text, 10);
@@ -21,15 +20,6 @@ function extractRowsConfig(row) {
     }
   }
   return null;
-}
-
-/**
- * Get the number of columns from a row
- * @param {Element} row
- * @returns {number}
- */
-function getColumnCount(row) {
-  return row ? row.children.length : 1;
 }
 
 /**
@@ -49,7 +39,35 @@ function createEmptyRow(columnCount, isHeader = false) {
 }
 
 /**
- *
+ * Create a row from content, adjusting to match the configured column count
+ * @param {Element} sourceRow - The source row element
+ * @param {number} configuredColumns - The configured number of columns
+ * @param {boolean} isHeader - Whether this is a header row
+ * @returns {HTMLTableRowElement}
+ */
+function createRowFromContent(sourceRow, configuredColumns, isHeader) {
+  const tr = document.createElement('tr');
+  moveInstrumentation(sourceRow, tr);
+
+  const sourceCells = [...sourceRow.children];
+
+  // Create cells up to the configured column count
+  for (let i = 0; i < configuredColumns; i += 1) {
+    const cell = document.createElement(isHeader ? 'th' : 'td');
+    if (isHeader) cell.setAttribute('scope', 'column');
+
+    // Use content from source cell if available
+    if (i < sourceCells.length) {
+      cell.innerHTML = sourceCells[i].innerHTML;
+    }
+
+    tr.append(cell);
+  }
+
+  return tr;
+}
+
+/**
  * @param {Element} block
  */
 export default async function decorate(block) {
@@ -59,35 +77,42 @@ export default async function decorate(block) {
   const header = !block.classList.contains('no-header');
 
   const allRows = [...block.children];
+  let configuredColumns = 1;
   let configuredRows = 0;
-  let contentRows = allRows;
+  let contentStartIndex = 0;
 
-  // Check if first row contains the rows configuration (a single number)
+  // Extract configuration values from the beginning rows
+  // First config row: columns
   if (allRows.length > 0) {
-    const rowsConfig = extractRowsConfig(allRows[0]);
-    if (rowsConfig !== null) {
-      configuredRows = rowsConfig;
-      contentRows = allRows.slice(1); // Skip the config row
+    const columnsConfig = extractNumberConfig(allRows[0]);
+    if (columnsConfig !== null) {
+      configuredColumns = columnsConfig;
+      contentStartIndex = 1;
+
+      // Second config row: rows
+      if (allRows.length > 1) {
+        const rowsConfig = extractNumberConfig(allRows[1]);
+        if (rowsConfig !== null) {
+          configuredRows = rowsConfig;
+          contentStartIndex = 2;
+        }
+      }
     }
   }
 
-  // Get column count from the first actual content row
-  const columnCount = contentRows.length > 0 ? getColumnCount(contentRows[0]) : 1;
+  // Get content rows (after configuration rows)
+  const contentRows = allRows.slice(contentStartIndex);
 
-  // Process content rows (skip the config row which we already extracted)
+  // Process content rows
   contentRows.forEach((row, i) => {
-    const tr = document.createElement('tr');
-    moveInstrumentation(row, tr);
+    const isHeaderRow = i === 0 && header;
+    const tr = createRowFromContent(row, configuredColumns, isHeaderRow);
 
-    [...row.children].forEach((cell) => {
-      const td = document.createElement(i === 0 && header ? 'th' : 'td');
-
-      if (i === 0) td.setAttribute('scope', 'column');
-      td.innerHTML = cell.innerHTML;
-      tr.append(td);
-    });
-    if (i === 0 && header) thead.append(tr);
-    else tbody.append(tr);
+    if (isHeaderRow) {
+      thead.append(tr);
+    } else {
+      tbody.append(tr);
+    }
   });
 
   // Add empty rows if configured rows exceed content rows
@@ -95,7 +120,17 @@ export default async function decorate(block) {
   if (configuredRows > dataRowCount) {
     const emptyRowsNeeded = configuredRows - dataRowCount;
     for (let i = 0; i < emptyRowsNeeded; i += 1) {
-      tbody.append(createEmptyRow(columnCount, false));
+      tbody.append(createEmptyRow(configuredColumns, false));
+    }
+  }
+
+  // If no content rows but we have configuration, create header and empty rows
+  if (contentRows.length === 0 && (configuredColumns > 0 || configuredRows > 0)) {
+    if (header) {
+      thead.append(createEmptyRow(configuredColumns, true));
+    }
+    for (let i = 0; i < configuredRows; i += 1) {
+      tbody.append(createEmptyRow(configuredColumns, false));
     }
   }
 
