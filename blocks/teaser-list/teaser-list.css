@@ -5,7 +5,7 @@
 .teaser-list {
     --teaser-list-number-of-columns: 1;
     --teaser-list-item-number-of-subgrid-rows: 4;
-    
+
     padding: var(--space-32) 0;
 }
 
@@ -28,13 +28,7 @@
     overflow: hidden;
     border: var(--border-width-sm) solid var(--color-grey-100);
     box-shadow: var(--box-shadow);
-    transition: var(--transition-base);
     position: relative;
-}
-
-.teaser-list .teaser:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--box-shadow);
 }
 
 .teaser-list .teaser-image {
@@ -43,7 +37,8 @@
     overflow: hidden;
 }
 
-.teaser-list .teaser-image img {
+.teaser-list .teaser-image img,
+.teaser-list .teaser-image picture {
     width: 100%;
     height: 100%;
     object-fit: cover;
