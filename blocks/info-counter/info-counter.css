@@ -330,7 +330,7 @@
   }
 
   .info-counter[data-digit-count="5"] .info-counter-digit-value {
-    font-size: clamp(6rem, 26vw, 9.5rem); /* 96px - 152px */
+    font-size: clamp(6rem, 20vw, 9.5rem); /* 96px - 152px */
     line-height: 160px;
   }
 
