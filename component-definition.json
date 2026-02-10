@@ -50,7 +50,6 @@
               "page": {
                 "resourceType": "core/franklin/components/button/v1/button",
                 "template": {
-                  "name": "Button",
                   "model": "button"
                 }
               }
@@ -595,6 +594,23 @@
                 "template": {
                   "name": "Tags",
                   "model": "tags"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Teaser List",
+          "id": "teaser-list",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Teaser List",
+                  "model": "teaser-list",
+                  "teaser-list-type": "parent_page",
+                  "teasersTitleElement": "h3"
                 }
               }
             }

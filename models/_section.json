@@ -87,7 +87,8 @@
         "info-counter",
         "dynamiccontent",
         "dynamiccontentfilter",
-        "download"
+        "download",
+        "teaser-list"
       ]
     }
   ]
