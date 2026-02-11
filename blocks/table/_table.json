@@ -27,7 +27,7 @@
               "template": {
                 "name": "Row",
                 "model": "table-row",
-                "column1text": "TEXT PUT HERE"
+                "column1text": "Text here"
               }
             }
           }
@@ -43,8 +43,8 @@
               "template": {
                 "name": "Row",
                 "model": "table-col-2",
-                "column1text": "TEXT PUT HERE",
-                "column2text": "TEXT PUT HERE"
+                "column1text": "Text here",
+                "column2text": "Text here"
               }
             }
           }
@@ -60,9 +60,9 @@
               "template": {
                 "name": "Row",
                 "model": "table-col-3",
-                "column1text": "TEXT PUT HERE",
-                "column2text": "TEXT PUT HERE",
-                "column3text": "TEXT PUT HERE"
+                "column1text": "Text here",
+                "column2text": "Text here",
+                "column3text": "Text here"
               }
             }
           }
@@ -78,10 +78,10 @@
               "template": {
                 "name": "Row",
                 "model": "table-col-4",
-                "column1text": "TEXT PUT HERE",
-                "column2text": "TEXT PUT HERE",
-                "column3text": "TEXT PUT HERE",
-                "column4text": "TEXT PUT HERE"
+                "column1text": "Text here",
+                "column2text": "Text here",
+                "column3text": "Text here",
+                "column4text": "Text here"
               }
             }
           }
@@ -97,11 +97,11 @@
               "template": {
                 "name": "Row",
                 "model": "table-col-5",
-                "column1text": "TEXT PUT HERE",
-                "column2text": "TEXT PUT HERE",
-                "column3text": "TEXT PUT HERE",
-                "column4text": "TEXT PUT HERE",
-                "column5text": "TEXT PUT HERE"
+                "column1text": "Text here",
+                "column2text": "Text here",
+                "column3text": "Text here",
+                "column4text": "Text here",
+                "column5text": "Text here"
               }
             }
           }
@@ -117,12 +117,12 @@
               "template": {
                 "name": "Row",
                 "model": "table-col-6",
-                "column1text": "TEXT PUT HERE",
-                "column2text": "TEXT PUT HERE",
-                "column3text": "TEXT PUT HERE",
-                "column4text": "TEXT PUT HERE",
-                "column5text": "TEXT PUT HERE",
-                "column6text": "TEXT PUT HERE"
+                "column1text": "Text here",
+                "column2text": "Text here",
+                "column3text": "Text here",
+                "column4text": "Text here",
+                "column5text": "Text here",
+                "column6text": "Text here"
               }
             }
           }
@@ -138,13 +138,13 @@
               "template": {
                 "name": "Row",
                 "model": "table-col-7",
-                "column1text": "TEXT PUT HERE",
-                "column2text": "TEXT PUT HERE",
-                "column3text": "TEXT PUT HERE",
-                "column4text": "TEXT PUT HERE",
-                "column5text": "TEXT PUT HERE",
-                "column6text": "TEXT PUT HERE",
-                "column7text": "TEXT PUT HERE"
+                "column1text": "Text here",
+                "column2text": "Text here",
+                "column3text": "Text here",
+                "column4text": "Text here",
+                "column5text": "Text here",
+                "column6text": "Text here",
+                "column7text": "Text here"
               }
             }
           }
@@ -160,14 +160,14 @@
               "template": {
                 "name": "Row",
                 "model": "table-col-8",
-                "column1text": "TEXT PUT HERE",
-                "column2text": "TEXT PUT HERE",
-                "column3text": "TEXT PUT HERE",
-                "column4text": "TEXT PUT HERE",
-                "column5text": "TEXT PUT HERE",
-                "column6text": "TEXT PUT HERE",
-                "column7text": "TEXT PUT HERE",
-                "column8text": "TEXT PUT HERE"
+                "column1text": "Text here",
+                "column2text": "Text here",
+                "column3text": "Text here",
+                "column4text": "Text here",
+                "column5text": "Text here",
+                "column6text": "Text here",
+                "column7text": "Text here",
+                "column8text": "Text here"
               }
             }
           }
@@ -183,22 +183,22 @@
               "template": {
                 "name": "Row",
                 "model": "table-col-9",
-                "column1text": "TEXT PUT HERE",
-                "column2text": "TEXT PUT HERE",
-                "column3text": "TEXT PUT HERE",
-                "column4text": "TEXT PUT HERE",
-                "column5text": "TEXT PUT HERE",
-                "column6text": "TEXT PUT HERE",
-                "column7text": "TEXT PUT HERE",
-                "column8text": "TEXT PUT HERE",
-                "column9text": "TEXT PUT HERE"
+                "column1text": "Text here",
+                "column2text": "Text here",
+                "column3text": "Text here",
+                "column4text": "Text here",
+                "column5text": "Text here",
+                "column6text": "Text here",
+                "column7text": "Text here",
+                "column8text": "Text here",
+                "column9text": "Text here"
               }
             }
           }
         }
       },
       {
-        "title": "Row",
+        "title": "Row1 10",
         "id": "table-col-10",
         "plugins": {
           "xwalk": {
@@ -207,16 +207,16 @@
               "template": {
                 "name": "Row",
                 "model": "table-col-10",
-                "column1text": "TEXT PUT HERE",
-                "column2text": "TEXT PUT HERE",
-                "column3text": "TEXT PUT HERE",
-                "column4text": "TEXT PUT HERE",
-                "column5text": "TEXT PUT HERE",
-                "column6text": "TEXT PUT HERE",
-                "column7text": "TEXT PUT HERE",
-                "column8text": "TEXT PUT HERE",
-                "column9text": "TEXT PUT HERE",
-                "column10text": "TEXT PUT HERE"
+                "column1text": "Text here",
+                "column2text": "Text here",
+                "column3text": "Text here",
+                "column4text": "Text here",
+                "column5text": "Text here",
+                "column6text": "Text here",
+                "column7text": "Text here",
+                "column8text": "Text here",
+                "column9text": "Text here",
+                "column10text": "Text here"
               }
             }
           }
