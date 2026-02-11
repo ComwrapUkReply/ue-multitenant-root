@@ -665,7 +665,7 @@
           }
         },
         {
-          "title": "Row1 10",
+          "title": "Row 10",
           "id": "table-col-10",
           "plugins": {
             "xwalk": {
