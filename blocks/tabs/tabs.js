@@ -1,17 +1,12 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /**
- * Configuration constants for tabs block.
- * Hierarchy: Tabs (parent) → Tab (child of Tabs, parent of title/content) → title, content.
+ * Configuration constants for tabs block
  */
 const config = {
   activeClass: 'active',
   tabButtonClass: 'tabs-tab-button',
   tabPanelClass: 'tabs-tab-panel',
-  /** Class for the Tab as parent of title and content (one panel = one Tab) */
-  tabParentClass: 'tabs-tab',
-  panelTitleClass: 'tabs-tab-title',
-  panelContentClass: 'tabs-tab-content',
 };
 
 /**
@@ -21,10 +16,10 @@ const config = {
 const generateUniqueId = () => `tab-${Math.random().toString(36).substr(2, 9)}`;
 
 /**
- * Extracts tab data from the block structure.
- * Hierarchy: Tabs (block) → Tab (row) → title, content (cells).
- * @param {Element} block - The block element (Tabs parent)
- * @returns {Array<{ row: Element, titleText: string }>} Tab rows and title for button
+ * Extracts tab data from the block structure
+ * Supports both document-based (table rows) and Universal Editor (nested divs) formats
+ * @param {Element} block - The block element
+ * @returns {Array} Array of tab objects with title and content
  */
 const extractTabsData = (block) => {
   const rows = [...block.children];
@@ -33,9 +28,15 @@ const extractTabsData = (block) => {
     const cells = [...row.children];
 
     if (cells.length >= 2) {
-      const titleCell = cells[0];
-      const titleText = titleCell ? titleCell.textContent.trim() : '';
-      tabs.push({ row, titleText });
+      const [titleCell, contentCell] = cells;
+
+      if (titleCell && contentCell) {
+        tabs.push({
+          title: titleCell.textContent.trim(),
+          content: contentCell.innerHTML,
+          row,
+        });
+      }
     }
 
     return tabs;
@@ -97,36 +98,20 @@ const createTabButton = (title, uniqueId, isActive, row) => {
 };
 
 /**
- * Creates a Tab panel (Tab = parent of title, content). Moves row children into the panel
- * so the DOM reflects: Tabs → Tab → title, content.
- * @param {Element} row - Row element (one Tab); its children become title and content
+ * Creates a tab panel element
+ * @param {string} content - Panel HTML content
  * @param {string} uniqueId - Unique identifier for the tab
  * @param {boolean} isActive - Whether this panel is active
- * @returns {Element} Tab panel element (parent of title and content)
+ * @returns {Element} Tab panel element
  */
-const createTabPanel = (row, uniqueId, isActive) => {
+const createTabPanel = (content, uniqueId, isActive) => {
   const panel = document.createElement('div');
-  panel.className = `${config.tabPanelClass} ${config.tabParentClass}`;
+  panel.className = config.tabPanelClass;
   panel.setAttribute('role', 'tabpanel');
   panel.setAttribute('id', uniqueId);
   panel.setAttribute('aria-labelledby', `${uniqueId}-button`);
   panel.tabIndex = 0;
-
-  // Move row children into panel so Tab is parent of title, content (cards-like)
-  while (row.firstElementChild) {
-    panel.appendChild(row.firstElementChild);
-  }
-
-  // Assign semantic classes: Tab (panel) → title, content (children)
-  const children = [...panel.children];
-  if (children.length >= 2) {
-    children[0].classList.add(config.panelTitleClass);
-    children[1].classList.add(config.panelContentClass);
-  } else if (children.length === 1) {
-    children[0].classList.add(config.panelContentClass);
-  }
-
-  moveInstrumentation(row, panel);
+  panel.innerHTML = content;
 
   if (!isActive) {
     panel.setAttribute('hidden', '');
@@ -231,14 +216,14 @@ export default async function decorate(block) {
   const tabPanelsContainer = document.createElement('div');
   tabPanelsContainer.className = 'tabs-tab-panels';
 
-  // Create tabs: Tabs (parent) → Tab (child + parent of title, content)
+  // Create tabs from extracted data
   const tabs = tabsData.map((tabData, index) => {
     const uniqueId = generateUniqueId();
-    const { titleText, row } = tabData;
+    const { title, content, row } = tabData;
     const isActive = index === 0;
 
-    const button = createTabButton(titleText, uniqueId, isActive, row);
-    const panel = createTabPanel(row, uniqueId, isActive);
+    const button = createTabButton(title, uniqueId, isActive, row);
+    const panel = createTabPanel(content, uniqueId, isActive);
 
     return { button, panel };
   });
