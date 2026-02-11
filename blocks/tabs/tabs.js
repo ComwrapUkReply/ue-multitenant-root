@@ -7,10 +7,6 @@ const config = {
   activeClass: 'active',
   tabButtonClass: 'tabs-tab-button',
   tabPanelClass: 'tabs-tab-panel',
-  // Semantic classes for panel content (cards-like nesting: image, title, content)
-  panelImageClass: 'tabs-tab-image',
-  panelTitleClass: 'tabs-tab-title',
-  panelContentClass: 'tabs-tab-content',
 };
 
 /**
@@ -20,10 +16,10 @@ const config = {
 const generateUniqueId = () => `tab-${Math.random().toString(36).substr(2, 9)}`;
 
 /**
- * Extracts tab data from the block structure (cards-like: each row = one tab, cells = fields).
- * Supports 2 cells (title, content) or 3 cells (image, title, content) per row.
+ * Extracts tab data from the block structure
+ * Supports both document-based (table rows) and Universal Editor (nested divs) formats
  * @param {Element} block - The block element
- * @returns {Array<{ row: Element, titleText: string }>} Array of tab objects with row and title text for button
+ * @returns {Array} Array of tab objects with title and content
  */
 const extractTabsData = (block) => {
   const rows = [...block.children];
@@ -32,10 +28,15 @@ const extractTabsData = (block) => {
     const cells = [...row.children];
 
     if (cells.length >= 2) {
-      // Title is first text cell: index 0 for 2-cell (title, content), index 1 for 3-cell (image, title, content)
-      const titleCell = cells.length >= 3 ? cells[1] : cells[0];
-      const titleText = titleCell ? titleCell.textContent.trim() : '';
-      tabs.push({ row, titleText });
+      const [titleCell, contentCell] = cells;
+
+      if (titleCell && contentCell) {
+        tabs.push({
+          title: titleCell.textContent.trim(),
+          content: contentCell.innerHTML,
+          row,
+        });
+      }
     }
 
     return tabs;
@@ -97,38 +98,20 @@ const createTabButton = (title, uniqueId, isActive, row) => {
 };
 
 /**
- * Creates a tab panel by moving row children into the panel and assigning semantic classes
- * (cards-like: preserve DOM, add tabs-tab-image / tabs-tab-title / tabs-tab-content).
- * Supports 2 cells (title, content) or 3 cells (image, title, content).
- * @param {Element} row - Row element whose children will be moved into the panel
+ * Creates a tab panel element
+ * @param {string} content - Panel HTML content
  * @param {string} uniqueId - Unique identifier for the tab
  * @param {boolean} isActive - Whether this panel is active
  * @returns {Element} Tab panel element
  */
-const createTabPanel = (row, uniqueId, isActive) => {
+const createTabPanel = (content, uniqueId, isActive) => {
   const panel = document.createElement('div');
   panel.className = config.tabPanelClass;
   panel.setAttribute('role', 'tabpanel');
   panel.setAttribute('id', uniqueId);
   panel.setAttribute('aria-labelledby', `${uniqueId}-button`);
-
-  // Move row children into panel (same pattern as cards: move nodes, don't use innerHTML)
-  while (row.firstElementChild) {
-    panel.appendChild(row.firstElementChild);
-  }
-
-  // Assign semantic classes by order: 3 cells = image, title, content; 2 cells = title, content
-  const children = [...panel.children];
-  if (children.length >= 3) {
-    children[0].classList.add(config.panelImageClass);
-    children[1].classList.add(config.panelTitleClass);
-    children[2].classList.add(config.panelContentClass);
-  } else if (children.length === 2) {
-    children[0].classList.add(config.panelTitleClass);
-    children[1].classList.add(config.panelContentClass);
-  }
-
-  moveInstrumentation(row, panel);
+  panel.tabIndex = 0;
+  panel.innerHTML = content;
 
   if (!isActive) {
     panel.setAttribute('hidden', '');
@@ -201,13 +184,6 @@ const handleKeyboardNavigation = (event, currentButton, buttons, indicator) => {
     End: () => buttons.length - 1,
   };
 
-  // Handle Enter/Space for explicit activation
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    currentButton.click();
-    return;
-  }
-
   if (keyActions[event.key]) {
     event.preventDefault();
     nextIndex = keyActions[event.key]();
@@ -240,14 +216,14 @@ export default async function decorate(block) {
   const tabPanelsContainer = document.createElement('div');
   tabPanelsContainer.className = 'tabs-tab-panels';
 
-  // Create tabs from extracted data (titleText for button, row moved into panel)
+  // Create tabs from extracted data
   const tabs = tabsData.map((tabData, index) => {
     const uniqueId = generateUniqueId();
-    const { titleText, row } = tabData;
+    const { title, content, row } = tabData;
     const isActive = index === 0;
 
-    const button = createTabButton(titleText, uniqueId, isActive, row);
-    const panel = createTabPanel(row, uniqueId, isActive);
+    const button = createTabButton(title, uniqueId, isActive, row);
+    const panel = createTabPanel(content, uniqueId, isActive);
 
     return { button, panel };
   });
@@ -257,14 +233,6 @@ export default async function decorate(block) {
     tabButtonsWrapper.appendChild(button);
     tabPanelsContainer.appendChild(panel);
   });
-
-  // Ensure first tab button is active by default on initial render
-  // This defensively enforces the active state in case upstream markup changes.
-  const firstTabButton = tabButtonsWrapper.querySelector(`.${config.tabButtonClass}`);
-  if (firstTabButton && !firstTabButton.classList.contains(config.activeClass)) {
-    firstTabButton.classList.add(config.activeClass);
-    firstTabButton.setAttribute('aria-selected', 'true');
-  }
 
   // Get all tab buttons for event handling
   const allButtons = [...tabButtonsWrapper.querySelectorAll(`.${config.tabButtonClass}`)];
