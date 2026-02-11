@@ -1,10 +1,10 @@
 /* Tabs Block - Vertical Layout with White Background */
 .tabs-block {
   display: flex;
-  gap: var(--space-80);
+  gap: var(--space-22);
   align-items: flex-start;
   background-color: var(--color-white);
-  padding: var(--space-104) var(--space-200);
+  padding: var(--space-104) var(--space-52) var(--space-104) var(--space-104);
 }
 
 /* Tab List - Vertical Tabs on the Left */
@@ -32,14 +32,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
-  width: 380px;
+  width: 300px;
 }
 
 /* Tab Button */
 .tabs-tab-button {
   display: flex;
   align-items: center;
-  padding: 0 var(--space-24);
+  padding: 0 0 0 var(--space-24);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -54,16 +54,16 @@
 
 .tabs-tab-button-content {
   font-weight: 600;
-  font-size: var(--font-size-h4);
-  line-height: var(--line-height-h4);
+  font-size: var(--font-size-h5);
+  line-height: var(--line-height-h5);
   color: var(--color-primary);
   transition: all 0.3s ease;
 }
 
 /* Active Tab Button */
 .tabs-tab-button.active .tabs-tab-button-content {
-  font-size: var(--font-size-h3);
-  line-height: var(--line-height-h3);
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-h4);
 }
 
 /* Tab Button Focus State */
@@ -137,18 +137,17 @@
   }
 
   .tabs-tab-list {
-    border: none;
     width: 360px;
   }
 
   .tabs-tab-button-content {
-    font-size: 28px;
-    line-height: 36px;
+    font-size: var(--font-size-h6);
+    line-height: var(--line-height-h6);
   }
 
   .tabs-tab-button.active .tabs-tab-button-content {
-    font-size: 36px;
-    line-height: 44px;
+    font-size: var(--font-size-h5);
+    line-height: var(--line-height-h5);
   }
 }
 
@@ -233,7 +232,7 @@
 .tabs.background-dark .tabs-tab-button:focus-visible,
 .tabs.background .tabs-tab-button:focus {
   outline: none;
-  color: var(--color-white) !important;
+  color: var(--color-white);
   background: transparent;
 }
 
@@ -241,60 +240,31 @@
   outline: 2px solid var(--color-white);
 }
   
-.tabs.background-dark .tabs-tab-panel {
-  color: var(--color-white);
-}
-
-.tabs.background-dark .tabs-tab-panel.active {
-  display: block;
-}
-  
-.tabs.background-dark .tabs-tab-panel[hidden] {
-  display: none;
-}
-  
-.tabs.background-dark .tabs-tab-panel h2 {
-  color: var(--color-white);
-}
-
-.tabs.background-dark .tabs-tab-panel p {
-  color: var(--color-white);
-}
-
-.tabs.background-dark .tabs-tab-panel sup {
-  color: var(--color-white);
-}
-
-.tabs.background-dark .tabs-tab-panel a {
-  color: var(--color-white);
-}
-
-.tabs.background-dark .tabs-tab-panel .footnotes {
-  color: var(--color-white);
-}
-
-.tabs.background-dark .tabs-tab-panel .footnotes p {
-  color: var(--color-white);
-}
-
-.tabs.background-dark .tabs-tab-panel .footnotes sup {
-  color: var(--color-white);
-}
-
+.tabs.background-dark .tabs-tab-panel,
+.tabs.background-dark .tabs-tab-panel.active,
+.tabs.background-dark .tabs-tab-panel[hidden],
+.tabs.background-dark .tabs-tab-panel h2,
+.tabs.background-dark .tabs-tab-panel p,
+.tabs.background-dark .tabs-tab-panel sup,
+.tabs.background-dark .tabs-tab-panel a,
+.tabs.background-dark .tabs-tab-panel .footnotes,
+.tabs.background-dark .tabs-tab-panel .footnotes p,
+.tabs.background-dark .tabs-tab-panel .footnotes sup,
 .tabs.background-dark .tabs-indicator {
-  background-color: var(--color-white);
+  color: var(--color-white);
+}
+
+.tabs.background-dark .tabs-tab-panel .button-container a {
+  color: var(--color-white);
+  border: 2px solid var(--color-white);
 }
 
 .tabs.background-light .tabs-block {
-  background-color: var(--color-grey-300);
+  background-color: var(--color-grey-200);
 }
 
 .tabs.background-light .tabs-tab-list {
   border-left: 3px solid var(--color-grey-800);
-}
-
-.tabs.background-light .tabs-tab-button-content {
-  color: var(--color-primary);
 }
 
 @media (width <= 768px) {
