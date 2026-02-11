@@ -127,19 +127,7 @@
   {
     "id": "tabs",
     "components": [
-      "tab",
-      {
-        "id": "tab-title",
-        "components": [
-          "text"
-        ]
-      },
-      {
-        "id": "tab-content",
-        "components": [
-          "richtext"
-        ]
-      }
+      "tab"
     ]
   }
 ]

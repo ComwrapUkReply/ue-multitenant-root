@@ -1700,11 +1700,7 @@
           },
           {
             "name": "Background Dark",
-            "value": "background-dark"
-          },
-          {
-            "name": "Background Light",
-            "value": "background-light"
+            "value": "background"
           }
         ]
       }
@@ -1726,7 +1722,7 @@
         "component": "richtext",
         "name": "content",
         "value": "",
-        "label": "Tab Content",
+        "label": "Tab Contentttt",
         "description": "Rich content displayed when tab is active (headings, paragraphs, lists, images, links)",
         "valueType": "string"
       }
