@@ -99,6 +99,32 @@
   display: none;
 }
 
+/* Panel content nesting (cards-like: image, title, content) */
+.tabs-tab-panel .tabs-tab-image {
+  line-height: 0;
+  margin-bottom: var(--space-24);
+}
+
+.tabs-tab-panel .tabs-tab-image img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.tabs-tab-panel .tabs-tab-title {
+  font-weight: 600;
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-h4);
+  color: var(--color-secondary);
+  margin-top: 0;
+  padding-bottom: var(--space-16);
+}
+
+.tabs-tab-panel .tabs-tab-content {
+  margin: 0;
+}
+
 /* Tab Panel Content Styling */
 .tabs-tab-panel h2 {
   font-weight: 600;
