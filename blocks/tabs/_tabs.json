@@ -50,7 +50,11 @@
             },
             {
               "name": "Background Dark",
-              "value": "background"
+              "value": "background-dark"
+            },
+            {
+              "name": "Background Light",
+              "value": "background-light"
             }
           ]
         }
@@ -61,20 +65,20 @@
       "fields": [
         {
           "component": "text",
-          "valueType": "string",
           "name": "title",
-          "label": "Tab anchor",
+          "value": "",
+          "label": "Tab Label",
           "description": "Short descriptive title for the tab (e.g., 'Tab 1', 'Getting Started')",
-          "required": true,
-          "multi": false
+          "valueType": "string",
+          "required": true
         },
         {
           "component": "richtext",
           "name": "content",
-          "label": "Tab content",
+          "value": "",
+          "label": "Tab Content",
           "description": "Rich content displayed when tab is active (headings, paragraphs, lists, images, links)",
-          "valueType": "string",
-          "multi": false
+          "valueType": "string"
         }
       ]
     }
