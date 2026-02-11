@@ -110,7 +110,6 @@ const createTabPanel = (content, uniqueId, isActive) => {
   panel.setAttribute('role', 'tabpanel');
   panel.setAttribute('id', uniqueId);
   panel.setAttribute('aria-labelledby', `${uniqueId}-button`);
-  panel.tabIndex = 0;
   panel.innerHTML = content;
 
   if (!isActive) {
@@ -184,6 +183,13 @@ const handleKeyboardNavigation = (event, currentButton, buttons, indicator) => {
     End: () => buttons.length - 1,
   };
 
+  // Handle Enter/Space for explicit activation
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    currentButton.click();
+    return;
+  }
+
   if (keyActions[event.key]) {
     event.preventDefault();
     nextIndex = keyActions[event.key]();
@@ -233,6 +239,14 @@ export default async function decorate(block) {
     tabButtonsWrapper.appendChild(button);
     tabPanelsContainer.appendChild(panel);
   });
+
+  // Ensure first tab button is active by default on initial render
+  // This defensively enforces the active state in case upstream markup changes.
+  const firstTabButton = tabButtonsWrapper.querySelector(`.${config.tabButtonClass}`);
+  if (firstTabButton && !firstTabButton.classList.contains(config.activeClass)) {
+    firstTabButton.classList.add(config.activeClass);
+    firstTabButton.setAttribute('aria-selected', 'true');
+  }
 
   // Get all tab buttons for event handling
   const allButtons = [...tabButtonsWrapper.querySelectorAll(`.${config.tabButtonClass}`)];
