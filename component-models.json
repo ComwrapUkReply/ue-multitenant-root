@@ -1699,8 +1699,12 @@
             "value": ""
           },
           {
-            "name": "Background",
-            "value": "background"
+            "name": "Background Dark",
+            "value": "background-dark"
+          },
+          {
+            "name": "Background Light",
+            "value": "background-light"
           }
         ]
       }

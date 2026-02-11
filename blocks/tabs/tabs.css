@@ -213,84 +213,96 @@
   }
 }
 
-.tabs.background .tabs-block {
+.tabs.background-dark .tabs-block {
   background-color: var(--color-primary);
   border-radius: var(--border-radius-md);
 }
 
-.tabs.background .tabs-tab-list {
+.tabs.background-dark .tabs-tab-list {
   border-left: 3px solid rgb(255 255 255 / 50%);;
 }
 
-.tabs.background .tabs-tab-button-content {
+.tabs.background-dark .tabs-tab-button-content {
   color: rgb(255 255 255 / 50%);
 }
 
-.tabs.background .tabs-tab-button.active .tabs-tab-button-content {
+.tabs.background-dark .tabs-tab-button.active .tabs-tab-button-content {
   color: var(--color-white);
 }
   
-.tabs.background .tabs-tab-button:focus-visible,
+.tabs.background-dark .tabs-tab-button:focus-visible,
 .tabs.background .tabs-tab-button:focus {
   outline: none;
   color: var(--color-white) !important;
   background: transparent;
 }
 
-.tabs.background .tabs-tab-button:focus-visible {
+.tabs.background-dark .tabs-tab-button:focus-visible {
   outline: 2px solid var(--color-white);
 }
   
-.tabs.background .tabs-tab-panel {
+.tabs.background-dark .tabs-tab-panel {
   color: var(--color-white);
 }
 
-.tabs.background .tabs-tab-panel.active {
+.tabs.background-dark .tabs-tab-panel.active {
   display: block;
 }
   
-.tabs.background .tabs-tab-panel[hidden] {
+.tabs.background-dark .tabs-tab-panel[hidden] {
   display: none;
 }
   
-.tabs.background .tabs-tab-panel h2 {
+.tabs.background-dark .tabs-tab-panel h2 {
   color: var(--color-white);
 }
 
-.tabs.background .tabs-tab-panel p {
+.tabs.background-dark .tabs-tab-panel p {
   color: var(--color-white);
 }
 
-.tabs.background .tabs-tab-panel sup {
+.tabs.background-dark .tabs-tab-panel sup {
   color: var(--color-white);
 }
 
-.tabs.background .tabs-tab-panel a {
+.tabs.background-dark .tabs-tab-panel a {
   color: var(--color-white);
 }
 
-.tabs.background .tabs-tab-panel .footnotes {
+.tabs.background-dark .tabs-tab-panel .footnotes {
   color: var(--color-white);
 }
 
-.tabs.background .tabs-tab-panel .footnotes p {
+.tabs.background-dark .tabs-tab-panel .footnotes p {
   color: var(--color-white);
 }
 
-.tabs.background .tabs-tab-panel .footnotes sup {
+.tabs.background-dark .tabs-tab-panel .footnotes sup {
   color: var(--color-white);
 }
 
-.tabs.background .tabs-indicator {
+.tabs.background-dark .tabs-indicator {
   background-color: var(--color-white);
 }
 
+.tabs.background-light .tabs-block {
+  background-color: var(--color-grey-300);
+}
+
+.tabs.background-light .tabs-tab-list {
+  border-left: 3px solid var(--color-grey-800);
+}
+
+.tabs.background-light .tabs-tab-button-content {
+  color: var(--color-primary);
+}
+
 @media (width <= 768px) {
-  .tabs.background .tabs-tab-buttons-wrapper {
+  .tabs.background-dark .tabs-tab-buttons-wrapper {
     border-left: 3px solid rgb(255 255 255 / 50%);
   }
 
-  .tabs.background .tabs-tab-list {
+  .tabs.background-dark .tabs-tab-list {
     border-left: none;
   }
 }
