@@ -42,11 +42,14 @@ function buildFlipCard(li) {
   const front = document.createElement('div');
   front.className = CLASSES.front;
   front.append(imageDiv.cloneNode(true));
-  front.append(titleWrap);
+  front.insertBefore(titleWrap, front.firstChild);
 
   const back = document.createElement('div');
   back.className = CLASSES.back;
-  back.append(bodyDiv);
+  const backContent = document.createElement('div');
+  backContent.className = 'tails-card-back-richtext';
+  backContent.append(bodyDiv);
+  back.append(backContent);
 
   inner.append(front, back);
   li.textContent = '';
