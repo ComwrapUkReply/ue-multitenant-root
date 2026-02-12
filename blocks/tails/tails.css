@@ -1,9 +1,10 @@
+/* Grid layout */
 .tails > ul {
   list-style: none;
   margin: var(--space-24) 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(min(100%,(100% - 7rem)/8),1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, (100% - 7rem) / 8), 1fr));
   grid-gap: var(--space-24);
 }
 
@@ -19,20 +20,111 @@
   }
 }
 
-.tails > ul > li {
+/* Flip card container */
+.tails > ul > li.tails-card {
   background-color: transparent;
+  perspective: 62.5rem;
+  aspect-ratio: 3 / 4;
 }
 
-.tails .tails-tail-body {
-  margin: var(--space-16) 0;
+/* Inner flipper – smooth 3D transform */
+.tails .tails-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  box-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 8%), 0 0.5rem 1.5rem rgb(0 0 0 / 12%);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.tails .tails-card:hover .tails-card-inner {
+  transform: rotateY(180deg);
+  box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 10%), 0 1rem 2.5rem rgb(0 0 0 / 15%);
+}
+
+/* Front and back faces */
+.tails .tails-card-front,
+.tails .tails-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.tails .tails-card-back {
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: stretch;
+}
+
+/* Front: image with title overlay */
+.tails .tails-card-front {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .tails .tails-tail-image {
+  position: absolute;
+  inset: 0;
   line-height: 0;
 }
 
-.tails > ul > li img {
+.tails .tails-card-front picture img,
+.tails .tails-card-front .tails-tail-image img {
   width: 100%;
+  height: 100%;
   aspect-ratio: 3 / 4;
   object-fit: cover;
+}
+
+.tails .tails-card-title-wrap {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-16) var(--space-16) var(--space-24);
+  background: linear-gradient(to top, rgb(0 0 0 / 75%), transparent);
+  color: var(--background-color, #fff);
+}
+
+.tails .tails-card-title-wrap h1,
+.tails .tails-card-title-wrap h2,
+.tails .tails-card-title-wrap h3,
+.tails .tails-card-title-wrap h4,
+.tails .tails-card-title-wrap h5,
+.tails .tails-card-title-wrap h6 {
+  margin: 0;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-m);
+  color: inherit;
+  text-shadow: 0 0.0625rem 0.25rem rgb(0 0 0 / 40%);
+}
+
+/* Back: description */
+.tails .tails-tail-body {
+  margin: 0;
+  padding: var(--space-24);
+  width: 100%;
+  overflow: auto;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+  line-height: 1.6;
+}
+
+.tails .tails-tail-body :first-child {
+  margin-top: 0;
+}
+
+.tails .tails-tail-body :last-child {
+  margin-bottom: 0;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .tails .tails-card-inner {
+    transition-duration: 0.01ms;
+  }
 }
