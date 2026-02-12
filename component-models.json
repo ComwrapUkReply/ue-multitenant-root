@@ -1089,81 +1089,20 @@
         "name": "hero-ctas"
       },
       {
-        "component": "select",
-        "name": "ctaCount",
-        "label": "Number of buttons",
-        "options": [
-          {
-            "name": "0 buttons",
-            "value": "0"
-          },
-          {
-            "name": "1 button",
-            "value": "1"
-          },
-          {
-            "name": "2 buttons",
-            "value": "2"
-          }
-        ],
-        "value": "0"
-      },
-      {
         "component": "aem-content",
-        "name": "cta1_link",
-        "label": "CTA 1 Link",
-        "condition": {
-          "or": [
-            {
-              "===": [
-                {
-                  "var": "ctaCount"
-                },
-                "1"
-              ]
-            },
-            {
-              "===": [
-                {
-                  "var": "ctaCount"
-                },
-                "2"
-              ]
-            }
-          ]
-        }
+        "name": "primaryButton_link",
+        "label": "Primary Button Link"
       },
       {
         "component": "text",
-        "name": "cta1_text",
-        "label": "CTA 1 Text",
-        "valueType": "string",
-        "value": "",
-        "condition": {
-          "or": [
-            {
-              "===": [
-                {
-                  "var": "ctaCount"
-                },
-                "1"
-              ]
-            },
-            {
-              "===": [
-                {
-                  "var": "ctaCount"
-                },
-                "2"
-              ]
-            }
-          ]
-        }
+        "name": "primaryButton_label",
+        "label": "Primary Button Label",
+        "value": ""
       },
       {
         "component": "select",
-        "name": "cta1_target",
-        "label": "CTA 1 Target",
+        "name": "primaryButton_target",
+        "label": "Primary Button Target",
         "options": [
           {
             "name": "Same Window",
@@ -1174,108 +1113,49 @@
             "value": "_blank"
           }
         ],
-        "value": "",
-        "condition": {
-          "or": [
-            {
-              "===": [
-                {
-                  "var": "ctaCount"
-                },
-                "1"
-              ]
-            },
-            {
-              "===": [
-                {
-                  "var": "ctaCount"
-                },
-                "2"
-              ]
-            }
-          ]
-        }
+        "value": ""
       },
       {
-        "component": "select",
-        "name": "cta1_style",
-        "label": "CTA 1 Style",
+        "component": "multiselect",
+        "name": "primaryButton_classes",
+        "label": "Primary Button Style",
+        "valueType": "string",
+        "maxSize": 2,
         "options": [
           {
-            "name": "Default",
-            "value": ""
-          },
-          {
-            "name": "Primary",
-            "value": "primary"
-          },
-          {
-            "name": "Secondary",
-            "value": "secondary"
-          },
-          {
-            "name": "Primary Outline",
-            "value": "primary Outline"
-          },
-          {
-            "name": "Secondary Outline",
-            "value": "secondary Outline"
+            "name": "Style",
+            "children": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Secondary",
+                "value": "secondary"
+              },
+              {
+                "name": "Text",
+                "value": "text"
+              }
+            ]
           }
-        ],
-        "value": "",
-        "condition": {
-          "or": [
-            {
-              "===": [
-                {
-                  "var": "ctaCount"
-                },
-                "1"
-              ]
-            },
-            {
-              "===": [
-                {
-                  "var": "ctaCount"
-                },
-                "2"
-              ]
-            }
-          ]
-        }
+        ]
       },
       {
         "component": "aem-content",
-        "name": "cta2_link",
-        "label": "CTA 2 Link",
-        "condition": {
-          "===": [
-            {
-              "var": "ctaCount"
-            },
-            "2"
-          ]
-        }
+        "name": "secondaryButton_link",
+        "label": "Secondary Button Link (optional)"
       },
       {
         "component": "text",
-        "name": "cta2_text",
-        "label": "CTA 2 Text",
-        "valueType": "string",
-        "value": "",
-        "condition": {
-          "===": [
-            {
-              "var": "ctaCount"
-            },
-            "2"
-          ]
-        }
+        "name": "secondaryButton_label",
+        "label": "Secondary Button Label",
+        "value": ""
       },
       {
         "component": "select",
-        "name": "cta2_target",
-        "label": "CTA 2 Target",
+        "name": "secondaryButton_target",
+        "label": "Secondary Button Target",
         "options": [
           {
             "name": "Same Window",
@@ -1286,51 +1166,33 @@
             "value": "_blank"
           }
         ],
-        "value": "",
-        "condition": {
-          "===": [
-            {
-              "var": "ctaCount"
-            },
-            "2"
-          ]
-        }
+        "value": ""
       },
       {
-        "component": "select",
-        "name": "cta2_style",
-        "label": "CTA 2 Style",
+        "component": "multiselect",
+        "name": "secondaryButton_classes",
+        "label": "Secondary Button Style",
+        "valueType": "string",
+        "maxSize": 2,
         "options": [
           {
-            "name": "Default",
-            "value": ""
-          },
-          {
-            "name": "Primary",
-            "value": "primary"
-          },
-          {
-            "name": "Secondary",
-            "value": "secondary"
-          },
-          {
-            "name": "Primary Outline",
-            "value": "primary Outline"
-          },
-          {
-            "name": "Secondary Outline",
-            "value": "secondary Outline"
+            "name": "Style",
+            "children": [
+              {
+                "name": "Primary",
+                "value": "primary"
+              },
+              {
+                "name": "Secondary",
+                "value": "secondary"
+              },
+              {
+                "name": "Text",
+                "value": "text"
+              }
+            ]
           }
-        ],
-        "value": "",
-        "condition": {
-          "===": [
-            {
-              "var": "ctaCount"
-            },
-            "2"
-          ]
-        }
+        ]
       }
     ]
   },
