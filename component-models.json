@@ -1740,13 +1740,6 @@
     "id": "tail",
     "fields": [
       {
-        "component": "text",
-        "name": "title",
-        "value": "",
-        "label": "Title",
-        "valueType": "string"
-      },
-      {
         "component": "reference",
         "valueType": "string",
         "name": "image",
@@ -1758,6 +1751,13 @@
         "name": "image-alt",
         "value": "",
         "label": "Image Alt Text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "title",
+        "value": "",
+        "label": "Title",
         "valueType": "string"
       },
       {
