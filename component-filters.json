@@ -16,6 +16,8 @@
       "video-hero",
       "cards",
       "card",
+      "tails",
+      "tail",
       "columns",
       "fragment",
       "accordion",
@@ -128,6 +130,12 @@
     "id": "tabs",
     "components": [
       "tab"
+    ]
+  },
+  {
+    "id": "tails",
+    "components": [
+      "tail"
     ]
   }
 ]

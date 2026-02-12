@@ -1,0 +1,38 @@
+.tails > ul {
+  list-style: none;
+  margin: var(--space-24) 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,(100% - 7rem)/8),1fr));
+  grid-gap: var(--space-24);
+}
+
+@media screen and (width <= 1024px) {
+  .tails > ul {
+    grid-template-columns: repeat(auto-fill, minmax(min(21.5rem, 100%), 1fr));
+  }
+}
+
+@media screen and (width <= 768px) {
+  .tails > ul {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 1fr), 1fr));
+  }
+}
+
+.tails > ul > li {
+  background-color: transparent;
+}
+
+.tails .tails-tail-body {
+  margin: var(--space-16) 0;
+}
+
+.tails .tails-tail-image {
+  line-height: 0;
+}
+
+.tails > ul > li img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}

@@ -1,0 +1,63 @@
+{
+  "definitions": [
+    {
+      "title": "Tails",
+      "id": "tails",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Tails",
+              "filter": "tails"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Tail",
+      "id": "tail",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Tail",
+              "model": "tail"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "tail",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Image",
+          "multi": false
+        },
+        {
+          "component": "richtext",
+          "name": "text",
+          "value": "",
+          "label": "Text",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "tails",
+      "components": [
+        "tail"
+      ]
+    }
+  ]
+}
