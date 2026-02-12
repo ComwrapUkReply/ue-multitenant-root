@@ -1740,20 +1740,6 @@
     "id": "tail",
     "fields": [
       {
-        "component": "reference",
-        "valueType": "string",
-        "name": "image",
-        "label": "Image",
-        "multi": false
-      },
-      {
-        "component": "text",
-        "name": "image-alt",
-        "value": "",
-        "label": "Image Alt Text",
-        "valueType": "string"
-      },
-      {
         "component": "text",
         "name": "title",
         "value": "",
