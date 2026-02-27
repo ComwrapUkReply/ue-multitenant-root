@@ -1,0 +1,324 @@
+/* Video Hero Block – uses project variables (variables.css, styles.css) */
+
+/* Reset wrapper constraints for full-width hero */
+.video-hero-container .video-hero-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.video-hero {
+  position: relative;
+  max-height: 600px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* Video background */
+.video-hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.video-hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Overlay for text readability – dark gradient (project uses --color-black) */
+.video-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgb(0 0 0 / 70%) 0%,
+    rgb(0 0 0 / 50%) 50%,
+    rgb(0 0 0 / 30%) 100%
+  );
+  z-index: 1;
+}
+
+/* Play/pause toggle – bottom right, white icon */
+.video-hero-play-toggle {
+  position: absolute;
+  bottom: var(--space-24);
+  right: var(--space-24);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  color: var(--color-white);
+  background: rgb(0 0 0 / 40%);
+  border: var(--border-width-md) solid var(--color-white);
+  border-radius: var(--border-radius-full);
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.video-hero-play-toggle:hover {
+  background: rgb(0 0 0 / 55%);
+  color: var(--color-white);
+}
+
+.video-hero-play-toggle .video-hero-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+}
+
+.video-hero-play-toggle .video-hero-icon-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.video-hero-play-toggle .video-hero-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* Content – aligned with project container and spacing */
+.video-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: var(--max-container-width);
+  margin: 0 auto;
+  padding: var(--space-40) var(--space-24);
+  width: 100%;
+  display: grid;
+  gap: var(--space-24);
+}
+
+/* Heading – project typography (h1 scale) */
+.video-hero-heading {
+  font-family: var(--font-family-base);
+  font-size: clamp(var(--font-size-mob-h1), 5vw, var(--font-size-h1));
+  line-height: clamp(var(--line-height-mob-h1), 6vw, var(--line-height-h1));
+  font-weight: 600;
+  color: var(--color-white);
+  margin: 0;
+}
+
+/* Emphasis (strong/em) – project secondary accent */
+.video-hero-heading strong,
+.video-hero-heading em {
+  color: var(--color-secondary);
+  font-style: normal;
+  font-weight: 600;
+  display: block;
+}
+
+/* Subheading – project body/meta typography */
+.video-hero-subheading {
+  font-family: var(--font-family-body);
+  font-size: clamp(var(--font-size-mob-meta), 2.5vw, var(--font-size-meta));
+  line-height: var(--line-height-meta);
+  color: var(--color-white);
+  margin: 0;
+}
+
+/* Buttons – project button tokens and spacing */
+.video-hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-16);
+  align-items: center;
+}
+
+.video-hero-buttons .button {
+  padding: var(--space-12) var(--space-24);
+  font-family: var(--font-family-base);
+  font-size: var(--button-font-size);
+  line-height: var(--button-line-height);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--button-border-radius);
+  border-width: var(--button-border-width);
+  border-style: var(--button-border-style);
+  transition: var(--transition-base);
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+/* Primary – project primary button on dark */
+.video-hero-buttons .button-primary {
+  background-color: var(--button-background-color);
+  color: var(--button-color);
+  border-color: var(--button-background-color);
+}
+
+.video-hero-buttons .button-primary:hover {
+  background-color: var(--button-hover-background-color);
+  border-color: var(--button-hover-background-color);
+}
+
+.video-hero-buttons .button-primary:focus-visible {
+  outline: var(--border-width-lg) solid var(--color-white);
+  outline-offset: var(--border-width-md);
+}
+
+/* Secondary – outline on dark (project secondary border) */
+.video-hero-buttons .button-secondary {
+  background-color: transparent;
+  color: var(--color-white);
+  border-color: var(--color-white);
+}
+
+.video-hero-buttons .button-secondary:hover {
+  background-color: rgb(255 255 255 / 10%);
+}
+
+.video-hero-buttons .button-secondary:focus-visible {
+  outline: var(--border-width-lg) solid var(--color-secondary);
+  outline-offset: var(--border-width-md);
+}
+
+/* Badge – project spacing */
+.video-hero-badge {
+  position: absolute;
+  bottom: var(--space-40);
+  right: var(--space-24);
+  z-index: 3;
+}
+
+.video-hero-badge img {
+  max-width: var(--space-160);
+  height: 120px;
+}
+
+/* Tablet – project breakpoint-md (768px) */
+@media (width >= 768px) {
+  .video-hero {
+    height: 50vh;
+    flex-direction: row;
+  }
+
+  .video-hero-content {
+    padding: var(--space-60) var(--space-32);
+    gap: var(--space-32);
+  }
+
+  .video-hero-play-toggle {
+    bottom: var(--space-32);
+    right: var(--space-32);
+  }
+
+  .video-hero-badge {
+    right: var(--space-32);
+    bottom: var(--space-60);
+  }
+
+  .video-hero-badge img {
+    max-width: var(--space-180);
+  }
+}
+
+/* Desktop – project breakpoint-xl (1200px) */
+@media (width >= 1200px) {
+  .video-hero-content {
+    padding: var(--space-80) var(--gutter-padding);
+    gap: var(--space-40);
+  }
+
+  .video-hero-play-toggle {
+    right: var(--gutter-padding);
+    bottom: var(--space-40);
+  }
+
+  .video-hero-badge {
+    right: var(--space-180);
+  }
+}
+
+/* High contrast (WCAG 2.2) */
+/* stylelint-disable-next-line media-feature-name-value-no-unknown */
+@media (prefers-contrast: high) {
+  .video-hero-overlay {
+    background: rgb(0 0 0 / 85%);
+  }
+
+  .video-hero-heading,
+  .video-hero-subheading {
+    text-shadow: 2px 2px 4px rgb(0 0 0 / 90%);
+  }
+
+  .video-hero-buttons .button {
+    border-width: var(--border-width-lg);
+  }
+}
+
+/* Reduced motion – project already sets this globally; reinforce for video */
+@media (prefers-reduced-motion: reduce) {
+  .video-hero-buttons .button {
+    transition: none;
+  }
+
+  .video-hero-video {
+    animation: none;
+  }
+}
+
+/* Focus – keyboard navigation (WCAG 2.2), project focus style */
+.video-hero a:focus-visible,
+.video-hero button:focus-visible {
+  outline: var(--border-width-lg) solid var(--color-white);
+  outline-offset: var(--border-width-lg);
+}
+
+/* Light scheme: stronger overlay for contrast */
+@media (prefers-color-scheme: light) {
+  .video-hero-overlay {
+    background: linear-gradient(
+      to right,
+      rgb(0 0 0 / 75%) 0%,
+      rgb(0 0 0 / 60%) 50%,
+      rgb(0 0 0 / 40%) 100%
+    );
+  }
+}
+
+/* Mobile – stack badge and full-width buttons; keep play toggle in corner */
+@media (width < 768px) {
+  .video-hero-play-toggle {
+    bottom: var(--space-16);
+    right: var(--space-16);
+    width: 44px;
+    height: 44px;
+  }
+
+  .video-hero-play-toggle .video-hero-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .video-hero-badge {
+    position: static;
+    margin-top: var(--space-20);
+  }
+
+  .video-hero-badge img {
+    max-width: var(--space-120);
+  }
+
+  .video-hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .video-hero-buttons .button {
+    width: 100%;
+  }
+}
