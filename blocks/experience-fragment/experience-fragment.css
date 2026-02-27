@@ -1,0 +1,238 @@
+/**
+ * Experience Fragment Block Styles
+ * Styling for the experience fragment container and its sections.
+ */
+
+/* Block wrapper - minimal styling to not interfere with fragment content */
+.experience-fragment-wrapper {
+  width: 100%;
+}
+
+/* Block container */
+.experience-fragment {
+  width: 100%;
+}
+
+/* Section wrapper for multiple sections */
+.experience-fragment .experience-fragment-section {
+  width: 100%;
+}
+
+/* Links styling in experience fragment nav */
+.experience-fragment-nav a {
+    color: var(--text-color, #131313);
+    text-decoration: none;
+  }
+
+/* Dark variant */
+.experience-fragment.dark {
+  background-color: var(--dark-color, #1a1a1a);
+  color: var(--background-color, #fff);
+}
+
+.experience-fragment.dark a {
+  color: var(--link-color-dark, #6ea8fe);
+}
+
+/* Light variant */
+.experience-fragment.light {
+  background-color: var(--light-color, #f5f5f5);
+  color: var(--text-color, #131313);
+}
+
+/* ============================================
+   Experience Fragment Navigation Styles
+   Used when experience fragment replaces header
+   ============================================ */
+
+/* Header block when using experience fragment */
+.header.block.experience-fragment-header {
+  height: auto;
+  min-height: var(--nav-height, 64px);
+}
+
+/* Nav wrapper for experience fragment */
+.experience-fragment-nav-wrapper {
+  width: 100%;
+  max-width: var(--max-content-width, 1200px);
+  margin: 0 auto;
+}
+
+/* Nav container for experience fragment */
+.nav.experience-fragment-nav {
+  display: block;
+  width: 100%;
+}
+
+/* Experience fragment nav container */
+.experience-fragment-nav-wrapper .experience-fragment-nav-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+/* Section styling within experience fragment nav */
+.experience-fragment-nav-section {
+  width: 100%;
+  padding: 0;
+}
+
+/* Default content wrapper within experience fragment nav */
+.experience-fragment-nav-section .default-content-wrapper {
+  max-width: var(--max-content-width, 1200px);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.experience-fragment-nav-section:has(.region-switcher-wrapper){
+    display: flex;
+}
+
+/* ============================================
+   Logo, Navigation, Tools Layout
+   ============================================ */
+
+/* Overall header background and divider */
+.experience-fragment-nav {
+  background-color: var(--color-white);
+}
+
+/* Logo section (experience-fragment-nav-section-1) */
+.experience-fragment-nav-section-1 .default-content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.experience-fragment-nav-section-1 picture {
+  display: block;
+}
+
+.experience-fragment-nav-section-1 img {
+  max-height: 40px;
+  width: auto;
+}
+
+/* Lists in experience fragment nav (navigation menus) */
+.experience-fragment-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .experience-fragment-nav li {
+    margin: 0;
+  }
+
+/* Navigation section (experience-fragment-nav-section-2) */
+.experience-fragment-nav-section-2 .default-content-wrapper > ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.experience-fragment-nav-section-2 .default-content-wrapper > ul > li {
+  position: relative;
+  margin: 0;
+}
+
+/* Top-level nav label */
+.experience-fragment-nav-section-2 .default-content-wrapper > ul > li > p {
+  margin: 0;
+  padding: var(--space-12) var(--space-16);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  color: var(--color-black);
+}
+
+/* Submenu list */
+.experience-fragment-nav-section-2 .default-content-wrapper > ul > li > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--space-16) var(--space-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.experience-fragment-nav-section-2 .default-content-wrapper > ul > li > ul > li {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  color: var(--color-black);
+}
+
+/* Tools section (experience-fragment-nav-section-3) */
+.experience-fragment-nav-section-3 .default-content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-8);
+  min-height: 44px;
+}
+
+/* Ensure any buttons/links in tools area align nicely */
+.experience-fragment-nav-section-3 .default-content-wrapper > * {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Responsive: Desktop layout */
+@media screen and (width >= 900px) {
+  .experience-fragment-nav-section .default-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Desktop navigation: single row with dropdown-style submenus */
+  .experience-fragment-nav-section-2 .default-content-wrapper > ul {
+    flex-wrap: nowrap;
+    gap: var(--space-24);
+  }
+
+  .experience-fragment-nav-section-2 .default-content-wrapper > ul > li > ul {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    margin-top: var(--space-8);
+    padding: var(--space-16);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-cloud-grey);
+    border-radius: var(--space-4);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+    min-width: 180px;
+    z-index: 10;
+    display: none;
+  }
+
+  /* Reveal submenu on hover/focus of parent item (CSS-only behavior) */
+  .experience-fragment-nav-section-2 .default-content-wrapper > ul > li:hover > ul,
+  .experience-fragment-nav-section-2 .default-content-wrapper > ul > li:focus-within > ul {
+    display: flex;
+  }
+}
+
+.experience-fragment-nav a:hover {
+  color: var(--link-hover-color, #1d3ecf);
+}
+
+/* Button styling in experience fragment nav */
+.experience-fragment-nav .button-container {
+  margin: 0;
+}
+
+.experience-fragment-nav .button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+}
+
+/* Images in experience fragment nav (logos, icons) */
+.experience-fragment-nav img {
+  max-height: 40px;
+  width: auto;
+}
+
