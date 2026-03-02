@@ -54,7 +54,6 @@ const createTabList = () => {
   tabList.setAttribute('aria-label', 'Content tabs');
 
   const indicator = document.createElement('div');
-  indicator.className = 'tabs-indicator';
   indicator.setAttribute('aria-hidden', 'true');
 
   const tabButtonsWrapper = document.createElement('div');
@@ -127,11 +126,6 @@ const createTabPanel = (content, uniqueId, isActive) => {
  * @param {Element} indicator - Indicator element
  * @param {Element} activeButton - Active button element
  */
-const updateIndicator = (indicator, activeButton) => {
-  const { offsetTop: top, offsetHeight: height } = activeButton;
-  indicator.style.top = `${top}px`;
-  indicator.style.height = `${height}px`;
-};
 
 /**
  * Switches between tabs
@@ -139,7 +133,7 @@ const updateIndicator = (indicator, activeButton) => {
  * @param {Element} toButton - Button to activate
  * @param {Element} indicator - Indicator element
  */
-const switchTab = (fromButton, toButton, indicator) => {
+const switchTab = (fromButton, toButton) => {
   const fromPanel = document.getElementById(fromButton.getAttribute('aria-controls'));
   const toPanel = document.getElementById(toButton.getAttribute('aria-controls'));
 
@@ -159,9 +153,6 @@ const switchTab = (fromButton, toButton, indicator) => {
 
   toPanel.removeAttribute('hidden');
   toPanel.classList.add(config.activeClass);
-
-  // Update indicator
-  updateIndicator(indicator, toButton);
 };
 
 /**
@@ -267,8 +258,5 @@ export default async function decorate(block) {
   // Position indicator after render
   requestAnimationFrame(() => {
     const activeButton = tabButtonsWrapper.querySelector(`.${config.tabButtonClass}.${config.activeClass}`);
-    if (activeButton) {
-      updateIndicator(indicator, activeButton);
-    }
   });
 }
