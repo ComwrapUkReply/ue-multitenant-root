@@ -75,6 +75,8 @@ function decorateTeaser(video, teaserPicture, target) {
   videoTag.innerHTML = `<source src="${video.href}" type="video/mp4">`;
   target.prepend(videoTag);
   video.remove();
+  
+  return videoTag;
 }
 
 function decorateOverlayButton(fullScreenVideoLink, block, overlay) {
@@ -155,6 +157,61 @@ async function decorateFullScreenVideo(fullScreenVideoLink, teaserPicture, targe
   target.appendChild(fullVideoContainer);
 }
 
+function createPlayPauseButton(video, container, autoplayEnabled) {
+  const playPauseButton = document.createElement('button');
+  playPauseButton.type = 'button';
+  playPauseButton.className = 'video-play-pause-toggle';
+  
+  // Set initial state based on autoplay setting
+  const initialLabel = autoplayEnabled ? 'Pause video' : 'Play video';
+  playPauseButton.setAttribute('aria-label', initialLabel);
+  
+  playPauseButton.innerHTML = `
+    <span class="video-icon video-icon-play ${autoplayEnabled ? 'video-icon-hidden' : ''}" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" focusable="false">
+        <path d="M8 5v14l11-7L8 5z"/>
+      </svg>
+    </span>
+    <span class="video-icon video-icon-pause ${autoplayEnabled ? '' : 'video-icon-hidden'}" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" focusable="false">
+        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+      </svg>
+    </span>
+  `;
+  
+  // Set initial is-playing state
+  if (autoplayEnabled) {
+    playPauseButton.classList.add('is-playing');
+  }
+  
+  const updatePlayPauseState = () => {
+    const isPlaying = !video.paused;
+    playPauseButton.classList.toggle('is-playing', isPlaying);
+    playPauseButton.querySelector('.video-icon-play')?.classList.toggle('video-icon-hidden', isPlaying);
+    playPauseButton.querySelector('.video-icon-pause')?.classList.toggle('video-icon-hidden', !isPlaying);
+    playPauseButton.setAttribute('aria-label', isPlaying ? 'Pause video' : 'Play video');
+  };
+
+  playPauseButton.addEventListener('click', () => {
+    if (video.paused) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  });
+
+  video.addEventListener('play', updatePlayPauseState);
+  video.addEventListener('pause', updatePlayPauseState);
+  
+  // Initial state update after a short delay to handle autoplay blocking
+  setTimeout(() => {
+    updatePlayPauseState();
+  }, 100);
+  
+  container.appendChild(playPauseButton);
+  return playPauseButton;
+}
+
 function decorateVideoOptions(block) {
   const video = block.querySelector('video');
   if (!video) {
@@ -198,6 +255,16 @@ function decorateVideoOptions(block) {
   video.controls = controlsEnabled;
 
   [autoplay, loop, muted, controls].filter(Boolean).forEach((el) => el.remove());
+  
+  // Add play/pause button for teaser video (if not showing native controls)
+  if (!controlsEnabled) {
+    const videoContainer = video.closest('.teaser-video-container') || video.closest('.hero-video-banner');
+    if (videoContainer) {
+      createPlayPauseButton(video, videoContainer, autoplayEnabled);
+    }
+  }
+  
+  return { autoplayEnabled, loopEnabled, mutedEnabled, controlsEnabled };
 }
 
 export default function decorate(block) {
@@ -224,8 +291,8 @@ export default function decorate(block) {
     block.appendChild(placeholderImage);
   }
 
-  decorateTeaser(teaserVideoLink, teaserPicture, heroContent, placeholderImage);
-  decorateVideoOptions(block);
+  const teaserVideo = decorateTeaser(teaserVideoLink, teaserPicture, heroContent, placeholderImage);
+  const videoOptions = decorateVideoOptions(block);
 
   // Overlay (e.g. fullscreen link) is optional - only present when first row has two cells
   const overlay = videoBanner.children[1];

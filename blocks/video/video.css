@@ -304,3 +304,66 @@ main>.section.video-container {
     display: flex;
     justify-content: center;
   }
+
+  /* Play/pause toggle for teaser video */
+  .video-play-pause-toggle {
+    position: absolute;
+    bottom: var(--space-24);
+    right: var(--space-24);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    color: var(--color-white);
+    background: rgb(0 0 0 / 40%);
+    border: var(--border-width-md) solid var(--color-white);
+    border-radius: var(--border-radius-full);
+    cursor: pointer;
+    transition: var(--transition-base);
+  }
+
+  .video-play-pause-toggle:hover {
+    background: rgb(0 0 0 / 60%);
+    color: var(--color-white);
+  }
+
+  .video-play-pause-toggle:focus-visible {
+    outline: var(--border-width-lg) solid var(--color-white);
+    outline-offset: var(--border-width-md);
+  }
+
+  .video-play-pause-toggle .video-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    inset: 0;
+  }
+
+  .video-play-pause-toggle .video-icon-hidden {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .video-play-pause-toggle .video-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Mobile: smaller button */
+  @media (width < 768px) {
+    .video-play-pause-toggle {
+      bottom: var(--space-16);
+      right: var(--space-16);
+      width: 40px;
+      height: 40px;
+    }
+
+    .video-play-pause-toggle .video-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
