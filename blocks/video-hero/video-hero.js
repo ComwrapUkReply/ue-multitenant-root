@@ -176,34 +176,24 @@ export default function decorate(block) {
   videoContainer.appendChild(video);
   videoContainer.appendChild(overlay);
 
-  // Play/pause toggle (bottom right) – shows pause if autoplay is enabled, play if disabled
+  // Play/pause toggle (bottom right) – for when autoplay is blocked or user wants to pause
   if (videoSrc) {
     const playToggle = document.createElement('button');
     playToggle.type = 'button';
     playToggle.className = 'video-hero-play-toggle';
-    
-    // Set initial state based on autoplay setting
-    const initialLabel = videoAutoplay ? 'Pause video' : 'Play video';
-    playToggle.setAttribute('aria-label', initialLabel);
-    
+    playToggle.setAttribute('aria-label', 'Play video');
     playToggle.innerHTML = `
-      <span class="video-hero-icon video-hero-icon-play ${videoAutoplay ? 'video-hero-icon-hidden' : ''}" aria-hidden="true">
+      <span class="video-hero-icon video-hero-icon-play" aria-hidden="true">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" focusable="false">
           <path d="M8 5v14l11-7L8 5z"/>
         </svg>
       </span>
-      <span class="video-hero-icon video-hero-icon-pause ${videoAutoplay ? '' : 'video-hero-icon-hidden'}" aria-hidden="true">
+      <span class="video-hero-icon video-hero-icon-pause video-hero-icon-hidden" aria-hidden="true">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" focusable="false">
           <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
         </svg>
       </span>
     `;
-    
-    // Set initial is-playing state
-    if (videoAutoplay) {
-      playToggle.classList.add('is-playing');
-    }
-    
     videoContainer.appendChild(playToggle);
 
     const updatePlayToggleState = () => {
@@ -224,12 +214,7 @@ export default function decorate(block) {
 
     video.addEventListener('play', updatePlayToggleState);
     video.addEventListener('pause', updatePlayToggleState);
-    
-    // Initial state is already set above, but update after a short delay
-    // to handle cases where autoplay might be blocked by browser
-    setTimeout(() => {
-      updatePlayToggleState();
-    }, 100);
+    updatePlayToggleState();
   }
 
   // Create content container
