@@ -15,6 +15,13 @@ main>.section.video-container {
   .video-wrapper:has(.video.hero) {
     max-width: unset;
   }
+
+  .teaser-video-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+  }
   
   .video {
     position: relative;
