@@ -122,12 +122,6 @@ const createTabPanel = (content, uniqueId, isActive) => {
 };
 
 /**
- * Updates the indicator position
- * @param {Element} indicator - Indicator element
- * @param {Element} activeButton - Active button element
- */
-
-/**
  * Switches between tabs
  * @param {Element} fromButton - Current active button
  * @param {Element} toButton - Button to activate
@@ -254,9 +248,4 @@ export default async function decorate(block) {
   // Replace block content
   block.textContent = '';
   block.appendChild(tabsContainer);
-
-  // Position indicator after render
-  requestAnimationFrame(() => {
-    const activeButton = tabButtonsWrapper.querySelector(`.${config.tabButtonClass}.${config.activeClass}`);
-  });
 }
