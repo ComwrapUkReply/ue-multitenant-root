@@ -131,11 +131,5 @@
     "components": [
       "tab"
     ]
-  },
-  {
-    "id": "tails",
-    "components": [
-      "tail"
-    ]
   }
 ]
