@@ -255,7 +255,7 @@ function decorateVideoOptions(block) {
   video.controls = controlsEnabled;
 
   [autoplay, loop, muted, controls].filter(Boolean).forEach((el) => el.remove());
-  
+
   // Add play/pause button for teaser video (if not showing native controls)
   if (!controlsEnabled) {
     const videoContainer = video.closest('.teaser-video-container') || video.closest('.hero-video-banner');
@@ -263,8 +263,6 @@ function decorateVideoOptions(block) {
       createPlayPauseButton(video, videoContainer, autoplayEnabled);
     }
   }
-  
-  return { autoplayEnabled, loopEnabled, mutedEnabled, controlsEnabled };
 }
 
 export default function decorate(block) {
@@ -291,8 +289,8 @@ export default function decorate(block) {
     block.appendChild(placeholderImage);
   }
 
-  const teaserVideo = decorateTeaser(teaserVideoLink, teaserPicture, heroContent, placeholderImage);
-  const videoOptions = decorateVideoOptions(block);
+  decorateTeaser(teaserVideoLink, teaserPicture, heroContent, placeholderImage);
+  decorateVideoOptions(block);
 
   // Overlay (e.g. fullscreen link) is optional - only present when first row has two cells
   const overlay = videoBanner.children[1];
