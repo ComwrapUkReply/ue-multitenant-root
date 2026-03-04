@@ -75,8 +75,6 @@ function decorateTeaser(video, teaserPicture, target) {
   videoTag.innerHTML = `<source src="${video.href}" type="video/mp4">`;
   target.prepend(videoTag);
   video.remove();
-  
-  return videoTag;
 }
 
 function decorateOverlayButton(fullScreenVideoLink, block, overlay) {
@@ -161,11 +159,11 @@ function createPlayPauseButton(video, container, autoplayEnabled) {
   const playPauseButton = document.createElement('button');
   playPauseButton.type = 'button';
   playPauseButton.className = 'video-play-pause-toggle';
-  
+
   // Set initial state based on autoplay setting
   const initialLabel = autoplayEnabled ? 'Pause video' : 'Play video';
   playPauseButton.setAttribute('aria-label', initialLabel);
-  
+
   playPauseButton.innerHTML = `
     <span class="video-icon video-icon-play ${autoplayEnabled ? 'video-icon-hidden' : ''}" aria-hidden="true">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" focusable="false">
@@ -178,12 +176,12 @@ function createPlayPauseButton(video, container, autoplayEnabled) {
       </svg>
     </span>
   `;
-  
+
   // Set initial is-playing state
   if (autoplayEnabled) {
     playPauseButton.classList.add('is-playing');
   }
-  
+
   const updatePlayPauseState = () => {
     const isPlaying = !video.paused;
     playPauseButton.classList.toggle('is-playing', isPlaying);
@@ -202,12 +200,12 @@ function createPlayPauseButton(video, container, autoplayEnabled) {
 
   video.addEventListener('play', updatePlayPauseState);
   video.addEventListener('pause', updatePlayPauseState);
-  
+
   // Initial state update after a short delay to handle autoplay blocking
   setTimeout(() => {
     updatePlayPauseState();
   }, 100);
-  
+
   container.appendChild(playPauseButton);
   return playPauseButton;
 }
