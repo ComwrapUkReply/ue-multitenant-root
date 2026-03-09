@@ -333,37 +333,48 @@ const createDigitContainers = (digitCount) => {
 };
 
 /**
- * Create text paragraph element from description
+ * Append text content to a container, preserving semantic structure.
+ * Avoids nesting block-level elements inside <p>.
+ * @param {HTMLElement} container - Parent element to append into
  * @param {string} descriptionText - Plain text content
  * @param {string} descriptionHTML - HTML content
- * @returns {HTMLElement} Paragraph element
  */
-const createTextParagraph = (descriptionText, descriptionHTML) => {
-  const paragraph = createElement('p');
+const appendTextContent = (container, descriptionText, descriptionHTML) => {
+  if (!descriptionText?.trim()) return;
+
   let html = descriptionHTML || descriptionText;
 
-  // Clean Universal Editor attributes
   if (hasUEAttributes(html)) {
     html = cleanHTML(html);
   }
 
-  // Check if content has HTML tags
   const hasHTMLTags = html !== descriptionText && PATTERNS.htmlTags.test(html);
 
-  if (hasHTMLTags) {
-    // Extract inner content if wrapped in <p> tag
-    if (PATTERNS.pWrapper.test(html)) {
-      const tempDiv = createElement('div');
-      tempDiv.innerHTML = html;
-      paragraph.innerHTML = tempDiv.firstElementChild?.innerHTML || html;
-    } else {
-      paragraph.innerHTML = html;
-    }
-  } else {
-    paragraph.textContent = descriptionText;
+  if (!hasHTMLTags) {
+    const p = createElement('p');
+    p.textContent = descriptionText;
+    container.appendChild(p);
+    return;
   }
 
-  return paragraph;
+  const tempDiv = createElement('div');
+  tempDiv.innerHTML = html;
+  Array.from(tempDiv.children).forEach(removeAueAttributes);
+
+  const children = [...tempDiv.children];
+  if (children.length === 0) {
+    const p = createElement('p');
+    p.textContent = tempDiv.textContent?.trim() || descriptionText;
+    container.appendChild(p);
+    return;
+  }
+
+  // Unwrap a single wrapping <div> and promote its children
+  const source = children.length === 1 && children[0].tagName === 'DIV'
+    ? [...children[0].children]
+    : children;
+
+  source.forEach((child) => container.appendChild(child));
 };
 
 /**
@@ -379,6 +390,7 @@ const buildCounterStructure = (targetNumber, descriptionText, descriptionHTML) =
 
   // Create number container
   const numberContainer = createElement('div', CLASSES.number);
+  numberContainer.setAttribute('role', 'img');
   numberContainer.setAttribute('aria-label', `Counter: ${targetNumber}`);
 
   // Create digit containers
@@ -392,10 +404,7 @@ const buildCounterStructure = (targetNumber, descriptionText, descriptionHTML) =
   // Create text container
   const textContainer = createElement('div', CLASSES.text);
 
-  if (descriptionText?.trim()) {
-    const textParagraph = createTextParagraph(descriptionText, descriptionHTML);
-    textContainer.appendChild(textParagraph);
-  }
+  appendTextContent(textContainer, descriptionText, descriptionHTML);
 
   // Assemble structure
   wrapper.appendChild(numberContainer);

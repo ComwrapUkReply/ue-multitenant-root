@@ -11,6 +11,7 @@ This skill guides you through creating new AEM Edge Delivery blocks or modifying
 
 - **content-driven-development**: MUST be invoked before using this skill to ensure content and content models are ready
 - **block-collection-and-party**: Use to find similar blocks for patterns
+- **semantic-html-a11y**: Invoked during decoration to enforce semantic HTML, WCAG 2.2, and SEO/AEO/GEO structure
 - **testing-blocks**: Automatically invoked after implementation for comprehensive testing
 
 ## When to Use This Skill
@@ -103,6 +104,13 @@ Follow patterns and conventions in `resources/js-guidelines.md`:
 - Follow established patterns from similar blocks
 
 **Read `resources/js-guidelines.md` for detailed examples, code standards, and best practices.**
+
+**Semantic HTML validation:** After writing or modifying decoration code, invoke the **semantic-html-a11y** skill to validate the DOM structure. At a minimum:
+
+- Never nest block-level elements inside `<p>`
+- Use headings (`<h2>`–`<h6>`) for titles, not `<p>` with classes
+- Unwrap wrapper `<div>` from rich text output
+- Run the static check: `node .claude/skills/semantic-html-a11y/scripts/check-semantic-html.js blocks/{block-name}/{block-name}.js`
 
 ### 5. Add CSS Styling
 
