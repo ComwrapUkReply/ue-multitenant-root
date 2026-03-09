@@ -333,13 +333,13 @@ const createDigitContainers = (digitCount) => {
 };
 
 /**
- * Append text content to a container, preserving semantic structure.
- * Avoids nesting block-level elements inside <p>.
- * @param {HTMLElement} container - Parent element to append into
- * @param {string} descriptionText - Plain text content
+ * Append description content directly into the text container using semantic markup.
+ * Parses HTML and appends children directly — never wraps block-level content inside a <p>.
+ * @param {HTMLElement} textContainer - Container to append content into
+ * @param {string} descriptionText - Plain text fallback
  * @param {string} descriptionHTML - HTML content
  */
-const appendTextContent = (container, descriptionText, descriptionHTML) => {
+const appendTextContent = (textContainer, descriptionText, descriptionHTML) => {
   if (!descriptionText?.trim()) return;
 
   let html = descriptionHTML || descriptionText;
@@ -353,19 +353,20 @@ const appendTextContent = (container, descriptionText, descriptionHTML) => {
   if (!hasHTMLTags) {
     const p = createElement('p');
     p.textContent = descriptionText;
-    container.appendChild(p);
+    textContainer.appendChild(p);
     return;
   }
 
   const tempDiv = createElement('div');
   tempDiv.innerHTML = html;
-  Array.from(tempDiv.children).forEach(removeAueAttributes);
+  removeAueAttributes(tempDiv);
 
   const children = [...tempDiv.children];
+
   if (children.length === 0) {
     const p = createElement('p');
     p.textContent = tempDiv.textContent?.trim() || descriptionText;
-    container.appendChild(p);
+    textContainer.appendChild(p);
     return;
   }
 
@@ -374,7 +375,7 @@ const appendTextContent = (container, descriptionText, descriptionHTML) => {
     ? [...children[0].children]
     : children;
 
-  source.forEach((child) => container.appendChild(child));
+  source.forEach((child) => textContainer.appendChild(child));
 };
 
 /**
@@ -500,6 +501,33 @@ const getDisplayMode = (block) => {
 };
 
 /**
+ * Lock the number container to its final rendered width to prevent layout shifting during animation
+ * Temporarily renders the final number, measures the container, applies the width as an inline
+ * style, then calls the provided callback (which resets digits to 0 and starts the animation).
+ * @param {HTMLElement} numberContainer - The number container element
+ * @param {NodeList|Array} digits - Digit elements
+ * @param {number} targetNumber - Final target number
+ * @param {Function} [onComplete] - Called after width is locked
+ */
+const lockNumberContainerWidth = (numberContainer, digits, targetNumber, onComplete) => {
+  if (!numberContainer || !digits?.length) {
+    onComplete?.();
+    return;
+  }
+
+  // Show the final number so the browser can compute the maximum rendered width
+  updateDigits(digits, targetNumber);
+
+  requestAnimationFrame(() => {
+    const width = numberContainer.offsetWidth;
+    if (width > 0) {
+      numberContainer.style.width = `${width}px`;
+    }
+    onComplete?.();
+  });
+};
+
+/**
  * Handle extremely large numbers (10+ digits) that might overflow
  * Only applies dynamic sizing if CSS clamp isn't sufficient
  * @param {HTMLElement} block - Block element
@@ -587,7 +615,7 @@ export default function decorate(block) {
   block.dataset.digitCount = digitCount.toString();
 
   // Build counter structure
-  const { wrapper, digits } = buildCounterStructure(
+  const { wrapper, numberContainer, digits } = buildCounterStructure(
     targetNumber,
     descriptionText,
     descriptionHTML,
@@ -597,11 +625,14 @@ export default function decorate(block) {
   block.appendChild(wrapper);
 
   // Handle extremely large numbers (10+ digits) that might need dynamic sizing
-  const numberContainer = wrapper.querySelector(`.${CLASSES.number}`);
   if (numberContainer) {
     handleExtremeNumbers(block, digitCount, numberContainer);
   }
 
-  // Initialize animation
-  initializeAnimation(block, digits, targetNumber);
+  // Lock the number container width to the final rendered value before animating.
+  // This prevents the container from resizing digit-by-digit during the count animation,
+  // which would cause the adjacent text container to shift/shake.
+  lockNumberContainerWidth(numberContainer, digits, targetNumber, () => {
+    initializeAnimation(block, digits, targetNumber);
+  });
 }
