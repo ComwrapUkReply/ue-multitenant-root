@@ -211,9 +211,24 @@ function processDescriptionElements(descriptionElements) {
   descriptionWrapper.className = CLASSES.description;
 
   descriptionElements.forEach((element) => {
-    const p = document.createElement('p');
-    p.innerHTML = element.innerHTML;
-    descriptionWrapper.appendChild(p);
+    const html = element.innerHTML?.trim();
+    if (!html) {
+      element.remove();
+      return;
+    }
+
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+
+    const children = [...tempDiv.children];
+    if (children.length > 0) {
+      children.forEach((child) => descriptionWrapper.appendChild(child));
+    } else {
+      const p = document.createElement('p');
+      p.textContent = tempDiv.textContent?.trim() || '';
+      descriptionWrapper.appendChild(p);
+    }
+
     element.remove();
   });
 
