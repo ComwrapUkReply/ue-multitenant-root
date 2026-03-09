@@ -138,7 +138,6 @@
     background: transparent;
     border: var(--border-width-sm) var(--border-style-solid) var(--color-grey-100);
     box-shadow: none;
-    padding: var(--space-12);
   }
   
   .facts-figures-card.minimal .facts-figures-card-title {
