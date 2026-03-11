@@ -2037,8 +2037,12 @@
             "value": ""
           },
           {
-            "name": "Background",
-            "value": "background"
+            "name": "Background Dark",
+            "value": "background-dark"
+          },
+          {
+            "name": "Background Light",
+            "value": "background-light"
           }
         ]
       }
@@ -2051,7 +2055,7 @@
         "component": "text",
         "name": "title",
         "value": "",
-        "label": "Tab Title",
+        "label": "Tab Label",
         "description": "Short descriptive title for the tab (e.g., 'Tab 1', 'Getting Started')",
         "valueType": "string",
         "required": true
