@@ -458,8 +458,7 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
     color: var(--color-black);
     text-decoration: none;
     display: block;
-    padding: var(--space-8) var(--space-12);
-    border-radius: var(--space-4);
+    padding: var(--space-4) var(--space-12);
     transition: background-color var(--transition-base), color var(--transition-base);
   }
 
@@ -482,11 +481,9 @@ header nav .nav-sections .nav-sections-menu > ul > li.nav-drop > .nav-sections-1
   }
 
   header nav .nav-sections .nav-sections-menu > ul > li.nav-drop[aria-expanded='true'] > .nav-sections-1 > li > a {
-    color: #F51352;
-    border: 2px solid #F51352;
-    border-radius: var(--space-24);
-    padding: var(--space-8) var(--space-16);
+    padding: var(--space-4) var(--space-8);
     width: 100%;
+    white-space: nowrap;
   }
 
   /* dropdown arrow pointer */
