@@ -568,8 +568,9 @@ blockquote::before {
 .button.text {
     background-color: transparent;
     color: var(--color-primary);
-    border-radius: 0;
-    padding: var(--space-16) var(--space-20) var(--space-16) var(--space-12);
+    padding: var(--space-16) var(--space-32) var(--space-16) var(--space-12);
+    border: var(--border-width-md) var(--border-style-solid) var(--color-primary);
+    border-radius: var(--button-border-radius);
 }
 
 .button.text span {
