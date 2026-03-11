@@ -40,7 +40,7 @@ export default async function decorate(block) {
   dynamicContent.forEach((content) => {
     const contentLink = document.createElement('a');
     contentLink.href = content.path;
-    const contentElement = document.createElement('content');
+    const contentElement = document.createElement('article');
     contentElement.classList.add('content');
     contentLink.appendChild(contentElement);
 
@@ -55,7 +55,7 @@ export default async function decorate(block) {
     contentBody.classList.add('content-body');
     contentElement.appendChild(contentBody);
 
-    const title = document.createElement('p');
+    const title = document.createElement('h3');
     title.classList.add('content-title');
     title.textContent = content.title;
     contentBody.appendChild(title);

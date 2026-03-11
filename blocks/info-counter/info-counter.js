@@ -391,6 +391,7 @@ const buildCounterStructure = (targetNumber, descriptionText, descriptionHTML) =
 
   // Create number container
   const numberContainer = createElement('div', CLASSES.number);
+  numberContainer.setAttribute('role', 'img');
   numberContainer.setAttribute('aria-label', `Counter: ${targetNumber}`);
 
   // Create digit containers
