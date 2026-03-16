@@ -7,23 +7,16 @@
    CONTAINER & WRAPPER
    ============================================================================= */
 
-   /* Base wrapper styles - will be overridden by media queries */
    .info-counter-wrapper {
      display: flex;
      width: 100%;
    }
-
-.info-counter-container .info-counter-wrapper {
-  display: flex;
-  max-width: unset;
-}
 
 /* =============================================================================
    MAIN BLOCK
    ============================================================================= */
 
 .info-counter {
-  /* Layout Styles - Desktop: horizontal layout (number left, text right) */
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -31,12 +24,11 @@
   gap: var(--space-32);
   padding-block: var(--space-48);
   padding-inline: var(--space-200);
-  min-height: var(--line-height-hero); /* 168px */
+  min-height: var(--line-height-hero);
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Ensure desktop layout is horizontal */
 @media (width >= 900px) {
   .info-counter {
     flex-direction: row;
@@ -67,8 +59,6 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  height: 280px;
-  min-width: 450px;
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
@@ -83,8 +73,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  height: 280px;
-  line-height: 280px;
   overflow: hidden;
   position: relative;
 }
@@ -92,8 +80,8 @@
 .info-counter-digit-value {
   font-family: var(--font-family-semibold);
   font-weight: 600;
-  font-size: clamp(7rem, 12vw, 11rem); /* Larger, responsive font */
-  line-height: 280px;
+  font-size: clamp(4rem, 12vw, 6rem);
+  line-height: clamp(4rem, 12vw, 6rem);
   color: var(--color-black);
   text-align: right;
   white-space: nowrap;
@@ -109,8 +97,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  flex-shrink: 0;
-  max-width: 460px;
 }
 
 .info-counter-text p {
@@ -176,67 +162,6 @@
   }
 
 /* =============================================================================
-   PROGRESSIVE FONT SIZING - DESKTOP
-   ============================================================================= */
-
-/* Larger numbers get progressively smaller fonts to prevent overflow */
-.info-counter[data-digit-count="4"] .info-counter-digit-value {
-  font-size: clamp(5.5rem, 11vw, 9rem);
-  line-height: 260px;
-}
-
-.info-counter[data-digit-count="4"] .info-counter-number,
-.info-counter[data-digit-count="4"] .info-counter-digit {
-  height: 260px;
-}
-
-.info-counter[data-digit-count="5"] .info-counter-digit-value {
-  font-size: clamp(5rem, 10vw, 8.5rem);
-  line-height: 250px;
-}
-
-.info-counter[data-digit-count="5"] .info-counter-number,
-.info-counter[data-digit-count="5"] .info-counter-digit {
-  height: 250px;
-}
-
-.info-counter[data-digit-count="6"] .info-counter-digit-value {
-  font-size: clamp(4.5rem, 9vw, 8rem);
-  line-height: 240px;
-}
-
-.info-counter[data-digit-count="6"] .info-counter-number,
-.info-counter[data-digit-count="6"] .info-counter-digit {
-  height: 240px;
-}
-
-.info-counter[data-digit-count="7"] .info-counter-digit-value {
-  font-size: clamp(4rem, 8vw, 7.5rem);
-  line-height: 230px;
-}
-
-.info-counter[data-digit-count="7"] .info-counter-number,
-.info-counter[data-digit-count="7"] .info-counter-digit {
-  height: 230px;
-}
-
-.info-counter[data-digit-count="8"] .info-counter-digit-value,
-.info-counter[data-digit-count="9"] .info-counter-digit-value,
-.info-counter[data-digit-count="10"] .info-counter-digit-value {
-  font-size: clamp(3.75rem, 7.5vw, 7rem);
-  line-height: 220px;
-}
-
-.info-counter[data-digit-count="8"] .info-counter-number,
-.info-counter[data-digit-count="8"] .info-counter-digit,
-.info-counter[data-digit-count="9"] .info-counter-number,
-.info-counter[data-digit-count="9"] .info-counter-digit,
-.info-counter[data-digit-count="10"] .info-counter-number,
-.info-counter[data-digit-count="10"] .info-counter-digit {
-  height: 220px;
-}
-
-/* =============================================================================
    RESPONSIVE: TABLET (600px - 899px)
    ============================================================================= */
 
@@ -250,8 +175,8 @@
   }
 
   .info-counter-text p {
-    font-size: var(--font-size-mob-h4); /* 22px */
-    line-height: var(--line-height-mob-h4); /* 28px */
+    font-size: var(--font-size-mob-h4);
+    line-height: var(--line-height-mob-h4);
   }
 }
 
@@ -261,44 +186,28 @@
 
 @media (width < 900px) {
   .info-counter {
-    /* Layout adjustments */
     gap: var(--space-16);
     padding-inline: var(--space-24);
-
-    /* Typography adjustments - larger base font size */
-
-    /* Base size for 1-3 digits, scales DOWN for more digits to prevent overflow */
-
-    /* Ensure vertical stacking with number first, text below */
     flex-direction: column;
     align-items: center;
   }
 
   .info-counter-number {
-    height: 180px;
     min-width: auto;
-    margin-bottom: var(--space-24);
+    margin-bottom: var(--space-16);
     width: 100%;
     max-width: 100%;
     justify-content: center;
     overflow: visible;
-    order: 1; /* Explicitly place number first on mobile */
+    order: 1;
   }
 
   .info-counter-digit {
-    height: 180px;
-    line-height: 180px;
     flex-shrink: 0;
     min-width: 0;
   }
 
   .info-counter-digit-value {
-    /* Base size for 1-3 digits, scales DOWN for more digits to prevent overflow */
-    font-size: clamp(7rem, 30vw, 11rem); /* 112px - 176px */
-    line-height: 180px;
-
-    /* Allow digits to scale but maintain readability */
-    max-width: 100%;
     word-break: keep-all;
   }
 
@@ -307,80 +216,21 @@
     height: auto;
     text-align: center;
     padding-inline: var(--space-24);
-    order: 2; /* Explicitly place text after number on mobile */
+    order: 2;
     width: 100%;
-    margin-top: 0; /* Ensure no extra margin */
+    margin-top: 0;
   }
 
   .info-counter-text p {
-    font-size: clamp(1rem, 4vw, 1.25rem); /* 16px - 20px, larger than before */
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    padding-bottom: var(--space-16);
     line-height: 1.6;
-    text-align: center; /* Center-justified on mobile */
+    text-align: center;
   }
 
-  /* Progressive font sizing - larger numbers get smaller fonts to prevent overflow */
-  .info-counter[data-digit-count="4"] .info-counter-digit-value {
-    font-size: clamp(6.5rem, 28vw, 10rem); /* 104px - 160px */
-    line-height: 170px;
-  }
-
-  .info-counter[data-digit-count="4"] .info-counter-number,
-  .info-counter[data-digit-count="4"] .info-counter-digit {
-    height: 170px;
-  }
-
-  .info-counter[data-digit-count="5"] .info-counter-digit-value {
-    font-size: clamp(6rem, 20vw, 9.5rem); /* 96px - 152px */
-    line-height: 160px;
-  }
-
-  .info-counter[data-digit-count="5"] .info-counter-number,
-  .info-counter[data-digit-count="5"] .info-counter-digit {
-    height: 160px;
-  }
-
-  .info-counter[data-digit-count="6"] .info-counter-digit-value {
-    font-size: clamp(5.5rem, 24vw, 9rem); /* 88px - 144px */
-    line-height: 150px;
-  }
-
-  .info-counter[data-digit-count="6"] .info-counter-number,
-  .info-counter[data-digit-count="6"] .info-counter-digit {
-    height: 150px;
-  }
-
-  .info-counter[data-digit-count="7"] .info-counter-digit-value {
-    font-size: clamp(4.5rem, 22vw, 8.5rem); /* 72px - 136px */
-    line-height: 140px;
-  }
-
-  .info-counter[data-digit-count="7"] .info-counter-number,
-  .info-counter[data-digit-count="7"] .info-counter-digit {
-    height: 140px;
-  }
-
-  .info-counter[data-digit-count="8"] .info-counter-digit-value,
-  .info-counter[data-digit-count="9"] .info-counter-digit-value,
-  .info-counter[data-digit-count="10"] .info-counter-digit-value {
-    font-size: clamp(4.25rem, 18vw, 8rem); /* 68px - 128px */
-    line-height: 135px;
-  }
-
-  .info-counter[data-digit-count="8"] .info-counter-number,
-  .info-counter[data-digit-count="8"] .info-counter-digit,
-  .info-counter[data-digit-count="9"] .info-counter-number,
-  .info-counter[data-digit-count="9"] .info-counter-digit,
-  .info-counter[data-digit-count="10"] .info-counter-number,
-  .info-counter[data-digit-count="10"] .info-counter-digit {
-    height: 135px;
-  }
-
-  /* Ensure wrapper maintains proper vertical order on mobile */
   .info-counter-wrapper {
-    display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
   }
 }
 
@@ -388,7 +238,6 @@
    ACCESSIBILITY
    ============================================================================= */
 
-/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .info-counter-digit-value {
     transition: none;
@@ -399,13 +248,11 @@
   }
 }
 
-/* Focus styles */
 .info-counter:focus-visible {
   outline: 2px solid var(--color-primary-700);
   outline-offset: var(--space-4);
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: more) {
   .info-counter {
     border: 2px solid currentcolor;

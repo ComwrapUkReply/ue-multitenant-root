@@ -189,7 +189,9 @@ p {
 /* Links */
 a {
     color: var(--color-primary);
-    text-decoration: none;
+    text-decoration: underline;
+    text-decoration-skip-ink: none;
+    text-underline-position: from-font;
     transition: var(--transition-base);
 }
 
@@ -199,8 +201,12 @@ a:not([class]) {
 }
 
 a:hover,
-a:focus {
+a:focus,
+a:focus-visible {
     color: var(--color-primary-900);
+    text-decoration: none;
+    text-decoration-skip-ink: none;
+    text-underline-position: from-font;
 }
 
 a:active {
@@ -562,8 +568,9 @@ blockquote::before {
 .button.text {
     background-color: transparent;
     color: var(--color-primary);
-    border-radius: 0;
-    padding: var(--space-16) var(--space-20) var(--space-16) var(--space-12);
+    padding: var(--space-16) var(--space-32) var(--space-16) var(--space-12);
+    border: var(--border-width-md) var(--border-style-solid) var(--color-primary);
+    border-radius: var(--button-border-radius);
 }
 
 .button.text span {

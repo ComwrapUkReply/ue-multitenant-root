@@ -333,37 +333,49 @@ const createDigitContainers = (digitCount) => {
 };
 
 /**
- * Create text paragraph element from description
- * @param {string} descriptionText - Plain text content
+ * Append description content directly into the text container using semantic markup.
+ * Parses HTML and appends children directly — never wraps block-level content inside a <p>.
+ * @param {HTMLElement} textContainer - Container to append content into
+ * @param {string} descriptionText - Plain text fallback
  * @param {string} descriptionHTML - HTML content
- * @returns {HTMLElement} Paragraph element
  */
-const createTextParagraph = (descriptionText, descriptionHTML) => {
-  const paragraph = createElement('p');
+const appendTextContent = (textContainer, descriptionText, descriptionHTML) => {
+  if (!descriptionText?.trim()) return;
+
   let html = descriptionHTML || descriptionText;
 
-  // Clean Universal Editor attributes
   if (hasUEAttributes(html)) {
     html = cleanHTML(html);
   }
 
-  // Check if content has HTML tags
   const hasHTMLTags = html !== descriptionText && PATTERNS.htmlTags.test(html);
 
-  if (hasHTMLTags) {
-    // Extract inner content if wrapped in <p> tag
-    if (PATTERNS.pWrapper.test(html)) {
-      const tempDiv = createElement('div');
-      tempDiv.innerHTML = html;
-      paragraph.innerHTML = tempDiv.firstElementChild?.innerHTML || html;
-    } else {
-      paragraph.innerHTML = html;
-    }
-  } else {
-    paragraph.textContent = descriptionText;
+  if (!hasHTMLTags) {
+    const p = createElement('p');
+    p.textContent = descriptionText;
+    textContainer.appendChild(p);
+    return;
   }
 
-  return paragraph;
+  const tempDiv = createElement('div');
+  tempDiv.innerHTML = html;
+  removeAueAttributes(tempDiv);
+
+  const children = [...tempDiv.children];
+
+  if (children.length === 0) {
+    const p = createElement('p');
+    p.textContent = tempDiv.textContent?.trim() || descriptionText;
+    textContainer.appendChild(p);
+    return;
+  }
+
+  // Unwrap a single wrapping <div> and promote its children
+  const source = children.length === 1 && children[0].tagName === 'DIV'
+    ? [...children[0].children]
+    : children;
+
+  source.forEach((child) => textContainer.appendChild(child));
 };
 
 /**
@@ -392,10 +404,7 @@ const buildCounterStructure = (targetNumber, descriptionText, descriptionHTML) =
   // Create text container
   const textContainer = createElement('div', CLASSES.text);
 
-  if (descriptionText?.trim()) {
-    const textParagraph = createTextParagraph(descriptionText, descriptionHTML);
-    textContainer.appendChild(textParagraph);
-  }
+  appendTextContent(textContainer, descriptionText, descriptionHTML);
 
   // Assemble structure
   wrapper.appendChild(numberContainer);
@@ -491,6 +500,33 @@ const getDisplayMode = (block) => {
 };
 
 /**
+ * Lock the number container to its final rendered width to prevent layout shifting during animation
+ * Temporarily renders the final number, measures the container, applies the width as an inline
+ * style, then calls the provided callback (which resets digits to 0 and starts the animation).
+ * @param {HTMLElement} numberContainer - The number container element
+ * @param {NodeList|Array} digits - Digit elements
+ * @param {number} targetNumber - Final target number
+ * @param {Function} [onComplete] - Called after width is locked
+ */
+const lockNumberContainerWidth = (numberContainer, digits, targetNumber, onComplete) => {
+  if (!numberContainer || !digits?.length) {
+    onComplete?.();
+    return;
+  }
+
+  // Show the final number so the browser can compute the maximum rendered width
+  updateDigits(digits, targetNumber);
+
+  requestAnimationFrame(() => {
+    const width = numberContainer.offsetWidth;
+    if (width > 0) {
+      numberContainer.style.width = `${width}px`;
+    }
+    onComplete?.();
+  });
+};
+
+/**
  * Handle extremely large numbers (10+ digits) that might overflow
  * Only applies dynamic sizing if CSS clamp isn't sufficient
  * @param {HTMLElement} block - Block element
@@ -578,7 +614,7 @@ export default function decorate(block) {
   block.dataset.digitCount = digitCount.toString();
 
   // Build counter structure
-  const { wrapper, digits } = buildCounterStructure(
+  const { wrapper, numberContainer, digits } = buildCounterStructure(
     targetNumber,
     descriptionText,
     descriptionHTML,
@@ -588,11 +624,14 @@ export default function decorate(block) {
   block.appendChild(wrapper);
 
   // Handle extremely large numbers (10+ digits) that might need dynamic sizing
-  const numberContainer = wrapper.querySelector(`.${CLASSES.number}`);
   if (numberContainer) {
     handleExtremeNumbers(block, digitCount, numberContainer);
   }
 
-  // Initialize animation
-  initializeAnimation(block, digits, targetNumber);
+  // Lock the number container width to the final rendered value before animating.
+  // This prevents the container from resizing digit-by-digit during the count animation,
+  // which would cause the adjacent text container to shift/shake.
+  lockNumberContainerWidth(numberContainer, digits, targetNumber, () => {
+    initializeAnimation(block, digits, targetNumber);
+  });
 }
