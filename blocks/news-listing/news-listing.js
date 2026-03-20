@@ -210,11 +210,15 @@ export default async function decorate(block) {
     return;
   }
 
-  // Build header
+  // Build header with dynamic category in title
+  const categorySpan = el('span', { class: 'news-listing-category' }, CATEGORIES[0].label);
+  const titleEl = el('h2', {}, 'Latest ');
+  titleEl.appendChild(categorySpan);
+  titleEl.appendChild(document.createTextNode(' News'));
   const header = el(
     'div',
     { class: 'news-listing-header' },
-    el('h2', {}, titleText),
+    titleEl,
     el('p', {}, descriptionText),
   );
 
@@ -338,6 +342,14 @@ export default async function decorate(block) {
     btn.addEventListener('click', () => {
       filters.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', 'false'));
       btn.setAttribute('aria-pressed', 'true');
+      // Animate category text flip
+      categorySpan.classList.add('news-listing-category-out');
+      setTimeout(() => {
+        categorySpan.textContent = cat.label;
+        categorySpan.classList.remove('news-listing-category-out');
+        categorySpan.classList.add('news-listing-category-in');
+        setTimeout(() => categorySpan.classList.remove('news-listing-category-in'), 300);
+      }, 300);
       switchCategory(cat.query);
     });
     filters.appendChild(btn);
