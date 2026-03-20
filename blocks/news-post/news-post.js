@@ -1,7 +1,4 @@
 import { useBlockConfig, isUE } from '../helpers.js';
-import {
-  domEl, div, a, h2, p, span,
-} from '../../scripts/dom-builder.js';
 
 const BLOCK_CONFIG = Object.freeze({
   empty: true,
@@ -11,6 +8,21 @@ const BLOCK_CONFIG = Object.freeze({
     SOURCE_LABEL: { index: 2, removeRow: true },
   },
 });
+
+function el(tag, attrs = {}, ...children) {
+  const element = document.createElement(tag);
+  Object.entries(attrs).forEach(([key, value]) => {
+    element.setAttribute(key, value);
+  });
+  children.forEach((child) => {
+    if (typeof child === 'string') {
+      element.appendChild(document.createTextNode(child));
+    } else if (child) {
+      element.appendChild(child);
+    }
+  });
+  return element;
+}
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -22,85 +34,94 @@ function formatDate(dateString) {
 }
 
 function renderPlaceholder(block, backLabel, backPath) {
-  const backLink = a({ href: backPath, class: 'news-post-back' }, backLabel);
-  const image = div(
+  const backLink = el('a', { href: backPath, class: 'news-post-back' }, backLabel);
+  const image = el(
+    'div',
     { class: 'news-post-image' },
-    div({ class: 'news-post-image-placeholder' }, 'Article Image'),
+    el('div', { class: 'news-post-image-placeholder' }, 'Article Image'),
   );
-  const meta = div(
+  const meta = el(
+    'div',
     { class: 'news-post-meta' },
-    domEl('time', 'January 1, 2025'),
-    span({ class: 'news-post-meta-separator' }),
-    span('News Source'),
+    el('time', {}, 'January 1, 2025'),
+    el('span', { class: 'news-post-meta-separator' }),
+    el('span', {}, 'News Source'),
   );
-  const title = domEl('h1', { class: 'news-post-title' }, 'Sample News Article Title for Preview');
-  const content = div(
+  const title = el('h1', { class: 'news-post-title' }, 'Sample News Article Title for Preview');
+  const content = el(
+    'div',
     { class: 'news-post-content' },
-    p('This is a placeholder article content shown in Universal Editor preview mode. The actual content will be fetched from the news API when viewed on the published site.'),
+    el('p', {}, 'This is a placeholder article content shown in Universal Editor preview mode. The actual content will be fetched from the news API when viewed on the published site.'),
   );
-  const source = a(
-    {
-      href: '#', class: 'news-post-source', target: '_blank', rel: 'noopener noreferrer',
-    },
-    'Read full article at source',
-  );
+  const source = el('a', {
+    href: '#',
+    class: 'news-post-source',
+    target: '_blank',
+    rel: 'noopener noreferrer',
+  }, 'Read full article at source');
 
   block.append(backLink, image, meta, title, content, source);
 }
 
 function renderFallback(block, backLabel, backPath, sourceLabel, sourceUrl) {
-  const fallback = div(
+  const actions = el('div', { class: 'news-post-fallback-actions' });
+  if (sourceUrl) {
+    actions.appendChild(el('a', {
+      href: sourceUrl,
+      class: 'news-post-source',
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    }, sourceLabel));
+  }
+  actions.appendChild(el('a', { href: backPath, class: 'news-post-back' }, backLabel));
+
+  const fallback = el(
+    'div',
     { class: 'news-post-fallback' },
-    h2('Article preview unavailable'),
-    p('This article is not available for inline preview. You can read it at the original source or go back to the news listing.'),
-    div(
-      { class: 'news-post-fallback-actions' },
-      ...(sourceUrl
-        ? [a({
-          href: sourceUrl, class: 'news-post-source', target: '_blank', rel: 'noopener noreferrer',
-        }, sourceLabel)]
-        : []),
-      a({ href: backPath, class: 'news-post-back' }, backLabel),
-    ),
+    el('h2', {}, 'Article preview unavailable'),
+    el('p', {}, 'This article is not available for inline preview. You can read it at the original source or go back to the news listing.'),
+    actions,
   );
   block.appendChild(fallback);
 }
 
 function renderArticle(block, article, backLabel, backPath, sourceLabel) {
-  const backLink = a({ href: backPath, class: 'news-post-back' }, backLabel);
+  const backLink = el('a', { href: backPath, class: 'news-post-back' }, backLabel);
 
-  const imageContainer = div({ class: 'news-post-image' });
+  const imageContainer = el('div', { class: 'news-post-image' });
   if (article.image) {
     imageContainer.appendChild(
-      domEl('img', { src: article.image, alt: article.title, loading: 'eager' }),
+      el('img', { src: article.image, alt: article.title, loading: 'eager' }),
     );
   } else {
     imageContainer.appendChild(
-      div({ class: 'news-post-image-placeholder' }, 'No image available'),
+      el('div', { class: 'news-post-image-placeholder' }, 'No image available'),
     );
   }
 
-  const meta = div(
+  const meta = el(
+    'div',
     { class: 'news-post-meta' },
-    domEl('time', { datetime: article.publishedAt || '' }, formatDate(article.publishedAt)),
-    span({ class: 'news-post-meta-separator' }),
-    span(article.source?.name || 'Unknown source'),
+    el('time', { datetime: article.publishedAt || '' }, formatDate(article.publishedAt)),
+    el('span', { class: 'news-post-meta-separator' }),
+    el('span', {}, article.source?.name || 'Unknown source'),
   );
 
-  const title = domEl('h1', { class: 'news-post-title' }, article.title || '');
+  const title = el('h1', { class: 'news-post-title' }, article.title || '');
 
   const contentText = article.content || article.description || '';
-  const content = div(
+  const content = el(
+    'div',
     { class: 'news-post-content' },
-    p(contentText),
+    el('p', {}, contentText),
   );
 
-  const source = a(
-    {
-      href: article.url, class: 'news-post-source', target: '_blank', rel: 'noopener noreferrer',
-    },
-    sourceLabel,
-  );
+  const source = el('a', {
+    href: article.url,
+    class: 'news-post-source',
+    target: '_blank',
+    rel: 'noopener noreferrer',
+  }, sourceLabel);
 
   block.append(backLink, imageContainer, meta, title, content, source);
 }

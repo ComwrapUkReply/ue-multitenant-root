@@ -1,7 +1,4 @@
 import { useBlockConfig, isUE } from '../helpers.js';
-import {
-  domEl, div, ul, li, a, h2, h3, p, button, img, span,
-} from '../../scripts/dom-builder.js';
 
 const API_KEY = 'fa8be279f005e9112d5f0b27b8dfc93a';
 const API_BASE = 'https://gnews.io/api/v4';
@@ -28,6 +25,21 @@ const BLOCK_CONFIG = Object.freeze({
 });
 
 const cache = new Map();
+
+function el(tag, attrs = {}, ...children) {
+  const element = document.createElement(tag);
+  Object.entries(attrs).forEach(([key, value]) => {
+    element.setAttribute(key, value);
+  });
+  children.forEach((child) => {
+    if (typeof child === 'string') {
+      element.appendChild(document.createTextNode(child));
+    } else if (child) {
+      element.appendChild(child);
+    }
+  });
+  return element;
+}
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -77,18 +89,22 @@ function createCard(article, postPagePath) {
   const href = `${postPagePath}?source=${encodeURIComponent(article.url)}`;
 
   const imageEl = article.image
-    ? img({ src: article.image, alt: article.title, loading: 'lazy' })
-    : span({ class: 'news-card-placeholder' });
+    ? el('img', { src: article.image, alt: article.title, loading: 'lazy' })
+    : el('span', { class: 'news-card-placeholder' });
 
-  const card = li(
-    a(
+  const card = el(
+    'li',
+    {},
+    el(
+      'a',
       { href, class: 'news-card-link' },
-      div({ class: 'news-card-image' }, imageEl),
-      div(
+      el('div', { class: 'news-card-image' }, imageEl),
+      el(
+        'div',
         { class: 'news-card-body' },
-        h3(article.title || ''),
-        domEl('time', { datetime: article.publishedAt || '' }, formatDate(article.publishedAt)),
-        p(article.description || ''),
+        el('h3', {}, article.title || ''),
+        el('time', { datetime: article.publishedAt || '' }, formatDate(article.publishedAt)),
+        el('p', {}, article.description || ''),
       ),
     ),
   );
@@ -99,17 +115,19 @@ function createCard(article, postPagePath) {
 }
 
 function createSkeletonCards(count) {
-  const skeleton = div({ class: 'news-listing-skeleton' });
+  const skeleton = el('div', { class: 'news-listing-skeleton' });
   for (let i = 0; i < count; i += 1) {
     skeleton.appendChild(
-      div(
+      el(
+        'div',
         { class: 'news-skeleton-card' },
-        div({ class: 'news-skeleton-image' }),
-        div(
+        el('div', { class: 'news-skeleton-image' }),
+        el(
+          'div',
           { class: 'news-skeleton-body' },
-          div({ class: 'news-skeleton-line' }),
-          div({ class: 'news-skeleton-line' }),
-          div({ class: 'news-skeleton-line' }),
+          el('div', { class: 'news-skeleton-line' }),
+          el('div', { class: 'news-skeleton-line' }),
+          el('div', { class: 'news-skeleton-line' }),
         ),
       ),
     );
@@ -118,9 +136,9 @@ function createSkeletonCards(count) {
 }
 
 function createMessage(text, retryFn) {
-  const msg = div({ class: 'news-listing-message' }, p(text));
+  const msg = el('div', { class: 'news-listing-message' }, el('p', {}, text));
   if (retryFn) {
-    const retryBtn = button({ class: 'news-listing-retry' }, 'Try again');
+    const retryBtn = el('button', { class: 'news-listing-retry' }, 'Try again');
     retryBtn.addEventListener('click', retryFn);
     msg.appendChild(retryBtn);
   }
@@ -128,34 +146,40 @@ function createMessage(text, retryFn) {
 }
 
 function renderPlaceholder(block, titleText, descriptionText) {
-  const header = div(
+  const header = el(
+    'div',
     { class: 'news-listing-header' },
-    h2(titleText),
-    p(descriptionText),
+    el('h2', {}, titleText),
+    el('p', {}, descriptionText),
   );
 
-  const filters = div({ class: 'news-listing-filters' });
+  const filters = el('div', { class: 'news-listing-filters' });
   CATEGORIES.forEach((cat, i) => {
     filters.appendChild(
-      button({ 'aria-pressed': i === 0 ? 'true' : 'false' }, cat.label),
+      el('button', { 'aria-pressed': i === 0 ? 'true' : 'false' }, cat.label),
     );
   });
 
-  const grid = ul({ class: 'news-listing-grid' });
+  const grid = el('ul', { class: 'news-listing-grid' });
   for (let i = 0; i < 8; i += 1) {
     grid.appendChild(
-      li(
-        a(
+      el(
+        'li',
+        {},
+        el(
+          'a',
           { href: '#', class: 'news-card-link' },
-          div(
+          el(
+            'div',
             { class: 'news-card-image' },
-            span({ class: 'news-card-placeholder' }),
+            el('span', { class: 'news-card-placeholder' }),
           ),
-          div(
+          el(
+            'div',
             { class: 'news-card-body' },
-            h3('Sample News Article Title'),
-            domEl('time', 'January 1, 2025'),
-            p('This is a placeholder description for the news article card in Universal Editor preview mode.'),
+            el('h3', {}, 'Sample News Article Title'),
+            el('time', {}, 'January 1, 2025'),
+            el('p', {}, 'This is a placeholder description for the news article card in Universal Editor preview mode.'),
           ),
         ),
       ),
@@ -182,16 +206,17 @@ export default async function decorate(block) {
   }
 
   // Build header
-  const header = div(
+  const header = el(
+    'div',
     { class: 'news-listing-header' },
-    h2(titleText),
-    p(descriptionText),
+    el('h2', {}, titleText),
+    el('p', {}, descriptionText),
   );
 
   // Build filter bar
-  const filters = div({ class: 'news-listing-filters' });
-  const grid = ul({ class: 'news-listing-grid' });
-  const sentinel = div({ class: 'news-listing-sentinel' });
+  const filters = el('div', { class: 'news-listing-filters' });
+  const grid = el('ul', { class: 'news-listing-grid' });
+  const sentinel = el('div', { class: 'news-listing-sentinel' });
   const skeleton = createSkeletonCards(COLUMNS);
 
   let currentQuery = CATEGORIES[0].query;
@@ -204,7 +229,7 @@ export default async function decorate(block) {
 
   function showSpinner() {
     sentinel.innerHTML = '';
-    sentinel.appendChild(div({ class: 'news-listing-spinner' }));
+    sentinel.appendChild(el('div', { class: 'news-listing-spinner' }));
     sentinel.style.display = '';
   }
 
@@ -304,7 +329,7 @@ export default async function decorate(block) {
 
   // Create filter buttons
   CATEGORIES.forEach((cat, i) => {
-    const btn = button({ 'aria-pressed': i === 0 ? 'true' : 'false' }, cat.label);
+    const btn = el('button', { 'aria-pressed': i === 0 ? 'true' : 'false' }, cat.label);
     btn.addEventListener('click', () => {
       filters.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', 'false'));
       btn.setAttribute('aria-pressed', 'true');
