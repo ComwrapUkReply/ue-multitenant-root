@@ -1,0 +1,48 @@
+{
+  "definitions": [
+    {
+      "title": "News Listing",
+      "id": "news-listing",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "News Listing",
+              "model": "news-listing"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "news-listing",
+      "fields": [
+        {
+          "component": "text",
+          "name": "listingTitle",
+          "label": "Title",
+          "valueType": "string",
+          "value": "Latest News"
+        },
+        {
+          "component": "richtext",
+          "name": "listingDescription",
+          "label": "Description",
+          "valueType": "string",
+          "value": "Stay up to date with the latest news in technology and innovation."
+        },
+        {
+          "component": "text",
+          "name": "postPagePath",
+          "label": "Post Page Path",
+          "valueType": "string",
+          "value": "/news/post"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
