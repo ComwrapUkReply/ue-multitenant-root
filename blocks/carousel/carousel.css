@@ -32,7 +32,7 @@
   flex-direction: column;
   background-color: transparent;
   align-items: center;
-  padding: var(--space-64) var(--space-16); 
+  padding: var(--space-84) var(--space-16); 
   gap: var(--space-16); /* 16px */
   justify-content: center;
   box-sizing: border-box;
@@ -73,6 +73,7 @@
   object-fit: cover;
   display: block;
   border-radius: var(--border-radius-md);
+  aspect-ratio: 4/3;
 }
 
 .carousel-slide-content h1,
@@ -127,8 +128,9 @@
 }
 
 .carousel-arrow {
-  width: 48px;
+  width: 32px;
   height: 48px;
+  padding: 0;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -171,7 +173,10 @@
 }
 
 .carousel-next::before {
-  transform: translate(-50%, -50%) rotate(45deg);
+  /* transform: translate(-50%, -50%) rotate(45deg); */
+  border: 1px var(--color-primary) solid;
+  border-top: none;
+  border-right: none;
 }
 
 /* Carousel Controls Container */
