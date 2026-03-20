@@ -1,13 +1,22 @@
-import { useBlockConfig, isUE } from '../helpers.js';
+function isUE() {
+  const { classList } = document.documentElement;
+  return classList.contains('adobe-ue-edit') || classList.contains('adobe-ue-preview');
+}
 
-const BLOCK_CONFIG = Object.freeze({
-  empty: true,
-  FIELDS: {
-    BACK_BUTTON_LABEL: { index: 0, removeRow: true },
-    BACK_BUTTON_PATH: { index: 1, removeRow: true },
-    SOURCE_LABEL: { index: 2, removeRow: true },
-  },
-});
+function extractBlockFields(block) {
+  const rows = Array.from(block.children);
+  const labelRow = rows[0];
+  const pathRow = rows[1];
+  const sourceRow = rows[2];
+  const fields = {
+    backLabel: labelRow?.textContent?.trim() || '',
+    backPath: pathRow?.textContent?.trim() || '',
+    sourceLabel: sourceRow?.textContent?.trim() || '',
+  };
+  [labelRow, pathRow, sourceRow].forEach((row) => row?.remove());
+  block.textContent = '';
+  return fields;
+}
 
 function el(tag, attrs = {}, ...children) {
   const element = document.createElement(tag);
@@ -127,15 +136,11 @@ function renderArticle(block, article, backLabel, backPath, sourceLabel) {
 }
 
 export default function decorate(block) {
-  const {
-    BACK_BUTTON_LABEL,
-    BACK_BUTTON_PATH,
-    SOURCE_LABEL,
-  } = useBlockConfig(block, BLOCK_CONFIG);
+  const fields = extractBlockFields(block);
 
-  const backLabel = BACK_BUTTON_LABEL.text || 'Back to News';
-  const backPath = BACK_BUTTON_PATH.text || '/news';
-  const sourceLabel = SOURCE_LABEL.text || 'Read full article at source';
+  const backLabel = fields.backLabel || 'Back to News';
+  const backPath = fields.backPath || '/news';
+  const sourceLabel = fields.sourceLabel || 'Read full article at source';
 
   if (isUE()) {
     renderPlaceholder(block, backLabel, backPath);

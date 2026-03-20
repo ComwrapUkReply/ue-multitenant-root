@@ -1,5 +1,3 @@
-import { useBlockConfig, isUE } from '../helpers.js';
-
 const API_KEY = 'fa8be279f005e9112d5f0b27b8dfc93a';
 const API_BASE = 'https://gnews.io/api/v4';
 const ARTICLES_PER_FETCH = 10;
@@ -15,14 +13,25 @@ const CATEGORIES = Object.freeze([
   { label: 'Marketing', query: 'digital marketing martech' },
 ]);
 
-const BLOCK_CONFIG = Object.freeze({
-  empty: true,
-  FIELDS: {
-    LISTING_TITLE: { index: 0, removeRow: true },
-    LISTING_DESCRIPTION: { index: 1, removeRow: true },
-    POST_PAGE_PATH: { index: 2, removeRow: true },
-  },
-});
+function isUE() {
+  const { classList } = document.documentElement;
+  return classList.contains('adobe-ue-edit') || classList.contains('adobe-ue-preview');
+}
+
+function extractBlockFields(block) {
+  const rows = Array.from(block.children);
+  const titleRow = rows[0];
+  const descRow = rows[1];
+  const pathRow = rows[2];
+  const fields = {
+    title: titleRow?.textContent?.trim() || '',
+    description: descRow?.textContent?.trim() || '',
+    postPagePath: pathRow?.textContent?.trim() || '',
+  };
+  [titleRow, descRow, pathRow].forEach((row) => row?.remove());
+  block.textContent = '';
+  return fields;
+}
 
 const cache = new Map();
 
@@ -190,15 +199,11 @@ function renderPlaceholder(block, titleText, descriptionText) {
 }
 
 export default async function decorate(block) {
-  const {
-    LISTING_TITLE,
-    LISTING_DESCRIPTION,
-    POST_PAGE_PATH,
-  } = useBlockConfig(block, BLOCK_CONFIG);
+  const fields = extractBlockFields(block);
 
-  const titleText = LISTING_TITLE.text || 'Latest News';
-  const descriptionText = LISTING_DESCRIPTION.text || 'Stay up to date with the latest news in technology and innovation.';
-  const postPagePath = POST_PAGE_PATH.text || '/news/post';
+  const titleText = fields.title || 'Latest News';
+  const descriptionText = fields.description || 'Stay up to date with the latest news in technology and innovation.';
+  const postPagePath = fields.postPagePath || '/news/post';
 
   if (isUE()) {
     renderPlaceholder(block, titleText, descriptionText);
