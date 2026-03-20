@@ -953,7 +953,7 @@ blockquote::before {
    /* sections */
 
    main .section {
-    margin: var(--space-48) 0;
+    margin: var(--space-48) auto;
    }
   
   main > .section > div {
