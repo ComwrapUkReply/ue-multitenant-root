@@ -8,7 +8,7 @@ const INITIAL_CARDS = INITIAL_ROWS * COLUMNS;
 const CATEGORIES = Object.freeze([
   { label: 'All', query: 'artificial intelligence OR robotics OR marketing' },
   { label: 'AI', query: 'artificial intelligence' },
-  { label: 'Content Supply Chain', query: 'content supply chain digital asset management' },
+  { label: 'Adobe', query: 'adobe experience cloud' },
   { label: 'Robotics', query: 'robotics automation' },
   { label: 'Marketing', query: 'digital marketing martech' },
 ]);
