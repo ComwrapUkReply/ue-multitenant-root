@@ -166,10 +166,32 @@ main > .section > div.download-wrapper {
     flex-direction: column;
   }
 
+  /* Let children of the text wrapper participate in flex ordering on mobile
+     so the preview image can sit above the download button. */
+  .download-wrapper-inner .download-content-wrapper {
+    display: contents;
+  }
+
+  .download-wrapper-inner .download-title {
+    order: 1;
+  }
+
+  .download-wrapper-inner .download-description {
+    order: 2;
+  }
+
   .download-wrapper-inner .download-preview-image {
     width: 100%;
     height: auto;
     max-height: 200px;
-    order: 1;
+    order: 3;
+  }
+
+  .download-wrapper-inner .download-warning {
+    order: 4;
+  }
+
+  .download-wrapper-inner .download-button {
+    order: 5;
   }
 }
