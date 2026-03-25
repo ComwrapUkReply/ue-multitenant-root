@@ -90,7 +90,9 @@
         "dynamiccontent",
         "dynamiccontentfilter",
         "download",
-        "teaser-list"
+        "teaser-list",
+        "news-listing",
+        "news-post"
       ]
     }
   ]
