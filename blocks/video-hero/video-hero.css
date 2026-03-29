@@ -184,12 +184,14 @@
   outline-offset: var(--border-width-md);
 }
 
-/* Badge – project spacing */
+/* Badge – centered at top of hero */
 .video-hero-badge {
-  position: absolute;
-  bottom: var(--space-40);
-  right: var(--space-24);
-  z-index: 3;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-24);
 }
 
 .video-hero-badge img {
@@ -214,11 +216,6 @@
     right: var(--space-32);
   }
 
-  .video-hero-badge {
-    right: var(--space-32);
-    bottom: var(--space-60);
-  }
-
   .video-hero-badge img {
     max-width: var(--space-180);
   }
@@ -237,7 +234,7 @@
   }
 
   .video-hero-badge {
-    right: var(--space-180);
+    padding-top: var(--space-40);
   }
 }
 
@@ -295,11 +292,6 @@
   .video-hero-play-toggle .video-hero-icon svg {
     width: 28px;
     height: 28px;
-  }
-
-  .video-hero-badge {
-    position: static;
-    margin-top: var(--space-20);
   }
 
   .video-hero-badge img {
