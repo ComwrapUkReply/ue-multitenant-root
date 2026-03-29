@@ -192,6 +192,7 @@
   display: flex;
   justify-content: center;
   padding-top: var(--space-24);
+  margin-bottom: calc(-1 * var(--space-24));
 }
 
 .video-hero-badge img {
