@@ -31,16 +31,11 @@
   object-position: center;
 }
 
-/* Overlay for text readability – dark gradient (project uses --color-black) */
+/* Overlay for text readability – uniform dark (project uses --color-black) */
 .video-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to right,
-    rgb(0 0 0 / 70%) 0%,
-    rgb(0 0 0 / 50%) 50%,
-    rgb(0 0 0 / 30%) 100%
-  );
+  background: rgb(0 0 0 / 50%);
   z-index: 1;
 }
 
@@ -87,7 +82,7 @@
   height: 32px;
 }
 
-/* Content – aligned with project container and spacing */
+/* Content – centered with project container and spacing */
 .video-hero-content {
   position: relative;
   z-index: 2;
@@ -97,6 +92,8 @@
   width: 100%;
   display: grid;
   gap: var(--space-24);
+  text-align: center;
+  justify-items: center;
 }
 
 /* Heading – project typography (h1 scale) */
@@ -133,6 +130,7 @@
   flex-wrap: wrap;
   gap: var(--space-16);
   align-items: center;
+  justify-content: center;
 }
 
 .video-hero-buttons .button {
@@ -281,12 +279,7 @@
 /* Light scheme: stronger overlay for contrast */
 @media (prefers-color-scheme: light) {
   .video-hero-overlay {
-    background: linear-gradient(
-      to right,
-      rgb(0 0 0 / 75%) 0%,
-      rgb(0 0 0 / 60%) 50%,
-      rgb(0 0 0 / 40%) 100%
-    );
+    background: rgb(0 0 0 / 60%);
   }
 }
 
@@ -315,10 +308,6 @@
 
   .video-hero-buttons {
     flex-direction: column;
-    align-items: stretch;
-  }
-
-  .video-hero-buttons .button {
-    width: 100%;
+    align-items: center;
   }
 }
