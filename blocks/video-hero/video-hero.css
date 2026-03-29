@@ -88,7 +88,7 @@
   z-index: 2;
   max-width: var(--max-container-width);
   margin: 0 auto;
-  padding: var(--space-40) var(--space-24);
+  padding: 32px var(--space-24);
   width: 100%;
   display: grid;
   gap: var(--space-24);
@@ -207,7 +207,7 @@
   }
 
   .video-hero-content {
-    padding: var(--space-60) var(--space-32);
+    padding: 32px var(--space-32);
     gap: var(--space-32);
   }
 
@@ -224,7 +224,7 @@
 /* Desktop – project breakpoint-xl (1200px) */
 @media (width >= 1200px) {
   .video-hero-content {
-    padding: var(--space-80) var(--gutter-padding);
+    padding: 32px var(--gutter-padding);
     gap: var(--space-40);
   }
 
