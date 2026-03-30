@@ -260,13 +260,10 @@ export default function decorate(block) {
     content.appendChild(buttonsContainer);
   }
 
-  // Assemble the block
-  block.appendChild(videoContainer);
-  block.appendChild(content);
-
-  // Create badge container (positioned absolutely, outside main content flow)
+  // Create badge container (centered at top of hero)
+  let badge = null;
   if (badgeImg) {
-    const badge = document.createElement('div');
+    badge = document.createElement('div');
     badge.className = 'video-hero-badge';
     const badgeImgClone = badgeImg.cloneNode(true);
 
@@ -276,8 +273,14 @@ export default function decorate(block) {
     }
 
     badge.appendChild(badgeImgClone);
+  }
+
+  // Assemble the block: video background → badge → content
+  block.appendChild(videoContainer);
+  if (badge) {
     block.appendChild(badge);
   }
+  block.appendChild(content);
 
   // Start playback when autoplay is on (user can use play button if blocked)
   if (videoSrc) {
