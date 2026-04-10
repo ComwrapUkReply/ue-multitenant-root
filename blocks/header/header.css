@@ -68,7 +68,9 @@ header nav p {
 
 header nav a:any-link {
     cursor: pointer;
+    text-decoration: none;
     color: currentcolor;
+    position: relative;
 }
 
 /* hamburger */
