@@ -21,6 +21,7 @@ export const getNodeValue = (block, index) => {
     const deepestElement = node.querySelector('*:not(:has(*))');
     return deepestElement?.textContent?.trim() || '';
   } catch (error) {
+    /* eslint-disable-next-line no-console */
     console.warn('getNodeValue: error querying element', error);
     return '';
   }
@@ -36,6 +37,7 @@ export const getNodeValue = (block, index) => {
 export const setBlockItemOptions = (blockItem, blockItemMap, blockItemsOptions) => {
   // Defensive checks
   if (!blockItem || !Array.isArray(blockItemMap) || !Array.isArray(blockItemsOptions)) {
+    /* eslint-disable-next-line no-console */
     console.warn('setBlockItemOptions: invalid arguments');
     return;
   }
@@ -80,11 +82,13 @@ export const getBlockChildren = (block, options = {}) => {
 export const moveClassToTargetedChild = (block, target, removeBlockClass = false) => {
   // Defensive checks
   if (!block || !target) {
+    /* eslint-disable-next-line no-console */
     console.warn('moveClassToTargetedChild: block and target must be provided');
     return;
   }
 
   if (!block.classList || !target.classList) {
+    /* eslint-disable-next-line no-console */
     console.warn('moveClassToTargetedChild: block and target must have classList');
     return;
   }
@@ -174,6 +178,7 @@ export const observeEditorMode = (callback, initialCall = true) => {
 
   // Defensive check - ensure callback is a function
   if (typeof callback !== 'function') {
+    /* eslint-disable-next-line no-console */
     console.warn('observeEditorMode: callback must be a function');
     return () => {}; // Return no-op cleanup function
   }
@@ -183,6 +188,7 @@ export const observeEditorMode = (callback, initialCall = true) => {
     try {
       callback(isEditorMode());
     } catch (error) {
+      /* eslint-disable-next-line no-console */
       console.error('observeEditorMode: error in initial callback', error);
     }
   }
@@ -195,6 +201,7 @@ export const observeEditorMode = (callback, initialCall = true) => {
     try {
       callback(isEditorMode());
     } catch (error) {
+      /* eslint-disable-next-line no-console */
       console.error('observeEditorMode: error in callback', error);
     }
   };
@@ -208,6 +215,7 @@ export const observeEditorMode = (callback, initialCall = true) => {
       observers.push(currentObserver);
     }
   } catch (error) {
+    /* eslint-disable-next-line no-console */
     console.warn('observeEditorMode: failed to observe current document', error);
   }
 
@@ -235,6 +243,7 @@ export const observeEditorMode = (callback, initialCall = true) => {
       try {
         observer.disconnect();
       } catch (error) {
+        /* eslint-disable-next-line no-console */
         console.warn('observeEditorMode: error disconnecting observer', error);
       }
     });
