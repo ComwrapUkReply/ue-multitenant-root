@@ -137,6 +137,11 @@
   outline-offset: -2px;
 }
 
+.region-switcher-option:focus,
+.region-switcher-option:hover {
+  background: var(--color-grey-300);
+}
+
 .region-switcher-option.current {
   background: var(--color-info);
   font-weight: 600;
