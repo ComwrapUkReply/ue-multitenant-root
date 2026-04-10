@@ -232,14 +232,14 @@ header nav .nav-sections ul li p a {
   color: var(--color-black);
 }
 
+header nav .nav-sections ul li p {
+    padding: var(--space-12) var(--space-8);
+    font-size: var(--font-size-label);
+    line-height: var(--line-height-label);
+  }
+
 header nav .nav-sections ul li p:has(a) {
 	padding: 0;
-}
-
-header nav .nav-sections ul li p {
-  padding: var(--space-12) var(--space-8);
-  font-size: var(--font-size-label);
-  line-height: var(--line-height-label);
 }
 
 header nav .nav-sections ul > li > ul {
