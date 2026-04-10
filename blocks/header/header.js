@@ -209,6 +209,21 @@ function restructureNavSectionsMenu(navSectionsMenu) {
     });
   };
 
+  const normalizeExistingMenuItem = (li) => {
+    cleanupMenuLinks(li);
+
+    const directParagraph = li.querySelector(':scope > p');
+    if (directParagraph) {
+      directParagraph.removeAttribute('class');
+    }
+
+    const directSubmenu = li.querySelector(':scope > ul');
+    if (directSubmenu) {
+      li.classList.add('nav-drop');
+      directSubmenu.classList.add('nav-sections-1');
+    }
+  };
+
   while (i < allChildren.length) {
     const current = allChildren[i];
 
@@ -238,7 +253,7 @@ function restructureNavSectionsMenu(navSectionsMenu) {
       i += 2; // Skip both p and ul
     } else if (current.tagName === 'UL') {
       Array.from(current.children).forEach((li) => {
-        cleanupMenuLinks(li);
+        normalizeExistingMenuItem(li);
         menuItems.push(li);
       });
       i += 1;
