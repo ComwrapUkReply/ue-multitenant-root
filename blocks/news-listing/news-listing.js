@@ -1,9 +1,25 @@
-const API_KEY = 'fa8be279f005e9112d5f0b27b8dfc93a';
-const API_BASE = 'https://gnews.io/api/v4';
+import { getMetadata } from '../../scripts/aem.js';
+
 const ARTICLES_PER_FETCH = 10;
 const INITIAL_ROWS = 4;
 const COLUMNS = 4;
 const INITIAL_CARDS = INITIAL_ROWS * COLUMNS;
+const META_KEYS = Object.freeze({
+  provider: 'news-provider',
+});
+
+const PROVIDERS = Object.freeze({
+  gnews: Object.freeze({
+    name: 'gnews',
+    apiBase: 'https://gnews.io/api/v4',
+    keyMeta: 'fa8be279f005e9112d5f0b27b8dfc93a',
+  }),
+  currents: Object.freeze({
+    name: 'currents',
+    apiBase: 'https://api.currentsapi.services/v1',
+    keyMeta: '29Ajftr5l2CQ34rLqYucXoJpPFCsGgdDitM3ZCQuWJOfiLrf',
+  }),
+});
 
 const CATEGORIES = Object.freeze([
   { label: 'All', query: 'artificial intelligence OR robotics OR marketing' },
@@ -59,8 +75,58 @@ function formatDate(dateString) {
   });
 }
 
-async function fetchNews(query, page = 1) {
-  const cacheKey = `${query}-${page}`;
+function getProviderName() {
+  const providerName = getMetadata(META_KEYS.provider).trim().toLowerCase();
+  if (PROVIDERS[providerName]) return providerName;
+  return PROVIDERS.gnews.name;
+}
+
+function getProviderConfig(providerName) {
+  const provider = PROVIDERS[providerName];
+  return {
+    ...provider,
+    apiKey: getMetadata(provider.keyMeta).trim(),
+  };
+}
+
+function resolveProviderSequence() {
+  const configuredName = getProviderName();
+  const gnewsConfig = getProviderConfig(PROVIDERS.gnews.name);
+  const currentsConfig = getProviderConfig(PROVIDERS.currents.name);
+  const configuredProvider = configuredName === PROVIDERS.currents.name
+    ? currentsConfig
+    : gnewsConfig;
+
+  let primaryProvider = configuredProvider;
+  if (!primaryProvider.apiKey) {
+    if (configuredName === PROVIDERS.gnews.name && currentsConfig.apiKey) {
+      primaryProvider = currentsConfig;
+    } else if (configuredName === PROVIDERS.currents.name && gnewsConfig.apiKey) {
+      primaryProvider = gnewsConfig;
+    }
+  }
+
+  const fallbackProvider = [gnewsConfig, currentsConfig].find(
+    (provider) => provider.name !== primaryProvider.name && provider.apiKey,
+  ) || null;
+
+  return {
+    primaryProvider,
+    fallbackProvider,
+  };
+}
+
+function createApiError(status, providerName, details = '') {
+  return Object.assign(new Error(`API error: ${status}`), {
+    status,
+    provider: providerName,
+    details,
+  });
+}
+
+async function fetchGnews(query, provider, page = 1) {
+  const { apiBase, apiKey, name } = provider;
+  const cacheKey = `${name}-${query}-${page}-${apiKey}`;
   if (cache.has(cacheKey)) return cache.get(cacheKey);
 
   const params = new URLSearchParams({
@@ -68,19 +134,97 @@ async function fetchNews(query, page = 1) {
     lang: 'en',
     max: String(ARTICLES_PER_FETCH),
     page: String(page),
-    apikey: API_KEY,
+    apikey: apiKey,
   });
 
-  const url = `${API_BASE}/search?${params.toString()}`;
+  const url = `${apiBase}/search?${params.toString()}`;
 
   const response = await fetch(url);
+  const responseData = await response.json();
   if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
+    const details = Array.isArray(responseData?.errors) ? responseData.errors.join(' ') : '';
+    throw createApiError(response.status, name, details);
   }
 
-  const data = await response.json();
-  cache.set(cacheKey, data.articles || []);
-  return data.articles || [];
+  const articles = responseData?.articles || [];
+  cache.set(cacheKey, articles);
+  return articles;
+}
+
+function mapCurrentsArticle(article) {
+  return {
+    title: article?.title || '',
+    description: article?.description || '',
+    url: article?.url || '',
+    image: article?.image || '',
+    publishedAt: article?.published || '',
+  };
+}
+
+async function fetchCurrents(query, provider, page = 1) {
+  const { apiBase, apiKey, name } = provider;
+  const cacheKey = `${name}-${query}-${page}-${apiKey}`;
+  if (cache.has(cacheKey)) return cache.get(cacheKey);
+
+  const params = new URLSearchParams({
+    keywords: query,
+    language: 'en',
+    page_number: String(page),
+    page_size: String(ARTICLES_PER_FETCH),
+    apiKey,
+  });
+
+  const url = `${apiBase}/search?${params.toString()}`;
+  const response = await fetch(url);
+  const responseData = await response.json();
+  if (!response.ok) {
+    const details = Array.isArray(responseData?.errors) ? responseData.errors.join(' ') : '';
+    throw createApiError(response.status, name, details);
+  }
+
+  const articles = (responseData?.news || []).map(mapCurrentsArticle);
+  cache.set(cacheKey, articles);
+  return articles;
+}
+
+function isQuotaOrAuthError(error) {
+  const authErrorStatuses = [401, 402, 403, 429];
+  if (authErrorStatuses.includes(error?.status)) return true;
+
+  const details = `${error?.details || ''}`.toLowerCase();
+  return details.includes('request limit')
+    || details.includes('quota')
+    || details.includes('rate limit');
+}
+
+async function fetchNews(query, providers, page = 1) {
+  const { primaryProvider, fallbackProvider } = providers;
+  if (!primaryProvider?.apiKey) {
+    throw createApiError(0, primaryProvider?.name || PROVIDERS.gnews.name, 'Missing API key configuration.');
+  }
+
+  const providerFetcherMap = {
+    [PROVIDERS.gnews.name]: fetchGnews,
+    [PROVIDERS.currents.name]: fetchCurrents,
+  };
+
+  const primaryFetcher = providerFetcherMap[primaryProvider.name];
+  if (!primaryFetcher) {
+    throw createApiError(0, primaryProvider.name, 'Unsupported provider configuration.');
+  }
+
+  try {
+    return await primaryFetcher(query, primaryProvider, page);
+  } catch (error) {
+    if (fallbackProvider?.apiKey && isQuotaOrAuthError(error)) {
+      const fallbackFetcher = providerFetcherMap[fallbackProvider.name];
+      if (fallbackFetcher) {
+        return fallbackFetcher(query, fallbackProvider, page);
+      }
+    }
+
+    throw error;
+  }
 }
 
 function storeArticle(article) {
@@ -154,6 +298,22 @@ function createMessage(text, retryFn) {
   return msg;
 }
 
+function getNewsErrorMessage(error) {
+  const errorStatus = error?.status;
+  const errorProvider = error?.provider;
+
+  if (errorStatus === 401 || errorStatus === 403) {
+    if (errorProvider === PROVIDERS.gnews.name) {
+      return 'Unable to access GNews. Add "currents-apikey" for fallback or verify "gnews-apikey".';
+    }
+    if (errorProvider === PROVIDERS.currents.name) {
+      return 'Unable to access Currents API. Verify "currents-apikey" or switch provider back to GNews.';
+    }
+  }
+
+  return 'Unable to load news. Please try again later.';
+}
+
 function renderPlaceholder(block, titleText, descriptionText) {
   const header = el(
     'div',
@@ -209,6 +369,8 @@ export default async function decorate(block) {
     renderPlaceholder(block, titleText, descriptionText);
     return;
   }
+
+  const providers = resolveProviderSequence();
 
   // Build header with dynamic category in title
   const categorySpan = el('span', { class: 'news-listing-category' }, CATEGORIES[0].label);
@@ -275,7 +437,7 @@ export default async function decorate(block) {
     showSpinner();
 
     try {
-      const articles = await fetchNews(currentQuery, currentPage);
+      const articles = await fetchNews(currentQuery, providers, currentPage);
       if (articles.length === 0) {
         hasMore = false;
         hideSpinner();
@@ -290,10 +452,10 @@ export default async function decorate(block) {
         if (articles.length < ARTICLES_PER_FETCH) hasMore = false;
         renderBatch();
       }
-    } catch {
+    } catch (error) {
       hideSpinner();
       if (allArticles.length === 0) {
-        grid.after(createMessage('Unable to load news. Please try again later.', () => {
+        grid.after(createMessage(getNewsErrorMessage(error), () => {
           block.querySelector('.news-listing-message')?.remove();
           loadMore();
         }));
@@ -357,12 +519,19 @@ export default async function decorate(block) {
 
   block.append(header, filters, skeleton, grid, sentinel);
 
+  if (!providers.primaryProvider.apiKey) {
+    skeleton.remove();
+    hideSpinner();
+    grid.after(createMessage('News feed is not configured. Add "gnews-apikey" or "currents-apikey" in page metadata.'));
+    return;
+  }
+
   // Initial load
   try {
     while (hasMore && allArticles.length < INITIAL_CARDS) {
       isLoading = true;
       // eslint-disable-next-line no-await-in-loop
-      const articles = await fetchNews(currentQuery, currentPage);
+      const articles = await fetchNews(currentQuery, providers, currentPage);
       if (articles.length === 0) {
         hasMore = false;
       } else {
@@ -380,10 +549,10 @@ export default async function decorate(block) {
     }
 
     setupObserver();
-  } catch {
+  } catch (error) {
     isLoading = false;
     skeleton.remove();
-    grid.after(createMessage('Unable to load news. Please try again later.', () => {
+    grid.after(createMessage(getNewsErrorMessage(error), () => {
       block.querySelector('.news-listing-message')?.remove();
       switchCategory(currentQuery);
     }));
