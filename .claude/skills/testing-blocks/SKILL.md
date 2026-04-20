@@ -12,6 +12,8 @@ This skill guides you through testing code changes in AEM Edge Delivery Services
 - **content-driven-development**: Test content created during CDD serves as the basis for testing
 - **building-blocks**: This skill is automatically invoked after block implementation
 - **block-collection-and-party**: May provide reference test patterns from similar blocks
+- **frontend-testing**: Provides automated a11y, visual, and DOM validation scripts
+- **semantic-html-a11y**: Rules enforced by the DOM validation checks
 
 ## When to Use This Skill
 
@@ -64,6 +66,8 @@ Before opening a pull request, complete ALL of the following:
 - [ ] **Existing tests pass** - All keeper tests still pass with your changes
 - [ ] **Unit tests written** - New keeper tests for any logic-heavy utilities or data processing
 - [ ] **Browser validation** - Feature tested in local dev server, screenshots captured
+- [ ] **Accessibility validated** - Run `test-block-a11y.js` or `test-block-full.js` from the **frontend-testing** skill; review and fix any violations
+- [ ] **DOM semantics validated** - Run `test-block-full.js` or `check-semantic-html.js`; no semantic violations
 - [ ] **All variants tested** - Each variant/configuration of blocks validated
 - [ ] **Responsive behavior** - Tested on mobile, tablet, desktop viewports
 - [ ] **Linting passes** - `npm run lint` completes without errors
@@ -98,7 +102,17 @@ npm run test:watch
 
 **Detailed guide:** See `resources/unit-testing.md`
 
-### 2. Browser Testing (THROWAWAY TESTS)
+### 2. Automated Front-End Testing
+
+**For accessibility, visual, and DOM validation**, use the **frontend-testing** skill scripts:
+
+```bash
+node .claude/skills/frontend-testing/scripts/test-block-full.js --block <name> --url <url>
+```
+
+This runs axe-core a11y checks, DOM semantic validation, and captures responsive screenshots in one command. See the **frontend-testing** skill for setup and detailed usage.
+
+### 3. Browser Testing (THROWAWAY TESTS)
 
 **When to use:** Block decoration, visual validation, DOM structure, responsive design
 
