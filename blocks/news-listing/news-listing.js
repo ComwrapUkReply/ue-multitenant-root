@@ -1,30 +1,27 @@
 import { getMetadata } from '../../scripts/aem.js';
 
+// The Guardian Open Platform — https://open-platform.theguardian.com/access/
+// Free tier: 5,000 requests/day, 12 req/sec, no credit card required
+const GUARDIAN_API_BASE = 'https://content.guardianapis.com/search';
+const GUARDIAN_KEY_META = 'guardian-apikey';
+const GUARDIAN_FIELDS = 'thumbnail,trailText,headline';
+
+// TODO: remove before production — use page metadata "guardian-apikey" instead
+const DEV_API_KEY = '723cc7cb-6c79-436d-992b-a532f7574c0f';
+
 const ARTICLES_PER_FETCH = 10;
 const INITIAL_ROWS = 4;
 const COLUMNS = 4;
 const INITIAL_CARDS = INITIAL_ROWS * COLUMNS;
-const META_KEYS = Object.freeze({
-  provider: 'news-provider',
-});
 
-const PROVIDERS = Object.freeze({
-  gnews: Object.freeze({
-    name: 'gnews',
-    apiBase: 'https://gnews.io/api/v4',
-    keyMeta: 'fa8be279f005e9112d5f0b27b8dfc93a',
-  }),
-  currents: Object.freeze({
-    name: 'currents',
-    apiBase: 'https://api.currentsapi.services/v1',
-    keyMeta: '29Ajftr5l2CQ34rLqYucXoJpPFCsGgdDitM3ZCQuWJOfiLrf',
-  }),
-});
+// Reusable string constants to keep lines within the 100-char limit
+const UE_PLACEHOLDER_DESC = 'This is a placeholder description for the news article card in Universal Editor preview mode.';
+const DEFAULT_DESC = 'Stay up to date with the latest news in technology and innovation.';
+const CONFIG_MSG = 'News feed is not configured. Add "guardian-apikey" in page metadata.';
 
 const CATEGORIES = Object.freeze([
   { label: 'All', query: 'artificial intelligence OR robotics OR marketing' },
   { label: 'AI', query: 'artificial intelligence' },
-  { label: 'Adobe', query: 'adobe experience cloud' },
   { label: 'Robotics', query: 'robotics automation' },
   { label: 'Marketing', query: 'digital marketing martech' },
 ]);
@@ -75,156 +72,50 @@ function formatDate(dateString) {
   });
 }
 
-function getProviderName() {
-  const providerName = getMetadata(META_KEYS.provider).trim().toLowerCase();
-  if (PROVIDERS[providerName]) return providerName;
-  return PROVIDERS.gnews.name;
+function getApiKey() {
+  return getMetadata(GUARDIAN_KEY_META).trim() || DEV_API_KEY;
 }
 
-function getProviderConfig(providerName) {
-  const provider = PROVIDERS[providerName];
+function mapGuardianArticle(article) {
   return {
-    ...provider,
-    apiKey: getMetadata(provider.keyMeta).trim(),
+    title: article?.fields?.headline || article?.webTitle || '',
+    description: article?.fields?.trailText || '',
+    url: article?.webUrl || '',
+    image: article?.fields?.thumbnail || '',
+    publishedAt: article?.webPublicationDate || '',
   };
 }
 
-function resolveProviderSequence() {
-  const configuredName = getProviderName();
-  const gnewsConfig = getProviderConfig(PROVIDERS.gnews.name);
-  const currentsConfig = getProviderConfig(PROVIDERS.currents.name);
-  const configuredProvider = configuredName === PROVIDERS.currents.name
-    ? currentsConfig
-    : gnewsConfig;
-
-  let primaryProvider = configuredProvider;
-  if (!primaryProvider.apiKey) {
-    if (configuredName === PROVIDERS.gnews.name && currentsConfig.apiKey) {
-      primaryProvider = currentsConfig;
-    } else if (configuredName === PROVIDERS.currents.name && gnewsConfig.apiKey) {
-      primaryProvider = gnewsConfig;
-    }
-  }
-
-  const fallbackProvider = [gnewsConfig, currentsConfig].find(
-    (provider) => provider.name !== primaryProvider.name && provider.apiKey,
-  ) || null;
-
-  return {
-    primaryProvider,
-    fallbackProvider,
-  };
-}
-
-function createApiError(status, providerName, details = '') {
-  return Object.assign(new Error(`API error: ${status}`), {
-    status,
-    provider: providerName,
-    details,
-  });
-}
-
-async function fetchGnews(query, provider, page = 1) {
-  const { apiBase, apiKey, name } = provider;
-  const cacheKey = `${name}-${query}-${page}-${apiKey}`;
+async function fetchNews(query, apiKey, page = 1) {
+  const cacheKey = `${query}-${page}`;
   if (cache.has(cacheKey)) return cache.get(cacheKey);
 
   const params = new URLSearchParams({
     q: query,
-    lang: 'en',
-    max: String(ARTICLES_PER_FETCH),
+    'api-key': apiKey,
+    'page-size': String(ARTICLES_PER_FETCH),
     page: String(page),
-    apikey: apiKey,
+    'show-fields': GUARDIAN_FIELDS,
+    'order-by': 'newest',
   });
 
-  const url = `${apiBase}/search?${params.toString()}`;
-
+  const url = `${GUARDIAN_API_BASE}?${params.toString()}`;
   const response = await fetch(url);
-  const responseData = await response.json();
+
   if (!response.ok) {
-    const details = Array.isArray(responseData?.errors) ? responseData.errors.join(' ') : '';
-    throw createApiError(response.status, name, details);
+    throw Object.assign(
+      new Error(`Guardian API error: ${response.status}`),
+      { status: response.status },
+    );
   }
 
-  const articles = responseData?.articles || [];
-  cache.set(cacheKey, articles);
-  return articles;
-}
-
-function mapCurrentsArticle(article) {
-  return {
-    title: article?.title || '',
-    description: article?.description || '',
-    url: article?.url || '',
-    image: article?.image || '',
-    publishedAt: article?.published || '',
-  };
-}
-
-async function fetchCurrents(query, provider, page = 1) {
-  const { apiBase, apiKey, name } = provider;
-  const cacheKey = `${name}-${query}-${page}-${apiKey}`;
-  if (cache.has(cacheKey)) return cache.get(cacheKey);
-
-  const params = new URLSearchParams({
-    keywords: query,
-    language: 'en',
-    page_number: String(page),
-    page_size: String(ARTICLES_PER_FETCH),
-    apiKey,
-  });
-
-  const url = `${apiBase}/search?${params.toString()}`;
-  const response = await fetch(url);
-  const responseData = await response.json();
-  if (!response.ok) {
-    const details = Array.isArray(responseData?.errors) ? responseData.errors.join(' ') : '';
-    throw createApiError(response.status, name, details);
-  }
-
-  const articles = (responseData?.news || []).map(mapCurrentsArticle);
-  cache.set(cacheKey, articles);
-  return articles;
-}
-
-function isQuotaOrAuthError(error) {
-  const authErrorStatuses = [401, 402, 403, 429];
-  if (authErrorStatuses.includes(error?.status)) return true;
-
-  const details = `${error?.details || ''}`.toLowerCase();
-  return details.includes('request limit')
-    || details.includes('quota')
-    || details.includes('rate limit');
-}
-
-async function fetchNews(query, providers, page = 1) {
-  const { primaryProvider, fallbackProvider } = providers;
-  if (!primaryProvider?.apiKey) {
-    throw createApiError(0, primaryProvider?.name || PROVIDERS.gnews.name, 'Missing API key configuration.');
-  }
-
-  const providerFetcherMap = {
-    [PROVIDERS.gnews.name]: fetchGnews,
-    [PROVIDERS.currents.name]: fetchCurrents,
-  };
-
-  const primaryFetcher = providerFetcherMap[primaryProvider.name];
-  if (!primaryFetcher) {
-    throw createApiError(0, primaryProvider.name, 'Unsupported provider configuration.');
-  }
-
-  try {
-    return await primaryFetcher(query, primaryProvider, page);
-  } catch (error) {
-    if (fallbackProvider?.apiKey && isQuotaOrAuthError(error)) {
-      const fallbackFetcher = providerFetcherMap[fallbackProvider.name];
-      if (fallbackFetcher) {
-        return fallbackFetcher(query, fallbackProvider, page);
-      }
-    }
-
-    throw error;
-  }
+  const data = await response.json();
+  const articles = (data?.response?.results || []).map(mapGuardianArticle);
+  const totalPages = data?.response?.pages ?? 0;
+  const currentPage = data?.response?.currentPage ?? page;
+  const result = { articles, hasNextPage: currentPage < totalPages };
+  cache.set(cacheKey, result);
+  return result;
 }
 
 function storeArticle(article) {
@@ -298,19 +189,14 @@ function createMessage(text, retryFn) {
   return msg;
 }
 
-function getNewsErrorMessage(error) {
-  const errorStatus = error?.status;
-  const errorProvider = error?.provider;
-
-  if (errorStatus === 401 || errorStatus === 403) {
-    if (errorProvider === PROVIDERS.gnews.name) {
-      return 'Unable to access GNews. Add "currents-apikey" for fallback or verify "gnews-apikey".';
-    }
-    if (errorProvider === PROVIDERS.currents.name) {
-      return 'Unable to access Currents API. Verify "currents-apikey" or switch provider back to GNews.';
-    }
+function getErrorMessage(error) {
+  const { status } = error || {};
+  if (status === 401 || status === 403) {
+    return 'Unable to access the news feed. Please verify "guardian-apikey" in page metadata.';
   }
-
+  if (status === 429) {
+    return 'News feed rate limit reached. Please try again later.';
+  }
   return 'Unable to load news. Please try again later.';
 }
 
@@ -338,17 +224,13 @@ function renderPlaceholder(block, titleText, descriptionText) {
         el(
           'a',
           { href: '#', class: 'news-card-link' },
-          el(
-            'div',
-            { class: 'news-card-image' },
-            el('span', { class: 'news-card-placeholder' }),
-          ),
+          el('div', { class: 'news-card-image' }, el('span', { class: 'news-card-placeholder' })),
           el(
             'div',
             { class: 'news-card-body' },
             el('h3', {}, 'Sample News Article Title'),
             el('time', {}, 'January 1, 2025'),
-            el('p', {}, 'This is a placeholder description for the news article card in Universal Editor preview mode.'),
+            el('p', {}, UE_PLACEHOLDER_DESC),
           ),
         ),
       ),
@@ -360,9 +242,8 @@ function renderPlaceholder(block, titleText, descriptionText) {
 
 export default async function decorate(block) {
   const fields = extractBlockFields(block);
-
   const titleText = fields.title || 'Latest News';
-  const descriptionText = fields.description || 'Stay up to date with the latest news in technology and innovation.';
+  const descriptionText = fields.description || DEFAULT_DESC;
   const postPagePath = fields.postPagePath || '/news/post';
 
   if (isUE()) {
@@ -370,13 +251,14 @@ export default async function decorate(block) {
     return;
   }
 
-  const providers = resolveProviderSequence();
+  const apiKey = getApiKey();
 
-  // Build header with dynamic category in title
+  // Build header with animated category label
   const categorySpan = el('span', { class: 'news-listing-category' }, CATEGORIES[0].label);
   const titleEl = el('h2', {}, 'Latest ');
   titleEl.appendChild(categorySpan);
   titleEl.appendChild(document.createTextNode(' News'));
+
   const header = el(
     'div',
     { class: 'news-listing-header' },
@@ -384,11 +266,14 @@ export default async function decorate(block) {
     el('p', {}, descriptionText),
   );
 
-  // Build filter bar
   const filters = el('div', { class: 'news-listing-filters' });
   const grid = el('ul', { class: 'news-listing-grid' });
-  const sentinel = el('div', { class: 'news-listing-sentinel' });
   const skeleton = createSkeletonCards(COLUMNS);
+  const loadMoreBtn = el(
+    'button',
+    { class: 'news-listing-load-more', style: 'display:none' },
+    'Load More News',
+  );
 
   let currentQuery = CATEGORIES[0].query;
   let currentPage = 1;
@@ -396,17 +281,13 @@ export default async function decorate(block) {
   let displayedCount = 0;
   let isLoading = false;
   let hasMore = true;
-  let observer;
 
-  function showSpinner() {
-    sentinel.innerHTML = '';
-    sentinel.appendChild(el('div', { class: 'news-listing-spinner' }));
-    sentinel.style.display = '';
-  }
-
-  function hideSpinner() {
-    sentinel.innerHTML = '';
-    sentinel.style.display = 'none';
+  // Show/hide and enable/disable the load-more button
+  function updateButton() {
+    const moreAvailable = hasMore || displayedCount < allArticles.length;
+    loadMoreBtn.style.display = moreAvailable ? '' : 'none';
+    loadMoreBtn.disabled = isLoading;
+    loadMoreBtn.textContent = isLoading ? 'Loading…' : 'Load More News';
   }
 
   function renderBatch() {
@@ -415,17 +296,13 @@ export default async function decorate(block) {
       grid.appendChild(createCard(allArticles[i], postPagePath));
     }
     displayedCount = end;
-
-    if (displayedCount >= allArticles.length && !hasMore) {
-      hideSpinner();
-      if (observer) observer.disconnect();
-    }
+    updateButton();
   }
 
   async function loadMore() {
     if (isLoading || (!hasMore && displayedCount >= allArticles.length)) return;
 
-    // If we have buffered articles to show, just render them
+    // Still have buffered articles — just render the next batch
     if (displayedCount < allArticles.length) {
       renderBatch();
       return;
@@ -434,14 +311,12 @@ export default async function decorate(block) {
     if (!hasMore) return;
 
     isLoading = true;
-    showSpinner();
+    updateButton();
 
     try {
-      const articles = await fetchNews(currentQuery, providers, currentPage);
+      const { articles, hasNextPage } = await fetchNews(currentQuery, apiKey, currentPage);
       if (articles.length === 0) {
         hasMore = false;
-        hideSpinner();
-        if (observer) observer.disconnect();
         if (allArticles.length === 0) {
           grid.innerHTML = '';
           grid.after(createMessage('No news articles found for this category.'));
@@ -449,33 +324,19 @@ export default async function decorate(block) {
       } else {
         allArticles = allArticles.concat(articles);
         currentPage += 1;
-        if (articles.length < ARTICLES_PER_FETCH) hasMore = false;
+        hasMore = hasNextPage;
         renderBatch();
       }
     } catch (error) {
-      hideSpinner();
       if (allArticles.length === 0) {
-        grid.after(createMessage(getNewsErrorMessage(error), () => {
+        grid.after(createMessage(getErrorMessage(error), () => {
           block.querySelector('.news-listing-message')?.remove();
           loadMore();
         }));
       }
     } finally {
       isLoading = false;
-    }
-  }
-
-  function setupObserver() {
-    if (observer) observer.disconnect();
-    observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) loadMore();
-      },
-      { rootMargin: '200px' },
-    );
-    if (hasMore || displayedCount < allArticles.length) {
-      showSpinner();
-      observer.observe(sentinel);
+      updateButton();
     }
   }
 
@@ -487,24 +348,48 @@ export default async function decorate(block) {
     hasMore = true;
     grid.innerHTML = '';
     block.querySelector('.news-listing-message')?.remove();
-    if (observer) observer.disconnect();
-    await loadMore();
-    // Fetch more if needed to fill initial rows
+    loadMoreBtn.style.display = 'none';
+
+    // Pre-fetch enough articles to fill the initial rows
     while (hasMore && allArticles.length < INITIAL_CARDS) {
-      // eslint-disable-next-line no-await-in-loop
-      await loadMore();
+      isLoading = true;
+      updateButton();
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const { articles, hasNextPage } = await fetchNews(currentQuery, apiKey, currentPage);
+        if (articles.length === 0) {
+          hasMore = false;
+        } else {
+          allArticles = allArticles.concat(articles);
+          currentPage += 1;
+          hasMore = hasNextPage;
+        }
+      } catch (error) {
+        isLoading = false;
+        updateButton();
+        grid.after(createMessage(getErrorMessage(error), () => {
+          block.querySelector('.news-listing-message')?.remove();
+          switchCategory(query);
+        }));
+        return;
+      }
     }
+
+    isLoading = false;
     renderBatch();
-    setupObserver();
+
+    if (allArticles.length === 0) {
+      grid.after(createMessage('No news articles found for this category.'));
+    }
   }
 
-  // Create filter buttons
+  loadMoreBtn.addEventListener('click', () => loadMore());
+
   CATEGORIES.forEach((cat, i) => {
     const btn = el('button', { 'aria-pressed': i === 0 ? 'true' : 'false' }, cat.label);
     btn.addEventListener('click', () => {
       filters.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', 'false'));
       btn.setAttribute('aria-pressed', 'true');
-      // Animate category text flip
       categorySpan.classList.add('news-listing-category-out');
       setTimeout(() => {
         categorySpan.textContent = cat.label;
@@ -517,27 +402,26 @@ export default async function decorate(block) {
     filters.appendChild(btn);
   });
 
-  block.append(header, filters, skeleton, grid, sentinel);
+  block.append(header, filters, skeleton, grid, loadMoreBtn);
 
-  if (!providers.primaryProvider.apiKey) {
+  if (!apiKey) {
     skeleton.remove();
-    hideSpinner();
-    grid.after(createMessage('News feed is not configured. Add "gnews-apikey" or "currents-apikey" in page metadata.'));
+    grid.after(createMessage(CONFIG_MSG));
     return;
   }
 
-  // Initial load
+  // Initial load — fill first page of cards
   try {
     while (hasMore && allArticles.length < INITIAL_CARDS) {
       isLoading = true;
       // eslint-disable-next-line no-await-in-loop
-      const articles = await fetchNews(currentQuery, providers, currentPage);
+      const { articles, hasNextPage } = await fetchNews(currentQuery, apiKey, currentPage);
       if (articles.length === 0) {
         hasMore = false;
       } else {
         allArticles = allArticles.concat(articles);
         currentPage += 1;
-        if (articles.length < ARTICLES_PER_FETCH) hasMore = false;
+        hasMore = hasNextPage;
       }
     }
     isLoading = false;
@@ -547,12 +431,10 @@ export default async function decorate(block) {
     if (allArticles.length === 0) {
       grid.after(createMessage('No news articles found for this category.'));
     }
-
-    setupObserver();
   } catch (error) {
     isLoading = false;
     skeleton.remove();
-    grid.after(createMessage(getNewsErrorMessage(error), () => {
+    grid.after(createMessage(getErrorMessage(error), () => {
       block.querySelector('.news-listing-message')?.remove();
       switchCategory(currentQuery);
     }));
