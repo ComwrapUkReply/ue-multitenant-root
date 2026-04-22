@@ -3,8 +3,11 @@ import { getMetadata } from '../../scripts/aem.js';
 // The Guardian Open Platform — https://open-platform.theguardian.com/access/
 // Free tier: 5,000 requests/day, 12 req/sec, no credit card required
 const GUARDIAN_API_BASE = 'https://content.guardianapis.com/search';
-const GUARDIAN_KEY_META = '723cc7cb-6c79-436d-992b-a532f7574c0f';
+const GUARDIAN_KEY_META = 'guardian-apikey';
 const GUARDIAN_FIELDS = 'thumbnail,trailText,headline';
+
+// TODO: remove before production — use page metadata "guardian-apikey" instead
+const DEV_API_KEY = '723cc7cb-6c79-436d-992b-a532f7574c0f';
 
 const ARTICLES_PER_FETCH = 10;
 const INITIAL_ROWS = 4;
@@ -71,7 +74,7 @@ function formatDate(dateString) {
 }
 
 function getApiKey() {
-  return getMetadata(GUARDIAN_KEY_META).trim();
+  return getMetadata(GUARDIAN_KEY_META).trim() || DEV_API_KEY;
 }
 
 function mapGuardianArticle(article) {
