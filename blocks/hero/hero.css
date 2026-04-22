@@ -23,13 +23,11 @@ main>.section.hero-container {
     height: 100%;
     background-color: var(--color-black);
     opacity: 0.6;
-    z-index: 1;
 }
 
 .hero h1 {
   max-width: 1200px;
   position: relative;
-  z-index: 2;
   margin-left: auto;
   margin-right: auto;
   color: var(--color-white);

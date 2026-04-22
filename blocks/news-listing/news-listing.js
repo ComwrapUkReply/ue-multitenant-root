@@ -13,6 +13,22 @@ const ARTICLES_PER_FETCH = 10;
 const INITIAL_ROWS = 4;
 const COLUMNS = 4;
 const INITIAL_CARDS = INITIAL_ROWS * COLUMNS;
+const META_KEYS = Object.freeze({
+  provider: 'news-provider',
+});
+
+const PROVIDERS = Object.freeze({
+  gnews: Object.freeze({
+    name: 'gnews',
+    apiBase: 'https://gnews.io/api/v4',
+    keyMeta: 'fa8be279f005e9112d5f0b27b8dfc93a',
+  }),
+  currents: Object.freeze({
+    name: 'currents',
+    apiBase: 'https://api.currentsapi.services/v1',
+    keyMeta: '29Ajftr5l2CQ34rLqYucXoJpPFCsGgdDitM3ZCQuWJOfiLrf',
+  }),
+});
 
 // Reusable string constants to keep lines within the 100-char limit
 const UE_PLACEHOLDER_DESC = 'This is a placeholder description for the news article card in Universal Editor preview mode.';

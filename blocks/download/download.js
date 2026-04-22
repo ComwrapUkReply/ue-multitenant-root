@@ -8,16 +8,7 @@ function isValidFileType(fileUrl) {
 
   // Allowed file extensions based on requirements
   const allowedExtensions = [
-    // Documents
-    'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'xml',
-    // Images
-    'jpg', 'jpeg', 'heic', 'png', 'webp', 'bmp',
-    // Videos
-    'avs', 'acv', 'avc', 'ev', 'mp4',
-    // Archives
-    'zip',
-    // Media
-    'mp3', 'mov',
+    'html', 'json', 'mp4', 'pdf', 'svg', 'jpg', 'png', 'avif',
   ];
 
   // Extract file extension from URL

@@ -203,6 +203,27 @@ function restructureNavSectionsMenu(navSectionsMenu) {
   const menuItems = [];
   let i = 0;
 
+  const cleanupMenuLinks = (element) => {
+    element.querySelectorAll('a.button').forEach((link) => {
+      link.classList.remove('button');
+    });
+  };
+
+  const normalizeExistingMenuItem = (li) => {
+    cleanupMenuLinks(li);
+
+    const directParagraph = li.querySelector(':scope > p');
+    if (directParagraph) {
+      directParagraph.removeAttribute('class');
+    }
+
+    const directSubmenu = li.querySelector(':scope > ul');
+    if (directSubmenu) {
+      li.classList.add('nav-drop');
+      directSubmenu.classList.add('nav-sections-1');
+    }
+  };
+
   while (i < allChildren.length) {
     const current = allChildren[i];
 
@@ -215,10 +236,7 @@ function restructureNavSectionsMenu(navSectionsMenu) {
       pElement.removeAttribute('class');
 
       // Remove button class from any a elements inside p
-      const links = pElement.querySelectorAll('a.button');
-      links.forEach((link) => {
-        link.classList.remove('button');
-      });
+      cleanupMenuLinks(pElement);
 
       // Add nav-sections-submenu class to ul element
       ulElement.classList.add('nav-sections-1');
@@ -233,6 +251,12 @@ function restructureNavSectionsMenu(navSectionsMenu) {
 
       menuItems.push(liWrapper);
       i += 2; // Skip both p and ul
+    } else if (current.tagName === 'UL') {
+      Array.from(current.children).forEach((li) => {
+        normalizeExistingMenuItem(li);
+        menuItems.push(li);
+      });
+      i += 1;
     } else {
       // Skip standalone elements (p without following ul)
       i += 1;
