@@ -269,8 +269,12 @@ export default async function decorate(block) {
 
   const filters = el('div', { class: 'news-listing-filters' });
   const grid = el('ul', { class: 'news-listing-grid' });
-  const sentinel = el('div', { class: 'news-listing-sentinel' });
   const skeleton = createSkeletonCards(COLUMNS);
+  const loadMoreBtn = el(
+    'button',
+    { class: 'news-listing-load-more', style: 'display:none' },
+    'Load More News',
+  );
 
   let currentQuery = CATEGORIES[0].query;
   let currentPage = 1;
@@ -278,17 +282,13 @@ export default async function decorate(block) {
   let displayedCount = 0;
   let isLoading = false;
   let hasMore = true;
-  let observer;
 
-  function showSpinner() {
-    sentinel.innerHTML = '';
-    sentinel.appendChild(el('div', { class: 'news-listing-spinner' }));
-    sentinel.style.display = '';
-  }
-
-  function hideSpinner() {
-    sentinel.innerHTML = '';
-    sentinel.style.display = 'none';
+  // Show/hide and enable/disable the load-more button
+  function updateButton() {
+    const moreAvailable = hasMore || displayedCount < allArticles.length;
+    loadMoreBtn.style.display = moreAvailable ? '' : 'none';
+    loadMoreBtn.disabled = isLoading;
+    loadMoreBtn.textContent = isLoading ? 'Loading…' : 'Load More News';
   }
 
   function renderBatch() {
@@ -297,15 +297,13 @@ export default async function decorate(block) {
       grid.appendChild(createCard(allArticles[i], postPagePath));
     }
     displayedCount = end;
-    if (displayedCount >= allArticles.length && !hasMore) {
-      hideSpinner();
-      if (observer) observer.disconnect();
-    }
+    updateButton();
   }
 
   async function loadMore() {
     if (isLoading || (!hasMore && displayedCount >= allArticles.length)) return;
 
+    // Still have buffered articles — just render the next batch
     if (displayedCount < allArticles.length) {
       renderBatch();
       return;
@@ -314,14 +312,12 @@ export default async function decorate(block) {
     if (!hasMore) return;
 
     isLoading = true;
-    showSpinner();
+    updateButton();
 
     try {
       const { articles, hasNextPage } = await fetchNews(currentQuery, apiKey, currentPage);
       if (articles.length === 0) {
         hasMore = false;
-        hideSpinner();
-        if (observer) observer.disconnect();
         if (allArticles.length === 0) {
           grid.innerHTML = '';
           grid.after(createMessage('No news articles found for this category.'));
@@ -333,7 +329,6 @@ export default async function decorate(block) {
         renderBatch();
       }
     } catch (error) {
-      hideSpinner();
       if (allArticles.length === 0) {
         grid.after(createMessage(getErrorMessage(error), () => {
           block.querySelector('.news-listing-message')?.remove();
@@ -342,20 +337,7 @@ export default async function decorate(block) {
       }
     } finally {
       isLoading = false;
-    }
-  }
-
-  function setupObserver() {
-    if (observer) observer.disconnect();
-    observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) loadMore();
-      },
-      { rootMargin: '200px' },
-    );
-    if (hasMore || displayedCount < allArticles.length) {
-      showSpinner();
-      observer.observe(sentinel);
+      updateButton();
     }
   }
 
@@ -367,15 +349,42 @@ export default async function decorate(block) {
     hasMore = true;
     grid.innerHTML = '';
     block.querySelector('.news-listing-message')?.remove();
-    if (observer) observer.disconnect();
-    await loadMore();
+    loadMoreBtn.style.display = 'none';
+
+    // Pre-fetch enough articles to fill the initial rows
     while (hasMore && allArticles.length < INITIAL_CARDS) {
-      // eslint-disable-next-line no-await-in-loop
-      await loadMore();
+      isLoading = true;
+      updateButton();
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const { articles, hasNextPage } = await fetchNews(currentQuery, apiKey, currentPage);
+        if (articles.length === 0) {
+          hasMore = false;
+        } else {
+          allArticles = allArticles.concat(articles);
+          currentPage += 1;
+          hasMore = hasNextPage;
+        }
+      } catch (error) {
+        isLoading = false;
+        updateButton();
+        grid.after(createMessage(getErrorMessage(error), () => {
+          block.querySelector('.news-listing-message')?.remove();
+          switchCategory(query);
+        }));
+        return;
+      }
     }
+
+    isLoading = false;
     renderBatch();
-    setupObserver();
+
+    if (allArticles.length === 0) {
+      grid.after(createMessage('No news articles found for this category.'));
+    }
   }
+
+  loadMoreBtn.addEventListener('click', () => loadMore());
 
   CATEGORIES.forEach((cat, i) => {
     const btn = el('button', { 'aria-pressed': i === 0 ? 'true' : 'false' }, cat.label);
@@ -394,11 +403,10 @@ export default async function decorate(block) {
     filters.appendChild(btn);
   });
 
-  block.append(header, filters, skeleton, grid, sentinel);
+  block.append(header, filters, skeleton, grid, loadMoreBtn);
 
   if (!apiKey) {
     skeleton.remove();
-    hideSpinner();
     grid.after(createMessage(CONFIG_MSG));
     return;
   }
@@ -423,10 +431,7 @@ export default async function decorate(block) {
 
     if (allArticles.length === 0) {
       grid.after(createMessage('No news articles found for this category.'));
-      return; // nothing to observe — skip setting up infinite scroll
     }
-
-    setupObserver();
   } catch (error) {
     isLoading = false;
     skeleton.remove();
