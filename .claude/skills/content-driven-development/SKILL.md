@@ -41,7 +41,9 @@ This skill orchestrates other skills at the appropriate stages:
 
 - **content-modeling**: Invoked when new content models need to be designed or existing models modified
 - **building-blocks**: Invoked during implementation phase for block creation or modification
+- **semantic-html-a11y**: Enforces semantic HTML, WCAG 2.2, and SEO/AEO/GEO structure during implementation
 - **testing-blocks**: Referenced during validation phase for comprehensive testing
+- **frontend-testing**: Provides automated a11y, visual, and DOM validation scripts during validation
 - **block-collection-and-party**: Used to find similar blocks and reference implementations
 
 ## The Content-First Process
@@ -182,6 +184,8 @@ The final phase ensures the implementation works correctly with real content.
 - ✅ Check responsive behavior (mobile, tablet, desktop)
 - ✅ Test edge cases revealed by the actual content
 - ✅ Validate accessibility basics (keyboard navigation, screen reader friendly)
+- ✅ Run `semantic-html-a11y` static check on modified block JS files
+- ✅ Run `frontend-testing` full suite (a11y + DOM validation + visual screenshots)
 
 #### Step 3.2: Run Quality Checks
 
