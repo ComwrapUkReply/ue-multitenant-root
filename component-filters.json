@@ -13,15 +13,17 @@
       "button",
       "title",
       "hero",
+      "video-hero",
       "cards",
       "card",
+      "tails",
+      "tail",
       "columns",
       "fragment",
       "accordion",
       "breadcrumbs",
       "carousel",
       "download",
-      "teaser",
       "facts-figures-cards",
       "buttons",
       "headline",
@@ -36,14 +38,18 @@
       "teaser",
       "tags",
       "embed",
-      "teaser",
       "separator",
+      "search",
+      "search-results",
       "modal",
       "tabs",
       "info-counter",
       "dynamiccontent",
       "dynamiccontentfilter",
-      "download"
+      "download",
+      "teaser-list",
+      "news-listing",
+      "news-post"
     ]
   },
   {
@@ -120,6 +126,42 @@
     "id": "table-4-columns",
     "components": [
       "table-col-4"
+    ]
+  },
+  {
+    "id": "table-5-columns",
+    "components": [
+      "table-col-5"
+    ]
+  },
+  {
+    "id": "table-6-columns",
+    "components": [
+      "table-col-6"
+    ]
+  },
+  {
+    "id": "table-7-columns",
+    "components": [
+      "table-col-7"
+    ]
+  },
+  {
+    "id": "table-8-columns",
+    "components": [
+      "table-col-8"
+    ]
+  },
+  {
+    "id": "table-9-columns",
+    "components": [
+      "table-col-9"
+    ]
+  },
+  {
+    "id": "table-10-columns",
+    "components": [
+      "table-col-10"
     ]
   },
   {

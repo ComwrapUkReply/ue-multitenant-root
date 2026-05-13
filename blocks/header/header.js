@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable max-len */
+
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import languageSwitcherDecorate from '../language-switcher/language-switcher.js';
@@ -174,7 +177,7 @@ async function addLanguageSwitcher(navTools) {
  */
 async function addRegionSwitcher(navTools) {
   const container = document.createElement('div');
-  container.className = 'region-switcher-header';
+  container.className = 'block  region-switcher-header';
 
   const mockBlock = document.createElement('div');
   mockBlock.className = 'block region-switcher';
@@ -200,6 +203,27 @@ function restructureNavSectionsMenu(navSectionsMenu) {
   const menuItems = [];
   let i = 0;
 
+  const cleanupMenuLinks = (element) => {
+    element.querySelectorAll('a.button').forEach((link) => {
+      link.classList.remove('button');
+    });
+  };
+
+  const normalizeExistingMenuItem = (li) => {
+    cleanupMenuLinks(li);
+
+    const directParagraph = li.querySelector(':scope > p');
+    if (directParagraph) {
+      directParagraph.removeAttribute('class');
+    }
+
+    const directSubmenu = li.querySelector(':scope > ul');
+    if (directSubmenu) {
+      li.classList.add('nav-drop');
+      directSubmenu.classList.add('nav-sections-1');
+    }
+  };
+
   while (i < allChildren.length) {
     const current = allChildren[i];
 
@@ -212,10 +236,7 @@ function restructureNavSectionsMenu(navSectionsMenu) {
       pElement.removeAttribute('class');
 
       // Remove button class from any a elements inside p
-      const links = pElement.querySelectorAll('a.button');
-      links.forEach((link) => {
-        link.classList.remove('button');
-      });
+      cleanupMenuLinks(pElement);
 
       // Add nav-sections-submenu class to ul element
       ulElement.classList.add('nav-sections-1');
@@ -230,6 +251,12 @@ function restructureNavSectionsMenu(navSectionsMenu) {
 
       menuItems.push(liWrapper);
       i += 2; // Skip both p and ul
+    } else if (current.tagName === 'UL') {
+      Array.from(current.children).forEach((li) => {
+        normalizeExistingMenuItem(li);
+        menuItems.push(li);
+      });
+      i += 1;
     } else {
       // Skip standalone elements (p without following ul)
       i += 1;
@@ -277,6 +304,16 @@ export default async function decorate(block) {
     brandLink.closest('.button-container').className = '';
   }
 
+  // Ensure logo image is wrapped in a link to the site root
+  const brandPicture = navBrand.querySelector('picture');
+  if (brandPicture && !brandPicture.closest('a')) {
+    const homeLink = document.createElement('a');
+    homeLink.href = '/';
+    homeLink.setAttribute('aria-label', 'Home');
+    brandPicture.parentNode.insertBefore(homeLink, brandPicture);
+    homeLink.appendChild(brandPicture);
+  }
+
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
     // add nav-section-menu class to default-content-wrapper
@@ -290,7 +327,6 @@ export default async function decorate(block) {
     navSections.querySelectorAll(':scope .nav-sections-menu > ul > li.nav-drop').forEach((navSection) => {
       if (navSection.querySelector('.nav-sections-1').children.length > 8) {
         navSection.querySelector('.nav-sections-1').classList.add('nav-drop-overflow');
-        console.log('nav-drop-overflow');
       }
       // Add click handler to toggle submenu only in desktop view
       navSection.addEventListener('click', () => {
@@ -317,12 +353,27 @@ export default async function decorate(block) {
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
 
-  // Add region switcher first, then language switcher to nav-tools
+  // Add region switcher and language switcher to nav-tools
   // Region = Country selection, Language = Languages within that country
+  // Final order: region-switcher, language-switcher, search-wrapper
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
+    // Create both switchers in the desired order
     await addRegionSwitcher(navTools);
     await addLanguageSwitcher(navTools);
+
+    // Ensure search-wrapper comes after both switchers
+    const searchWrapper = navTools.querySelector('.search-wrapper');
+    const regionHeader = navTools.querySelector('.region-switcher-header');
+    const languageHeader = navTools.querySelector('.language-switcher-header');
+
+    if (searchWrapper && regionHeader && languageHeader) {
+      // Move search-wrapper to the end if it's not already there
+      const lastChild = navTools.lastElementChild;
+      if (lastChild !== searchWrapper) {
+        navTools.appendChild(searchWrapper);
+      }
+    }
   }
 
   const navWrapper = document.createElement('div');

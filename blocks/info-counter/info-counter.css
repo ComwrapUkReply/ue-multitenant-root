@@ -7,47 +7,48 @@
    CONTAINER & WRAPPER
    ============================================================================= */
 
-.info-counter-container .info-counter-wrapper {
-  display: flex;
-  max-width: unset;
-}
+   .info-counter-wrapper {
+     display: flex;
+     width: 100%;
+   }
 
 /* =============================================================================
    MAIN BLOCK
    ============================================================================= */
 
 .info-counter {
-  /* CSS Custom Properties - Layout */
-  --info-counter-gap: var(--space-32);
-  --info-counter-padding-block: var(--space-48);
-  --info-counter-padding-inline: 200px;
-  --info-counter-min-height: 168px;
-
-  /* Number */
-  --info-counter-number-height: 168px;
-  --info-counter-number-min-width: 300px;
-  --info-counter-digit-font-size: var(--font-size-hero);
-  --info-counter-digit-line-height: var(--line-height-hero);
-
-  /* Text */
-  --info-counter-text-max-width: 460px;
-  --info-counter-text-font-size: var(--font-size-body);
-  --info-counter-text-line-height: var(--line-height-body);
-
-  /* Colors */
-  --info-counter-text-color: var(--color-quaternary);
-  --info-counter-number-color: var(--color-quaternary);
-
-  /* Layout Styles */
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: var(--info-counter-gap);
-  padding-block: var(--info-counter-padding-block);
-  padding-inline: var(--info-counter-padding-inline);
-  min-height: var(--info-counter-min-height);
+  justify-content: flex-start;
+  gap: var(--space-32);
+  padding-block: var(--space-48);
+  padding-inline: var(--space-200);
+  min-height: var(--line-height-hero);
   width: 100%;
   box-sizing: border-box;
+}
+
+@media (width >= 900px) {
+  .info-counter {
+    flex-direction: row;
+  }
+
+  .info-counter .info-counter-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-32);
+    width: 100%;
+  }
+
+  .info-counter-text {
+    text-align: left;
+  }
+
+  .info-counter-text p {
+    text-align: left;
+  }
 }
 
 /* =============================================================================
@@ -58,8 +59,6 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  height: var(--info-counter-number-height);
-  min-width: var(--info-counter-number-min-width);
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
@@ -74,8 +73,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  height: var(--info-counter-number-height);
-  line-height: var(--info-counter-digit-line-height);
   overflow: hidden;
   position: relative;
 }
@@ -83,13 +80,13 @@
 .info-counter-digit-value {
   font-family: var(--font-family-semibold);
   font-weight: 600;
-  font-size: var(--info-counter-digit-font-size);
-  line-height: var(--info-counter-digit-line-height);
-  color: var(--info-counter-number-color);
+  font-size: clamp(4rem, 12vw, 6rem);
+  line-height: clamp(4rem, 12vw, 6rem);
+  color: var(--color-black);
   text-align: right;
   white-space: nowrap;
   display: block;
-  transition: transform 0.3s ease-out;
+  transition: transform var(--transition-base);
 }
 
 /* =============================================================================
@@ -100,16 +97,36 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  flex-shrink: 0;
-  max-width: var(--info-counter-text-max-width);
 }
 
 .info-counter-text p {
   margin: 0;
   padding: 0;
-  font-size: var(--info-counter-text-font-size);
-  line-height: var(--info-counter-text-line-height);
-  color: var(--info-counter-text-color);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-black);
+}
+
+/* =============================================================================
+   VARIANT: DARK MODE
+   ============================================================================= */
+
+.info-counter-mode-dark .info-counter-text p {
+  color: var(--color-white);
+}
+
+.info-counter-mode-dark .info-counter-digit-value {
+  color: var(--color-white);
+}
+
+.info-counter.dark .info-counter-text p,
+.info-counter.on-dark .info-counter-text p {
+  color: var(--color-white);
+}
+
+.info-counter.dark .info-counter-digit-value,
+.info-counter.on-dark .info-counter-digit-value {
+  color: var(--color-white);
 }
 
 /* =============================================================================
@@ -117,22 +134,32 @@
    ============================================================================= */
 
 .info-counter.primary {
-  --info-counter-text-color: var(--color-white);
-  --info-counter-number-color: var(--color-white);
+  background: var(--color-primary);
+}
 
-  background: var(--color-secondary);
+.info-counter.primary .info-counter-text p {
+  color: var(--color-white);
+}
+
+.info-counter.primary .info-counter-digit-value {
+  color: var(--color-white);
 }
 
 /* =============================================================================
-   VARIANT: DARK MODE
+   VARIANT: Secondary (Dark background)
    ============================================================================= */
 
-.info-counter.dark,
-.info-counter.on-dark,
-.info-counter-mode-dark {
-  --info-counter-text-color: var(--color-white);
-  --info-counter-number-color: var(--color-white);
-}
+   .info-counter.secondary {
+    background: var(--color-secondary);
+  }
+  
+  .info-counter.secondary .info-counter-text p {
+    color: var(--color-white);
+  }
+  
+  .info-counter.secondary .info-counter-digit-value {
+    color: var(--color-white);
+  }
 
 /* =============================================================================
    RESPONSIVE: TABLET (600px - 899px)
@@ -140,10 +167,16 @@
 
 @media (width >= 600px) and (width < 900px) {
   .info-counter {
-    --info-counter-padding-inline: var(--space-40);
-    --info-counter-text-max-width: 500px;
-    --info-counter-text-font-size: 1.375rem; /* 22px */
-    --info-counter-text-line-height: 1.75rem; /* 28px */
+    padding-inline: var(--space-40);
+  }
+
+  .info-counter-text {
+    max-width: 500px;
+  }
+
+  .info-counter-text p {
+    font-size: var(--font-size-mob-h4);
+    line-height: var(--line-height-mob-h4);
   }
 }
 
@@ -153,40 +186,51 @@
 
 @media (width < 900px) {
   .info-counter {
-    /* Layout adjustments */
-    --info-counter-gap: 0;
-    --info-counter-padding-inline: var(--space-24);
-    --info-counter-number-height: 100px;
-    --info-counter-number-min-width: auto;
-
-    /* Typography adjustments */
-    --info-counter-digit-font-size: 5.5rem; /* 88px */
-    --info-counter-digit-line-height: 100px;
-    --info-counter-text-font-size: var(--font-size-meta);
-    --info-counter-text-line-height: var(--line-height-base);
-    --info-counter-text-max-width: 100%;
-
+    gap: var(--space-16);
+    padding-inline: var(--space-24);
     flex-direction: column;
     align-items: center;
   }
 
   .info-counter-number {
-    margin-bottom: 0;
+    min-width: auto;
+    margin-bottom: var(--space-16);
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+    overflow: visible;
+    order: 1;
   }
 
   .info-counter-digit {
-    height: var(--info-counter-number-height);
-    line-height: var(--info-counter-digit-line-height);
+    flex-shrink: 0;
+    min-width: 0;
+  }
+
+  .info-counter-digit-value {
+    word-break: keep-all;
   }
 
   .info-counter-text {
+    max-width: 100%;
     height: auto;
     text-align: center;
     padding-inline: var(--space-24);
+    order: 2;
+    width: 100%;
+    margin-top: 0;
   }
 
   .info-counter-text p {
-    text-align: left;
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    padding-bottom: var(--space-16);
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .info-counter-wrapper {
+    flex-direction: column;
+    align-items: center;
   }
 }
 
@@ -194,7 +238,6 @@
    ACCESSIBILITY
    ============================================================================= */
 
-/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .info-counter-digit-value {
     transition: none;
@@ -205,13 +248,11 @@
   }
 }
 
-/* Focus styles */
 .info-counter:focus-visible {
-  outline: 2px solid var(--color-blue);
+  outline: 2px solid var(--color-primary-700);
   outline-offset: var(--space-4);
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: more) {
   .info-counter {
     border: 2px solid currentcolor;

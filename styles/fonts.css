@@ -1,3 +1,83 @@
+/* Alaskaka Font */
+@font-face {
+	font-family: Alaska-Bold;
+	src: url('../fonts/Alaska-Bold.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Alaska-BoldItalic;
+	src: url('../fonts/Alaska-BoldItalic.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+		font-display: swap;
+}
+
+@font-face {
+	font-family: Alaska-ExtraLight;
+	src: url('../fonts/Alaska-ExtraLight.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: Alaska-ExtraLightItalic;
+	src: url('../fonts/Alaska-ExtraLightItalic.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: Alaska-Light;
+	src: url('../fonts/Alaska-Light.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+		font-display: swap;
+}
+
+@font-face {
+	font-family: Alaska-LightItalic;
+	src: url('../fonts/Alaska-LightItalic.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+		font-display: swap;
+}
+
+@font-face {
+	font-family: Alaska-Regular;
+	src: url('../fonts/Alaska-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+		font-display: swap;
+}
+
+@font-face {
+	font-family: Alaska-RegularItalic;
+	src: url('../fonts/Alaska-Italic.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+		font-display: swap;
+}
+
+@font-face {
+	font-family: Alaska-SemiBold;
+	src: url('../fonts/Alaska-SemiBold.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+		font-display: swap;
+}
+
+@font-face {
+	font-family: Alaska-SemiBoldItalic;
+	src: url('../fonts/Alaska-SemiBoldItalic.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+		font-display: swap;
+}
+
 /* stylelint-disable max-line-length */
 @font-face {
   font-family: roboto-condensed;

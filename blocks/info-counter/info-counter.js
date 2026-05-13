@@ -13,7 +13,9 @@ import { isEditorMode as checkEditorMode } from '../../scripts/utils.js';
 const CONFIG = {
   animation: {
     duration: 1000, // Animation duration in milliseconds
-    threshold: 0.1, // Intersection Observer threshold (30% visible)
+    delay: 1000, // Delay before animation starts (milliseconds)
+    threshold: 0.5, // Intersection Observer threshold (20% visible)
+    rootMargin: '0px 0px -50px 0px', // Trigger slightly before fully in view
   },
   defaults: {
     targetNumber: 0,
@@ -331,37 +333,49 @@ const createDigitContainers = (digitCount) => {
 };
 
 /**
- * Create text paragraph element from description
- * @param {string} descriptionText - Plain text content
+ * Append description content directly into the text container using semantic markup.
+ * Parses HTML and appends children directly — never wraps block-level content inside a <p>.
+ * @param {HTMLElement} textContainer - Container to append content into
+ * @param {string} descriptionText - Plain text fallback
  * @param {string} descriptionHTML - HTML content
- * @returns {HTMLElement} Paragraph element
  */
-const createTextParagraph = (descriptionText, descriptionHTML) => {
-  const paragraph = createElement('p');
+const appendTextContent = (textContainer, descriptionText, descriptionHTML) => {
+  if (!descriptionText?.trim()) return;
+
   let html = descriptionHTML || descriptionText;
 
-  // Clean Universal Editor attributes
   if (hasUEAttributes(html)) {
     html = cleanHTML(html);
   }
 
-  // Check if content has HTML tags
   const hasHTMLTags = html !== descriptionText && PATTERNS.htmlTags.test(html);
 
-  if (hasHTMLTags) {
-    // Extract inner content if wrapped in <p> tag
-    if (PATTERNS.pWrapper.test(html)) {
-      const tempDiv = createElement('div');
-      tempDiv.innerHTML = html;
-      paragraph.innerHTML = tempDiv.firstElementChild?.innerHTML || html;
-    } else {
-      paragraph.innerHTML = html;
-    }
-  } else {
-    paragraph.textContent = descriptionText;
+  if (!hasHTMLTags) {
+    const p = createElement('p');
+    p.textContent = descriptionText;
+    textContainer.appendChild(p);
+    return;
   }
 
-  return paragraph;
+  const tempDiv = createElement('div');
+  tempDiv.innerHTML = html;
+  removeAueAttributes(tempDiv);
+
+  const children = [...tempDiv.children];
+
+  if (children.length === 0) {
+    const p = createElement('p');
+    p.textContent = tempDiv.textContent?.trim() || descriptionText;
+    textContainer.appendChild(p);
+    return;
+  }
+
+  // Unwrap a single wrapping <div> and promote its children
+  const source = children.length === 1 && children[0].tagName === 'DIV'
+    ? [...children[0].children]
+    : children;
+
+  source.forEach((child) => textContainer.appendChild(child));
 };
 
 /**
@@ -390,10 +404,7 @@ const buildCounterStructure = (targetNumber, descriptionText, descriptionHTML) =
   // Create text container
   const textContainer = createElement('div', CLASSES.text);
 
-  if (descriptionText?.trim()) {
-    const textParagraph = createTextParagraph(descriptionText, descriptionHTML);
-    textContainer.appendChild(textParagraph);
-  }
+  appendTextContent(textContainer, descriptionText, descriptionHTML);
 
   // Assemble structure
   wrapper.appendChild(numberContainer);
@@ -408,11 +419,13 @@ const buildCounterStructure = (targetNumber, descriptionText, descriptionHTML) =
 
 /**
  * Initialize counter animation with viewport detection
+ * Animation only starts when block enters the viewport
  * @param {HTMLElement} block - Block element
  * @param {NodeList|Array} digits - Digit elements
  * @param {number} targetNumber - Target number
  */
 const initializeAnimation = (block, digits, targetNumber) => {
+  // Validate inputs
   if (!digits?.length || targetNumber < 0) return;
 
   // Prevent re-animation
@@ -425,28 +438,55 @@ const initializeAnimation = (block, digits, targetNumber) => {
     return;
   }
 
-  // Initialize display to 0
+  // Initialize display to 0 (before animation starts)
   updateDigits(digits, 0);
 
-  // Observe viewport intersection
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && block.dataset.animated !== 'true') {
-          block.dataset.animated = 'true';
-          animateCounter(digits, targetNumber);
-          observer.unobserve(block);
-        }
-      });
-    },
-    {
-      root: null,
-      rootMargin: '0px',
-      threshold: CONFIG.animation.threshold,
-    },
-  );
+  // Mark block as ready for animation
+  block.dataset.animationReady = 'true';
 
+  /**
+   * Handle intersection callback
+   * Triggers animation when block enters viewport (with configurable delay)
+   * @param {IntersectionObserverEntry[]} entries - Intersection entries
+   * @param {IntersectionObserver} obs - Observer instance
+   */
+  const handleIntersection = (entries, obs) => {
+    entries.forEach((entry) => {
+      // Only animate when entering viewport and not already animated
+      if (entry.isIntersecting && block.dataset.animated !== 'true') {
+        // Mark as animated to prevent re-triggering
+        block.dataset.animated = 'true';
+
+        // Stop observing once animation triggered
+        obs.unobserve(block);
+
+        // Start counting animation after delay
+        const { delay } = CONFIG.animation;
+        if (delay > 0) {
+          setTimeout(() => {
+            animateCounter(digits, targetNumber);
+          }, delay);
+        } else {
+          animateCounter(digits, targetNumber);
+        }
+      }
+    });
+  };
+
+  // Create intersection observer with responsive configuration
+  const observerOptions = {
+    root: null, // Use viewport as root
+    rootMargin: CONFIG.animation.rootMargin, // Trigger slightly before fully visible
+    threshold: CONFIG.animation.threshold, // Percentage of block visible to trigger
+  };
+
+  const observer = new IntersectionObserver(handleIntersection, observerOptions);
+
+  // Start observing the block
   observer.observe(block);
+
+  // Store observer reference for potential cleanup
+  block.infoCounterObserver = observer;
 };
 
 /**
@@ -457,6 +497,92 @@ const initializeAnimation = (block, digits, targetNumber) => {
 const getDisplayMode = (block) => {
   const isDarkMode = block.classList.contains('dark') || block.classList.contains('on-dark');
   return isDarkMode ? 'dark' : 'light';
+};
+
+/**
+ * Lock the number container to its final rendered width to prevent layout shifting during animation
+ * Temporarily renders the final number, measures the container, applies the width as an inline
+ * style, then calls the provided callback (which resets digits to 0 and starts the animation).
+ * @param {HTMLElement} numberContainer - The number container element
+ * @param {NodeList|Array} digits - Digit elements
+ * @param {number} targetNumber - Final target number
+ * @param {Function} [onComplete] - Called after width is locked
+ */
+const lockNumberContainerWidth = (numberContainer, digits, targetNumber, onComplete) => {
+  if (!numberContainer || !digits?.length) {
+    onComplete?.();
+    return;
+  }
+
+  // Show the final number so the browser can compute the maximum rendered width
+  updateDigits(digits, targetNumber);
+
+  requestAnimationFrame(() => {
+    const width = numberContainer.offsetWidth;
+    if (width > 0) {
+      numberContainer.style.width = `${width}px`;
+    }
+    onComplete?.();
+  });
+};
+
+/**
+ * Handle extremely large numbers (10+ digits) that might overflow
+ * Only applies dynamic sizing if CSS clamp isn't sufficient
+ * @param {HTMLElement} block - Block element
+ * @param {number} digitCount - Number of digits
+ * @param {HTMLElement} numberContainer - Number container element
+ */
+const handleExtremeNumbers = (block, digitCount, numberContainer) => {
+  // Only handle extremely large numbers (10+ digits) on mobile
+  // CSS clamp should handle most cases, this is a fallback
+  if (digitCount >= 10) {
+    // Use ResizeObserver to handle viewport changes dynamically
+    const resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        const viewportWidth = entry.contentRect.width;
+        // Only adjust on mobile viewports
+        if (viewportWidth < 900) {
+          const padding = 48; // Total horizontal padding (24px * 2)
+          const availableWidth = viewportWidth - padding;
+
+          // Calculate max font size to prevent overflow
+          const maxFontSize = Math.floor((availableWidth / digitCount) * 0.7);
+
+          // Only apply if calculated size is smaller than CSS clamp minimum
+          const cssMinSize = 68; // From CSS clamp minimum for 10+ digits on mobile
+          if (maxFontSize < cssMinSize && maxFontSize > 0) {
+            const digitValues = numberContainer.querySelectorAll(SELECTORS.digitValue);
+            digitValues.forEach((digit) => {
+              digit.style.fontSize = `${maxFontSize}px`;
+              digit.style.lineHeight = `${maxFontSize * 1.14}px`;
+            });
+
+            const optimalHeight = Math.max(100, maxFontSize * 1.14);
+            numberContainer.style.height = `${optimalHeight}px`;
+          } else {
+            // Remove inline styles to let CSS take over
+            const digitValues = numberContainer.querySelectorAll(SELECTORS.digitValue);
+            digitValues.forEach((digit) => {
+              digit.style.fontSize = '';
+              digit.style.lineHeight = '';
+            });
+            numberContainer.style.height = '';
+          }
+        } else {
+          // Desktop: remove any inline styles
+          const digitValues = numberContainer.querySelectorAll(SELECTORS.digitValue);
+          digitValues.forEach((digit) => {
+            digit.style.fontSize = '';
+            digit.style.lineHeight = '';
+          });
+          numberContainer.style.height = '';
+        }
+      });
+    });
+
+    resizeObserver.observe(block);
+  }
 };
 
 // =============================================================================
@@ -483,8 +609,12 @@ export default function decorate(block) {
   block.classList.add(`${CLASSES.modePrefix}${mode}`);
   block.dataset.targetNumber = targetNumber.toString();
 
+  // Add digit count data attribute for responsive CSS targeting
+  const digitCount = targetNumber.toString().length;
+  block.dataset.digitCount = digitCount.toString();
+
   // Build counter structure
-  const { wrapper, digits } = buildCounterStructure(
+  const { wrapper, numberContainer, digits } = buildCounterStructure(
     targetNumber,
     descriptionText,
     descriptionHTML,
@@ -493,6 +623,15 @@ export default function decorate(block) {
   // Append to block
   block.appendChild(wrapper);
 
-  // Initialize animation
-  initializeAnimation(block, digits, targetNumber);
+  // Handle extremely large numbers (10+ digits) that might need dynamic sizing
+  if (numberContainer) {
+    handleExtremeNumbers(block, digitCount, numberContainer);
+  }
+
+  // Lock the number container width to the final rendered value before animating.
+  // This prevents the container from resizing digit-by-digit during the count animation,
+  // which would cause the adjacent text container to shift/shake.
+  lockNumberContainerWidth(numberContainer, digits, targetNumber, () => {
+    initializeAnimation(block, digits, targetNumber);
+  });
 }

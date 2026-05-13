@@ -10,7 +10,7 @@ blockquote {
 
 blockquote::before {
     content: '"';
-    color: var(--color-blue);
+    color: var(--color-primary-700);
     font-size: var(--space-88);
     line-height: var(--space-80);
     padding-right: var(--space-24);
@@ -21,22 +21,22 @@ blockquote::before {
     background: rgb(201 232 251 / 30%);
     display: flex;
     flex-direction: column;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border-radius: 8px;
+    padding: var(--space-32);
+    margin-bottom: var(--space-32);
+    border-radius: var(--border-radius-md);
     transition: all 0.3s ease;
 }
 
 .block.quote blockquote {
-    margin: 16px;
+    margin: var(--space-16);
     padding: 0;
     text-indent: 0;
-    font-size: 1.2rem;
-    line-height: 1.6;
+    font-size: var(--font-size-h6);
+    line-height: var(--line-height-h6);
 }
 
 .block.quote blockquote p {
-    color: var(--color-primary-blue);
+    color: var(--color-primary);
     font-style: italic;
     font-size: var(--font-size-h4);
     line-height: var(--line-height-h4);
@@ -49,7 +49,7 @@ blockquote::before {
     gap: var(--space-8);
     font-size: small;
     font-style: italic;
-    margin: 16px;
+    margin: var(--space-16);
     position: relative;
     text-align: right;
 }
@@ -64,62 +64,62 @@ blockquote::before {
 
 /* Block option styles */
 
-/* Highlight theme */
-.block.quote.highlight {
-    background: linear-gradient(135deg, rgb(255 237 74 / 40%), rgb(255 193 7 / 30%));
-    border-left: 4px solid var(--primary-color, #ffc107);
-    box-shadow: 0 4px 12px rgb(255 193 7 / 20%);
+/* Solid style - Dark teal background with white text */
+.block.quote.solid {
+    background: var(--color-primary-700);
+    border-left: 4px solid var(--color-primary-700);
 }
 
-.block.quote.highlight blockquote::before {
-    font-weight: 500;
-    color: var(--dark-color, #333);
+.block.quote.solid blockquote::before {
+    color: var(--color-white);
 }
 
-.block.quote.highlight blockquote p {
-    color: var(--dark-color, #333);
+.block.quote.solid blockquote p {
+    color: var(--color-white);
 }
 
-.block.quote.highlight .quote-author {
-    color: var(--dark-color, #333);
+.block.quote.solid .quote-author {
+    color: var(--color-white);
 }
 
-/* Dark theme */
-.block.quote.dark {
-    background: linear-gradient(135deg, rgb(33 37 41 / 95%), rgb(52 58 64 / 90%));
-    color: var(--light-color, #f8f9fa);
-    border-left: 4px solid var(--secondary-color, #6c757d);
-    box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
+/* Outline Primary style - Transparent background with medium teal outline and text */
+.block.quote.outline-primary {
+    background: transparent;
+    border-left: 4px solid var(--color-primary-500);
 }
 
-.block.quote.dark blockquote::before {
-    color: var(--light-color, #f8f9fa);
+.block.quote.outline-primary blockquote::before {
+    color: var(--color-primary-500);
 }
 
-.block.quote.dark blockquote p {
-    color: var(--light-color, #f8f9fa);
+.block.quote.outline-primary blockquote p {
+    color: var(--color-primary-500);
 }
 
-.block.quote.dark .quote-author {
-    color: var(--light-color, #f8f9fa);
+.block.quote.outline-primary .quote-author {
+    color: var(--color-primary-500);
 }
 
-/* Light theme */
-.block.quote.light {
-    background: rgb(248 249 250 / 80%);
-    border: 1px solid var(--light-color, #e9ecef);
-    border-left: 4px solid var(--info-color, #0dcaf0);
-    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+/* Outline Secondary style - Transparent background with red/pink outline and text */
+.block.quote.outline-secondary {
+    background: transparent;
+    border-left: 4px solid var(--color-secondary);
 }
 
-.block.quote.light blockquote::before {
-    color: var(--text-color, #495057);
+.block.quote.outline-secondary blockquote::before {
+    color: var(--color-secondary);
 }
 
-.block.quote.light blockquote p {
-    color: var(--text-color, #495057);
+.block.quote.outline-secondary blockquote p {
+    color: var(--color-secondary);
 }
 
-.block.quote.light .quote-author {
-    color: var(--secondary-color, #495057);
+.block.quote.outline-secondary .quote-author {
+    color: var(--color-secondary);
+}
+
+/* Long quote size - Smaller text for longer quotes */
+.block.quote.long blockquote p {
+    font-size: var(--font-size-h6);
+    line-height: var(--line-height-h6);
 }

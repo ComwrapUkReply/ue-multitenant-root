@@ -12,24 +12,27 @@ export default async function decorate(block) {
   // Filter content items based on selected tags (show if content has ANY selected tag)
   const filterContent = (selectedTags) => {
     const contentContainer = dynamicContentBlock.querySelector('.content-container');
-    const contentLinks = contentContainer?.querySelectorAll('a[data-tags]');
+    // Get ALL links, not just those with data-tags attribute
+    const allLinks = contentContainer?.querySelectorAll('a');
 
-    contentLinks.forEach((link) => {
+    // Check if allLinks exists before iterating
+    if (!allLinks || allLinks.length === 0) {
+      return;
+    }
+
+    allLinks.forEach((link) => {
       if (selectedTags.length === 0) {
         // Show all items if no tags selected
         link.style.display = '';
       } else {
         // Show items that have ANY of the selected tags
         const tagsAttr = link.getAttribute('data-tags');
-        if (tagsAttr) {
+        if (tagsAttr && tagsAttr.trim()) {
           const tagArray = tagsAttr.split(', ').map((tag) => tag.split(':').pop().trim());
           const hasSelectedTag = selectedTags.some((selectedTag) => tagArray.includes(selectedTag));
-          if (hasSelectedTag) {
-            link.style.display = '';
-          } else {
-            link.style.display = 'none';
-          }
+          link.style.display = hasSelectedTag ? '' : 'none';
         } else {
+          // No tags attribute or empty - hide the item when tags are selected
           link.style.display = 'none';
         }
       }
@@ -66,7 +69,8 @@ export default async function decorate(block) {
     const tagPills = [];
     contentLinks.forEach((link) => {
       const tagsAttr = link.getAttribute('data-tags');
-      if (tagsAttr) {
+      // Only process links that have non-empty tags
+      if (tagsAttr && tagsAttr.trim()) {
         // Split by ', ' and add each tag to the array
         const tags = tagsAttr.split(', ').map((tag) => tag.split(':').pop().trim());
         tagPills.push(...tags);
@@ -126,7 +130,8 @@ export default async function decorate(block) {
 
   const checkForContent = () => {
     const contentContainer = dynamicContentBlock.querySelector('.content-container');
-    const contentLinks = contentContainer?.querySelectorAll('a[data-tags]');
+    // Get ALL links, not just those with data-tags attribute
+    const contentLinks = contentContainer?.querySelectorAll('a');
     if (contentContainer && contentLinks && contentLinks.length > 0) {
       return contentLinks;
     }

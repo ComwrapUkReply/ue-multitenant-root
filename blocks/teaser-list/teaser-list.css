@@ -1,0 +1,154 @@
+/* Teaser List block styles - Mobile First Approach */
+
+/* Uses design system variables from variables.css */
+
+.teaser-list {
+    --teaser-list-number-of-columns: 1;
+    --teaser-list-item-number-of-subgrid-rows: 4;
+
+    padding: var(--space-32) 0;
+}
+
+.teaser-list-inner {
+    display: grid;
+    grid-template-columns: repeat(var(--teaser-list-number-of-columns), 1fr);
+    gap: var(--space-24);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.teaser-list .teaser {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span var(--teaser-list-item-number-of-subgrid-rows);
+    gap: var(--space-16);
+    background: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    border: var(--border-width-sm) solid var(--color-grey-100);
+    box-shadow: var(--box-shadow);
+    position: relative;
+}
+
+.teaser-list .teaser-image {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.teaser-list .teaser-image img,
+.teaser-list .teaser-image picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.teaser-list-empty p {
+    margin: 0;
+}
+
+.teaser-list .teaser-title {
+    padding: 0 var(--space-24);
+}
+
+.teaser-list .teaser-description {
+    padding: 0 var(--space-24);
+}
+
+.teaser-list .teaser-button-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-16);
+    padding: 0 var(--space-24);
+    padding-bottom: var(--space-24);
+}
+
+/* ===== TABLET STYLES ===== */
+@media (width > 480px) {
+    .teaser-list {
+        --teaser-gap: var(--space-24);
+    }
+}
+
+@media (width >= 768px) {
+    .teaser-list.teaser-list-columns-2 {
+        --teaser-list-number-of-columns: 2;
+    }
+}
+
+/* ===== DESKTOP STYLES ===== */
+@media (width >= 1024px) {
+    .teaser-list {
+        --teaser-list-gap: var(--space-40);
+    }
+
+    .teaser-list.teaser-list-columns-1 {
+        --teaser-list-number-of-columns: 1;
+    }
+
+    .teaser-list.teaser-list-columns-2 {
+        --teaser-list-number-of-columns: 2;
+    }
+
+    .teaser-list.teaser-list-columns-3 {
+        --teaser-list-number-of-columns: 3;
+    }
+
+    .teaser-list.teaser-list-columns-4 {
+        --teaser-list-number-of-columns: 4;
+    }
+}
+
+/* ===== EMPTY STATE ===== */
+.teaser-list-empty {
+    padding: var(--space-32);
+    text-align: center;
+    color: var(--color-grey);
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-base);
+    border: var(--border-width-sm) dashed var(--color-grey-300);
+    border-radius: var(--border-radius-md);
+    background: var(--color-grey-200);
+}
+
+/* ===== ACCESSIBILITY ===== */
+.teaser-list .teaser:focus-visible {
+    outline: var(--border-width-md) solid var(--color-primary);
+    outline-offset: var(--space-4);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .teaser-list .teaser,
+    .teaser-list .teaser-image img,
+    .teaser-list .teaser-button-container a.button {
+        transition: none;
+    }
+}
+
+.gradient .teaser-list .teaser .teaser-title h4,
+.gradient .teaser-list .teaser .teaser-description p {
+    color: var(--color-primary);
+}
+
+.gradient .teaser-list .teaser .teaser-button-container .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-12) var(--space-24);
+    font-family: var(--font-family-base);
+    font-size: var(--button-font-size);
+    line-height: var(--button-line-height);
+    font-weight: 600;
+    text-decoration: none;
+    border: var(--button-border-width) var(--button-border-style) var(--color-primary);
+    border-radius: var(--button-border-radius);
+    cursor: pointer;
+    transition: var(--transition-base);
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    min-height: 44px;
+}

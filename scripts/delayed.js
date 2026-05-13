@@ -66,5 +66,32 @@ function createBackToTopButton() {
   }, { passive: true });
 }
 
+/**
+ * Opens external links in a new tab.
+ * Targets all anchors on the page whose href points to a different origin than the current page.
+ */
+function openExternalLinksInNewTab() {
+  const { origin } = window.location;
+
+  document.querySelectorAll('a[href]').forEach((anchor) => {
+    const href = anchor.getAttribute('href');
+
+    if (!href) return;
+
+    try {
+      const url = new URL(href, origin);
+      if (url.origin !== origin) {
+        anchor.setAttribute('target', '_blank');
+        anchor.setAttribute('rel', 'noopener noreferrer');
+      }
+    } catch {
+      // Malformed href — skip silently
+    }
+  });
+}
+
 // Initialize back to top button
 createBackToTopButton();
+
+// Open external links in a new tab
+openExternalLinksInNewTab();

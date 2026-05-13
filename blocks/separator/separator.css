@@ -1,7 +1,7 @@
 /* Base separator block container */
 .block.separator {
   width: 100%;
-  margin: 4rem 0;
+  margin: var(--space-64) 0;
 }
 
 /* Separator line element (child of block) */
@@ -14,17 +14,17 @@
 
 /* Blue variant - applies to separator line */
 .block.separator.blue .separator-line {
-  background: var(--color-primary-blue, #0073dd);
+  background: var(--color-primary);
   height: 2px;
 }
 
 /* Grey variant - applies to separator line */
 .block.separator.grey .separator-line {
-  background: var(--color-natural-grey, #8f8d87);
+  background: var(--color-grey-500);
   height: 2px;
 }
 
 /* Editor mode - add padding to block container */
 .block.separator.editor-mode {
-  padding: 2rem 0;
+  padding: var(--space-32) 0;
 }
