@@ -68,7 +68,7 @@ function createBackToTopButton() {
 
 /**
  * Returns true if the given URL hostname should be treated as internal (same site).
- * Covers the current origin, all *.aem.page and *.aem.live variants, and comwrap.com.
+ * Covers the current origin and all *.aem.page / *.aem.live variants of the same project.
  */
 function isInternalHostname(hostname, currentHostname) {
   if (hostname === currentHostname) return true;
@@ -77,30 +77,47 @@ function isInternalHostname(hostname, currentHostname) {
 }
 
 /**
- * Opens external links in a new tab.
- * Targets all anchors on the page whose href points to a different origin than the current page.
- * Internal hostnames (current origin, *.aem.page, *.aem.live, comwrap.com)
- * are never opened in a new tab.
+ * Applies target="_blank" and rel="noopener noreferrer" to a single anchor
+ * if its href points to an external hostname.
  */
-
-function openExternalLinksInNewTab() {
+function processExternalLink(anchor) {
   const { origin, hostname } = window.location;
+  const href = anchor.getAttribute('href');
 
-  document.querySelectorAll('a[href]').forEach((anchor) => {
-    const href = anchor.getAttribute('href');
+  if (!href) return;
 
-    if (!href) return;
-
-    try {
-      const url = new URL(href, origin);
-      if (!isInternalHostname(url.hostname, hostname)) {
-        anchor.setAttribute('target', '_blank');
-        anchor.setAttribute('rel', 'noopener noreferrer');
-      }
-    } catch {
-      // Malformed href — skip silently
+  try {
+    const url = new URL(href, origin);
+    if (!isInternalHostname(url.hostname, hostname)) {
+      anchor.setAttribute('target', '_blank');
+      anchor.setAttribute('rel', 'noopener noreferrer');
     }
+  } catch {
+    // Malformed href — skip silently
+  }
+}
+
+/**
+ * Opens external links in a new tab.
+ * Processes all existing anchors and watches for dynamically added ones
+ * (e.g. lazy-loaded blocks, modals) via a MutationObserver.
+ */
+function openExternalLinksInNewTab() {
+  document.querySelectorAll('a[href]').forEach(processExternalLink);
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType !== Node.ELEMENT_NODE) return;
+        if (node.matches('a[href]')) {
+          processExternalLink(node);
+        }
+        node.querySelectorAll('a[href]').forEach(processExternalLink);
+      });
+    });
   });
+
+  observer.observe(document.body, { childList: true, subtree: true });
 }
 
 // Initialize back to top button
