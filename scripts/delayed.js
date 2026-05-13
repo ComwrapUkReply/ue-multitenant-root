@@ -67,11 +67,24 @@ function createBackToTopButton() {
 }
 
 /**
+ * Returns true if the given URL hostname should be treated as internal (same site).
+ * Covers the current origin, all *.aem.page and *.aem.live variants, and comwrap.com.
+ */
+function isInternalHostname(hostname, currentHostname) {
+  if (hostname === currentHostname) return true;
+  if (hostname.endsWith('.aem.page') || hostname.endsWith('.aem.live')) return true;
+  return false;
+}
+
+/**
  * Opens external links in a new tab.
  * Targets all anchors on the page whose href points to a different origin than the current page.
+ * Internal hostnames (current origin, *.aem.page, *.aem.live, comwrap.com)
+ * are never opened in a new tab.
  */
+
 function openExternalLinksInNewTab() {
-  const { origin } = window.location;
+  const { origin, hostname } = window.location;
 
   document.querySelectorAll('a[href]').forEach((anchor) => {
     const href = anchor.getAttribute('href');
@@ -80,7 +93,7 @@ function openExternalLinksInNewTab() {
 
     try {
       const url = new URL(href, origin);
-      if (url.origin !== origin) {
+      if (!isInternalHostname(url.hostname, hostname)) {
         anchor.setAttribute('target', '_blank');
         anchor.setAttribute('rel', 'noopener noreferrer');
       }
