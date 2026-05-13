@@ -42,6 +42,30 @@ function createWarningMessage(container) {
   return warningMsg;
 }
 
+/**
+ * Forces a file download using fetch + blob, bypassing cross-origin restrictions
+ * on the HTML `download` attribute. Falls back to window.open on CORS failure.
+ * @param {string} url - The file URL to download
+ */
+async function downloadFile(url) {
+  const filename = url.split('?')[0].split('/').pop();
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('fetch failed');
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(blobUrl);
+  } catch {
+    window.open(url, '_blank');
+  }
+}
+
 export default function decorate(block) {
   const rows = block.children || [];
   let downloadLink;
