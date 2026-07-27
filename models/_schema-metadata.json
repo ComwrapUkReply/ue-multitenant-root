@@ -1,0 +1,96 @@
+{
+  "structuredDataContainer": {
+    "component": "container",
+    "name": "structured-data",
+    "label": "Structured Data (Schema.org)",
+    "fields": [
+      {
+        "component": "boolean",
+        "name": "schema-enabled",
+        "label": "Enable Structured Data",
+        "value": false
+      },
+      {
+        "component": "select",
+        "name": "schema-type",
+        "label": "Schema Type",
+        "valueType": "string",
+        "options": [
+          { "name": "WebPage", "value": "WebPage" },
+          { "name": "Article", "value": "Article" },
+          { "name": "NewsArticle", "value": "NewsArticle" },
+          { "name": "BlogPosting", "value": "BlogPosting" },
+          { "name": "Event", "value": "Event" },
+          { "name": "Organization", "value": "Organization" },
+          { "name": "VideoObject", "value": "VideoObject" }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-headline",
+        "label": "Schema Headline (override)"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-description",
+        "label": "Schema Description (override)"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-image",
+        "label": "Schema Image URL (override)"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-author",
+        "label": "Author Name"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-org-name",
+        "label": "Organization Name"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-org-url",
+        "label": "Organization URL"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-event-start",
+        "label": "Event Start Date"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-event-end",
+        "label": "Event End Date"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-event-location",
+        "label": "Event Location"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-video-url",
+        "label": "Video URL"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "schema-jsonld",
+        "label": "Raw JSON-LD override"
+      }
+    ]
+  }
+}

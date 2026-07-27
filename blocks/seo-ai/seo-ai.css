@@ -1,0 +1,31 @@
+.seo-ai-panel {
+    margin: 1rem 0;
+    padding: 1rem 1.25rem;
+    border: 1px dashed var(--color-gray-400, #999);
+    border-radius: 4px;
+    background: var(--color-gray-50, #f8f8f8);
+}
+
+.seo-ai-generate {
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.seo-ai-generate.is-busy {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.seo-ai-status {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.seo-ai-status[data-variant='success'] {
+    color: var(--color-green-700, #1a6b1a);
+}
+
+.seo-ai-status[data-variant='error'] {
+    color: var(--color-red-700, #b00020);
+}

@@ -1,3 +1,5 @@
+import { injectSeoSchema } from './seo-schema.js';
+
 /**
  * Creates and manages the back to top button
  */
@@ -95,3 +97,6 @@ createBackToTopButton();
 
 // Open external links in a new tab
 openExternalLinksInNewTab();
+
+// Structured data (non-blocking, after main content)
+injectSeoSchema();

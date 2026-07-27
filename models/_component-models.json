@@ -146,6 +146,9 @@
             "valueType": "string",
             "name": "primary-language-url",
             "label": "Primary Language URL"
+          },
+          {
+            "...": "./_schema-metadata.json#/structuredDataContainer"
           }
     ]
   },

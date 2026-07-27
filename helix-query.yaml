@@ -44,6 +44,12 @@ indices:
       tags:
         select: head > meta[name="cq-tags"]
         value: attribute(el, "content")
+      schema-enabled:
+        select: head > meta[name="schema-enabled"]
+        value: attribute(el, "content")
+      schema-type:
+        select: head > meta[name="schema-type"]
+        value: attribute(el, "content")
 
   blog:
     include:
@@ -82,5 +88,11 @@ indices:
         value: attribute(el, "content")
       publishDate:
         select: head > meta[name="article_publish_date"]
+        value: attribute(el, "content")
+      schema-enabled:
+        select: head > meta[name="schema-enabled"]
+        value: attribute(el, "content")
+      schema-type:
+        select: head > meta[name="schema-type"]
         value: attribute(el, "content")
 
